@@ -1,130 +1,37 @@
 <template>
   <div class="container-fluid">
-   <!--  <div class="row" v-if="authenticated">
-      <div class="card">
-        <div class="card-body">
-          <form action="#">
-            <div class="form-body">
-              <div class="form-group">
-                <div class="row">
-                  <label class="col-lg-1">Name</label>
-                  <div class="col-lg-11">
-                    <div class="row">
-                      <div class="col-md-12">
-                        <input
-                          :value="(name ? name : '') + ' ' + (last_name ? last_name : '')"
-                          type="text"
-                          class="form-control"
-                          placeholder="Your Full Name"
-                          disabled
-                        />
-                      </div>
-                    </div>
-                  </div>
-                </div>
-              </div>
-              <div class="form-group">
-                <div class="row">
-                  <label class="col-lg-1">Email</label>
-                  <div class="col-lg-11">
-                    <div class="row">
-                      <div class="col-md-12">
-                        <input
-                          v-model="email"
-                          type="email"
-                          class="form-control"
-                          placeholder="example@mailsrv.any"
-                          disabled
-                        />
-                      </div>
-                    </div>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </form>
-        </div>
-      </div>
-    </div> -->
-
     <div class="row">
       <div class="card">
         <div class="card-body">
-          <!--    <h4 class="card-title mb-3">Tabs Bordered Justified</h4> -->
-          <ul class="nav nav-tabs nav-justified nav-bordered mb-3 customtab">
-            <li class="nav-item">
-              <a
-                href="#Summary"
-                data-toggle="tab"
-                aria-expanded="false"
-                class="nav-link active"
-              >
-                <i class="mdi mdi-home-variant d-lg-none d-block mr-1"></i>
-                <span class="d-none d-lg-block">Sumario</span>
-              </a>
-            </li>
-            <li class="nav-item">
-              <a
-                href="#Situation"
-                data-toggle="tab"
-                aria-expanded="true"
-                class="nav-link"
-              >
-                <i class="mdi mdi-account-circle d-lg-none d-block mr-1"></i>
-                <span class="d-none d-lg-block">Situacion actual</span>
-              </a>
-            </li>
-            <li class="nav-item" v-for="sCopy in scennariosCopies">
-              <a
-                :href="'#copy' + sCopy.id"
-                data-toggle="tab"
-                aria-expanded="false"
-                class="nav-link"
-              >
-                <i class="mdi mdi-playlist-plus d-lg-none d-block mr-1"></i>
-                <span class="d-none d-lg-block">{{ sCopy.name }}</span>
-              </a>
-            </li>
-          </ul>
+          <div class="col">
+            <div class="card">
+              <div class="card-body">
+                <h1 class="text-cented text-danger">12:17:18</h1>
 
-          <div class="tab-content" style="width: 100%">
-            <div class="tab-pane show active" id="Summary">
-              <!-- Contains SumMMaryTable component -->
-              <!-- Send values from thit tho his children -->
-              <Summary
-                :summary="summary"
-                :factors="Factors"
-                :scores="scores"
-                :FactorsWithScores="FactorsWithScores"
-                :maritialStatusChanged="maritialStatusChanged"
-                :scennariosCopies="scennariosCopies"
-                :authenticated="authenticated"
-                :reloadAt="reloadAt"
-              />
-            </div>
-            <div class="tab-pane" id="Situation">
-              <!-- Contains scennarios accordions and change maritial status -->
-              <!-- receiving values from child of this like a function -->
-              <SituationA
-                @maritialChanged="getMaritialChanged"
-                @selectedSituation="getSituation"
-                @FactorsTitles="getTitles"
-                @scoresArr="getScores"
-                @additionalScennarios="getAdditionalScennarios"
-                @factorsWithSubfactors="getFactsWSubfacts"
-                @reloader="getReloader"
-                :authenticated="authenticated"
-              />
-            </div>
-            <div v-for="copy in scennariosCopies" :id="'copy' + copy.id" class="tab-pane">
-              <!-- {{ copy }} -->
-              <Scenario2
-                :copyId="copy.id"
-                :body="copy.body"
-                :factors="factorsWithSubfactors"
-                :maritialSituation="copy.is_married ? copy.is_married : 0"
-                :scennarioName="copy.name"
-              />
+                <h4 class="card-title">Put your code for register input or output</h4>
+
+                <form class="mt-3">
+                  <div class="input-group mb-3">
+                    <input
+                      type="text"
+                      v-model="code"
+                      class="form-control"
+                      placeholder="1921"
+                      aria-label=""
+                      aria-describedby="basic-addon1"
+                      required
+                      minlength="4"
+                      maxlength="4"
+                      v-on:keydown.enter.prevent="assistance"
+                    />
+                    <div class="input-group-append">
+                      <button class="btn btn-info" type="button" @click="assistance">
+                        Go!
+                      </button>
+                    </div>
+                  </div>
+                </form>
+              </div>
             </div>
           </div>
         </div>
@@ -132,18 +39,9 @@
     </div>
   </div>
 </template>
-
 <script>
-import Summary from "./content-tabs/Summary.vue";
-import SituationA from "./content-tabs/actual-scennario/SituationA.vue";
-import Scenario2 from "./content-tabs/Scenario2.vue";
-
+// https://codepen.io/gau/pen/LjQwGp
 export default {
-  components: {
-    Summary,
-    SituationA,
-    Scenario2,
-  },
   data() {
     return {
       email: "",
@@ -161,6 +59,10 @@ export default {
       factorsWithSubfactors: [],
       reloadAt: null,
       authenticated: false,
+      code: null,
+
+      time: "",
+      date: "",
     };
   },
 
@@ -176,60 +78,37 @@ export default {
   },
 
   methods: {
-    getSituation(value) {
-      //   console.log("Summary");
-      let me = this;
-      me.summary = value;
-    },
-    getTitles(value) {
-      this.Factors = value;
-    },
-    getFactsWSubfacts(value) {
-      //   console.log("Facts");
-      this.factorsWithSubfactors = value;
-    },
+    /*  clock() {
+      function time() {
+        var d = new Date();
+        var s = d.getSeconds();
+        var m = d.getMinutes();
+        var h = d.getHours();
+        span.textContent =
+          ("0" + h).substr(-2) + ":" + ("0" + m).substr(-2) + ":" + ("0" + s).substr(-2);
+      }
+      setInterval(time, 1000);
+    }, */
 
-    getMaritialChanged(value) {
-      //   console.log("CONTENT");
-      this.maritialStatusChanged = value;
-    },
-
-    getAdditionalScennarios(value) {
-      //   console.log("Extra scennarios");
-      this.scennariosCopies = value;
-    },
-
-    getReloader(value) {
+    /*  getReloader(value) {
       this.reloadAt = value;
     },
-
-    getScores(value) {
-      this.scores = value[0];
-      let factArr = [];
-
-      this.Factors.forEach((factor) => {
-        this.scores.forEach((score) => {
-          if (
-            score["singleSum"] != undefined &&
-            "factor" in score["singleSum"] &&
-            score["singleSum"].factor === factor.id
-          ) {
-            factArr.push({ factor: factor.id, singleSum: score["singleSum"].sum });
-          }
-          if (
-            score["marriedSum"] != undefined &&
-            "factor" in score["marriedSum"] &&
-            score["marriedSum"].factor === factor.id
-          ) {
-            factArr.push({ factor: factor.id, marriedSum: score["marriedSum"].sum });
-          }
+ */
+    assistance() {
+      let me = this;
+      axios
+        .post("api/assistances", { code: me.code })
+        .then((response) => {
+          console.log(response);
+          Swal.fire({
+            type: "success",
+            title: "Registro  de entrada | salida",
+            text: "Bienvenido || Gcacias. Has asistido x horas",
+          });
+        })
+        .catch((error) => {
+          console.table(error);
         });
-      });
-      let Grouped = [];
-      Grouped = _.mapValues(_.groupBy(factArr, "factor"), (list) =>
-        list.map((val) => _.omit(val, "factor"))
-      );
-      this.FactorsWithScores = Grouped;
     },
   },
 };

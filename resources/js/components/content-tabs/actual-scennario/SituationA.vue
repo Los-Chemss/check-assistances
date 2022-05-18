@@ -183,10 +183,11 @@ export default {
                     "Se ha" + scenario == null
                       ? "creado"
                       : "actualizado" + " este escenario",
+
+                  timer: 3000,
                 });
                 let now = Date.now();
                 me.reloader2 = now;
-                // console.log(me.reloader2);
                 me.$emit("reloader", now);
                 window.location.reload();
                 console.log(response);

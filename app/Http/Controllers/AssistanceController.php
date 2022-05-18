@@ -46,8 +46,10 @@ class AssistanceController extends Controller
     {
         try {
             $code = $request->code;
-            $customer = Customer::where('code', $code)->first();
+            $customer = Customer::where('code', $code)->firstOrFail();
             $branch = Branch::where('id', 2)->first(); //It be found by ip ? or aautenticatin manager
+
+            if(!$customer) return 404;
 
 
             $data = [

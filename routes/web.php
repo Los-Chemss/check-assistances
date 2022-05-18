@@ -28,7 +28,6 @@ Route::get('/send_mail', function () { //test function only
     }
 });
 
-Route::get('/', [DashboardController::class, 'index'])->name('dashboard');
 Auth::routes();
 
 if (env('APP_ENV') === 'local') {
@@ -42,6 +41,7 @@ if (env('APP_ENV') === 'local') {
 Route::get('/factors', [FactorController::class, 'factors']);
 
 Route::middleware('auth')->group(function () {
+    Route::get('/', [DashboardController::class, 'index'])->name('dashboard');
     //user
     Route::get('/profile',  [UserController::class, 'profile'])->name('profile');
     Route::get('/account',  [UserController::class, 'account']);

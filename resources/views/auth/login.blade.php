@@ -35,6 +35,18 @@
                                         @enderror
                                     </div>
                                 </div>
+                                {{--  --}}
+                                <div class="form-group mb-3">
+                                    <select class="form-control custom-select"
+                                        style="width: 100%; height:36px;">
+                                        <option>Select</option>
+                                        <optgroup label="Alaskan/Hawaiian Time Zone">
+                                            <option value="AK">Alaska</option>
+                                            <option value="HI">Hawaii</option>
+                                        </optgroup>
+                                    </select>
+                                </div>
+                                {{--  --}}
                                 <div class="form-group mb-4">
                                     <div class="">
                                         <input id="password" type="password" style="opacity:75%;"
@@ -68,7 +80,7 @@
                                 </div>
                                 <div class="form-group text-center mt-4"
                                     style="position:relative;
-                                                                                                                                        z-index:1;">
+                                                                                                                                                                            z-index:1;">
                                     <div class="col-xs-12">
                                         <button
                                             class="btn btn-info btn-lg btn-block text-uppercase waves-effect waves-light"
