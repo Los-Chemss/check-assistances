@@ -79,7 +79,7 @@
         <header class="topbar">
             @include('layouts.navbar')
         </header>
-       {{--  @include('layouts.aside') --}}
+        @include('layouts.aside')
 
         @if (!Auth::user())
             {{-- @yield('content') --}}{{-- login view --}}
@@ -106,7 +106,7 @@
             {{-- @include('layouts.aside') --}}
         @endif
         {{-- body --}}
-        <div class="page-wrapper ml-0">
+        <div class="page-wrapper">
             {{-- <div class="container-fluid"> --}}
             @yield('content')
             @if (Auth::user())

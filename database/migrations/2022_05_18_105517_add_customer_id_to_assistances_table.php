@@ -29,3 +29,11 @@ class AddCustomerIdToAssistancesTable extends Migration
         });
     }
 }
+
+
+/*
+Un cliente es cliente de una company.
+El cliente puede asistir a cualquier branch de la company
+Un cliente tiene una menbership con la company .
+Un cliente paga membresia a una company
+*/

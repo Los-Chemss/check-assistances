@@ -34,10 +34,14 @@
                   ></h1>
                 </div>
               </div>
+              <div class="row border-success pt-0" style="height:280px; border:1px dotted">
+                <DigitalClock />
+              </div>
               <div class="card-body">
-                <h1 class="text-cented text-danger">12:17:18</h1>
-
-                <h4 class="card-title">Put your code for register input or output</h4>
+                <div class="row">
+                  <h4 class="card-title">Put your code for register input or output</h4>
+                </div>
+                <!-- <h1 class="text-cented text-danger">12:17:18</h1> -->
 
                 <form class="mt-3">
                   <div class="input-group mb-3">
@@ -70,7 +74,11 @@
 </template>
 <script>
 // https://codepen.io/gau/pen/LjQwGp
+import DigitalClock from "./DigitalClock.vue";
 export default {
+  components: {
+    DigitalClock,
+  },
   data() {
     return {
       email: "",

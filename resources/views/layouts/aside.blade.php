@@ -19,7 +19,7 @@
                         </a>
 
                         <ul aria-expanded="false" class="collapse  first-level">
-                           {{--  <li class="sidebar-item">
+                            {{-- <li class="sidebar-item">
                                 <change_themme></change_themme>
                             </li> --}}
                             <li class="sidebar-item">
@@ -49,6 +49,13 @@
                         <span class="hide-menu">Home</span></a>
                 </li>
                 @if (Auth::user())
+                    <li class="sidebar-item"> <a class="sidebar-link waves-effect waves-dark sidebar-link"
+                            href="/customers" aria-expanded="false">
+                            <i data-feather="users" class="feather-icon"></i>
+                            <span class="hide-menu">Customers</span></a>
+                    </li>
+
+
                     <li class="sidebar-item">
                         <form method="POST" action="{{ route('logout') }}">
                             @csrf
