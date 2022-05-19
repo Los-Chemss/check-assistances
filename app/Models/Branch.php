@@ -13,4 +13,9 @@ class Branch extends Model
     {
         return $this->hasMany(Assistance::class);
     }
+
+    public function company()
+    {
+        return $this->belongsTo(Company::class, 'company_id');
+    }
 }

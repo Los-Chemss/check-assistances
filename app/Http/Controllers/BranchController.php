@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\Branch;
 use App\Http\Requests\StoreBranchRequest;
 use App\Http\Requests\UpdateBranchRequest;
+use Illuminate\Support\Facades\Auth;
 
 class BranchController extends Controller
 {
@@ -15,7 +16,11 @@ class BranchController extends Controller
      */
     public function index()
     {
-        return Branch::all();
+        $user = Auth::user();
+        $branches = Branch::With('company')->get();
+        return response()->json($branches);
+
+        // return Branch::all();
     }
 
     /**

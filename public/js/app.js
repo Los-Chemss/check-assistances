@@ -2185,6 +2185,35 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
 // https://codepen.io/gau/pen/LjQwGp
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = ({
   data: function data() {
@@ -2206,7 +2235,9 @@ __webpack_require__.r(__webpack_exports__);
       authenticated: false,
       code: null,
       time: "",
-      date: ""
+      date: "",
+      branches: [],
+      selectedBranch: null
     };
   },
   created: function created() {
@@ -2219,33 +2250,50 @@ __webpack_require__.r(__webpack_exports__);
       this.authenticated = false;
     }
   },
+  mounted: function mounted() {
+    this.getBranches();
+  },
   methods: {
-    /*  clock() {
-      function time() {
-        var d = new Date();
-        var s = d.getSeconds();
-        var m = d.getMinutes();
-        var h = d.getHours();
-        span.textContent =
-          ("0" + h).substr(-2) + ":" + ("0" + m).substr(-2) + ":" + ("0" + s).substr(-2);
-      }
-      setInterval(time, 1000);
-    }, */
-
-    /*  getReloader(value) {
-      this.reloadAt = value;
+    getBranches: function getBranches() {
+      var me = this;
+      axios.get("api/branches").then(function (response) {
+        console.log(response);
+        me.branches = response.data;
+      })["catch"](function (error) {
+        console.table(error);
+      });
     },
-    */
+    selectBranch: function selectBranch(event) {
+      var branch = JSON.parse(JSON.stringify(event.target.options[event.target.options.selectedIndex]))._value;
+
+      console.log(branch);
+      this.selectedBranch = branch;
+    },
     assistance: function assistance() {
       var me = this;
       axios.post("api/assistances", {
+        branch: me.selectedBranch.id,
         code: me.code
       }).then(function (response) {
         console.log(response);
+        var movement = null;
+        var messagge = null;
+        var customer = response.data.customer;
+
+        if ("entrada" in response.data) {
+          movement = "entrada";
+          messagge = "Bienvenido " + customer.name;
+        }
+
+        if ("salida" in response.data) {
+          movement = "salida";
+          messagge = "Gracias por asistir :) " + customer.name;
+        }
+
         Swal.fire({
           type: "success",
-          title: "Registro  de entrada | salida",
-          text: "Bienvenido || Gcacias. Has asistido x horas"
+          title: "Registro  de " + movement + " satisfactorio",
+          text: messagge
         });
       })["catch"](function (error) {
         console.table(error);
@@ -20951,6 +20999,73 @@ var render = function () {
         _c("div", { staticClass: "card-body" }, [
           _c("div", { staticClass: "col" }, [
             _c("div", { staticClass: "card" }, [
+              _c("div", { staticClass: "card-header" }, [
+                _c("div", { staticClass: "col-md-12 pl-4 pr-4" }, [
+                  _c(
+                    "select",
+                    {
+                      directives: [
+                        {
+                          name: "model",
+                          rawName: "v-model",
+                          value: _vm.selectedBranch,
+                          expression: "selectedBranch",
+                        },
+                      ],
+                      staticClass: "select2 form-control custom-select",
+                      staticStyle: { width: "100%" },
+                      attrs: { id: "select2-search-hide" },
+                      on: {
+                        change: [
+                          function ($event) {
+                            var $$selectedVal = Array.prototype.filter
+                              .call($event.target.options, function (o) {
+                                return o.selected
+                              })
+                              .map(function (o) {
+                                var val = "_value" in o ? o._value : o.value
+                                return val
+                              })
+                            _vm.selectedBranch = $event.target.multiple
+                              ? $$selectedVal
+                              : $$selectedVal[0]
+                          },
+                          _vm.selectBranch,
+                        ],
+                      },
+                    },
+                    _vm._l(_vm.branches, function (branch) {
+                      return _c("option", { domProps: { value: branch } }, [
+                        _c("p", [
+                          _vm._v(
+                            "\n                      " +
+                              _vm._s(branch.division) +
+                              "\n                    "
+                          ),
+                        ]),
+                        _vm._v(" "),
+                        _c("br"),
+                      ])
+                    }),
+                    0
+                  ),
+                ]),
+                _vm._v(" "),
+                _c("div", { staticClass: "col-md-12 pl-4 pr-4" }, [
+                  _c("h1", {
+                    staticClass: "text-center border-bottom text-success",
+                    attrs: { for: "" },
+                    domProps: {
+                      textContent: _vm._s(
+                        _vm.selectedBranch && _vm.selectedBranch["company"]
+                          ? _vm.selectedBranch["company"].name
+                          : null
+                      ),
+                    },
+                  }),
+                ]),
+              ]),
+              _vm._v(" "),
               _c("div", { staticClass: "card-body" }, [
                 _c("h1", { staticClass: "text-cented text-danger" }, [
                   _vm._v("12:17:18"),

@@ -47,10 +47,9 @@ class AssistanceController extends Controller
         try {
             $code = $request->code;
             $customer = Customer::where('code', $code)->firstOrFail();
-            $branch = Branch::where('id', 2)->first(); //It be found by ip ? or aautenticatin manager
-
-            if(!$customer) return 404;
-
+            if (!$customer) return 404;
+            $branch = Branch::where('id', $request->branch)->first(); //It be found by ip ? or aautenticatin manager
+            if (!$branch) return 404;
 
             $data = [
                 'customer_id' => $customer->id,
@@ -69,15 +68,12 @@ class AssistanceController extends Controller
                 $assisted->output = date("Y-m-d H:i:s");
                 $assisted->save();
 
-                $resp =  ['Out at' => $assisted];
+                $resp =  ['salida' => $assisted, 'customer' => $customer];
             } else {
-                $resp =  ['In at at' => Assistance::create($data)];
+                $resp =  ['entrada' => Assistance::create($data), 'customer' => $customer];
             }
 
-            return response()->json($resp);
-            return 200;
-
-            Assistance::create($request->all());
+            return response()->json($resp, 200);
         } catch (Exception $e) {
             return $e->getMessage();
         }
