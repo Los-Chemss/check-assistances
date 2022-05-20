@@ -14,7 +14,8 @@ class AddCurrentBranchIdToUsersTable extends Migration
     public function up()
     {
         Schema::table('users', function (Blueprint $table) {
-            //
+            $table->unsignedBigInteger('branch_id')->default(1);
+            $table->foreign('branch_id')->references('id')->on('branches');
         });
     }
 
@@ -26,7 +27,8 @@ class AddCurrentBranchIdToUsersTable extends Migration
     public function down()
     {
         Schema::table('users', function (Blueprint $table) {
-            //
+            $table->dropForeign(['branch_id']);
+            $table->dropColumn('branch_id');
         });
     }
 }

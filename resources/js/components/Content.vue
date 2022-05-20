@@ -3,67 +3,59 @@
     <div class="row">
       <div class="card">
         <div class="card-body">
-          <div class="col">
+          <div class="row">
             <div class="card">
               <div class="card-header">
-                <div class="col-md-12 pl-4 pr-4">
-                  <select
-                    class="select2 form-control custom-select"
-                    id="select2-search-hide"
-                    style="width: 100%"
-                    v-model="selectedBranch"
-                    @change="selectBranch"
-                  >
-                    <option v-for="branch in branches" :value="branch">
-                      <p>
-                        {{ branch.division }}
-                      </p>
-                      <br />
-                    </option>
-                  </select>
-                </div>
-                <div class="col-md-12 pl-4 pr-4">
-                  <h1
-                    class="text-center border-bottom text-success"
-                    for=""
-                    v-text="
-                      selectedBranch && selectedBranch['company']
-                        ? selectedBranch['company'].name
-                        : null
-                    "
-                  ></h1>
-                </div>
-              </div>
-              <div class="row border-success pt-0" style="height:280px; border:1px dotted">
-                <DigitalClock />
+                <h1 v-if="branch" class="bg'">
+                  <p>Division: {{ branch.division }}</p>
+                  <!-- <br /> -->
+                  <p>Location: {{ branch.location }}</p>
+                </h1>
+                <h1 v-else class="bg'danger">
+                  <p>No branch selected. Please select one.</p>
+                </h1>
+                <!--   <h1
+                  class="text-center rounded"
+
+                >
+                  {{ branch ? branch : "" }}
+
+                    <p ></p>
+
+
+                </h1> -->
+                <div class="col-md-8 m-auto"></div>
               </div>
               <div class="card-body">
                 <div class="row">
-                  <h4 class="card-title">Put your code for register input or output</h4>
-                </div>
-                <!-- <h1 class="text-cented text-danger">12:17:18</h1> -->
-
-                <form class="mt-3">
-                  <div class="input-group mb-3">
-                    <input
-                      type="text"
-                      v-model="code"
-                      class="form-control"
-                      placeholder="1921"
-                      aria-label=""
-                      aria-describedby="basic-addon1"
-                      required
-                      minlength="4"
-                      maxlength="4"
-                      v-on:keydown.enter.prevent="assistance"
-                    />
-                    <div class="input-group-append">
-                      <button class="btn btn-info" type="button" @click="assistance">
-                        Go!
-                      </button>
-                    </div>
+                  <DigitalClock />
+                  <div class="col-md-8 m-auto mb-4 shadow-sm pb-4 mt-3 pt-4">
+                    <h4 class="card-title text-center text-danger">
+                      Put your code for register input or output
+                    </h4>
+                    <form class="mt-3">
+                      <div class="input-group mb-3">
+                        <input
+                          class="form-control text-center"
+                          type="number"
+                          v-model="code"
+                          placeholder="1921"
+                          aria-label=""
+                          aria-describedby="basic-addon1"
+                          minlength="4"
+                          maxlength="4"
+                          v-on:keydown.enter.prevent="assistance"
+                          required
+                        />
+                        <div class="input-group-append">
+                          <button class="btn btn-info" type="button" @click="assistance">
+                            <i class="icon-login"></i>
+                          </button>
+                        </div>
+                      </div>
+                    </form>
                   </div>
-                </form>
+                </div>
               </div>
             </div>
           </div>
@@ -101,6 +93,7 @@ export default {
       time: "",
       date: "",
       branches: [],
+      branch: null,
       selectedBranch: null,
     };
   },
@@ -111,42 +104,19 @@ export default {
       this.name = window.Laravel.user.name;
       this.last_name = window.Laravel.user.last_name;
       this.authenticated = true;
+      this.branch = window.Laravel.user.branch;
     } else {
       this.authenticated = false;
     }
   },
 
-  mounted() {
-    this.getBranches();
-  },
+  mounted() {},
 
   methods: {
-    getBranches() {
-      let me = this;
-
-      axios
-        .get("api/branches")
-        .then((response) => {
-          console.log(response);
-          me.branches = response.data;
-        })
-        .catch((error) => {
-          console.table(error);
-        });
-    },
-
-    selectBranch(event) {
-      const branch = JSON.parse(
-        JSON.stringify(event.target.options[event.target.options.selectedIndex])
-      )._value;
-
-      console.log(branch);
-      this.selectedBranch = branch;
-    },
     assistance() {
       let me = this;
       axios
-        .post("api/assistances", { branch: me.selectedBranch.id, code: me.code })
+        .post("api/assistances", { branch: me.branch.id, code: me.code })
         .then((response) => {
           console.log(response);
           let movement = null;

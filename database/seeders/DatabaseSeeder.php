@@ -20,6 +20,8 @@ class DatabaseSeeder extends Seeder
             BranchSeeder::class,
             CustomerSeeder::class,
             AssistanceSeeder::class,
+            MembershipSeeder::class,
+            PaymentSeeder::class,
         ]);
     }
 }

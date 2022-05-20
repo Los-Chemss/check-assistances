@@ -1,8 +1,10 @@
 <template>
-  <div id="clock" class="container">
-    <p class="date">{{ clock.date }}</p>
-    <p class="time">{{ clock.time }}</p>
-    <p class="text">DIGITAL CLOCK with Vue.js</p>
+  <div class="clock-body shadow-lg p-4 m-4 rounded  col-md-8 m-auto">
+    <div id="clock" class="">
+      <p class="date">{{ clock.date }}</p>
+      <p class="time">{{ clock.time }}</p>
+      <p class="text">DIGITAL CLOCK with Vue.js</p>
+    </div>
   </div>
 </template>
 
@@ -51,10 +53,10 @@ export default {
 </script>
 <style lang="scss" scoped>
 html,
-body {
-  height: 100%;
+.clock-body {
+  height: 300px;
 }
-body {
+.clock-body {
   background: #0f3854;
   background: radial-gradient(ellipse at center, #0a2e38 0%, #000000 70%);
   background-size: 100%;
@@ -65,9 +67,9 @@ p {
 }
 #clock {
   font-family: "Share Tech Mono", monospace;
-  color: #ffffff;
+  color: #240303;
   text-align: center;
-  position: absolute;
+  position:relative;
   left: 50%;
   top: 50%;
   transform: translate(-50%, -50%);
@@ -75,7 +77,8 @@ p {
   text-shadow: 0 0 20px rgba(10, 175, 230, 1), 0 0 20px rgba(10, 175, 230, 0);
   .time {
     letter-spacing: 0.05em;
-    font-size: 80px;
+    font-size: 45px;
+    // font-size: 80px;
     padding: 5px 0;
   }
   .date {
@@ -87,5 +90,11 @@ p {
     font-size: 12px;
     padding: 20px 0 0;
   }
+}
+.center {
+  margin: auto;
+  width: 50%;
+  border: 3px solid green;
+  padding: 10px;
 }
 </style>

@@ -3,6 +3,7 @@
 namespace Database\Factories;
 
 use App\Models\Company;
+use App\Models\Customer;
 use Illuminate\Database\Eloquent\Factories\Factory;
 
 class CustomerFactory extends Factory
@@ -14,9 +15,20 @@ class CustomerFactory extends Factory
      */
     public function definition()
     {
+        $cus = Customer::select('code')->get();
+        $codes = [];
+        foreach ($cus as $c) {
+            array_push($codes, $c->code);
+        }
+        $unique = null;
+        do {
+            $unique = $this->faker->numberBetween(0001, 9999);
+        } while (in_array($this->faker->numberBetween(0001, 9999), $codes));
+
+
         return [
             'name' => $this->faker->name(),
-            'code' => $this->faker->numberBetween(0001, 9999),
+            'code' => $unique,
             'income' => $this->faker->dateTime(),
             'membership' => $this->faker->randomElement(['monthly', 'yearly']),
             'company_id' => function () {

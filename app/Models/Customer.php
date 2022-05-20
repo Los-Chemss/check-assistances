@@ -13,5 +13,13 @@ class Customer extends Model
     {
         return $this->belongsTo(Company::class);
     }
+    public function memberships()
+    {
+        return $this->hasMany(Membership::class);
+    }
+    public function payments()
+    {
+        return $this->hasMany(Payment::class);
+    }
 }
 

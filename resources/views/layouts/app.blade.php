@@ -97,7 +97,7 @@
             @php
                 $user_auth_data = [
                     'isLoggedin' => true,
-                    'user' => Auth::user(),
+                    'user' => Auth::user()->load('branch'),
                 ];
             @endphp
         @endif

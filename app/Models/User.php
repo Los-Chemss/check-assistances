@@ -26,6 +26,7 @@ class User extends Authenticatable
         'description',
         'themme_layout',
         'refresh_token',
+        'branch_id'
     ];
 
     /**
@@ -46,4 +47,9 @@ class User extends Authenticatable
     protected $casts = [
         'email_verified_at' => 'datetime',
     ];
+
+    public function branch()
+    {
+        return $this->belongsTo(Branch::class);
+    }
 }

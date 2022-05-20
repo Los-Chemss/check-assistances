@@ -5,6 +5,9 @@ namespace App\Http\Controllers;
 use App\Models\Customer;
 use App\Http\Requests\StoreCustomerRequest;
 use App\Http\Requests\UpdateCustomerRequest;
+use App\Models\Company;
+use App\Models\User;
+use Illuminate\Support\Facades\Auth;
 
 class CustomerController extends Controller
 {
@@ -15,7 +18,58 @@ class CustomerController extends Controller
      */
     public function index()
     {
-        return Customer::all();
+        // return view('customers.index');
+        $customers =  Customer::with(['company' => function ($query) {
+            $query->with(['memberships' => function ($q) {
+                $q->with(['payments' => function ($q) {
+                    $q->where('payments.customer_id', 1);
+                }]);
+            }]);
+        }])->get();
+
+        /*   ->with(['memberships' => function ($query) {
+                $query->with('payments');
+            }])->get();
+        */
+
+        return $customers;
+
+        foreach ($customers as $cus) {
+            foreach ($cus->memberships as $mem) {
+                foreach ($mem->payments as $key => $pay) {
+                    if ($pay->customer_id != $cus->id) {
+                        unset($mem->payments[$key]);
+                    }
+                }
+            }
+        }
+        return $customers;
+    }
+
+
+
+    public function getCustomersOfBranch()
+    {
+
+        //los users pertenecen ala compoany (<o>)
+        $user = User::where('id', 1)->firstOrFail();
+        // $user = User::where('id', Auth::user()->id)->firstOrFail();
+
+        // return $user;
+
+        return Company::with(['branches' => function ($q) use ($user) {
+            $q->where('branches.id', $user->branch_id);
+        }])->get();
+        // return Customer::all();
+
+
+        /*
+        select (*) from customers join company where id in branch.company_id
+        */
+
+        $customers = Customer::with(['company', function ($q) {
+            $q->with('branches');
+        }])->get();
     }
 
     /**

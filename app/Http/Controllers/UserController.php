@@ -36,22 +36,18 @@ class UserController extends Controller
     public function update(Request $request)
     {
         try {
-            $user = User::Where('id', Auth::user()->id);
-
+            $user = User::Where('id', Auth::user()->id)->firstOrFail();
             if ($user->name) {
                 $user->name = $request->name;
             }
             if ($user->last_name) {
                 $user->last_name = $request->last_name;
             }
+            if ($user->branch) {
+                $user->branch_id = $request->branch;
+            }
             $user->save();
             return 200;
-            /*   if ($user->email) {
-                $user->email = $request->email;
-            } */
-            /*  if ($user->user_name) {
-                $user->user_name = $request->user_name;
-            } */
         } catch (Exception $e) {
             return $this->returnJsonError($e, ['UserController' => 'update']);
         }

@@ -73,8 +73,8 @@
                       class="rounded-circle bg-success text-center display-1 w-100 p-3 font-weight-bold"
                       width="150"
                       v-text="
-                        (userObj.name? userObj.name.substring(0, 1):null) +
-                        (userObj.last_name? userObj.last_name.substring(0, 1):null)
+                        (userObj.name ? userObj.name.substring(0, 1) : null) +
+                        (userObj.last_name ? userObj.last_name.substring(0, 1) : null)
                       "
                     >
                     </span>
@@ -93,9 +93,9 @@
                   <div class="row">
                     <div class="col-md-6">
                       <small class="text-muted">Email </small>
-                      <h6 v-text="userObj.email"></h6>                     
-                    </div>                  
-                  </div>        
+                      <h6 v-text="userObj.email"></h6>
+                    </div>
+                  </div>
                 </div>
               </div>
             </div>
@@ -112,16 +112,32 @@
                   enctype="multipart/form-data"
                   autocomplete="nope"
                 >
-                  <input
+                  <!--  <input
                     autocomplete="off"
                     name="hidden"
                     type="text"
                     style="display: none"
-                  />
+                  /> -->
                   <div class="form-group" autocomplete="none">
-                    <label class="col-md-12" for="name"
-                      >Name</label
+                    <label for="select2-search-hide">Select branch</label>
+                    <select
+                      class="select2 form-control custom-select"
+                      id="select2-search-hide"
+                      style="width: 100%"
+                      v-model="selectedBranch"
+                      @change="selectBranch"
                     >
+                      <option v-for="branch in branches" :value="branch">
+                        <p>
+                          {{ branch.division }}
+                        </p>
+                        <br />
+                      </option>
+                    </select>
+                  </div>
+
+                  <div class="form-group" autocomplete="none">
+                    <label class="col-md-12" for="name">Name</label>
                     <div class="col-md-12">
                       <input
                         type="text"
@@ -133,7 +149,7 @@
                       />
                     </div>
                   </div>
-                 
+
                   <div class="form-group" autocomplete="none">
                     <label for="last_name" class="col-md-12">Last name</label>
                     <div class="col-md-12">
@@ -148,7 +164,7 @@
                     </div>
                   </div>
 
-                                   <div class="form-group">
+                  <div class="form-group">
                     <div class="col-sm-12">
                       <a href="#" class="btn btn-success" v-on:click="updateAccount()">
                         Update Profile
@@ -267,6 +283,8 @@ export default {
       userObj: {},
       submitted: false,
       errors: {},
+      branches: [],
+      selectedBranch: null,
     };
   },
   mounted() {
@@ -274,26 +292,46 @@ export default {
   },
 
   methods: {
+    getBranches() {
+      let me = this;
+
+      axios
+        .get("api/branches")
+        .then((response) => {
+          console.log(response);
+
+          //   console.log(response);
+          me.branches = response.data;
+        })
+        .catch((error) => {
+          console.table(error);
+        });
+    },
+
+    selectBranch(event) {
+      const branch = JSON.parse(
+        JSON.stringify(event.target.options[event.target.options.selectedIndex])
+      )._value;
+
+      console.log(branch);
+      this.selectedBranch = branch;
+    },
+
     userAccount() {
+    console.log('any');
+      this.getBranches();
       let me = this;
       this.loading = true;
       axios
         .get("/account")
         .then(function (response) {
           me.userObj = response.data;
-          console.log(me.userObj)
 
-          if (me.userObj["donotcall"] == 0 || false) {
-            me.user_donotcall === "yes";
-          } else {
-            me.user_donotcall = "no";
-          }
+          console.log(response);
 
-          if (me.userObj["emailoptout"] == 0 || false) {
-            me.user_emailoptout = "yes";
-          } else {
-            me.user_emailoptout = "no";
-          }
+          console.log(me.userObj);
+          return;
+          this.$emit("userBranch");
         })
         .catch(function (error) {
           console.log(error);
@@ -304,7 +342,7 @@ export default {
     updateAccount() {
       this.submitted = true;
       this.errors = {};
-      this.valideForm();
+      //   this.valideForm();
 
       console.log(Object.keys(this.errors));
       if (Object.keys(this.errors).length) {
@@ -313,27 +351,18 @@ export default {
       let me = this;
       axios
         .post("/account", {
-          secondaryemail: me.userObj.secondaryemail,
-          mobile: me.userObj.mobile,
-          cf_1945: me.userObj.cf_1945,
-          cf_2254: me.userObj.cf_2254,
-          cf_2246: me.userObj.cf_2246,
-          cf_2252: me.userObj.cf_2252,
-          cf_2250: me.userObj.cf_2250,
-
-          user_donotcall: me.user_donotcall,
-          user_emailoptout: me.user_emailoptout,
-
-          contact_no: me.userObj.contact_no,
+          name: me.userObj.name,
+          last_name: me.userObj.last_name,
+          branch: me.selectedBranch.id,
         })
         .then(function (response) {
+          console.log(response);
           Swal.fire({
             type: "success",
             title: "Account updated",
             timer: 2000,
             showConfirmButton: false,
           });
-          //debugger;
           me.userAccount();
         })
         .catch(function (error) {
@@ -348,19 +377,20 @@ export default {
     },
 
     updatePassword() {
-      this.submitted = true;
-      this.errors = {};
-      this.validePass();
-      console.log(Object.keys(this.errors));
-      if (Object.keys(this.errors).length) {
+      let me = this;
+      me.submitted = true;
+      me.errors = {};
+      me.validePass();
+      console.log(Object.keys(me.errors));
+      if (Object.keys(me.errors).length) {
         return;
       }
       axios
         .post("/new_password", {
-          contact_no: this.userObj.contact_no,
-          old_password: this.old_password,
-          new_password: this.new_password,
-          confirm_password: this.confirm_password,
+          contact_no: me.userObj.contact_no,
+          old_password: me.old_password,
+          new_password: me.new_password,
+          confirm_password: me.confirm_password,
         })
         .then(function (response) {
           Swal.fire({
@@ -394,7 +424,7 @@ export default {
       }
     },
 
-    valideForm() {
+    /*   valideForm() {
       this.valideUrlField("userObj.cf_2254", "skype");
       this.valideUrlField("userObj.cf_2246", "facebook");
       this.valideUrlField("userObj.cf_2252", "instagram");
@@ -421,7 +451,7 @@ export default {
           as
         ] = `The ${as} field is not valid url. try some 'http://${as}.com/profile'`;
       }
-    },
+    }, */
   },
 };
 </script>

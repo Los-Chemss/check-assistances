@@ -17,4 +17,8 @@ class Company extends Model
     {
         return $this->hasMany(Customer::class);
     }
+    public function memberships()
+    {
+        return $this->hasMany(Membership::class);
+    }
 }
