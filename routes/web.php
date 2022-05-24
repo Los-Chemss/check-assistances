@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\CustomerController;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\UserController;
@@ -40,7 +41,7 @@ if (env('APP_ENV') === 'local') {
 /*data for views*/
 Route::get('/factors', [FactorController::class, 'factors']);
 
-Route::middleware('auth')->group(function () {
+Route::middleware(['auth'])->group(function () {
     Route::get('/', [DashboardController::class, 'index'])->name('dashboard');
     //user
     Route::get('/profile',  [UserController::class, 'profile'])->name('profile');
@@ -51,6 +52,9 @@ Route::middleware('auth')->group(function () {
     Route::get('/user_themme',  [UserController::class, 'getThemme']);
     Route::post('/user_themme', [UserController::class, 'setThemme']);
     // Route::get('/user_themme', [UserController::class, 'changeThemme']);
+
+    //Customers
+    Route::get('customers',  [CustomerController::class, 'view'])->middleware('auth');
 
     //Scenarios
     Route::post('save-situation', [FactorController::class, 'saveScenario']);

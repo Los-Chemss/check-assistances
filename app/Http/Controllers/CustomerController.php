@@ -6,22 +6,36 @@ use App\Models\Customer;
 use App\Http\Requests\StoreCustomerRequest;
 use App\Http\Requests\UpdateCustomerRequest;
 use App\Models\Company;
+use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 use App\Models\User;
 use Exception;
-use Illuminate\Support\Facades\Auth;
 
 class CustomerController extends Controller
 {
+    public function __construct()
+    {
+        $this->middleware(function ($request, $next) {
+            $this->user = Auth::user();
+            return $next($request);
+        });
+    }
+
+
     /**
      * Display a listing of the resource.
      *
      * @return \Illuminate\Http\Response
      */
-    public function index()
+    public function index(Request $request)
     {
         try {
-            $user = Auth::user() != null ? Auth::user() : auth('sanctum')->user();
+            return $request;
+            return $user = Auth::user();
+            $user = Auth::user() ? Auth::user() : auth('sanctum')->user();
+            return $user;
             if (!$user) return response(null, 404);
+
 
             $companies = Company::where('user_id', $user->id)->get();
             $companyIds = [];
@@ -40,6 +54,12 @@ class CustomerController extends Controller
         } catch (Exception $e) {
             return response($e->getMessage(), $e->getCode());
         }
+    }
+
+    public function view()
+    {
+        $user = Auth::user();
+        return view('customers.index',compact('user'));
     }
 
     public function getCustomersOfBranch()

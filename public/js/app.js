@@ -2292,17 +2292,464 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */   "default": () => (__WEBPACK_DEFAULT_EXPORT__)
 /* harmony export */ });
 //
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = ({
   data: function data() {
     return {
-      customers: []
+      customers: [],
+      user: {}
     };
   },
-  mounted: function mounted() {},
+  mounted: function mounted() {
+    this.getCustomers();
+  },
+  created: function created() {
+    if (window.Laravel.user) {
+      this.user = window.laravel.user;
+      /*  this.email = window.Laravel.user.email;
+      this.name = window.Laravel.user.name;
+      this.last_name = window.Laravel.user.last_name;
+      this.branch = window.Laravel.user.branch; */
+
+      this.authenticated = true;
+    } else {
+      this.authenticated = false;
+    }
+  },
   methods: {
     getCustomers: function getCustomers() {
       var me = this;
-      axios.get("api/customers").then(function (response) {
+      axios.get("api/customers", {
+        user: user
+      }).then(function (response) {
+        console.log(response);
         me.customers = response.data;
         console.log(me.customers);
       })["catch"](function (error) {
@@ -21447,9 +21894,758 @@ var render = function () {
   var _vm = this
   var _h = _vm.$createElement
   var _c = _vm._self._c || _h
-  return _c("div")
+  return _c("div", { staticClass: "card" }, [
+    _c("div", { staticClass: "card-body" }, [
+      _c("h4", { staticClass: "card-title" }, [
+        _vm._v("Editable with Datatable"),
+      ]),
+      _vm._v(" "),
+      _c("h6", { staticClass: "card-subtitle" }, [
+        _vm._v("Just click on word which you want to change and enter"),
+      ]),
+      _vm._v(" "),
+      _c(
+        "table",
+        {
+          staticClass: "table table-striped table-bordered",
+          attrs: { id: "editable-datatable" },
+        },
+        [
+          _c(
+            "thead",
+            _vm._l(_vm.customers, function (cValue, cKey, cIndex) {
+              return _vm.key < 2
+                ? _c("tr", [
+                    _c("th", [_vm._v(_vm._s(_vm.ckey))]),
+                    _vm._v(" "),
+                    _c("th", [_vm._v(_vm._s(cIndex))]),
+                  ])
+                : _vm._e()
+            }),
+            0
+          ),
+          _vm._v(" "),
+          _vm._m(0),
+          _vm._v(" "),
+          _vm._m(1),
+        ]
+      ),
+    ]),
+  ])
 }
-var staticRenderFns = []
+var staticRenderFns = [
+  function () {
+    var _vm = this
+    var _h = _vm.$createElement
+    var _c = _vm._self._c || _h
+    return _c("tbody", [
+      _c("tr", { staticClass: "gradeX", attrs: { id: "1" } }, [
+        _c("td", [_vm._v("Trident")]),
+        _vm._v(" "),
+        _c("td", [_vm._v("Internet Explorer 4.0")]),
+        _vm._v(" "),
+        _c("td", [_vm._v("Win 95+")]),
+        _vm._v(" "),
+        _c("td", { staticClass: "center" }, [_vm._v("4")]),
+        _vm._v(" "),
+        _c("td", { staticClass: "center" }, [_vm._v("X")]),
+      ]),
+      _vm._v(" "),
+      _c("tr", { staticClass: "gradeC", attrs: { id: "2" } }, [
+        _c("td", [_vm._v("Trident")]),
+        _vm._v(" "),
+        _c("td", [_vm._v("Internet Explorer 5.0")]),
+        _vm._v(" "),
+        _c("td", [_vm._v("Win 95+")]),
+        _vm._v(" "),
+        _c("td", { staticClass: "center" }, [_vm._v("5")]),
+        _vm._v(" "),
+        _c("td", { staticClass: "center" }, [_vm._v("C")]),
+      ]),
+      _vm._v(" "),
+      _c("tr", { staticClass: "gradeA", attrs: { id: "3" } }, [
+        _c("td", [_vm._v("Trident")]),
+        _vm._v(" "),
+        _c("td", [_vm._v("Internet Explorer 5.5")]),
+        _vm._v(" "),
+        _c("td", [_vm._v("Win 95+")]),
+        _vm._v(" "),
+        _c("td", { staticClass: "center" }, [_vm._v("5.5")]),
+        _vm._v(" "),
+        _c("td", { staticClass: "center" }, [_vm._v("A")]),
+      ]),
+      _vm._v(" "),
+      _c("tr", { staticClass: "gradeA", attrs: { id: "4" } }, [
+        _c("td", [_vm._v("Trident")]),
+        _vm._v(" "),
+        _c("td", [_vm._v("Internet Explorer 6")]),
+        _vm._v(" "),
+        _c("td", [_vm._v("Win 98+")]),
+        _vm._v(" "),
+        _c("td", { staticClass: "center" }, [_vm._v("6")]),
+        _vm._v(" "),
+        _c("td", { staticClass: "center" }, [_vm._v("A")]),
+      ]),
+      _vm._v(" "),
+      _c("tr", { staticClass: "gradeA", attrs: { id: "5" } }, [
+        _c("td", [_vm._v("Trident")]),
+        _vm._v(" "),
+        _c("td", [_vm._v("Internet Explorer 7")]),
+        _vm._v(" "),
+        _c("td", [_vm._v("Win XP SP2+")]),
+        _vm._v(" "),
+        _c("td", { staticClass: "center" }, [_vm._v("7")]),
+        _vm._v(" "),
+        _c("td", { staticClass: "center" }, [_vm._v("A")]),
+      ]),
+      _vm._v(" "),
+      _c("tr", { staticClass: "gradeA", attrs: { id: "6" } }, [
+        _c("td", [_vm._v("Trident")]),
+        _vm._v(" "),
+        _c("td", [_vm._v("AOL browser (AOL desktop)")]),
+        _vm._v(" "),
+        _c("td", [_vm._v("Win XP")]),
+        _vm._v(" "),
+        _c("td", { staticClass: "center" }, [_vm._v("6")]),
+        _vm._v(" "),
+        _c("td", { staticClass: "center" }, [_vm._v("A")]),
+      ]),
+      _vm._v(" "),
+      _c("tr", { staticClass: "gradeA", attrs: { id: "7" } }, [
+        _c("td", [_vm._v("Gecko")]),
+        _vm._v(" "),
+        _c("td", [_vm._v("Firefox 1.0")]),
+        _vm._v(" "),
+        _c("td", [_vm._v("Win 98+ / OSX.2+")]),
+        _vm._v(" "),
+        _c("td", { staticClass: "center" }, [_vm._v("1.7")]),
+        _vm._v(" "),
+        _c("td", { staticClass: "center" }, [_vm._v("A")]),
+      ]),
+      _vm._v(" "),
+      _c("tr", { staticClass: "gradeA", attrs: { id: "8" } }, [
+        _c("td", [_vm._v("Gecko")]),
+        _vm._v(" "),
+        _c("td", [_vm._v("Firefox 1.5")]),
+        _vm._v(" "),
+        _c("td", [_vm._v("Win 98+ / OSX.2+")]),
+        _vm._v(" "),
+        _c("td", { staticClass: "center" }, [_vm._v("1.8")]),
+        _vm._v(" "),
+        _c("td", { staticClass: "center" }, [_vm._v("A")]),
+      ]),
+      _vm._v(" "),
+      _c("tr", { staticClass: "gradeA", attrs: { id: "9" } }, [
+        _c("td", [_vm._v("Gecko")]),
+        _vm._v(" "),
+        _c("td", [_vm._v("Firefox 2.0")]),
+        _vm._v(" "),
+        _c("td", [_vm._v("Win 98+ / OSX.2+")]),
+        _vm._v(" "),
+        _c("td", { staticClass: "center" }, [_vm._v("1.8")]),
+        _vm._v(" "),
+        _c("td", { staticClass: "center" }, [_vm._v("A")]),
+      ]),
+      _vm._v(" "),
+      _c("tr", { staticClass: "gradeA", attrs: { id: "10" } }, [
+        _c("td", [_vm._v("Gecko")]),
+        _vm._v(" "),
+        _c("td", [_vm._v("Firefox 3.0")]),
+        _vm._v(" "),
+        _c("td", [_vm._v("Win 2k+ / OSX.3+")]),
+        _vm._v(" "),
+        _c("td", { staticClass: "center" }, [_vm._v("1.9")]),
+        _vm._v(" "),
+        _c("td", { staticClass: "center" }, [_vm._v("A")]),
+      ]),
+      _vm._v(" "),
+      _c("tr", { staticClass: "gradeA", attrs: { id: "11" } }, [
+        _c("td", [_vm._v("Gecko")]),
+        _vm._v(" "),
+        _c("td", [_vm._v("Camino 1.0")]),
+        _vm._v(" "),
+        _c("td", [_vm._v("OSX.2+")]),
+        _vm._v(" "),
+        _c("td", { staticClass: "center" }, [_vm._v("1.8")]),
+        _vm._v(" "),
+        _c("td", { staticClass: "center" }, [_vm._v("A")]),
+      ]),
+      _vm._v(" "),
+      _c("tr", { staticClass: "gradeA", attrs: { id: "12" } }, [
+        _c("td", [_vm._v("Gecko")]),
+        _vm._v(" "),
+        _c("td", [_vm._v("Camino 1.5")]),
+        _vm._v(" "),
+        _c("td", [_vm._v("OSX.3+")]),
+        _vm._v(" "),
+        _c("td", { staticClass: "center" }, [_vm._v("1.8")]),
+        _vm._v(" "),
+        _c("td", { staticClass: "center" }, [_vm._v("A")]),
+      ]),
+      _vm._v(" "),
+      _c("tr", { staticClass: "gradeA", attrs: { id: "13" } }, [
+        _c("td", [_vm._v("Gecko")]),
+        _vm._v(" "),
+        _c("td", [_vm._v("Netscape 7.2")]),
+        _vm._v(" "),
+        _c("td", [_vm._v("Win 95+ / Mac OS 8.6-9.2")]),
+        _vm._v(" "),
+        _c("td", { staticClass: "center" }, [_vm._v("1.7")]),
+        _vm._v(" "),
+        _c("td", { staticClass: "center" }, [_vm._v("A")]),
+      ]),
+      _vm._v(" "),
+      _c("tr", { staticClass: "gradeA", attrs: { id: "14" } }, [
+        _c("td", [_vm._v("Gecko")]),
+        _vm._v(" "),
+        _c("td", [_vm._v("Netscape Browser 8")]),
+        _vm._v(" "),
+        _c("td", [_vm._v("Win 98SE+")]),
+        _vm._v(" "),
+        _c("td", { staticClass: "center" }, [_vm._v("1.7")]),
+        _vm._v(" "),
+        _c("td", { staticClass: "center" }, [_vm._v("A")]),
+      ]),
+      _vm._v(" "),
+      _c("tr", { staticClass: "gradeA", attrs: { id: "15" } }, [
+        _c("td", [_vm._v("Gecko")]),
+        _vm._v(" "),
+        _c("td", [_vm._v("Netscape Navigator 9")]),
+        _vm._v(" "),
+        _c("td", [_vm._v("Win 98+ / OSX.2+")]),
+        _vm._v(" "),
+        _c("td", { staticClass: "center" }, [_vm._v("1.8")]),
+        _vm._v(" "),
+        _c("td", { staticClass: "center" }, [_vm._v("A")]),
+      ]),
+      _vm._v(" "),
+      _c("tr", { staticClass: "gradeA", attrs: { id: "16" } }, [
+        _c("td", [_vm._v("Gecko")]),
+        _vm._v(" "),
+        _c("td", [_vm._v("Mozilla 1.0")]),
+        _vm._v(" "),
+        _c("td", [_vm._v("Win 95+ / OSX.1+")]),
+        _vm._v(" "),
+        _c("td", { staticClass: "center" }, [_vm._v("1")]),
+        _vm._v(" "),
+        _c("td", { staticClass: "center" }, [_vm._v("A")]),
+      ]),
+      _vm._v(" "),
+      _c("tr", { staticClass: "gradeA", attrs: { id: "17" } }, [
+        _c("td", [_vm._v("Gecko")]),
+        _vm._v(" "),
+        _c("td", [_vm._v("Mozilla 1.1")]),
+        _vm._v(" "),
+        _c("td", [_vm._v("Win 95+ / OSX.1+")]),
+        _vm._v(" "),
+        _c("td", { staticClass: "center" }, [_vm._v("1.1")]),
+        _vm._v(" "),
+        _c("td", { staticClass: "center" }, [_vm._v("A")]),
+      ]),
+      _vm._v(" "),
+      _c("tr", { staticClass: "gradeA", attrs: { id: "18" } }, [
+        _c("td", [_vm._v("Gecko")]),
+        _vm._v(" "),
+        _c("td", [_vm._v("Mozilla 1.2")]),
+        _vm._v(" "),
+        _c("td", [_vm._v("Win 95+ / OSX.1+")]),
+        _vm._v(" "),
+        _c("td", { staticClass: "center" }, [_vm._v("1.2")]),
+        _vm._v(" "),
+        _c("td", { staticClass: "center" }, [_vm._v("A")]),
+      ]),
+      _vm._v(" "),
+      _c("tr", { staticClass: "gradeA", attrs: { id: "19" } }, [
+        _c("td", [_vm._v("Gecko")]),
+        _vm._v(" "),
+        _c("td", [_vm._v("Mozilla 1.3")]),
+        _vm._v(" "),
+        _c("td", [_vm._v("Win 95+ / OSX.1+")]),
+        _vm._v(" "),
+        _c("td", { staticClass: "center" }, [_vm._v("1.3")]),
+        _vm._v(" "),
+        _c("td", { staticClass: "center" }, [_vm._v("A")]),
+      ]),
+      _vm._v(" "),
+      _c("tr", { staticClass: "gradeA", attrs: { id: "20" } }, [
+        _c("td", [_vm._v("Gecko")]),
+        _vm._v(" "),
+        _c("td", [_vm._v("Mozilla 1.4")]),
+        _vm._v(" "),
+        _c("td", [_vm._v("Win 95+ / OSX.1+")]),
+        _vm._v(" "),
+        _c("td", { staticClass: "center" }, [_vm._v("1.4")]),
+        _vm._v(" "),
+        _c("td", { staticClass: "center" }, [_vm._v("A")]),
+      ]),
+      _vm._v(" "),
+      _c("tr", { staticClass: "gradeA", attrs: { id: "21" } }, [
+        _c("td", [_vm._v("Gecko")]),
+        _vm._v(" "),
+        _c("td", [_vm._v("Mozilla 1.5")]),
+        _vm._v(" "),
+        _c("td", [_vm._v("Win 95+ / OSX.1+")]),
+        _vm._v(" "),
+        _c("td", { staticClass: "center" }, [_vm._v("1.5")]),
+        _vm._v(" "),
+        _c("td", { staticClass: "center" }, [_vm._v("A")]),
+      ]),
+      _vm._v(" "),
+      _c("tr", { staticClass: "gradeA", attrs: { id: "22" } }, [
+        _c("td", [_vm._v("Gecko")]),
+        _vm._v(" "),
+        _c("td", [_vm._v("Mozilla 1.6")]),
+        _vm._v(" "),
+        _c("td", [_vm._v("Win 95+ / OSX.1+")]),
+        _vm._v(" "),
+        _c("td", { staticClass: "center" }, [_vm._v("1.6")]),
+        _vm._v(" "),
+        _c("td", { staticClass: "center" }, [_vm._v("A")]),
+      ]),
+      _vm._v(" "),
+      _c("tr", { staticClass: "gradeA", attrs: { id: "23" } }, [
+        _c("td", [_vm._v("Gecko")]),
+        _vm._v(" "),
+        _c("td", [_vm._v("Mozilla 1.7")]),
+        _vm._v(" "),
+        _c("td", [_vm._v("Win 98+ / OSX.1+")]),
+        _vm._v(" "),
+        _c("td", { staticClass: "center" }, [_vm._v("1.7")]),
+        _vm._v(" "),
+        _c("td", { staticClass: "center" }, [_vm._v("A")]),
+      ]),
+      _vm._v(" "),
+      _c("tr", { staticClass: "gradeA", attrs: { id: "24" } }, [
+        _c("td", [_vm._v("Gecko")]),
+        _vm._v(" "),
+        _c("td", [_vm._v("Mozilla 1.8")]),
+        _vm._v(" "),
+        _c("td", [_vm._v("Win 98+ / OSX.1+")]),
+        _vm._v(" "),
+        _c("td", { staticClass: "center" }, [_vm._v("1.8")]),
+        _vm._v(" "),
+        _c("td", { staticClass: "center" }, [_vm._v("A")]),
+      ]),
+      _vm._v(" "),
+      _c("tr", { staticClass: "gradeA", attrs: { id: "25" } }, [
+        _c("td", [_vm._v("Gecko")]),
+        _vm._v(" "),
+        _c("td", [_vm._v("Seamonkey 1.1")]),
+        _vm._v(" "),
+        _c("td", [_vm._v("Win 98+ / OSX.2+")]),
+        _vm._v(" "),
+        _c("td", { staticClass: "center" }, [_vm._v("1.8")]),
+        _vm._v(" "),
+        _c("td", { staticClass: "center" }, [_vm._v("A")]),
+      ]),
+      _vm._v(" "),
+      _c("tr", { staticClass: "gradeA", attrs: { id: "26" } }, [
+        _c("td", [_vm._v("Gecko")]),
+        _vm._v(" "),
+        _c("td", [_vm._v("Epiphany 2.20")]),
+        _vm._v(" "),
+        _c("td", [_vm._v("Gnome")]),
+        _vm._v(" "),
+        _c("td", { staticClass: "center" }, [_vm._v("1.8")]),
+        _vm._v(" "),
+        _c("td", { staticClass: "center" }, [_vm._v("A")]),
+      ]),
+      _vm._v(" "),
+      _c("tr", { staticClass: "gradeA", attrs: { id: "27" } }, [
+        _c("td", [_vm._v("Webkit")]),
+        _vm._v(" "),
+        _c("td", [_vm._v("Safari 1.2")]),
+        _vm._v(" "),
+        _c("td", [_vm._v("OSX.3")]),
+        _vm._v(" "),
+        _c("td", { staticClass: "center" }, [_vm._v("125.5")]),
+        _vm._v(" "),
+        _c("td", { staticClass: "center" }, [_vm._v("A")]),
+      ]),
+      _vm._v(" "),
+      _c("tr", { staticClass: "gradeA", attrs: { id: "28" } }, [
+        _c("td", [_vm._v("Webkit")]),
+        _vm._v(" "),
+        _c("td", [_vm._v("Safari 1.3")]),
+        _vm._v(" "),
+        _c("td", [_vm._v("OSX.3")]),
+        _vm._v(" "),
+        _c("td", { staticClass: "center" }, [_vm._v("312.8")]),
+        _vm._v(" "),
+        _c("td", { staticClass: "center" }, [_vm._v("A")]),
+      ]),
+      _vm._v(" "),
+      _c("tr", { staticClass: "gradeA", attrs: { id: "29" } }, [
+        _c("td", [_vm._v("Webkit")]),
+        _vm._v(" "),
+        _c("td", [_vm._v("Safari 2.0")]),
+        _vm._v(" "),
+        _c("td", [_vm._v("OSX.4+")]),
+        _vm._v(" "),
+        _c("td", { staticClass: "center" }, [_vm._v("419.3")]),
+        _vm._v(" "),
+        _c("td", { staticClass: "center" }, [_vm._v("A")]),
+      ]),
+      _vm._v(" "),
+      _c("tr", { staticClass: "gradeA", attrs: { id: "30" } }, [
+        _c("td", [_vm._v("Webkit")]),
+        _vm._v(" "),
+        _c("td", [_vm._v("Safari 3.0")]),
+        _vm._v(" "),
+        _c("td", [_vm._v("OSX.4+")]),
+        _vm._v(" "),
+        _c("td", { staticClass: "center" }, [_vm._v("522.1")]),
+        _vm._v(" "),
+        _c("td", { staticClass: "center" }, [_vm._v("A")]),
+      ]),
+      _vm._v(" "),
+      _c("tr", { staticClass: "gradeA", attrs: { id: "31" } }, [
+        _c("td", [_vm._v("Webkit")]),
+        _vm._v(" "),
+        _c("td", [_vm._v("OmniWeb 5.5")]),
+        _vm._v(" "),
+        _c("td", [_vm._v("OSX.4+")]),
+        _vm._v(" "),
+        _c("td", { staticClass: "center" }, [_vm._v("420")]),
+        _vm._v(" "),
+        _c("td", { staticClass: "center" }, [_vm._v("A")]),
+      ]),
+      _vm._v(" "),
+      _c("tr", { staticClass: "gradeA", attrs: { id: "32" } }, [
+        _c("td", [_vm._v("Webkit")]),
+        _vm._v(" "),
+        _c("td", [_vm._v("iPod Touch / iPhone")]),
+        _vm._v(" "),
+        _c("td", [_vm._v("iPod")]),
+        _vm._v(" "),
+        _c("td", { staticClass: "center" }, [_vm._v("420.1")]),
+        _vm._v(" "),
+        _c("td", { staticClass: "center" }, [_vm._v("A")]),
+      ]),
+      _vm._v(" "),
+      _c("tr", { staticClass: "gradeA", attrs: { id: "33" } }, [
+        _c("td", [_vm._v("Webkit")]),
+        _vm._v(" "),
+        _c("td", [_vm._v("S60")]),
+        _vm._v(" "),
+        _c("td", [_vm._v("S60")]),
+        _vm._v(" "),
+        _c("td", { staticClass: "center" }, [_vm._v("413")]),
+        _vm._v(" "),
+        _c("td", { staticClass: "center" }, [_vm._v("A")]),
+      ]),
+      _vm._v(" "),
+      _c("tr", { staticClass: "gradeA", attrs: { id: "34" } }, [
+        _c("td", [_vm._v("Presto")]),
+        _vm._v(" "),
+        _c("td", [_vm._v("Opera 7.0")]),
+        _vm._v(" "),
+        _c("td", [_vm._v("Win 95+ / OSX.1+")]),
+        _vm._v(" "),
+        _c("td", { staticClass: "center" }, [_vm._v("-")]),
+        _vm._v(" "),
+        _c("td", { staticClass: "center" }, [_vm._v("A")]),
+      ]),
+      _vm._v(" "),
+      _c("tr", { staticClass: "gradeA", attrs: { id: "35" } }, [
+        _c("td", [_vm._v("Presto")]),
+        _vm._v(" "),
+        _c("td", [_vm._v("Opera 7.5")]),
+        _vm._v(" "),
+        _c("td", [_vm._v("Win 95+ / OSX.2+")]),
+        _vm._v(" "),
+        _c("td", { staticClass: "center" }, [_vm._v("-")]),
+        _vm._v(" "),
+        _c("td", { staticClass: "center" }, [_vm._v("A")]),
+      ]),
+      _vm._v(" "),
+      _c("tr", { staticClass: "gradeA", attrs: { id: "36" } }, [
+        _c("td", [_vm._v("Presto")]),
+        _vm._v(" "),
+        _c("td", [_vm._v("Opera 8.0")]),
+        _vm._v(" "),
+        _c("td", [_vm._v("Win 95+ / OSX.2+")]),
+        _vm._v(" "),
+        _c("td", { staticClass: "center" }, [_vm._v("-")]),
+        _vm._v(" "),
+        _c("td", { staticClass: "center" }, [_vm._v("A")]),
+      ]),
+      _vm._v(" "),
+      _c("tr", { staticClass: "gradeA", attrs: { id: "37" } }, [
+        _c("td", [_vm._v("Presto")]),
+        _vm._v(" "),
+        _c("td", [_vm._v("Opera 8.5")]),
+        _vm._v(" "),
+        _c("td", [_vm._v("Win 95+ / OSX.2+")]),
+        _vm._v(" "),
+        _c("td", { staticClass: "center" }, [_vm._v("-")]),
+        _vm._v(" "),
+        _c("td", { staticClass: "center" }, [_vm._v("A")]),
+      ]),
+      _vm._v(" "),
+      _c("tr", { staticClass: "gradeA", attrs: { id: "38" } }, [
+        _c("td", [_vm._v("Presto")]),
+        _vm._v(" "),
+        _c("td", [_vm._v("Opera 9.0")]),
+        _vm._v(" "),
+        _c("td", [_vm._v("Win 95+ / OSX.3+")]),
+        _vm._v(" "),
+        _c("td", { staticClass: "center" }, [_vm._v("-")]),
+        _vm._v(" "),
+        _c("td", { staticClass: "center" }, [_vm._v("A")]),
+      ]),
+      _vm._v(" "),
+      _c("tr", { staticClass: "gradeA", attrs: { id: "39" } }, [
+        _c("td", [_vm._v("Presto")]),
+        _vm._v(" "),
+        _c("td", [_vm._v("Opera 9.2")]),
+        _vm._v(" "),
+        _c("td", [_vm._v("Win 88+ / OSX.3+")]),
+        _vm._v(" "),
+        _c("td", { staticClass: "center" }, [_vm._v("-")]),
+        _vm._v(" "),
+        _c("td", { staticClass: "center" }, [_vm._v("A")]),
+      ]),
+      _vm._v(" "),
+      _c("tr", { staticClass: "gradeA", attrs: { id: "40" } }, [
+        _c("td", [_vm._v("Presto")]),
+        _vm._v(" "),
+        _c("td", [_vm._v("Opera 9.5")]),
+        _vm._v(" "),
+        _c("td", [_vm._v("Win 88+ / OSX.3+")]),
+        _vm._v(" "),
+        _c("td", { staticClass: "center" }, [_vm._v("-")]),
+        _vm._v(" "),
+        _c("td", { staticClass: "center" }, [_vm._v("A")]),
+      ]),
+      _vm._v(" "),
+      _c("tr", { staticClass: "gradeA", attrs: { id: "41" } }, [
+        _c("td", [_vm._v("Presto")]),
+        _vm._v(" "),
+        _c("td", [_vm._v("Opera for Wii")]),
+        _vm._v(" "),
+        _c("td", [_vm._v("Wii")]),
+        _vm._v(" "),
+        _c("td", { staticClass: "center" }, [_vm._v("-")]),
+        _vm._v(" "),
+        _c("td", { staticClass: "center" }, [_vm._v("A")]),
+      ]),
+      _vm._v(" "),
+      _c("tr", { staticClass: "gradeA", attrs: { id: "42" } }, [
+        _c("td", [_vm._v("Presto")]),
+        _vm._v(" "),
+        _c("td", [_vm._v("Nokia N800")]),
+        _vm._v(" "),
+        _c("td", [_vm._v("N800")]),
+        _vm._v(" "),
+        _c("td", { staticClass: "center" }, [_vm._v("-")]),
+        _vm._v(" "),
+        _c("td", { staticClass: "center" }, [_vm._v("A")]),
+      ]),
+      _vm._v(" "),
+      _c("tr", { staticClass: "gradeA", attrs: { id: "43" } }, [
+        _c("td", [_vm._v("Presto")]),
+        _vm._v(" "),
+        _c("td", [_vm._v("Nintendo DS browser")]),
+        _vm._v(" "),
+        _c("td", [_vm._v("Nintendo DS")]),
+        _vm._v(" "),
+        _c("td", { staticClass: "center" }, [_vm._v("8.5")]),
+        _vm._v(" "),
+        _c("td", { staticClass: "center" }, [
+          _vm._v("C/A"),
+          _c("sup", [_vm._v("1")]),
+        ]),
+      ]),
+      _vm._v(" "),
+      _c("tr", { staticClass: "gradeC", attrs: { id: "44" } }, [
+        _c("td", [_vm._v("KHTML")]),
+        _vm._v(" "),
+        _c("td", [_vm._v("Konqureror 3.1")]),
+        _vm._v(" "),
+        _c("td", [_vm._v("KDE 3.1")]),
+        _vm._v(" "),
+        _c("td", { staticClass: "center" }, [_vm._v("3.1")]),
+        _vm._v(" "),
+        _c("td", { staticClass: "center" }, [_vm._v("C")]),
+      ]),
+      _vm._v(" "),
+      _c("tr", { staticClass: "gradeA", attrs: { id: "45" } }, [
+        _c("td", [_vm._v("KHTML")]),
+        _vm._v(" "),
+        _c("td", [_vm._v("Konqureror 3.3")]),
+        _vm._v(" "),
+        _c("td", [_vm._v("KDE 3.3")]),
+        _vm._v(" "),
+        _c("td", { staticClass: "center" }, [_vm._v("3.3")]),
+        _vm._v(" "),
+        _c("td", { staticClass: "center" }, [_vm._v("A")]),
+      ]),
+      _vm._v(" "),
+      _c("tr", { staticClass: "gradeA", attrs: { id: "46" } }, [
+        _c("td", [_vm._v("KHTML")]),
+        _vm._v(" "),
+        _c("td", [_vm._v("Konqureror 3.5")]),
+        _vm._v(" "),
+        _c("td", [_vm._v("KDE 3.5")]),
+        _vm._v(" "),
+        _c("td", { staticClass: "center" }, [_vm._v("3.5")]),
+        _vm._v(" "),
+        _c("td", { staticClass: "center" }, [_vm._v("A")]),
+      ]),
+      _vm._v(" "),
+      _c("tr", { staticClass: "gradeX", attrs: { id: "47" } }, [
+        _c("td", [_vm._v("Tasman")]),
+        _vm._v(" "),
+        _c("td", [_vm._v("Internet Explorer 4.5")]),
+        _vm._v(" "),
+        _c("td", [_vm._v("Mac OS 8-9")]),
+        _vm._v(" "),
+        _c("td", { staticClass: "center" }, [_vm._v("-")]),
+        _vm._v(" "),
+        _c("td", { staticClass: "center" }, [_vm._v("X")]),
+      ]),
+      _vm._v(" "),
+      _c("tr", { staticClass: "gradeC", attrs: { id: "48" } }, [
+        _c("td", [_vm._v("Tasman")]),
+        _vm._v(" "),
+        _c("td", [_vm._v("Internet Explorer 5.1")]),
+        _vm._v(" "),
+        _c("td", [_vm._v("Mac OS 7.6-9")]),
+        _vm._v(" "),
+        _c("td", { staticClass: "center" }, [_vm._v("1")]),
+        _vm._v(" "),
+        _c("td", { staticClass: "center" }, [_vm._v("C")]),
+      ]),
+      _vm._v(" "),
+      _c("tr", { staticClass: "gradeC", attrs: { id: "49" } }, [
+        _c("td", [_vm._v("Tasman")]),
+        _vm._v(" "),
+        _c("td", [_vm._v("Internet Explorer 5.2")]),
+        _vm._v(" "),
+        _c("td", [_vm._v("Mac OS 8-X")]),
+        _vm._v(" "),
+        _c("td", { staticClass: "center" }, [_vm._v("1")]),
+        _vm._v(" "),
+        _c("td", { staticClass: "center" }, [_vm._v("C")]),
+      ]),
+      _vm._v(" "),
+      _c("tr", { staticClass: "gradeA", attrs: { id: "50" } }, [
+        _c("td", [_vm._v("Misc")]),
+        _vm._v(" "),
+        _c("td", [_vm._v("NetFront 3.1")]),
+        _vm._v(" "),
+        _c("td", [_vm._v("Embedded devices")]),
+        _vm._v(" "),
+        _c("td", { staticClass: "center" }, [_vm._v("-")]),
+        _vm._v(" "),
+        _c("td", { staticClass: "center" }, [_vm._v("C")]),
+      ]),
+      _vm._v(" "),
+      _c("tr", { staticClass: "gradeA", attrs: { id: "51" } }, [
+        _c("td", [_vm._v("Misc")]),
+        _vm._v(" "),
+        _c("td", [_vm._v("NetFront 3.4")]),
+        _vm._v(" "),
+        _c("td", [_vm._v("Embedded devices")]),
+        _vm._v(" "),
+        _c("td", { staticClass: "center" }, [_vm._v("-")]),
+        _vm._v(" "),
+        _c("td", { staticClass: "center" }, [_vm._v("A")]),
+      ]),
+      _vm._v(" "),
+      _c("tr", { staticClass: "gradeX", attrs: { id: "52" } }, [
+        _c("td", [_vm._v("Misc")]),
+        _vm._v(" "),
+        _c("td", [_vm._v("Dillo 0.8")]),
+        _vm._v(" "),
+        _c("td", [_vm._v("Embedded devices")]),
+        _vm._v(" "),
+        _c("td", { staticClass: "center" }, [_vm._v("-")]),
+        _vm._v(" "),
+        _c("td", { staticClass: "center" }, [_vm._v("X")]),
+      ]),
+      _vm._v(" "),
+      _c("tr", { staticClass: "gradeX", attrs: { id: "53" } }, [
+        _c("td", [_vm._v("Misc")]),
+        _vm._v(" "),
+        _c("td", [_vm._v("Links")]),
+        _vm._v(" "),
+        _c("td", [_vm._v("Text only")]),
+        _vm._v(" "),
+        _c("td", { staticClass: "center" }, [_vm._v("-")]),
+        _vm._v(" "),
+        _c("td", { staticClass: "center" }, [_vm._v("X")]),
+      ]),
+      _vm._v(" "),
+      _c("tr", { staticClass: "gradeX", attrs: { id: "54" } }, [
+        _c("td", [_vm._v("Misc")]),
+        _vm._v(" "),
+        _c("td", [_vm._v("Lynx")]),
+        _vm._v(" "),
+        _c("td", [_vm._v("Text only")]),
+        _vm._v(" "),
+        _c("td", { staticClass: "center" }, [_vm._v("-")]),
+        _vm._v(" "),
+        _c("td", { staticClass: "center" }, [_vm._v("X")]),
+      ]),
+      _vm._v(" "),
+      _c("tr", { staticClass: "gradeC", attrs: { id: "55" } }, [
+        _c("td", [_vm._v("Misc")]),
+        _vm._v(" "),
+        _c("td", [_vm._v("IE Mobile")]),
+        _vm._v(" "),
+        _c("td", [_vm._v("Windows Mobile 6")]),
+        _vm._v(" "),
+        _c("td", { staticClass: "center" }, [_vm._v("-")]),
+        _vm._v(" "),
+        _c("td", { staticClass: "center" }, [_vm._v("C")]),
+      ]),
+      _vm._v(" "),
+      _c("tr", { staticClass: "gradeC", attrs: { id: "56" } }, [
+        _c("td", [_vm._v("Misc")]),
+        _vm._v(" "),
+        _c("td", [_vm._v("PSP browser")]),
+        _vm._v(" "),
+        _c("td", [_vm._v("PSP")]),
+        _vm._v(" "),
+        _c("td", { staticClass: "center" }, [_vm._v("-")]),
+        _vm._v(" "),
+        _c("td", { staticClass: "center" }, [_vm._v("C")]),
+      ]),
+      _vm._v(" "),
+      _c("tr", { staticClass: "gradeU", attrs: { id: "57" } }, [
+        _c("td", [_vm._v("Other browsers")]),
+        _vm._v(" "),
+        _c("td", [_vm._v("All others")]),
+        _vm._v(" "),
+        _c("td", [_vm._v("-")]),
+        _vm._v(" "),
+        _c("td", { staticClass: "center" }, [_vm._v("-")]),
+        _vm._v(" "),
+        _c("td", { staticClass: "center" }, [_vm._v("U")]),
+      ]),
+    ])
+  },
+  function () {
+    var _vm = this
+    var _h = _vm.$createElement
+    var _c = _vm._self._c || _h
+    return _c("tfoot", [
+      _c("tr", [
+        _c("th", [_vm._v("Rendering engine")]),
+        _vm._v(" "),
+        _c("th", [_vm._v("Browser")]),
+        _vm._v(" "),
+        _c("th", [_vm._v("Platform(s)")]),
+        _vm._v(" "),
+        _c("th", [_vm._v("Engine version")]),
+        _vm._v(" "),
+        _c("th", [_vm._v("CSS grade")]),
+      ]),
+    ])
+  },
+]
 render._withStripped = true
 
 
