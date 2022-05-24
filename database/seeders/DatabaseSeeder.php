@@ -18,9 +18,9 @@ class DatabaseSeeder extends Seeder
             UserTableSeeder::class,
             CompanySeeder::class,
             BranchSeeder::class,
+            MembershipSeeder::class,
             CustomerSeeder::class,
             AssistanceSeeder::class,
-            MembershipSeeder::class,
             PaymentSeeder::class,
         ]);
     }

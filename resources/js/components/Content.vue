@@ -4,26 +4,16 @@
       <div class="card">
         <div class="card-body">
           <div class="row">
-            <div class="card">
-              <div class="card-header">
-                <h1 v-if="branch" class="bg'">
-                  <p>Division: {{ branch.division }}</p>
+            <div class="card" >
+              <div class="card-header" id="aca" >
+                <h1 v-if="branch" class="division">
+                  <p class="division">Division: {{ branch.division }}</p>
                   <!-- <br /> -->
-                  <p>Location: {{ branch.location }}</p>
+                  <p class="location">Location: {{ branch.location }}</p>
                 </h1>
                 <h1 v-else class="bg'danger">
                   <p>No branch selected. Please select one.</p>
                 </h1>
-                <!--   <h1
-                  class="text-center rounded"
-
-                >
-                  {{ branch ? branch : "" }}
-
-                    <p ></p>
-
-
-                </h1> -->
                 <div class="col-md-8 m-auto"></div>
               </div>
               <div class="card-body">
@@ -145,8 +135,41 @@ export default {
   },
 };
 </script>
-<style scoped>
+<style lang="scss" scoped >
 .card {
   width: 100%;
+}
+
+.card {
+  background: #0f3854;
+  background: radial-gradient(ellipse at center, #0a2e38 0%, #000000 70%);
+  background-size: 100%;
+}
+
+.card-header{
+  font-family: "Share Tech Mono", monospace;
+   color: #240303;
+  text-align: center;
+  position:relative;
+  left: 50%;
+  top: 10%;
+  transform: translate(-50%, -50%);
+  color: #daf6ff;
+  text-shadow: 0 0 20px rgba(10, 175, 230, 1), 0 0 20px rgba(10, 175, 230, 0);
+  .division {
+    letter-spacing: 0.05em;
+    font-size: 45px;
+    // font-size: 80px;
+    padding: 5px 0;
+  }
+  .location {
+    letter-spacing: 0.1em;
+    font-size: 24px;
+  }
+  .text {
+    letter-spacing: 0.1em;
+    font-size: 12px;
+    padding: 20px 0 0;
+  }
 }
 </style>

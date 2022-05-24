@@ -2,6 +2,7 @@
 
 namespace Database\Factories;
 
+use App\Models\User;
 use Illuminate\Database\Eloquent\Factories\Factory;
 
 class CompanyFactory extends Factory
@@ -15,6 +16,9 @@ class CompanyFactory extends Factory
     {
         return [
             'name' => $this->faker->name(),
+            'user_id' => function () {
+                return  User::query()->inRandomOrder()->first()->id;
+            },
         ];
     }
 }

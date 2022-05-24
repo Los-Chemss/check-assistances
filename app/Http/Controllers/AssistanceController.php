@@ -47,7 +47,15 @@ class AssistanceController extends Controller
         try {
             $code = $request->code;
             $customer = Customer::where('code', $code)->firstOrFail();
-            if (!$customer) return 404;
+
+            $customer = $customer->with(['membership' => function ($q) use ($customer) {
+                $q->with(['payments' => function ($q1) use ($customer) {
+                    $q1->where('customer_id', $customer->id)->orderBy('expires_at', 'desc');
+                }]);
+            }])->first();
+
+            if (!$customer) return response('User not found', 404);
+
             $branch = Branch::where('id', $request->branch)->first(); //It be found by ip ? or aautenticatin manager
             if (!$branch) return 404;
 
@@ -67,12 +75,10 @@ class AssistanceController extends Controller
             if ($assisted && $assisted['input'] != null && $assisted['output'] == null) {
                 $assisted->output = date("Y-m-d H:i:s");
                 $assisted->save();
-
                 $resp =  ['salida' => $assisted, 'customer' => $customer];
             } else {
                 $resp =  ['entrada' => Assistance::create($data), 'customer' => $customer];
             }
-
             return response()->json($resp, 200);
         } catch (Exception $e) {
             return $e->getMessage();

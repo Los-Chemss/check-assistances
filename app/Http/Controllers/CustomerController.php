@@ -7,6 +7,7 @@ use App\Http\Requests\StoreCustomerRequest;
 use App\Http\Requests\UpdateCustomerRequest;
 use App\Models\Company;
 use App\Models\User;
+use Exception;
 use Illuminate\Support\Facades\Auth;
 
 class CustomerController extends Controller
@@ -18,35 +19,28 @@ class CustomerController extends Controller
      */
     public function index()
     {
-        // return view('customers.index');
-        $customers =  Customer::with(['company' => function ($query) {
-            $query->with(['memberships' => function ($q) {
-                $q->with(['payments' => function ($q) {
-                    $q->where('payments.customer_id', 1);
-                }]);
-            }]);
-        }])->get();
+        try {
+            $user = Auth::user() != null ? Auth::user() : auth('sanctum')->user();
+            if (!$user) return response(null, 404);
 
-        /*   ->with(['memberships' => function ($query) {
-                $query->with('payments');
-            }])->get();
-        */
-
-        return $customers;
-
-        foreach ($customers as $cus) {
-            foreach ($cus->memberships as $mem) {
-                foreach ($mem->payments as $key => $pay) {
-                    if ($pay->customer_id != $cus->id) {
-                        unset($mem->payments[$key]);
-                    }
-                }
+            $companies = Company::where('user_id', $user->id)->get();
+            $companyIds = [];
+            foreach ($companies as $c) {
+                array_push($companyIds, $c->id);
             }
+            $customers =  Customer::with(['company' => function ($query) use ($companyIds) {
+                $query->whereIn('id', $companyIds)
+                    ->with(['memberships' => function ($q) {
+                        $q->with(['payments' => function ($q2) {
+                            $q2->where('payments.customer_id', 1);
+                        }]);
+                    }]);
+            }])->get();
+            return response()->json($customers);
+        } catch (Exception $e) {
+            return response($e->getMessage(), $e->getCode());
         }
-        return $customers;
     }
-
-
 
     public function getCustomersOfBranch()
     {
@@ -54,15 +48,12 @@ class CustomerController extends Controller
         //los users pertenecen ala compoany (<o>)
         $user = User::where('id', 1)->firstOrFail();
         // $user = User::where('id', Auth::user()->id)->firstOrFail();
-
         // return $user;
 
         return Company::with(['branches' => function ($q) use ($user) {
             $q->where('branches.id', $user->branch_id);
         }])->get();
         // return Customer::all();
-
-
         /*
         select (*) from customers join company where id in branch.company_id
         */

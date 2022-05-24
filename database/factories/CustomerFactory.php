@@ -4,6 +4,7 @@ namespace Database\Factories;
 
 use App\Models\Company;
 use App\Models\Customer;
+use App\Models\Membership;
 use Illuminate\Database\Eloquent\Factories\Factory;
 
 class CustomerFactory extends Factory
@@ -30,7 +31,9 @@ class CustomerFactory extends Factory
             'name' => $this->faker->name(),
             'code' => $unique,
             'income' => $this->faker->dateTime(),
-            'membership' => $this->faker->randomElement(['monthly', 'yearly']),
+            'membership_id' =>  function () {
+                return  Membership::query()->inRandomOrder()->first()->id;
+            },
             'company_id' => function () {
                 return  Company::query()->inRandomOrder()->first()->id;
             },

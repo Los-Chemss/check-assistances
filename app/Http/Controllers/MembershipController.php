@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\Membership;
 use App\Http\Requests\StoreMembershipRequest;
 use App\Http\Requests\UpdateMembershipRequest;
+use Illuminate\Support\Facades\Request;
 
 class MembershipController extends Controller
 {
@@ -15,7 +16,7 @@ class MembershipController extends Controller
      */
     public function index()
     {
-        //
+        return Membership::all();
     }
 
     /**
@@ -34,9 +35,9 @@ class MembershipController extends Controller
      * @param  \App\Http\Requests\StoreMembershipRequest  $request
      * @return \Illuminate\Http\Response
      */
-    public function store(StoreMembershipRequest $request)
+    public function store(Request $request)
     {
-        //
+        return Membership::create($request->all());
     }
 
     /**
@@ -47,7 +48,7 @@ class MembershipController extends Controller
      */
     public function show(Membership $membership)
     {
-        //
+        return $membership;
     }
 
     /**
@@ -70,7 +71,8 @@ class MembershipController extends Controller
      */
     public function update(UpdateMembershipRequest $request, Membership $membership)
     {
-        //
+        $membership->update($request->all());
+        return $membership;
     }
 
     /**
@@ -81,6 +83,6 @@ class MembershipController extends Controller
      */
     public function destroy(Membership $membership)
     {
-        //
+        return $membership->delete();
     }
 }

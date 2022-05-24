@@ -13,7 +13,7 @@ class CreateCustomersTable extends Migration
             $table->string('name');
             $table->string('code')->unique();
             $table->date('income')->nullable();
-            $table->string('membership')->nullable();
+            // $table->string('membership')->nullable();
             $table->timestamps();
         });
     }

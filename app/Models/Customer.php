@@ -13,9 +13,9 @@ class Customer extends Model
     {
         return $this->belongsTo(Company::class);
     }
-    public function memberships()
+    public function membership()
     {
-        return $this->hasMany(Membership::class);
+        return $this->belongsTo(Membership::class);
     }
     public function payments()
     {

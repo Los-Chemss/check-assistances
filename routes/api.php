@@ -31,12 +31,10 @@ Route::apiResource('companies', CompanyController::class);
 Route::apiResource('assistances', AssistanceController::class);
 Route::apiResource('branches', BranchController::class);
 
-Route::get('branch/customers', [CustomerController::class, 'getCustomersOfBranch']);
+Route::get('branch/customers', [CustomerController::class, 'getCustomersOfBranch']);//
 Route::apiResource('customers', CustomerController::class);
-
 Route::apiResource('memberships', MembershipController::class);
 Route::apiResource('payments', PaymentController::class);
-
 
 Route::post('sanctum/token', UserTokenController::class);
 
