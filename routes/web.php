@@ -54,7 +54,11 @@ Route::middleware(['auth'])->group(function () {
     // Route::get('/user_themme', [UserController::class, 'changeThemme']);
 
     //Customers
-    Route::get('customers',  [CustomerController::class, 'view'])->middleware('auth');
+    Route::get('customers',  [CustomerController::class, 'view']);
+    Route::get('customers/data',  [CustomerController::class, 'index']);
+    Route::post('customers/store',  [CustomerController::class, 'store']);
+    Route::post('customers/{id}/update',  [CustomerController::class, 'update']);
+    Route::post('customers/{id}/delete',  [CustomerController::class, 'delete']);
 
     //Scenarios
     Route::post('save-situation', [FactorController::class, 'saveScenario']);

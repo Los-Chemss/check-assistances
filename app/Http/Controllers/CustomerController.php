@@ -5,7 +5,9 @@ namespace App\Http\Controllers;
 use App\Models\Customer;
 use App\Http\Requests\StoreCustomerRequest;
 use App\Http\Requests\UpdateCustomerRequest;
+use App\Models\Branch;
 use App\Models\Company;
+use App\Models\Membership;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use App\Models\User;
@@ -30,36 +32,35 @@ class CustomerController extends Controller
     public function index(Request $request)
     {
         try {
-            return $request;
-            return $user = Auth::user();
             $user = Auth::user() ? Auth::user() : auth('sanctum')->user();
-            return $user;
+            // return $user;
             if (!$user) return response(null, 404);
-
-
-            $companies = Company::where('user_id', $user->id)->get();
+            $branch = Branch::where('id', $user->branch_id)->first();
+            $companies = Company::where('user_id', $user->id)
+                ->where('id', $branch->company_id)->get();
             $companyIds = [];
             foreach ($companies as $c) {
                 array_push($companyIds, $c->id);
             }
-            $customers =  Customer::with(['company' => function ($query) use ($companyIds) {
-                $query->whereIn('id', $companyIds)
-                    ->with(['memberships' => function ($q) {
-                        $q->with(['payments' => function ($q2) {
-                            $q2->where('payments.customer_id', 1);
-                        }]);
-                    }]);
+
+            $memberships = Membership::whereIn('company_id', $companyIds)->get();
+
+            $customers = Customer::with(['membership' => function ($query) {
+                $query->with(['payments' => function ($q) {
+                    $q->orderBy('paid_at', 'desc')->first();
+                }]);
             }])->get();
-            return response()->json($customers);
+
+            return response()->json([$customers, $memberships]);
         } catch (Exception $e) {
-            return response($e->getMessage(), $e->getCode());
+            return response($e->getMessage());
         }
     }
 
     public function view()
     {
         $user = Auth::user();
-        return view('customers.index',compact('user'));
+        return view('customers.index', compact('user'));
     }
 
     public function getCustomersOfBranch()
@@ -99,9 +100,22 @@ class CustomerController extends Controller
      * @param  \App\Http\Requests\StoreCustomerRequest  $request
      * @return \Illuminate\Http\Response
      */
-    public function store(StoreCustomerRequest $request)
+    public function store(Request $request)
     {
-        return Customer::create($request->all());
+        $user = Auth::user();
+        $branch = Branch::where('id', $user->branch_id)->first();
+        $company = Company::where('user_id', $user->id)->where('id', $branch->company_id)->first();
+        $data = [
+            'name' => $request->name,
+            'code' => $request->code,
+            'income' => $request->income,
+            'company_id' => $company->id
+        ];
+        return Customer::create($data);
+        try {
+        } catch (Exception $e) {
+            return response($e->getMessage(), 500);
+        }
     }
 
     /**

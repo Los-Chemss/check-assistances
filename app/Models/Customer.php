@@ -9,13 +9,15 @@ class Customer extends Model
 {
     use HasFactory;
 
+    protected $guarded=[];
+
     public function company()
     {
         return $this->belongsTo(Company::class);
     }
     public function membership()
     {
-        return $this->belongsTo(Membership::class);
+        return $this->belongsTo(Membership::class)->select('id','name');
     }
     public function payments()
     {

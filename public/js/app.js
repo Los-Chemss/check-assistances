@@ -2429,332 +2429,97 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = ({
   data: function data() {
     return {
       customers: [],
-      user: {}
+      user: {},
+      memberships: [],
+      modal: "",
+      modalTitle: "",
+      actionType: 0,
+      errors: null,
+      name: null,
+      code: null,
+      income: null,
+      membership: null,
+      selectedMembership: null
     };
   },
   mounted: function mounted() {
     this.getCustomers();
   },
-  created: function created() {
-    if (window.Laravel.user) {
-      this.user = window.laravel.user;
-      /*  this.email = window.Laravel.user.email;
-      this.name = window.Laravel.user.name;
-      this.last_name = window.Laravel.user.last_name;
-      this.branch = window.Laravel.user.branch; */
-
-      this.authenticated = true;
-    } else {
-      this.authenticated = false;
-    }
-  },
   methods: {
     getCustomers: function getCustomers() {
       var me = this;
-      axios.get("api/customers", {
-        user: user
-      }).then(function (response) {
-        console.log(response);
-        me.customers = response.data;
+      axios.get("customers/data").then(function (response) {
+        //   console.log(response);
+        me.customers = response.data[0];
+        me.memberships = response.data[1];
         console.log(me.customers);
       })["catch"](function (error) {
         console.table(error);
       });
+    },
+    saveCustomer: function saveCustomer() {
+      var me = this;
+      var request = {
+        name: me.name,
+        code: me.name,
+        income: me.income,
+        membership: me.membership
+      }; //   console.log({ request });
+
+      axios.post("customers/store", request).then(function (response) {
+        console.log(response);
+      })["catch"](function (error) {
+        console.table(error);
+      });
+    },
+    selMembership: function selMembership(event) {
+      console.log(event);
+      var newVal = null;
+      event.target.options[event.target.options.selectedIndex] ? this.selectedMembership = event.target.options[event.target.options.selectedIndex] : console.log("Invalid option");
+      return;
+      console.log(event.target);
+      console.log(event.target.options[event.target.options.selectedIndex]); //   return;
+
+      if ("criterion" in event) {
+        newVal = event;
+      } else {
+        newVal = JSON.parse(JSON.stringify(event.target.options[event.target.options.selectedIndex]))._value;
+      }
+
+      console.log(newVal);
+      this.selectedMembership = event;
+    },
+    closeModal: function closeModal() {
+      this.modal = 0;
+      this.title = "";
+      this.errors = {}; //   this.userFiles();//reload component
+    },
+    openModal: function openModal(model, action) {
+      var data = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : [];
+
+      switch (model) {
+        case "customers":
+          {
+            switch (action) {
+              case "store":
+                {
+                  this.modal = 1;
+                  this.modalTitle = "New customer";
+                  this.actionType = 1;
+                  /*  this.title = data.title;
+                  this.description = data.description;
+                  this.expiry_date = data.expiry_date;
+                  this.issued_date = data.issued_date; */
+
+                  break;
+                }
+            }
+          }
+      }
     }
   }
 });
@@ -21894,758 +21659,357 @@ var render = function () {
   var _vm = this
   var _h = _vm.$createElement
   var _c = _vm._self._c || _h
-  return _c("div", { staticClass: "card" }, [
-    _c("div", { staticClass: "card-body" }, [
-      _c("h4", { staticClass: "card-title" }, [
-        _vm._v("Editable with Datatable"),
+  return _c(
+    "div",
+    { staticClass: "card" },
+    [
+      _c("div", { staticClass: "card-header" }, [
+        _c(
+          "button",
+          {
+            staticClass: "btn btn-primary btn-lg fas fa-edit",
+            attrs: { type: "button" },
+            on: {
+              click: function ($event) {
+                return _vm.openModal("customers", "store")
+              },
+            },
+          },
+          [_vm._v("\n      New Customer\n    ")]
+        ),
       ]),
       _vm._v(" "),
-      _c("h6", { staticClass: "card-subtitle" }, [
-        _vm._v("Just click on word which you want to change and enter"),
-      ]),
-      _vm._v(" "),
-      _c(
-        "table",
-        {
-          staticClass: "table table-striped table-bordered",
-          attrs: { id: "editable-datatable" },
-        },
-        [
-          _c(
-            "thead",
-            _vm._l(_vm.customers, function (cValue, cKey, cIndex) {
-              return _vm.key < 2
-                ? _c("tr", [
-                    _c("th", [_vm._v(_vm._s(_vm.ckey))]),
-                    _vm._v(" "),
-                    _c("th", [_vm._v(_vm._s(cIndex))]),
-                  ])
-                : _vm._e()
-            }),
-            0
-          ),
-          _vm._v(" "),
-          _vm._m(0),
-          _vm._v(" "),
-          _vm._m(1),
-        ]
-      ),
-    ]),
-  ])
-}
-var staticRenderFns = [
-  function () {
-    var _vm = this
-    var _h = _vm.$createElement
-    var _c = _vm._self._c || _h
-    return _c("tbody", [
-      _c("tr", { staticClass: "gradeX", attrs: { id: "1" } }, [
-        _c("td", [_vm._v("Trident")]),
-        _vm._v(" "),
-        _c("td", [_vm._v("Internet Explorer 4.0")]),
-        _vm._v(" "),
-        _c("td", [_vm._v("Win 95+")]),
-        _vm._v(" "),
-        _c("td", { staticClass: "center" }, [_vm._v("4")]),
-        _vm._v(" "),
-        _c("td", { staticClass: "center" }, [_vm._v("X")]),
-      ]),
-      _vm._v(" "),
-      _c("tr", { staticClass: "gradeC", attrs: { id: "2" } }, [
-        _c("td", [_vm._v("Trident")]),
-        _vm._v(" "),
-        _c("td", [_vm._v("Internet Explorer 5.0")]),
-        _vm._v(" "),
-        _c("td", [_vm._v("Win 95+")]),
-        _vm._v(" "),
-        _c("td", { staticClass: "center" }, [_vm._v("5")]),
-        _vm._v(" "),
-        _c("td", { staticClass: "center" }, [_vm._v("C")]),
-      ]),
-      _vm._v(" "),
-      _c("tr", { staticClass: "gradeA", attrs: { id: "3" } }, [
-        _c("td", [_vm._v("Trident")]),
-        _vm._v(" "),
-        _c("td", [_vm._v("Internet Explorer 5.5")]),
-        _vm._v(" "),
-        _c("td", [_vm._v("Win 95+")]),
-        _vm._v(" "),
-        _c("td", { staticClass: "center" }, [_vm._v("5.5")]),
-        _vm._v(" "),
-        _c("td", { staticClass: "center" }, [_vm._v("A")]),
-      ]),
-      _vm._v(" "),
-      _c("tr", { staticClass: "gradeA", attrs: { id: "4" } }, [
-        _c("td", [_vm._v("Trident")]),
-        _vm._v(" "),
-        _c("td", [_vm._v("Internet Explorer 6")]),
-        _vm._v(" "),
-        _c("td", [_vm._v("Win 98+")]),
-        _vm._v(" "),
-        _c("td", { staticClass: "center" }, [_vm._v("6")]),
-        _vm._v(" "),
-        _c("td", { staticClass: "center" }, [_vm._v("A")]),
-      ]),
-      _vm._v(" "),
-      _c("tr", { staticClass: "gradeA", attrs: { id: "5" } }, [
-        _c("td", [_vm._v("Trident")]),
-        _vm._v(" "),
-        _c("td", [_vm._v("Internet Explorer 7")]),
-        _vm._v(" "),
-        _c("td", [_vm._v("Win XP SP2+")]),
-        _vm._v(" "),
-        _c("td", { staticClass: "center" }, [_vm._v("7")]),
-        _vm._v(" "),
-        _c("td", { staticClass: "center" }, [_vm._v("A")]),
-      ]),
-      _vm._v(" "),
-      _c("tr", { staticClass: "gradeA", attrs: { id: "6" } }, [
-        _c("td", [_vm._v("Trident")]),
-        _vm._v(" "),
-        _c("td", [_vm._v("AOL browser (AOL desktop)")]),
-        _vm._v(" "),
-        _c("td", [_vm._v("Win XP")]),
-        _vm._v(" "),
-        _c("td", { staticClass: "center" }, [_vm._v("6")]),
-        _vm._v(" "),
-        _c("td", { staticClass: "center" }, [_vm._v("A")]),
-      ]),
-      _vm._v(" "),
-      _c("tr", { staticClass: "gradeA", attrs: { id: "7" } }, [
-        _c("td", [_vm._v("Gecko")]),
-        _vm._v(" "),
-        _c("td", [_vm._v("Firefox 1.0")]),
-        _vm._v(" "),
-        _c("td", [_vm._v("Win 98+ / OSX.2+")]),
-        _vm._v(" "),
-        _c("td", { staticClass: "center" }, [_vm._v("1.7")]),
-        _vm._v(" "),
-        _c("td", { staticClass: "center" }, [_vm._v("A")]),
-      ]),
-      _vm._v(" "),
-      _c("tr", { staticClass: "gradeA", attrs: { id: "8" } }, [
-        _c("td", [_vm._v("Gecko")]),
-        _vm._v(" "),
-        _c("td", [_vm._v("Firefox 1.5")]),
-        _vm._v(" "),
-        _c("td", [_vm._v("Win 98+ / OSX.2+")]),
-        _vm._v(" "),
-        _c("td", { staticClass: "center" }, [_vm._v("1.8")]),
-        _vm._v(" "),
-        _c("td", { staticClass: "center" }, [_vm._v("A")]),
-      ]),
-      _vm._v(" "),
-      _c("tr", { staticClass: "gradeA", attrs: { id: "9" } }, [
-        _c("td", [_vm._v("Gecko")]),
-        _vm._v(" "),
-        _c("td", [_vm._v("Firefox 2.0")]),
-        _vm._v(" "),
-        _c("td", [_vm._v("Win 98+ / OSX.2+")]),
-        _vm._v(" "),
-        _c("td", { staticClass: "center" }, [_vm._v("1.8")]),
-        _vm._v(" "),
-        _c("td", { staticClass: "center" }, [_vm._v("A")]),
-      ]),
-      _vm._v(" "),
-      _c("tr", { staticClass: "gradeA", attrs: { id: "10" } }, [
-        _c("td", [_vm._v("Gecko")]),
-        _vm._v(" "),
-        _c("td", [_vm._v("Firefox 3.0")]),
-        _vm._v(" "),
-        _c("td", [_vm._v("Win 2k+ / OSX.3+")]),
-        _vm._v(" "),
-        _c("td", { staticClass: "center" }, [_vm._v("1.9")]),
-        _vm._v(" "),
-        _c("td", { staticClass: "center" }, [_vm._v("A")]),
-      ]),
-      _vm._v(" "),
-      _c("tr", { staticClass: "gradeA", attrs: { id: "11" } }, [
-        _c("td", [_vm._v("Gecko")]),
-        _vm._v(" "),
-        _c("td", [_vm._v("Camino 1.0")]),
-        _vm._v(" "),
-        _c("td", [_vm._v("OSX.2+")]),
-        _vm._v(" "),
-        _c("td", { staticClass: "center" }, [_vm._v("1.8")]),
-        _vm._v(" "),
-        _c("td", { staticClass: "center" }, [_vm._v("A")]),
-      ]),
-      _vm._v(" "),
-      _c("tr", { staticClass: "gradeA", attrs: { id: "12" } }, [
-        _c("td", [_vm._v("Gecko")]),
-        _vm._v(" "),
-        _c("td", [_vm._v("Camino 1.5")]),
-        _vm._v(" "),
-        _c("td", [_vm._v("OSX.3+")]),
-        _vm._v(" "),
-        _c("td", { staticClass: "center" }, [_vm._v("1.8")]),
-        _vm._v(" "),
-        _c("td", { staticClass: "center" }, [_vm._v("A")]),
-      ]),
-      _vm._v(" "),
-      _c("tr", { staticClass: "gradeA", attrs: { id: "13" } }, [
-        _c("td", [_vm._v("Gecko")]),
-        _vm._v(" "),
-        _c("td", [_vm._v("Netscape 7.2")]),
-        _vm._v(" "),
-        _c("td", [_vm._v("Win 95+ / Mac OS 8.6-9.2")]),
-        _vm._v(" "),
-        _c("td", { staticClass: "center" }, [_vm._v("1.7")]),
-        _vm._v(" "),
-        _c("td", { staticClass: "center" }, [_vm._v("A")]),
-      ]),
-      _vm._v(" "),
-      _c("tr", { staticClass: "gradeA", attrs: { id: "14" } }, [
-        _c("td", [_vm._v("Gecko")]),
-        _vm._v(" "),
-        _c("td", [_vm._v("Netscape Browser 8")]),
-        _vm._v(" "),
-        _c("td", [_vm._v("Win 98SE+")]),
-        _vm._v(" "),
-        _c("td", { staticClass: "center" }, [_vm._v("1.7")]),
-        _vm._v(" "),
-        _c("td", { staticClass: "center" }, [_vm._v("A")]),
-      ]),
-      _vm._v(" "),
-      _c("tr", { staticClass: "gradeA", attrs: { id: "15" } }, [
-        _c("td", [_vm._v("Gecko")]),
-        _vm._v(" "),
-        _c("td", [_vm._v("Netscape Navigator 9")]),
-        _vm._v(" "),
-        _c("td", [_vm._v("Win 98+ / OSX.2+")]),
-        _vm._v(" "),
-        _c("td", { staticClass: "center" }, [_vm._v("1.8")]),
-        _vm._v(" "),
-        _c("td", { staticClass: "center" }, [_vm._v("A")]),
-      ]),
-      _vm._v(" "),
-      _c("tr", { staticClass: "gradeA", attrs: { id: "16" } }, [
-        _c("td", [_vm._v("Gecko")]),
-        _vm._v(" "),
-        _c("td", [_vm._v("Mozilla 1.0")]),
-        _vm._v(" "),
-        _c("td", [_vm._v("Win 95+ / OSX.1+")]),
-        _vm._v(" "),
-        _c("td", { staticClass: "center" }, [_vm._v("1")]),
-        _vm._v(" "),
-        _c("td", { staticClass: "center" }, [_vm._v("A")]),
-      ]),
-      _vm._v(" "),
-      _c("tr", { staticClass: "gradeA", attrs: { id: "17" } }, [
-        _c("td", [_vm._v("Gecko")]),
-        _vm._v(" "),
-        _c("td", [_vm._v("Mozilla 1.1")]),
-        _vm._v(" "),
-        _c("td", [_vm._v("Win 95+ / OSX.1+")]),
-        _vm._v(" "),
-        _c("td", { staticClass: "center" }, [_vm._v("1.1")]),
-        _vm._v(" "),
-        _c("td", { staticClass: "center" }, [_vm._v("A")]),
-      ]),
-      _vm._v(" "),
-      _c("tr", { staticClass: "gradeA", attrs: { id: "18" } }, [
-        _c("td", [_vm._v("Gecko")]),
-        _vm._v(" "),
-        _c("td", [_vm._v("Mozilla 1.2")]),
-        _vm._v(" "),
-        _c("td", [_vm._v("Win 95+ / OSX.1+")]),
-        _vm._v(" "),
-        _c("td", { staticClass: "center" }, [_vm._v("1.2")]),
-        _vm._v(" "),
-        _c("td", { staticClass: "center" }, [_vm._v("A")]),
-      ]),
-      _vm._v(" "),
-      _c("tr", { staticClass: "gradeA", attrs: { id: "19" } }, [
-        _c("td", [_vm._v("Gecko")]),
-        _vm._v(" "),
-        _c("td", [_vm._v("Mozilla 1.3")]),
-        _vm._v(" "),
-        _c("td", [_vm._v("Win 95+ / OSX.1+")]),
-        _vm._v(" "),
-        _c("td", { staticClass: "center" }, [_vm._v("1.3")]),
-        _vm._v(" "),
-        _c("td", { staticClass: "center" }, [_vm._v("A")]),
-      ]),
-      _vm._v(" "),
-      _c("tr", { staticClass: "gradeA", attrs: { id: "20" } }, [
-        _c("td", [_vm._v("Gecko")]),
-        _vm._v(" "),
-        _c("td", [_vm._v("Mozilla 1.4")]),
-        _vm._v(" "),
-        _c("td", [_vm._v("Win 95+ / OSX.1+")]),
-        _vm._v(" "),
-        _c("td", { staticClass: "center" }, [_vm._v("1.4")]),
-        _vm._v(" "),
-        _c("td", { staticClass: "center" }, [_vm._v("A")]),
-      ]),
-      _vm._v(" "),
-      _c("tr", { staticClass: "gradeA", attrs: { id: "21" } }, [
-        _c("td", [_vm._v("Gecko")]),
-        _vm._v(" "),
-        _c("td", [_vm._v("Mozilla 1.5")]),
-        _vm._v(" "),
-        _c("td", [_vm._v("Win 95+ / OSX.1+")]),
-        _vm._v(" "),
-        _c("td", { staticClass: "center" }, [_vm._v("1.5")]),
-        _vm._v(" "),
-        _c("td", { staticClass: "center" }, [_vm._v("A")]),
-      ]),
-      _vm._v(" "),
-      _c("tr", { staticClass: "gradeA", attrs: { id: "22" } }, [
-        _c("td", [_vm._v("Gecko")]),
-        _vm._v(" "),
-        _c("td", [_vm._v("Mozilla 1.6")]),
-        _vm._v(" "),
-        _c("td", [_vm._v("Win 95+ / OSX.1+")]),
-        _vm._v(" "),
-        _c("td", { staticClass: "center" }, [_vm._v("1.6")]),
-        _vm._v(" "),
-        _c("td", { staticClass: "center" }, [_vm._v("A")]),
-      ]),
-      _vm._v(" "),
-      _c("tr", { staticClass: "gradeA", attrs: { id: "23" } }, [
-        _c("td", [_vm._v("Gecko")]),
-        _vm._v(" "),
-        _c("td", [_vm._v("Mozilla 1.7")]),
-        _vm._v(" "),
-        _c("td", [_vm._v("Win 98+ / OSX.1+")]),
-        _vm._v(" "),
-        _c("td", { staticClass: "center" }, [_vm._v("1.7")]),
-        _vm._v(" "),
-        _c("td", { staticClass: "center" }, [_vm._v("A")]),
-      ]),
-      _vm._v(" "),
-      _c("tr", { staticClass: "gradeA", attrs: { id: "24" } }, [
-        _c("td", [_vm._v("Gecko")]),
-        _vm._v(" "),
-        _c("td", [_vm._v("Mozilla 1.8")]),
-        _vm._v(" "),
-        _c("td", [_vm._v("Win 98+ / OSX.1+")]),
-        _vm._v(" "),
-        _c("td", { staticClass: "center" }, [_vm._v("1.8")]),
-        _vm._v(" "),
-        _c("td", { staticClass: "center" }, [_vm._v("A")]),
-      ]),
-      _vm._v(" "),
-      _c("tr", { staticClass: "gradeA", attrs: { id: "25" } }, [
-        _c("td", [_vm._v("Gecko")]),
-        _vm._v(" "),
-        _c("td", [_vm._v("Seamonkey 1.1")]),
-        _vm._v(" "),
-        _c("td", [_vm._v("Win 98+ / OSX.2+")]),
-        _vm._v(" "),
-        _c("td", { staticClass: "center" }, [_vm._v("1.8")]),
-        _vm._v(" "),
-        _c("td", { staticClass: "center" }, [_vm._v("A")]),
-      ]),
-      _vm._v(" "),
-      _c("tr", { staticClass: "gradeA", attrs: { id: "26" } }, [
-        _c("td", [_vm._v("Gecko")]),
-        _vm._v(" "),
-        _c("td", [_vm._v("Epiphany 2.20")]),
-        _vm._v(" "),
-        _c("td", [_vm._v("Gnome")]),
-        _vm._v(" "),
-        _c("td", { staticClass: "center" }, [_vm._v("1.8")]),
-        _vm._v(" "),
-        _c("td", { staticClass: "center" }, [_vm._v("A")]),
-      ]),
-      _vm._v(" "),
-      _c("tr", { staticClass: "gradeA", attrs: { id: "27" } }, [
-        _c("td", [_vm._v("Webkit")]),
-        _vm._v(" "),
-        _c("td", [_vm._v("Safari 1.2")]),
-        _vm._v(" "),
-        _c("td", [_vm._v("OSX.3")]),
-        _vm._v(" "),
-        _c("td", { staticClass: "center" }, [_vm._v("125.5")]),
-        _vm._v(" "),
-        _c("td", { staticClass: "center" }, [_vm._v("A")]),
-      ]),
-      _vm._v(" "),
-      _c("tr", { staticClass: "gradeA", attrs: { id: "28" } }, [
-        _c("td", [_vm._v("Webkit")]),
-        _vm._v(" "),
-        _c("td", [_vm._v("Safari 1.3")]),
-        _vm._v(" "),
-        _c("td", [_vm._v("OSX.3")]),
-        _vm._v(" "),
-        _c("td", { staticClass: "center" }, [_vm._v("312.8")]),
-        _vm._v(" "),
-        _c("td", { staticClass: "center" }, [_vm._v("A")]),
-      ]),
-      _vm._v(" "),
-      _c("tr", { staticClass: "gradeA", attrs: { id: "29" } }, [
-        _c("td", [_vm._v("Webkit")]),
-        _vm._v(" "),
-        _c("td", [_vm._v("Safari 2.0")]),
-        _vm._v(" "),
-        _c("td", [_vm._v("OSX.4+")]),
-        _vm._v(" "),
-        _c("td", { staticClass: "center" }, [_vm._v("419.3")]),
-        _vm._v(" "),
-        _c("td", { staticClass: "center" }, [_vm._v("A")]),
-      ]),
-      _vm._v(" "),
-      _c("tr", { staticClass: "gradeA", attrs: { id: "30" } }, [
-        _c("td", [_vm._v("Webkit")]),
-        _vm._v(" "),
-        _c("td", [_vm._v("Safari 3.0")]),
-        _vm._v(" "),
-        _c("td", [_vm._v("OSX.4+")]),
-        _vm._v(" "),
-        _c("td", { staticClass: "center" }, [_vm._v("522.1")]),
-        _vm._v(" "),
-        _c("td", { staticClass: "center" }, [_vm._v("A")]),
-      ]),
-      _vm._v(" "),
-      _c("tr", { staticClass: "gradeA", attrs: { id: "31" } }, [
-        _c("td", [_vm._v("Webkit")]),
-        _vm._v(" "),
-        _c("td", [_vm._v("OmniWeb 5.5")]),
-        _vm._v(" "),
-        _c("td", [_vm._v("OSX.4+")]),
-        _vm._v(" "),
-        _c("td", { staticClass: "center" }, [_vm._v("420")]),
-        _vm._v(" "),
-        _c("td", { staticClass: "center" }, [_vm._v("A")]),
-      ]),
-      _vm._v(" "),
-      _c("tr", { staticClass: "gradeA", attrs: { id: "32" } }, [
-        _c("td", [_vm._v("Webkit")]),
-        _vm._v(" "),
-        _c("td", [_vm._v("iPod Touch / iPhone")]),
-        _vm._v(" "),
-        _c("td", [_vm._v("iPod")]),
-        _vm._v(" "),
-        _c("td", { staticClass: "center" }, [_vm._v("420.1")]),
-        _vm._v(" "),
-        _c("td", { staticClass: "center" }, [_vm._v("A")]),
-      ]),
-      _vm._v(" "),
-      _c("tr", { staticClass: "gradeA", attrs: { id: "33" } }, [
-        _c("td", [_vm._v("Webkit")]),
-        _vm._v(" "),
-        _c("td", [_vm._v("S60")]),
-        _vm._v(" "),
-        _c("td", [_vm._v("S60")]),
-        _vm._v(" "),
-        _c("td", { staticClass: "center" }, [_vm._v("413")]),
-        _vm._v(" "),
-        _c("td", { staticClass: "center" }, [_vm._v("A")]),
-      ]),
-      _vm._v(" "),
-      _c("tr", { staticClass: "gradeA", attrs: { id: "34" } }, [
-        _c("td", [_vm._v("Presto")]),
-        _vm._v(" "),
-        _c("td", [_vm._v("Opera 7.0")]),
-        _vm._v(" "),
-        _c("td", [_vm._v("Win 95+ / OSX.1+")]),
-        _vm._v(" "),
-        _c("td", { staticClass: "center" }, [_vm._v("-")]),
-        _vm._v(" "),
-        _c("td", { staticClass: "center" }, [_vm._v("A")]),
-      ]),
-      _vm._v(" "),
-      _c("tr", { staticClass: "gradeA", attrs: { id: "35" } }, [
-        _c("td", [_vm._v("Presto")]),
-        _vm._v(" "),
-        _c("td", [_vm._v("Opera 7.5")]),
-        _vm._v(" "),
-        _c("td", [_vm._v("Win 95+ / OSX.2+")]),
-        _vm._v(" "),
-        _c("td", { staticClass: "center" }, [_vm._v("-")]),
-        _vm._v(" "),
-        _c("td", { staticClass: "center" }, [_vm._v("A")]),
-      ]),
-      _vm._v(" "),
-      _c("tr", { staticClass: "gradeA", attrs: { id: "36" } }, [
-        _c("td", [_vm._v("Presto")]),
-        _vm._v(" "),
-        _c("td", [_vm._v("Opera 8.0")]),
-        _vm._v(" "),
-        _c("td", [_vm._v("Win 95+ / OSX.2+")]),
-        _vm._v(" "),
-        _c("td", { staticClass: "center" }, [_vm._v("-")]),
-        _vm._v(" "),
-        _c("td", { staticClass: "center" }, [_vm._v("A")]),
-      ]),
-      _vm._v(" "),
-      _c("tr", { staticClass: "gradeA", attrs: { id: "37" } }, [
-        _c("td", [_vm._v("Presto")]),
-        _vm._v(" "),
-        _c("td", [_vm._v("Opera 8.5")]),
-        _vm._v(" "),
-        _c("td", [_vm._v("Win 95+ / OSX.2+")]),
-        _vm._v(" "),
-        _c("td", { staticClass: "center" }, [_vm._v("-")]),
-        _vm._v(" "),
-        _c("td", { staticClass: "center" }, [_vm._v("A")]),
-      ]),
-      _vm._v(" "),
-      _c("tr", { staticClass: "gradeA", attrs: { id: "38" } }, [
-        _c("td", [_vm._v("Presto")]),
-        _vm._v(" "),
-        _c("td", [_vm._v("Opera 9.0")]),
-        _vm._v(" "),
-        _c("td", [_vm._v("Win 95+ / OSX.3+")]),
-        _vm._v(" "),
-        _c("td", { staticClass: "center" }, [_vm._v("-")]),
-        _vm._v(" "),
-        _c("td", { staticClass: "center" }, [_vm._v("A")]),
-      ]),
-      _vm._v(" "),
-      _c("tr", { staticClass: "gradeA", attrs: { id: "39" } }, [
-        _c("td", [_vm._v("Presto")]),
-        _vm._v(" "),
-        _c("td", [_vm._v("Opera 9.2")]),
-        _vm._v(" "),
-        _c("td", [_vm._v("Win 88+ / OSX.3+")]),
-        _vm._v(" "),
-        _c("td", { staticClass: "center" }, [_vm._v("-")]),
-        _vm._v(" "),
-        _c("td", { staticClass: "center" }, [_vm._v("A")]),
-      ]),
-      _vm._v(" "),
-      _c("tr", { staticClass: "gradeA", attrs: { id: "40" } }, [
-        _c("td", [_vm._v("Presto")]),
-        _vm._v(" "),
-        _c("td", [_vm._v("Opera 9.5")]),
-        _vm._v(" "),
-        _c("td", [_vm._v("Win 88+ / OSX.3+")]),
-        _vm._v(" "),
-        _c("td", { staticClass: "center" }, [_vm._v("-")]),
-        _vm._v(" "),
-        _c("td", { staticClass: "center" }, [_vm._v("A")]),
-      ]),
-      _vm._v(" "),
-      _c("tr", { staticClass: "gradeA", attrs: { id: "41" } }, [
-        _c("td", [_vm._v("Presto")]),
-        _vm._v(" "),
-        _c("td", [_vm._v("Opera for Wii")]),
-        _vm._v(" "),
-        _c("td", [_vm._v("Wii")]),
-        _vm._v(" "),
-        _c("td", { staticClass: "center" }, [_vm._v("-")]),
-        _vm._v(" "),
-        _c("td", { staticClass: "center" }, [_vm._v("A")]),
-      ]),
-      _vm._v(" "),
-      _c("tr", { staticClass: "gradeA", attrs: { id: "42" } }, [
-        _c("td", [_vm._v("Presto")]),
-        _vm._v(" "),
-        _c("td", [_vm._v("Nokia N800")]),
-        _vm._v(" "),
-        _c("td", [_vm._v("N800")]),
-        _vm._v(" "),
-        _c("td", { staticClass: "center" }, [_vm._v("-")]),
-        _vm._v(" "),
-        _c("td", { staticClass: "center" }, [_vm._v("A")]),
-      ]),
-      _vm._v(" "),
-      _c("tr", { staticClass: "gradeA", attrs: { id: "43" } }, [
-        _c("td", [_vm._v("Presto")]),
-        _vm._v(" "),
-        _c("td", [_vm._v("Nintendo DS browser")]),
-        _vm._v(" "),
-        _c("td", [_vm._v("Nintendo DS")]),
-        _vm._v(" "),
-        _c("td", { staticClass: "center" }, [_vm._v("8.5")]),
-        _vm._v(" "),
-        _c("td", { staticClass: "center" }, [
-          _vm._v("C/A"),
-          _c("sup", [_vm._v("1")]),
+      _c("div", { staticClass: "card-body" }, [
+        _c("h4", { staticClass: "card-title" }, [
+          _vm._v("Editable with Datatable"),
         ]),
+        _vm._v(" "),
+        _c("h6", { staticClass: "card-subtitle" }, [
+          _vm._v("Just click on word which you want to change and enter"),
+        ]),
+        _vm._v(" "),
+        _c(
+          "table",
+          {
+            staticClass: "table table-striped table-bordered table-responsive",
+            attrs: { id: "editable-datatable" },
+          },
+          [
+            _c(
+              "thead",
+              _vm._l(_vm.customers, function (customer, index) {
+                return index < 1
+                  ? _c(
+                      "tr",
+                      _vm._l(customer, function (value, key, cIndex) {
+                        return _c("th", [_vm._v(_vm._s(key))])
+                      }),
+                      0
+                    )
+                  : _vm._e()
+              }),
+              0
+            ),
+            _vm._v(" "),
+            _c(
+              "tbody",
+              _vm._l(_vm.customers, function (customer, index) {
+                return index
+                  ? _c(
+                      "tr",
+                      { staticClass: "gradeX" },
+                      _vm._l(customer, function (value, key, cIndex) {
+                        return _c("td", [_vm._v(_vm._s(value))])
+                      }),
+                      0
+                    )
+                  : _vm._e()
+              }),
+              0
+            ),
+            _vm._v(" "),
+            _c(
+              "tfoot",
+              _vm._l(_vm.customers, function (customer, index) {
+                return index < 1
+                  ? _c(
+                      "tr",
+                      _vm._l(customer, function (value, key, cIndex) {
+                        return _c("th", [_vm._v(_vm._s(key))])
+                      }),
+                      0
+                    )
+                  : _vm._e()
+              }),
+              0
+            ),
+          ]
+        ),
       ]),
       _vm._v(" "),
-      _c("tr", { staticClass: "gradeC", attrs: { id: "44" } }, [
-        _c("td", [_vm._v("KHTML")]),
-        _vm._v(" "),
-        _c("td", [_vm._v("Konqureror 3.1")]),
-        _vm._v(" "),
-        _c("td", [_vm._v("KDE 3.1")]),
-        _vm._v(" "),
-        _c("td", { staticClass: "center" }, [_vm._v("3.1")]),
-        _vm._v(" "),
-        _c("td", { staticClass: "center" }, [_vm._v("C")]),
-      ]),
-      _vm._v(" "),
-      _c("tr", { staticClass: "gradeA", attrs: { id: "45" } }, [
-        _c("td", [_vm._v("KHTML")]),
-        _vm._v(" "),
-        _c("td", [_vm._v("Konqureror 3.3")]),
-        _vm._v(" "),
-        _c("td", [_vm._v("KDE 3.3")]),
-        _vm._v(" "),
-        _c("td", { staticClass: "center" }, [_vm._v("3.3")]),
-        _vm._v(" "),
-        _c("td", { staticClass: "center" }, [_vm._v("A")]),
-      ]),
-      _vm._v(" "),
-      _c("tr", { staticClass: "gradeA", attrs: { id: "46" } }, [
-        _c("td", [_vm._v("KHTML")]),
-        _vm._v(" "),
-        _c("td", [_vm._v("Konqureror 3.5")]),
-        _vm._v(" "),
-        _c("td", [_vm._v("KDE 3.5")]),
-        _vm._v(" "),
-        _c("td", { staticClass: "center" }, [_vm._v("3.5")]),
-        _vm._v(" "),
-        _c("td", { staticClass: "center" }, [_vm._v("A")]),
-      ]),
-      _vm._v(" "),
-      _c("tr", { staticClass: "gradeX", attrs: { id: "47" } }, [
-        _c("td", [_vm._v("Tasman")]),
-        _vm._v(" "),
-        _c("td", [_vm._v("Internet Explorer 4.5")]),
-        _vm._v(" "),
-        _c("td", [_vm._v("Mac OS 8-9")]),
-        _vm._v(" "),
-        _c("td", { staticClass: "center" }, [_vm._v("-")]),
-        _vm._v(" "),
-        _c("td", { staticClass: "center" }, [_vm._v("X")]),
-      ]),
-      _vm._v(" "),
-      _c("tr", { staticClass: "gradeC", attrs: { id: "48" } }, [
-        _c("td", [_vm._v("Tasman")]),
-        _vm._v(" "),
-        _c("td", [_vm._v("Internet Explorer 5.1")]),
-        _vm._v(" "),
-        _c("td", [_vm._v("Mac OS 7.6-9")]),
-        _vm._v(" "),
-        _c("td", { staticClass: "center" }, [_vm._v("1")]),
-        _vm._v(" "),
-        _c("td", { staticClass: "center" }, [_vm._v("C")]),
-      ]),
-      _vm._v(" "),
-      _c("tr", { staticClass: "gradeC", attrs: { id: "49" } }, [
-        _c("td", [_vm._v("Tasman")]),
-        _vm._v(" "),
-        _c("td", [_vm._v("Internet Explorer 5.2")]),
-        _vm._v(" "),
-        _c("td", [_vm._v("Mac OS 8-X")]),
-        _vm._v(" "),
-        _c("td", { staticClass: "center" }, [_vm._v("1")]),
-        _vm._v(" "),
-        _c("td", { staticClass: "center" }, [_vm._v("C")]),
-      ]),
-      _vm._v(" "),
-      _c("tr", { staticClass: "gradeA", attrs: { id: "50" } }, [
-        _c("td", [_vm._v("Misc")]),
-        _vm._v(" "),
-        _c("td", [_vm._v("NetFront 3.1")]),
-        _vm._v(" "),
-        _c("td", [_vm._v("Embedded devices")]),
-        _vm._v(" "),
-        _c("td", { staticClass: "center" }, [_vm._v("-")]),
-        _vm._v(" "),
-        _c("td", { staticClass: "center" }, [_vm._v("C")]),
-      ]),
-      _vm._v(" "),
-      _c("tr", { staticClass: "gradeA", attrs: { id: "51" } }, [
-        _c("td", [_vm._v("Misc")]),
-        _vm._v(" "),
-        _c("td", [_vm._v("NetFront 3.4")]),
-        _vm._v(" "),
-        _c("td", [_vm._v("Embedded devices")]),
-        _vm._v(" "),
-        _c("td", { staticClass: "center" }, [_vm._v("-")]),
-        _vm._v(" "),
-        _c("td", { staticClass: "center" }, [_vm._v("A")]),
-      ]),
-      _vm._v(" "),
-      _c("tr", { staticClass: "gradeX", attrs: { id: "52" } }, [
-        _c("td", [_vm._v("Misc")]),
-        _vm._v(" "),
-        _c("td", [_vm._v("Dillo 0.8")]),
-        _vm._v(" "),
-        _c("td", [_vm._v("Embedded devices")]),
-        _vm._v(" "),
-        _c("td", { staticClass: "center" }, [_vm._v("-")]),
-        _vm._v(" "),
-        _c("td", { staticClass: "center" }, [_vm._v("X")]),
-      ]),
-      _vm._v(" "),
-      _c("tr", { staticClass: "gradeX", attrs: { id: "53" } }, [
-        _c("td", [_vm._v("Misc")]),
-        _vm._v(" "),
-        _c("td", [_vm._v("Links")]),
-        _vm._v(" "),
-        _c("td", [_vm._v("Text only")]),
-        _vm._v(" "),
-        _c("td", { staticClass: "center" }, [_vm._v("-")]),
-        _vm._v(" "),
-        _c("td", { staticClass: "center" }, [_vm._v("X")]),
-      ]),
-      _vm._v(" "),
-      _c("tr", { staticClass: "gradeX", attrs: { id: "54" } }, [
-        _c("td", [_vm._v("Misc")]),
-        _vm._v(" "),
-        _c("td", [_vm._v("Lynx")]),
-        _vm._v(" "),
-        _c("td", [_vm._v("Text only")]),
-        _vm._v(" "),
-        _c("td", { staticClass: "center" }, [_vm._v("-")]),
-        _vm._v(" "),
-        _c("td", { staticClass: "center" }, [_vm._v("X")]),
-      ]),
-      _vm._v(" "),
-      _c("tr", { staticClass: "gradeC", attrs: { id: "55" } }, [
-        _c("td", [_vm._v("Misc")]),
-        _vm._v(" "),
-        _c("td", [_vm._v("IE Mobile")]),
-        _vm._v(" "),
-        _c("td", [_vm._v("Windows Mobile 6")]),
-        _vm._v(" "),
-        _c("td", { staticClass: "center" }, [_vm._v("-")]),
-        _vm._v(" "),
-        _c("td", { staticClass: "center" }, [_vm._v("C")]),
-      ]),
-      _vm._v(" "),
-      _c("tr", { staticClass: "gradeC", attrs: { id: "56" } }, [
-        _c("td", [_vm._v("Misc")]),
-        _vm._v(" "),
-        _c("td", [_vm._v("PSP browser")]),
-        _vm._v(" "),
-        _c("td", [_vm._v("PSP")]),
-        _vm._v(" "),
-        _c("td", { staticClass: "center" }, [_vm._v("-")]),
-        _vm._v(" "),
-        _c("td", { staticClass: "center" }, [_vm._v("C")]),
-      ]),
-      _vm._v(" "),
-      _c("tr", { staticClass: "gradeU", attrs: { id: "57" } }, [
-        _c("td", [_vm._v("Other browsers")]),
-        _vm._v(" "),
-        _c("td", [_vm._v("All others")]),
-        _vm._v(" "),
-        _c("td", [_vm._v("-")]),
-        _vm._v(" "),
-        _c("td", { staticClass: "center" }, [_vm._v("-")]),
-        _vm._v(" "),
-        _c("td", { staticClass: "center" }, [_vm._v("U")]),
-      ]),
-    ])
-  },
-  function () {
-    var _vm = this
-    var _h = _vm.$createElement
-    var _c = _vm._self._c || _h
-    return _c("tfoot", [
-      _c("tr", [
-        _c("th", [_vm._v("Rendering engine")]),
-        _vm._v(" "),
-        _c("th", [_vm._v("Browser")]),
-        _vm._v(" "),
-        _c("th", [_vm._v("Platform(s)")]),
-        _vm._v(" "),
-        _c("th", [_vm._v("Engine version")]),
-        _vm._v(" "),
-        _c("th", [_vm._v("CSS grade")]),
-      ]),
-    ])
-  },
-]
+      _vm.actionType == 1
+        ? [
+            _c(
+              "div",
+              {
+                staticClass: "modal fade",
+                class: { mostrar: _vm.modal },
+                staticStyle: { display: "none", "overflow-y": "auto" },
+                attrs: {
+                  tabindex: "-1",
+                  role: "dialog",
+                  "aria-labelledby": "myModalLabel",
+                  "aria-hidden": "true",
+                },
+              },
+              [
+                _c(
+                  "div",
+                  {
+                    staticClass: "modal-dialog modal-primary modal-lg",
+                    staticStyle: { "padding-top": "55px" },
+                    attrs: { role: "document" },
+                  },
+                  [
+                    _c("div", { staticClass: "modal-content" }, [
+                      _c("div", { staticClass: "modal-header" }, [
+                        _c("h4", {
+                          staticClass: "modal-title",
+                          domProps: { textContent: _vm._s(_vm.modalTitle) },
+                        }),
+                        _vm._v(" "),
+                        _c(
+                          "button",
+                          {
+                            staticClass: "close",
+                            attrs: {
+                              type: "button",
+                              "data-dismiss": "modal",
+                              "aria-label": "Close",
+                            },
+                            on: {
+                              click: function ($event) {
+                                return _vm.closeModal()
+                              },
+                            },
+                          },
+                          [
+                            _c("span", { attrs: { "aria-hidden": "true" } }, [
+                              _vm._v("×"),
+                            ]),
+                          ]
+                        ),
+                      ]),
+                      _vm._v(" "),
+                      _c("div", { staticClass: "modal-body" }, [
+                        _c("div", { staticClass: "flex flex-wrap -m-2" }, [
+                          _c("form", { staticClass: "floating-labels mt-4" }, [
+                            _c("div", { staticClass: "form-group mb-5" }, [
+                              _c("input", {
+                                directives: [
+                                  {
+                                    name: "model",
+                                    rawName: "v-model",
+                                    value: _vm.name,
+                                    expression: "name",
+                                  },
+                                ],
+                                staticClass: "form-control",
+                                attrs: { type: "text", id: "name" },
+                                domProps: { value: _vm.name },
+                                on: {
+                                  input: function ($event) {
+                                    if ($event.target.composing) {
+                                      return
+                                    }
+                                    _vm.name = $event.target.value
+                                  },
+                                },
+                              }),
+                              _vm._v(" "),
+                              _c("span", { staticClass: "bar" }),
+                              _vm._v(" "),
+                              _c("label", { attrs: { for: "name" } }, [
+                                _vm._v("name"),
+                              ]),
+                            ]),
+                            _vm._v(" "),
+                            _c("div", { staticClass: "form-group mb-5" }, [
+                              _c("input", {
+                                directives: [
+                                  {
+                                    name: "model",
+                                    rawName: "v-model",
+                                    value: _vm.code,
+                                    expression: "code",
+                                  },
+                                ],
+                                staticClass: "form-control",
+                                attrs: { type: "text", id: "code" },
+                                domProps: { value: _vm.code },
+                                on: {
+                                  input: function ($event) {
+                                    if ($event.target.composing) {
+                                      return
+                                    }
+                                    _vm.code = $event.target.value
+                                  },
+                                },
+                              }),
+                              _vm._v(" "),
+                              _c("span", { staticClass: "bar" }),
+                              _vm._v(" "),
+                              _c("label", { attrs: { for: "code" } }, [
+                                _vm._v("code"),
+                              ]),
+                            ]),
+                            _vm._v(" "),
+                            _c("div", { staticClass: "form-group mb-5" }, [
+                              _c("input", {
+                                directives: [
+                                  {
+                                    name: "model",
+                                    rawName: "v-model",
+                                    value: _vm.income,
+                                    expression: "income",
+                                  },
+                                ],
+                                staticClass: "form-control text-right",
+                                attrs: { type: "date", id: "income" },
+                                domProps: { value: _vm.income },
+                                on: {
+                                  input: function ($event) {
+                                    if ($event.target.composing) {
+                                      return
+                                    }
+                                    _vm.income = $event.target.value
+                                  },
+                                },
+                              }),
+                              _vm._v(" "),
+                              _c(
+                                "label",
+                                {
+                                  staticClass: "text-right",
+                                  attrs: { for: "income" },
+                                },
+                                [_vm._v("income")]
+                              ),
+                              _vm._v(" "),
+                              _c("span", { staticClass: "bar" }),
+                            ]),
+                            _vm._v(" "),
+                            _c("div", { staticClass: "form-group mb-5" }, [
+                              _c(
+                                "select",
+                                {
+                                  directives: [
+                                    {
+                                      name: "model",
+                                      rawName: "v-model",
+                                      value: _vm.selectedMembership,
+                                      expression: "selectedMembership",
+                                    },
+                                  ],
+                                  staticClass: "form-control p-0",
+                                  attrs: { id: "input6" },
+                                  on: {
+                                    change: [
+                                      function ($event) {
+                                        var $$selectedVal =
+                                          Array.prototype.filter
+                                            .call(
+                                              $event.target.options,
+                                              function (o) {
+                                                return o.selected
+                                              }
+                                            )
+                                            .map(function (o) {
+                                              var val =
+                                                "_value" in o
+                                                  ? o._value
+                                                  : o.value
+                                              return val
+                                            })
+                                        _vm.selectedMembership = $event.target
+                                          .multiple
+                                          ? $$selectedVal
+                                          : $$selectedVal[0]
+                                      },
+                                      _vm.selMembership,
+                                    ],
+                                  },
+                                },
+                                [
+                                  _c("option"),
+                                  _vm._v(" "),
+                                  _vm._l(
+                                    _vm.memberships,
+                                    function (membership) {
+                                      return _c(
+                                        "option",
+                                        { domProps: { value: membership.id } },
+                                        [
+                                          _vm._v(
+                                            "\n                      " +
+                                              _vm._s(membership.name) +
+                                              "\n                    "
+                                          ),
+                                        ]
+                                      )
+                                    }
+                                  ),
+                                ],
+                                2
+                              ),
+                              _vm._v(" "),
+                              _c("span", { staticClass: "bar" }),
+                              _vm._v(" "),
+                              _c("label", { attrs: { for: "input6" } }, [
+                                _vm._v("Membership"),
+                              ]),
+                            ]),
+                          ]),
+                        ]),
+                      ]),
+                      _vm._v(" "),
+                      _c("div", { staticClass: "modal-footer" }, [
+                        _c(
+                          "button",
+                          {
+                            staticClass: "btn btn-primary fas fa-save",
+                            attrs: { type: "button" },
+                            on: { click: _vm.saveCustomer },
+                          },
+                          [_vm._v("\n              Save\n            ")]
+                        ),
+                        _vm._v(" "),
+                        _c(
+                          "button",
+                          {
+                            staticClass: "btn btn-danger",
+                            attrs: { type: "button", "data-dismiss": "modal" },
+                            on: {
+                              click: function ($event) {
+                                return _vm.closeModal()
+                              },
+                            },
+                          },
+                          [_vm._v("\n              Close\n            ")]
+                        ),
+                      ]),
+                    ]),
+                  ]
+                ),
+              ]
+            ),
+          ]
+        : _vm._e(),
+    ],
+    2
+  )
+}
+var staticRenderFns = []
 render._withStripped = true
 
 
