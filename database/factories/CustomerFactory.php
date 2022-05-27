@@ -26,17 +26,18 @@ class CustomerFactory extends Factory
             $unique = $this->faker->numberBetween(0001, 9999);
         } while (in_array($this->faker->numberBetween(0001, 9999), $codes));
 
+        $companyId = function () {
+            return Company::query()->inRandomOrder()->first()->id;
+        };
 
         return [
             'name' => $this->faker->name(),
             'code' => $unique,
             'income' => $this->faker->dateTime(),
-            'membership_id' =>  function () {
+            'membership_id' =>  function () use ($companyId) {
                 return  Membership::query()->inRandomOrder()->first()->id;
             },
-            'company_id' => function () {
-                return  Company::query()->inRandomOrder()->first()->id;
-            },
+            'company_id' => $companyId
         ];
     }
 }

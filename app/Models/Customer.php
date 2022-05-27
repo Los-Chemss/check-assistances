@@ -9,7 +9,7 @@ class Customer extends Model
 {
     use HasFactory;
 
-    protected $guarded=[];
+    protected $guarded = [];
 
     public function company()
     {
@@ -17,11 +17,29 @@ class Customer extends Model
     }
     public function membership()
     {
-        return $this->belongsTo(Membership::class)->select('id','name');
+        return $this->belongsTo(Membership::class)->select('id', 'name');
     }
     public function payments()
     {
         return $this->hasMany(Payment::class);
     }
-}
+    //Scopes
+    public function scopeCriterion($query, $criteria, $input)
+    {
+        if ($criteria == 'income' && $input) {
+            return $query->where('income', '>=', date('Y-m-d', strtotime($input)));
+        }
+        return $query->where($criteria, 'LIKE', "%$input%");
+    }
 
+
+    /*   public function scopeCode($query, $input)
+    {
+        return $query->where('code', 'LIKE', "%$input%");
+    }
+
+    public function scopeIncome($query, $input)
+    {
+        return $query->where('income', ' >', "$input");
+    } */
+}

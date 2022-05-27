@@ -10,7 +10,7 @@ class AddMembershipIdToCustomersTable extends Migration
     {
         Schema::table('customers', function (Blueprint $table) {
             $table->unsignedBigInteger('membership_id')->default(1);
-            $table->foreign('membership_id')->references('id')->on('customers');
+            // $table->foreign('membership_id')->references('id')->on('memberships');
         });
     }
 

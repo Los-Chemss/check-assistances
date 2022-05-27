@@ -2611,6 +2611,30 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = ({
   data: function data() {
     return {
@@ -2636,9 +2660,10 @@ __webpack_require__.r(__webpack_exports__);
         to: 0
       },
       offset: 3,
-      criterio: "nombre",
+      criterio: "name",
       buscar: "",
-      showCustomers: 10
+      showCustomers: 10,
+      criterions: ["name", "code", "income"]
     };
   },
   computed: {
@@ -2671,8 +2696,8 @@ __webpack_require__.r(__webpack_exports__);
       }
 
       return pagesArray;
-    },
-    filter: undefined.getCustomers(undefined.page, undefined.buscar, undefined.criterio)
+    } // filter: this.getCustomers(this.page, this.buscar, this.criterio),
+
   },
   methods: {
     getCustomers: function getCustomers(page, buscar, criterio) {
@@ -2681,13 +2706,24 @@ __webpack_require__.r(__webpack_exports__);
       var url = "customers/data?page=" + page + "&buscar=" + buscar + "&criterio=" + criterio;
       axios.get(url).then(function (response) {
         var respuesta = response.data;
-        console.log(respuesta.memberships);
-        me.customers = respuesta.customers.data;
+        me.customers = respuesta.customers;
         me.pagination = respuesta.pagination;
-        me.memberships = respuesta.memberships;
       })["catch"](function (error) {
         console.table(error);
       });
+    },
+    getMemberships: function getMemberships() {
+      var me = this;
+      axios.get("memberships").then(function (response) {
+        console.log(response);
+        var respuesta = response.data;
+        me.memberships = respuesta;
+      })["catch"](function (error) {
+        console.log(error);
+      });
+    },
+    selectCriteria: function selectCriteria() {
+      this.buscar = "";
     },
     getRows: function getRows(event) {
       var newVal = null;
@@ -2707,8 +2743,7 @@ __webpack_require__.r(__webpack_exports__);
         code: me.name,
         income: me.income,
         membership: me.membership
-      }; //   console.log({ request });
-
+      };
       axios.post("customers/store", request).then(function (response) {
         console.log(response);
       })["catch"](function (error) {
@@ -2724,6 +2759,7 @@ __webpack_require__.r(__webpack_exports__);
         newVal = JSON.parse(JSON.stringify(event.target.options[event.target.options.selectedIndex]))._value;
       }
 
+      console.log(newVal);
       this.selectedMembership = newVal;
     },
     closeModal: function closeModal() {
@@ -2743,28 +2779,71 @@ __webpack_require__.r(__webpack_exports__);
                   this.modal = 1;
                   this.modalTitle = "New customer";
                   this.actionType = 1;
-                  /*  this.title = data.title;
-                  this.description = data.description;
-                  this.expiry_date = data.expiry_date;
-                  this.issued_date = data.issued_date; */
-
+                  this.name = "";
+                  this.code = "";
+                  this.income = "";
+                  this.selectedMembership = "";
                   break;
                 }
 
               case "update":
                 {
+                  console.log(data);
+                  var mem = null;
+                  this.memberships.forEach(function (m) {
+                    if (m.name === data.membership) mem = m;
+                  }); // console.log(this.formatDateToInput(new Date(data.income)));
+                  //   console.log(new Date(data.income).toISOString().slice(0, 10));
+
                   this.modal = 1;
                   this.modalTitle = "Update customer";
-                  this.actionType = 1;
+                  this.actionType = 2;
                   this.name = data.name;
                   this.code = data.code;
-                  this.income = data.income;
-                  this.membership = data.membership;
+                  this.income = new Date(data.income).toISOString().slice(0, 10);
+                  this.selectedMembership = mem;
                   break;
                 }
             }
           }
       }
+    },
+    deleteCustomer: function deleteCustomer(customer) {
+      var _this = this;
+
+      Swal.fire({
+        title: "Esta seguro que desea eliminar este objeto?",
+        type: "warning",
+        showCancelButton: true,
+        confirmButtonColor: "#3085d6",
+        cancelButtonColor: "#d33",
+        confirmButtonText: "Aceptar!",
+        cancelButtonText: "Cancelar",
+        confirmButtonClass: "btn btn-success",
+        cancelButtonClass: "btn btn-danger",
+        buttonsStyling: false,
+        reverseButtons: true
+      }).then(function (result) {
+        if (result.value) {
+          var me = _this;
+          axios.post("customers/" + customer + "/delete").then(function (response) {
+            console.log(response);
+            me.getCustomers(me.page, me.buscar, me.criterio);
+          })["catch"](function (error) {
+            console.log(error);
+          }); //
+        } else if ( // Read more about handling dismissals
+        result.dismiss === swal.DismissReason.cancel) {}
+      });
+    },
+    formatDateToInput: function formatDateToInput(date) {
+      var d = new Date(date),
+          month = "" + (d.getMonth() + 1),
+          day = "" + d.getDate(),
+          year = d.getFullYear();
+      if (month.length < 2) month = "0" + month;
+      if (day.length < 2) day = "0" + day;
+      return [day, month, year].join("/");
     },
     //Paginator
     cambiarPagina: function cambiarPagina(page, buscar, criterio) {
@@ -2776,7 +2855,8 @@ __webpack_require__.r(__webpack_exports__);
     }
   },
   mounted: function mounted() {
-    this.getCustomers();
+    this.getMemberships();
+    this.getCustomers(1, this.buscar, this.criterio);
   }
 });
 
@@ -21965,90 +22045,6 @@ var render = function () {
                             _c(
                               "div",
                               {
-                                staticClass: "input-group-prepend",
-                                attrs: { id: "col_render_length" },
-                              },
-                              [
-                                _c("label", { staticClass: "mr-2" }, [
-                                  _vm._v("Show"),
-                                ]),
-                                _vm._v(" "),
-                                _c(
-                                  "select",
-                                  {
-                                    directives: [
-                                      {
-                                        name: "model",
-                                        rawName: "v-model",
-                                        value: _vm.showCustomers,
-                                        expression: "showCustomers",
-                                      },
-                                    ],
-                                    staticClass:
-                                      "form-control-sm input-group-text",
-                                    attrs: {
-                                      name: "col_render_length  ",
-                                      "aria-controls": "col_render",
-                                    },
-                                    on: {
-                                      change: [
-                                        function ($event) {
-                                          var $$selectedVal =
-                                            Array.prototype.filter
-                                              .call(
-                                                $event.target.options,
-                                                function (o) {
-                                                  return o.selected
-                                                }
-                                              )
-                                              .map(function (o) {
-                                                var val =
-                                                  "_value" in o
-                                                    ? o._value
-                                                    : o.value
-                                                return val
-                                              })
-                                          _vm.showCustomers = $event.target
-                                            .multiple
-                                            ? $$selectedVal
-                                            : $$selectedVal[0]
-                                        },
-                                        function ($event) {
-                                          return _vm.getRows()
-                                        },
-                                      ],
-                                    },
-                                  },
-                                  [
-                                    _c("option", { attrs: { value: "10" } }, [
-                                      _vm._v("10"),
-                                    ]),
-                                    _vm._v(" "),
-                                    _c("option", { attrs: { value: "25" } }, [
-                                      _vm._v("25"),
-                                    ]),
-                                    _vm._v(" "),
-                                    _c("option", { attrs: { value: "50" } }, [
-                                      _vm._v("50"),
-                                    ]),
-                                    _vm._v(" "),
-                                    _c("option", { attrs: { value: "100" } }, [
-                                      _vm._v("100"),
-                                    ]),
-                                  ]
-                                ),
-                                _vm._v(" "),
-                                _c("label", { staticClass: "ml-2" }, [
-                                  _vm._v("entries"),
-                                ]),
-                              ]
-                            ),
-                          ]),
-                          _vm._v(" "),
-                          _c("div", { staticClass: "col-sm-12 col-md-6" }, [
-                            _c(
-                              "div",
-                              {
                                 staticClass:
                                   "input-group mb-3 dataTables_filter",
                               },
@@ -22070,112 +22066,236 @@ var render = function () {
                                         ],
                                         staticClass: "input-group-text",
                                         on: {
-                                          change: function ($event) {
-                                            var $$selectedVal =
-                                              Array.prototype.filter
-                                                .call(
-                                                  $event.target.options,
-                                                  function (o) {
-                                                    return o.selected
-                                                  }
-                                                )
-                                                .map(function (o) {
-                                                  var val =
-                                                    "_value" in o
-                                                      ? o._value
-                                                      : o.value
-                                                  return val
-                                                })
-                                            _vm.criterio = $event.target
-                                              .multiple
-                                              ? $$selectedVal
-                                              : $$selectedVal[0]
-                                          },
+                                          change: [
+                                            function ($event) {
+                                              var $$selectedVal =
+                                                Array.prototype.filter
+                                                  .call(
+                                                    $event.target.options,
+                                                    function (o) {
+                                                      return o.selected
+                                                    }
+                                                  )
+                                                  .map(function (o) {
+                                                    var val =
+                                                      "_value" in o
+                                                        ? o._value
+                                                        : o.value
+                                                    return val
+                                                  })
+                                              _vm.criterio = $event.target
+                                                .multiple
+                                                ? $$selectedVal
+                                                : $$selectedVal[0]
+                                            },
+                                            _vm.selectCriteria,
+                                          ],
                                         },
                                       },
-                                      _vm._l(
-                                        _vm.customers,
-                                        function (customer, index) {
-                                          return index < 1
-                                            ? _c(
-                                                "optgroup",
-                                                _vm._l(
-                                                  customer,
-                                                  function (
-                                                    value,
-                                                    key,
-                                                    cIndex
-                                                  ) {
-                                                    return _c(
-                                                      "option",
-                                                      {
-                                                        domProps: {
-                                                          value: key,
-                                                        },
-                                                      },
-                                                      [
-                                                        _vm._v(
-                                                          "\n                            " +
-                                                            _vm._s(key) +
-                                                            "\n                          "
-                                                        ),
-                                                      ]
-                                                    )
-                                                  }
-                                                ),
-                                                0
+                                      [
+                                        _c(
+                                          "optgroup",
+                                          _vm._l(
+                                            _vm.criterions,
+                                            function (criteria) {
+                                              return _c(
+                                                "option",
+                                                {
+                                                  domProps: { value: criteria },
+                                                },
+                                                [
+                                                  _vm._v(
+                                                    "\n                            " +
+                                                      _vm._s(criteria) +
+                                                      "\n                          "
+                                                  ),
+                                                ]
                                               )
-                                            : _vm._e()
-                                        }
-                                      ),
-                                      0
+                                            }
+                                          ),
+                                          0
+                                        ),
+                                      ]
                                     ),
                                   ]
                                 ),
                                 _vm._v(" "),
-                                _c("input", {
-                                  directives: [
-                                    {
-                                      name: "model",
-                                      rawName: "v-model",
-                                      value: _vm.buscar,
-                                      expression: "buscar",
-                                    },
-                                  ],
-                                  staticClass: "form-control",
-                                  attrs: {
-                                    type: "text",
-                                    placeholder: "Texto a buscar",
-                                  },
-                                  domProps: { value: _vm.buscar },
-                                  on: {
-                                    keyup: function ($event) {
-                                      if (
-                                        !$event.type.indexOf("key") &&
-                                        _vm._k(
-                                          $event.keyCode,
-                                          "enter",
-                                          13,
-                                          $event.key,
-                                          "Enter"
-                                        )
-                                      ) {
-                                        return null
-                                      }
-                                      return _vm.getCustomers(
-                                        1,
-                                        _vm.buscar,
-                                        _vm.criterio
-                                      )
-                                    },
-                                    input: function ($event) {
-                                      if ($event.target.composing) {
-                                        return
-                                      }
-                                      _vm.buscar = $event.target.value
-                                    },
-                                  },
-                                }),
+                                (_vm.criterio == "income"
+                                  ? "date"
+                                  : _vm.criterio == "code"
+                                  ? "number"
+                                  : "text") === "checkbox"
+                                  ? _c("input", {
+                                      directives: [
+                                        {
+                                          name: "model",
+                                          rawName: "v-model",
+                                          value: _vm.buscar,
+                                          expression: "buscar",
+                                        },
+                                      ],
+                                      staticClass: "form-control",
+                                      attrs: {
+                                        placeholder:
+                                          _vm.criterio == "income"
+                                            ? "22/07/2022"
+                                            : _vm.criterio == "code"
+                                            ? "0123"
+                                            : "Benny Juarez",
+                                        type: "checkbox",
+                                      },
+                                      domProps: {
+                                        checked: Array.isArray(_vm.buscar)
+                                          ? _vm._i(_vm.buscar, null) > -1
+                                          : _vm.buscar,
+                                      },
+                                      on: {
+                                        keyup: function ($event) {
+                                          if (
+                                            !$event.type.indexOf("key") &&
+                                            _vm._k(
+                                              $event.keyCode,
+                                              "enter",
+                                              13,
+                                              $event.key,
+                                              "Enter"
+                                            )
+                                          ) {
+                                            return null
+                                          }
+                                          return _vm.getCustomers(
+                                            1,
+                                            _vm.buscar,
+                                            _vm.criterio
+                                          )
+                                        },
+                                        change: function ($event) {
+                                          var $$a = _vm.buscar,
+                                            $$el = $event.target,
+                                            $$c = $$el.checked ? true : false
+                                          if (Array.isArray($$a)) {
+                                            var $$v = null,
+                                              $$i = _vm._i($$a, $$v)
+                                            if ($$el.checked) {
+                                              $$i < 0 &&
+                                                (_vm.buscar = $$a.concat([$$v]))
+                                            } else {
+                                              $$i > -1 &&
+                                                (_vm.buscar = $$a
+                                                  .slice(0, $$i)
+                                                  .concat($$a.slice($$i + 1)))
+                                            }
+                                          } else {
+                                            _vm.buscar = $$c
+                                          }
+                                        },
+                                      },
+                                    })
+                                  : (_vm.criterio == "income"
+                                      ? "date"
+                                      : _vm.criterio == "code"
+                                      ? "number"
+                                      : "text") === "radio"
+                                  ? _c("input", {
+                                      directives: [
+                                        {
+                                          name: "model",
+                                          rawName: "v-model",
+                                          value: _vm.buscar,
+                                          expression: "buscar",
+                                        },
+                                      ],
+                                      staticClass: "form-control",
+                                      attrs: {
+                                        placeholder:
+                                          _vm.criterio == "income"
+                                            ? "22/07/2022"
+                                            : _vm.criterio == "code"
+                                            ? "0123"
+                                            : "Benny Juarez",
+                                        type: "radio",
+                                      },
+                                      domProps: {
+                                        checked: _vm._q(_vm.buscar, null),
+                                      },
+                                      on: {
+                                        keyup: function ($event) {
+                                          if (
+                                            !$event.type.indexOf("key") &&
+                                            _vm._k(
+                                              $event.keyCode,
+                                              "enter",
+                                              13,
+                                              $event.key,
+                                              "Enter"
+                                            )
+                                          ) {
+                                            return null
+                                          }
+                                          return _vm.getCustomers(
+                                            1,
+                                            _vm.buscar,
+                                            _vm.criterio
+                                          )
+                                        },
+                                        change: function ($event) {
+                                          _vm.buscar = null
+                                        },
+                                      },
+                                    })
+                                  : _c("input", {
+                                      directives: [
+                                        {
+                                          name: "model",
+                                          rawName: "v-model",
+                                          value: _vm.buscar,
+                                          expression: "buscar",
+                                        },
+                                      ],
+                                      staticClass: "form-control",
+                                      attrs: {
+                                        placeholder:
+                                          _vm.criterio == "income"
+                                            ? "22/07/2022"
+                                            : _vm.criterio == "code"
+                                            ? "0123"
+                                            : "Benny Juarez",
+                                        type:
+                                          _vm.criterio == "income"
+                                            ? "date"
+                                            : _vm.criterio == "code"
+                                            ? "number"
+                                            : "text",
+                                      },
+                                      domProps: { value: _vm.buscar },
+                                      on: {
+                                        keyup: function ($event) {
+                                          if (
+                                            !$event.type.indexOf("key") &&
+                                            _vm._k(
+                                              $event.keyCode,
+                                              "enter",
+                                              13,
+                                              $event.key,
+                                              "Enter"
+                                            )
+                                          ) {
+                                            return null
+                                          }
+                                          return _vm.getCustomers(
+                                            1,
+                                            _vm.buscar,
+                                            _vm.criterio
+                                          )
+                                        },
+                                        input: function ($event) {
+                                          if ($event.target.composing) {
+                                            return
+                                          }
+                                          _vm.buscar = $event.target.value
+                                        },
+                                      },
+                                    }),
                                 _vm._v(" "),
                                 _c(
                                   "div",
@@ -22309,6 +22429,26 @@ var render = function () {
                                                 ),
                                                 _vm._v(
                                                   "\n                           \n                          "
+                                                ),
+                                                _c(
+                                                  "button",
+                                                  {
+                                                    staticClass:
+                                                      "btn btn-danger btn-sm",
+                                                    attrs: { type: "button" },
+                                                    on: {
+                                                      click: function ($event) {
+                                                        return _vm.deleteCustomer(
+                                                          customer.id
+                                                        )
+                                                      },
+                                                    },
+                                                  },
+                                                  [
+                                                    _c("i", {
+                                                      staticClass: "icon-trash",
+                                                    }),
+                                                  ]
                                                 ),
                                               ]),
                                             ],
@@ -22483,7 +22623,7 @@ var render = function () {
             ]),
           ]),
           _vm._v(" "),
-          _vm.actionType == 1
+          _vm.actionType == 1 || _vm.actionType == 2
             ? [
                 _c(
                   "div",
@@ -22628,6 +22768,12 @@ var render = function () {
                                 _vm._v(" "),
                                 _c("div", { staticClass: "form-group mb-5" }, [
                                   _c(
+                                    "label",
+                                    { attrs: { for: "membership" } },
+                                    [_vm._v("Membership")]
+                                  ),
+                                  _vm._v(" "),
+                                  _c(
                                     "select",
                                     {
                                       directives: [
@@ -22639,7 +22785,7 @@ var render = function () {
                                         },
                                       ],
                                       staticClass: "form-control p-0",
-                                      attrs: { id: "input6" },
+                                      attrs: { id: "membership" },
                                       on: {
                                         change: [
                                           function ($event) {
@@ -22675,11 +22821,7 @@ var render = function () {
                                         function (membership) {
                                           return _c(
                                             "option",
-                                            {
-                                              domProps: {
-                                                value: membership.id,
-                                              },
-                                            },
+                                            { domProps: { value: membership } },
                                             [
                                               _vm._v(
                                                 "\n                      " +
@@ -22693,12 +22835,6 @@ var render = function () {
                                     ],
                                     2
                                   ),
-                                  _vm._v(" "),
-                                  _c("span", { staticClass: "bar" }),
-                                  _vm._v(" "),
-                                  _c("label", { attrs: { for: "input6" } }, [
-                                    _vm._v("Membership"),
-                                  ]),
                                 ]),
                               ]),
                             ]),

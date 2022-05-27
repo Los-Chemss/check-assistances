@@ -6,6 +6,7 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\UserController;
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\FactorController;
+use App\Http\Controllers\MembershipController;
 use App\Mail\TestingMail;
 use Illuminate\Support\Facades\Mail;
 
@@ -58,15 +59,10 @@ Route::middleware(['auth'])->group(function () {
     Route::get('customers/data',  [CustomerController::class, 'index']);
     Route::post('customers/store',  [CustomerController::class, 'store']);
     Route::post('customers/{id}/update',  [CustomerController::class, 'update']);
-    Route::post('customers/{id}/delete',  [CustomerController::class, 'delete']);
+    Route::post('customers/{id}/delete',  [CustomerController::class, 'destroy']);
 
-    //Scenarios
-    Route::post('save-situation', [FactorController::class, 'saveScenario']);
-    Route::post('copy', [FactorController::class, 'copyScenario']);
-    Route::post('delete/{id}', [FactorController::class, 'deleteScennary']);
-    Route::post('print-summary', [FactorController::class, 'printSummary']);
-    Route::get('open_pdf/{fileName}', [FactorController::class, 'openPdf']);
-    Route::get('delete_temp_file/{fileName}', [FactorController::class, 'deletePdf']);
+    Route::get('memberships',  [MembershipController::class, 'index']);
+    Route::post('memberships',  [MembershipController::class, 'store']);
 
     Route::any('{any}', function () {
         abort(404);

@@ -12,18 +12,18 @@ class PaymentSeeder extends Seeder
 {
     public function run()
     {
-        $customers = Customer::select('id', 'company_id')->get();
+        $customers = Customer::select('id')->where('company_id', 2)->get();
         foreach ($customers as $customer) {
-            $company = Company::where('id', $customer->company_id)->first();
-            $membership = Membership::where('company_id', $company->id)
+           /*  $company = Company::where('id', $customer->company_id)->first();
+            $membership = Membership::where('company_id', 2)
                 ->where('name', 'monthly')
-                ->select('id')->first();
+                ->select('id')->first(); */
 
             Payment::create([
                 'paid_at' => '2022-05-20',
                 'expires_at' => '2022-06-20',
                 'customer_id' => $customer->id,
-                'membership_id' => $membership->id,
+                'membership_id' => 3,
             ]);
         }
     }

@@ -8,6 +8,7 @@ use App\Http\Requests\UpdateCustomerRequest;
 use App\Models\Branch;
 use App\Models\Company;
 use App\Models\Membership;
+use App\Models\Payment;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use App\Models\User;
@@ -36,38 +37,31 @@ class CustomerController extends Controller
             $buscar = $request->buscar;
             $criterio = $request->criterio;
 
-
             $user = Auth::user() ? Auth::user() : auth('sanctum')->user();
             // return $user;
             if (!$user) return response(null, 404);
-            $branch = Branch::where('id', $user->branch_id)->first();
-            $companies = Company::where('user_id', $user->id)
-                ->where('id', $branch->company_id)->get();
-            $companyIds = [];
-            foreach ($companies as $c) {
-                array_push($companyIds, $c->id);
+
+            //
+            $customers = Customer::criterion($criterio, $buscar)->with(['membership' => function ($query) {
+                $query->with(['payments' => function ($q) {
+                    $q->with('membership');
+                    // $q->where('customer_id', 'customer.id')->orderBy('paid_at', 'desc')->first();
+                }]);
+            }])
+                ->paginate(10); //add pagination
+            $customersRes = [];
+            foreach ($customers as $cus) {
+                $payment = Payment::where('customer_id', $cus->id)->orderBy('paid_at', 'desc')->first();
+                array_push($customersRes, [
+                    'id' => $cus->id,
+                    'name' => $cus->name,
+                    'code' => $cus->code,
+                    'income' => $cus->income,
+                    'membership' => $cus->membership['name'],
+                    'last paid' => $payment? $payment->paid_at:'',
+                    'expires at' => $payment? $payment->expires_at:''
+                ]);
             }
-
-            $memberships = Membership::whereIn('company_id', $companyIds)->get();
-
-            if ($buscar == '') {
-                $customers = Customer::with(['membership' => function ($query) {
-                    $query->with(['payments' => function ($q) {
-                        $q->orderBy('paid_at', 'desc')->first();
-                    }]);
-                }])->paginate(10); //add pagination
-
-            } else {
-                $customers = Customer::where($criterio, 'like', '%' . $buscar . '%')->with(['membership' => function ($query) {
-                    $query->with(['payments' => function ($q) {
-                        $q->orderBy('paid_at', 'desc')->first();
-                    }]);
-                }])->paginate(10); //add pagination
-            }
-            // $customers;
-
-            // return response()->json([$customers, $memberships]);
-
             return [
                 'pagination' => [
                     'total'        => $customers->total(),
@@ -77,8 +71,7 @@ class CustomerController extends Controller
                     'from'         => $customers->firstItem(),
                     'to'           => $customers->lastItem(),
                 ],
-                'customers' => $customers,
-                'memberships' => $memberships
+                'customers' => $customersRes
             ];
         } catch (Exception $e) {
             return response($e->getMessage());
@@ -187,9 +180,12 @@ class CustomerController extends Controller
      * @param  \App\Models\Customer  $customer
      * @return \Illuminate\Http\Response
      */
-    public function destroy(Customer $customer)
+    public function destroy( $id)
     {
-        $customer->delete();
-        return response()->json();
+        return Customer::where('id',$id)->delete();
+            // return $customer;
+
+        // $customer->delete();
+        // return response()->json();
     }
 }

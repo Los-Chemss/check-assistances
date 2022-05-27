@@ -5,6 +5,9 @@ namespace App\Http\Controllers;
 use App\Models\Membership;
 use App\Http\Requests\StoreMembershipRequest;
 use App\Http\Requests\UpdateMembershipRequest;
+use App\Models\Branch;
+use App\Models\Company;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Request;
 
 class MembershipController extends Controller
@@ -16,7 +19,28 @@ class MembershipController extends Controller
      */
     public function index()
     {
-        return Membership::all();
+        $user = Auth::user();
+        if (!$user) return response(null, 404);
+        $branch = Branch::where('id', $user->branch_id)->first();
+        $companies = Company::where('user_id', $user->id)
+            ->where('id', $branch->company_id)->get();
+        $companyIds = [];
+        foreach ($companies as $c) {
+            array_push($companyIds, $c->id);
+        }
+        $memberships = Membership::whereIn('company_id', $companyIds)->get();
+        return $memberships;
+      /*   return [
+            'pagination' => [
+                'total'        => $memberships->total(),
+                'current_page' => $memberships->currentPage(),
+                'per_page'     => $memberships->perPage(),
+                'last_page'    => $memberships->lastPage(),
+                'from'         => $memberships->firstItem(),
+                'to'           => $memberships->lastItem(),
+            ],
+            'memberships' => $memberships
+        ]; */
     }
 
     /**
