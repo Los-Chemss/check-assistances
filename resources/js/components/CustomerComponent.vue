@@ -1,39 +1,226 @@
 <template>
-  <div class="card">
-    <div class="card-header">
-      <button
-        type="button"
-        class="btn btn-primary btn-lg fas fa-edit"
-        @click="openModal('customers', 'store')"
-      >
-        New Customer
-      </button>
+  <div v-if="loading" style="heigth: 100%">
+    <div class="card shadow p-1 rounded">
+      <div class="card-body d-flex justify-content-around">
+        <div class="spinner-grow text-success center" role="status">
+          <span class="sr-only" style="">Loading...</span>
+        </div>
+      </div>
     </div>
-    <div class="card-body">
-      <h4 class="card-title">Editable with Datatable</h4>
-      <h6 class="card-subtitle">Just click on word which you want to change and enter</h6>
-      <table
-        class="table table-striped table-bordered table-responsive"
-        id="editable-datatable"
-      >
-        <thead>
-          <tr v-for="(customer, index) in customers" v-if="index < 1">
-            <th v-for="(value, key, cIndex) in customer">{{ key }}</th>
-          </tr>
-        </thead>
-        <tbody>
-          <tr class="gradeX" v-for="(customer, index) in customers" v-if="index">
-            <td v-for="(value, key, cIndex) in customer">{{ value }}</td>
-          </tr>
-        </tbody>
-        <tfoot>
-          <tr v-for="(customer, index) in customers" v-if="index < 1">
-            <th v-for="(value, key, cIndex) in customer">{{ key }}</th>
-          </tr>
-        </tfoot>
-      </table>
+  </div>
+  <div v-else>
+    <div class="row">
+      <div class="col-12">
+        <div class="card">
+          <div class="card-header border-bottom shadow-sm pt-4 mt-4 pb-2 mb-22">
+            <button
+              type="button"
+              class="btn btn-primary btn-lg fas fa-edit"
+              @click="openModal('customers', 'store')"
+            >
+              New Customer
+            </button>
+          </div>
+          <div class="card-body">
+            <h4 class="card-title">Customers</h4>
+            <div class="table-responsive">
+              <div
+                id="col_render_wrapper"
+                class="dataTables_wrapper container-fluid dt-bootstrap4"
+              >
+                <div class="row">
+                  <div class="col-sm-12 col-md-6">
+                    <div class="input-group-prepend" id="col_render_length">
+                      <label class="mr-2">Show</label>
+                      <select
+                        name="col_render_length  "
+                        aria-controls="col_render"
+                        class="form-control-sm input-group-text"
+                        v-model="showCustomers"
+                        @change="getRows()"
+                      >
+                        <option value="10">10</option>
+                        <option value="25">25</option>
+                        <option value="50">50</option>
+                        <option value="100">100</option>
+                      </select>
+                      <label class="ml-2">entries</label>
+                    </div>
+                  </div>
+                  <div class="col-sm-12 col-md-6">
+                    <div class="input-group mb-3 dataTables_filter">
+                      <div class="input-group-prepend">
+                        <!--  <span class="input-group-text">$</span> -->
+
+                        <select class="input-group-text" v-model="criterio">
+                          <optgroup
+                            v-for="(customer, index) in customers"
+                            v-if="index < 1"
+                          >
+                            <option v-for="(value, key, cIndex) in customer" :value="key">
+                              {{ key }}
+                            </option>
+                          </optgroup>
+                          <!--  <option value="descripcion">Descripción</option> -->
+                        </select>
+                      </div>
+                      <input
+                        type="text"
+                        v-model="buscar"
+                        @keyup.enter="getCustomers(1, buscar, criterio)"
+                        class="form-control"
+                        placeholder="Texto a buscar"
+                      />
+                      <div class="input-group-append">
+                        <button
+                          type="submit"
+                          @click="getCustomers(1, buscar, criterio)"
+                          class="btn-sm btn-primary input-group-text"
+                        >
+                          <i class="fa fa-search"></i>
+                        </button>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+                <div class="row">
+                  <div class="col-sm-12">
+                    <table
+                      id="col_render"
+                      class="table table-bordered table-striped table-sm"
+                      style="width: 100%"
+                      role="grid"
+                      aria-describedby="col_render_info"
+                    >
+                      <thead>
+                        <tr v-for="(customer, index) in customers" v-if="index < 1">
+                          <th v-for="(value, key, cIndex) in customer">
+                            {{ key }}
+                          </th>
+                          <th></th>
+                        </tr>
+                      </thead>
+                      <tbody>
+                        <tr
+                          v-for="(customer, index) in customers"
+                          v-if="index <= pagination.per_page"
+                        >
+                          <td v-for="(value, key, cIndex) in customer" max-height="5px">
+                            {{ value }}
+                          </td>
+                          <td>
+                            <button
+                              type="button"
+                              @click="openModal('customers', 'update', customer)"
+                              class="btn btn-warning btn-sm"
+                            >
+                              <i class="icon-pencil"></i>
+                            </button>
+                            &nbsp;
+                            <!--   <template v-if="categoria.condicion">
+                              <button
+                                type="button"
+                                class="btn btn-danger btn-sm"
+                                @click="desactivarCategoria(categoria.id)"
+                              >
+                                <i class="icon-trash"></i>
+                              </button>
+                            </template>
+                            <template v-else>
+                              <button
+                                type="button"
+                                class="btn btn-info btn-sm"
+                                @click="activarCategoria(categoria.id)"
+                              >
+                                <i class="icon-check"></i>
+                              </button>
+                            </template> -->
+                          </td>
+                        </tr>
+                      </tbody>
+                      <tfoot>
+                        <tr></tr>
+                        <tr v-for="(customer, index) in customers" v-if="index < 1">
+                          <th v-for="(value, key, cIndex) in customer">{{ key }}</th>
+                          <th></th>
+                        </tr>
+                      </tfoot>
+                    </table>
+                  </div>
+                </div>
+                <div class="row">
+                  <div class="col-sm-12 col-md-5">
+                    <div
+                      class="dataTables_info"
+                      id="col_render_info"
+                      role="status"
+                      aria-live="polite"
+                    >
+                      Showing 1 to 10 of 57 entries
+                    </div>
+                  </div>
+                  <div class="col-sm-12 col-md-7">
+                    <div
+                      class="dataTables_paginate paging_simple_numbers"
+                      id="col_render_paginate"
+                    >
+                      <nav>
+                        <ul class="pagination">
+                          <li class="page-item" v-if="pagination.current_page > 1">
+                            <a
+                              class="page-link"
+                              href="#"
+                              @click.prevent="
+                                cambiarPagina(
+                                  pagination.current_page - 1,
+                                  buscar,
+                                  criterio
+                                )
+                              "
+                              >Ant</a
+                            >
+                          </li>
+                          <li
+                            class="page-item"
+                            v-for="page in pagesNumber"
+                            :key="page"
+                            :class="[page == isActived ? 'active' : '']"
+                          >
+                            <a
+                              class="page-link"
+                              href="#"
+                              @click.prevent="cambiarPagina(page, buscar, criterio)"
+                              v-text="page"
+                            ></a>
+                          </li>
+                          <li
+                            class="page-item"
+                            v-if="pagination.current_page < pagination.last_page"
+                          >
+                            <a
+                              class="page-link"
+                              href="#"
+                              @click.prevent="
+                                cambiarPagina(
+                                  pagination.current_page + 1,
+                                  buscar,
+                                  criterio
+                                )
+                              "
+                              >Sig</a
+                            >
+                          </li>
+                        </ul>
+                      </nav>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
     </div>
-    <!-- open modal -->
     <template v-if="actionType == 1">
       <div
         class="modal fade"
@@ -52,7 +239,6 @@
           <div class="modal-content">
             <div class="modal-header">
               <h4 class="modal-title" v-text="modalTitle"></h4>
-
               <button
                 type="button"
                 class="close"
@@ -65,42 +251,38 @@
             </div>
             <div class="modal-body">
               <div class="flex flex-wrap -m-2">
-                <!-- name	code	income	created_at	updated_at	company_id	membership_id	membership -->
-                <!--   <div class="card">
-                  <div class="card-body"> -->
-                <form class="floating-labels mt-4">
+                <form class="">
                   <div class="form-group mb-5">
-                    <input type="text" class="form-control" id="name" v-model="name" />
-                    <span class="bar"></span>
                     <label for="name">name</label>
+                    <input type="text" class="form-control" id="name" v-model="name" />
+                    <!--    <span class="bar"></span> -->
                   </div>
                   <div class="form-group mb-5">
-                    <input type="text" class="form-control" id="code" v-model="code" />
-                    <span class="bar"></span>
                     <label for="code">code</label>
+                    <input type="text" class="form-control" id="code" v-model="code" />
+                    <!-- <span class="bar"></span> -->
                   </div>
                   <div class="form-group mb-5">
+                    <label for="income">income</label>
                     <input
                       type="date"
                       class="form-control text-right"
                       id="income"
                       v-model="income"
                     />
-                    <label for="income" class="text-right">income</label>
-                    <span class="bar"></span>
+                    <!-- <span class="bar"></span> -->
                   </div>
                   <div class="form-group mb-5">
                     <select
                       class="form-control p-0"
                       id="input6"
                       v-model="selectedMembership"
-                      @change="selMembership"
+                      @change="selectMembership"
                     >
                       <option></option>
                       <option v-for="membership in memberships" :value="membership.id">
                         {{ membership.name }}
                       </option>
-                      <!--  <option>Female</option> -->
                     </select>
                     <span class="bar"></span>
                     <label for="input6">Membership</label>
@@ -140,6 +322,7 @@
 export default {
   data() {
     return {
+      loading: false,
       customers: [],
       user: {},
       memberships: [],
@@ -152,25 +335,84 @@ export default {
       income: null,
       membership: null,
       selectedMembership: null,
+
+      pagination: {
+        total: 0,
+        current_page: 0,
+        per_page: 0,
+        last_page: 0,
+        from: 0,
+        to: 0,
+      },
+      offset: 3,
+      criterio: "nombre",
+      buscar: "",
+
+      showCustomers: 10,
     };
   },
-  mounted() {
-    this.getCustomers();
+
+  computed: {
+    isActived: function () {
+      return this.pagination.current_page;
+    },
+    //Calcula los elementos de la paginación
+    pagesNumber: function () {
+      if (!this.pagination.to) {
+        return [];
+      }
+
+      var from = this.pagination.current_page - this.offset;
+      if (from < 1) {
+        from = 1;
+      }
+
+      var to = from + this.offset * 2;
+      if (to >= this.pagination.last_page) {
+        to = this.pagination.last_page;
+      }
+
+      var pagesArray = [];
+      while (from <= to) {
+        pagesArray.push(from);
+        from++;
+      }
+      return pagesArray;
+    },
+
+    filter: this.getCustomers(this.page, this.buscar, this.criterio),
   },
+
   methods: {
-    getCustomers() {
+    getCustomers(page, buscar, criterio) {
+      console.log("getted");
       let me = this;
+      let url =
+        "customers/data?page=" + page + "&buscar=" + buscar + "&criterio=" + criterio;
       axios
-        .get("customers/data")
+        .get(url)
         .then((response) => {
-          //   console.log(response);
-          me.customers = response.data[0];
-          me.memberships = response.data[1];
-          console.log(me.customers);
+          var respuesta = response.data;
+          console.log(respuesta.memberships);
+          me.customers = respuesta.customers.data;
+          me.pagination = respuesta.pagination;
+          me.memberships = respuesta.memberships;
         })
         .catch((error) => {
           console.table(error);
         });
+    },
+
+    getRows(event) {
+      let newVal = null;
+      if ("criterion" in event) {
+        newVal = event;
+      } else {
+        newVal = JSON.parse(
+          JSON.stringify(event.target.options[event.target.options.selectedIndex])
+        )._value;
+      }
+      this.showCustomers = newVal;
     },
 
     saveCustomer() {
@@ -179,7 +421,7 @@ export default {
         name: me.name,
         code: me.name,
         income: me.income,
-        membership: me.membership
+        membership: me.membership,
       };
 
       //   console.log({ request });
@@ -194,19 +436,9 @@ export default {
         });
     },
 
-    selMembership(event) {
-      console.log(event);
+    selectMembership(event) {
       let newVal = null;
 
-      event.target.options[event.target.options.selectedIndex]
-        ? (this.selectedMembership =
-            event.target.options[event.target.options.selectedIndex])
-        : console.log("Invalid option");
-      return;
-
-      console.log(event.target);
-      console.log(event.target.options[event.target.options.selectedIndex]);
-      //   return;
       if ("criterion" in event) {
         newVal = event;
       } else {
@@ -214,8 +446,7 @@ export default {
           JSON.stringify(event.target.options[event.target.options.selectedIndex])
         )._value;
       }
-      console.log(newVal);
-      this.selectedMembership = event;
+      this.selectedMembership = newVal;
     },
 
     closeModal() {
@@ -239,10 +470,33 @@ export default {
               this.issued_date = data.issued_date; */
               break;
             }
+            case "update": {
+              this.modal = 1;
+              this.modalTitle = "Update customer";
+              this.actionType = 1;
+              this.name = data.name;
+              this.code = data.code;
+              this.income = data.income;
+              this.membership = data.membership;
+              break;
+            }
           }
         }
       }
     },
+
+    //Paginator
+    cambiarPagina(page, buscar, criterio) {
+      let me = this;
+      //Actualiza la página actual
+      me.pagination.current_page = page;
+      //Envia la petición para visualizar la data de esa página
+      me.getCustomers(page, buscar, criterio);
+    },
+  },
+
+  mounted() {
+    this.getCustomers();
   },
 };
 </script>

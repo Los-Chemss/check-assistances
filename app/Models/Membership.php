@@ -10,6 +10,6 @@ class Membership extends Model
     use HasFactory;
 
     public function payments(){
-        return $this->hasMany(Payment::class);//->select('id','paid_at','expires_at');
+        return $this->hasMany(Payment::class)->select('id','paid_at','expires_at');
     }
 }

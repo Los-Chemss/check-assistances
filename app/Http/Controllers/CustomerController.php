@@ -32,6 +32,11 @@ class CustomerController extends Controller
     public function index(Request $request)
     {
         try {
+
+            $buscar = $request->buscar;
+            $criterio = $request->criterio;
+
+
             $user = Auth::user() ? Auth::user() : auth('sanctum')->user();
             // return $user;
             if (!$user) return response(null, 404);
@@ -45,13 +50,36 @@ class CustomerController extends Controller
 
             $memberships = Membership::whereIn('company_id', $companyIds)->get();
 
-            $customers = Customer::with(['membership' => function ($query) {
-                $query->with(['payments' => function ($q) {
-                    $q->orderBy('paid_at', 'desc')->first();
-                }]);
-            }])->get();
+            if ($buscar == '') {
+                $customers = Customer::with(['membership' => function ($query) {
+                    $query->with(['payments' => function ($q) {
+                        $q->orderBy('paid_at', 'desc')->first();
+                    }]);
+                }])->paginate(10); //add pagination
 
-            return response()->json([$customers, $memberships]);
+            } else {
+                $customers = Customer::where($criterio, 'like', '%' . $buscar . '%')->with(['membership' => function ($query) {
+                    $query->with(['payments' => function ($q) {
+                        $q->orderBy('paid_at', 'desc')->first();
+                    }]);
+                }])->paginate(10); //add pagination
+            }
+            // $customers;
+
+            // return response()->json([$customers, $memberships]);
+
+            return [
+                'pagination' => [
+                    'total'        => $customers->total(),
+                    'current_page' => $customers->currentPage(),
+                    'per_page'     => $customers->perPage(),
+                    'last_page'    => $customers->lastPage(),
+                    'from'         => $customers->firstItem(),
+                    'to'           => $customers->lastItem(),
+                ],
+                'customers' => $customers,
+                'memberships' => $memberships
+            ];
         } catch (Exception $e) {
             return response($e->getMessage());
         }
