@@ -1,6 +1,17 @@
 /******/ (() => { // webpackBootstrap
 /******/ 	var __webpack_modules__ = ({
 
+/***/ "./node_modules/@babel/runtime/regenerator/index.js":
+/*!**********************************************************!*\
+  !*** ./node_modules/@babel/runtime/regenerator/index.js ***!
+  \**********************************************************/
+/***/ ((module, __unused_webpack_exports, __webpack_require__) => {
+
+module.exports = __webpack_require__(/*! regenerator-runtime */ "./node_modules/regenerator-runtime/runtime.js");
+
+
+/***/ }),
+
 /***/ "./node_modules/axios/index.js":
 /*!*************************************!*\
   !*** ./node_modules/axios/index.js ***!
@@ -2054,6 +2065,570 @@ module.exports = {
 
 /***/ }),
 
+/***/ "./node_modules/babel-loader/lib/index.js??clonedRuleSet-5[0].rules[0].use[0]!./node_modules/vue-loader/lib/index.js??vue-loader-options!./resources/js/components/AssistanceComponent.vue?vue&type=script&lang=js&":
+/*!**************************************************************************************************************************************************************************************************************************!*\
+  !*** ./node_modules/babel-loader/lib/index.js??clonedRuleSet-5[0].rules[0].use[0]!./node_modules/vue-loader/lib/index.js??vue-loader-options!./resources/js/components/AssistanceComponent.vue?vue&type=script&lang=js& ***!
+  \**************************************************************************************************************************************************************************************************************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   "default": () => (__WEBPACK_DEFAULT_EXPORT__)
+/* harmony export */ });
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+/* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = ({
+  data: function data() {
+    return {
+      loading: false,
+      assistances: [],
+      user: {},
+      memberships: [],
+      modal: "",
+      modalTitle: "",
+      actionType: 0,
+      errors: null,
+      name: null,
+      code: null,
+      income: null,
+      membership: null,
+      selectedMembership: null,
+      pagination: {
+        total: 0,
+        current_page: 0,
+        per_page: 0,
+        last_page: 0,
+        from: 0,
+        to: 0
+      },
+      offset: 3,
+      criterio: "name",
+      buscar: "",
+      showAssistances: 10,
+      criterions: ["name", "code", "income"]
+    };
+  },
+  computed: {
+    isActived: function isActived() {
+      return this.pagination.current_page;
+    },
+    //Calcula los elementos de la paginación
+    pagesNumber: function pagesNumber() {
+      if (!this.pagination.to) {
+        return [];
+      }
+
+      var from = this.pagination.current_page - this.offset;
+
+      if (from < 1) {
+        from = 1;
+      }
+
+      var to = from + this.offset * 2;
+
+      if (to >= this.pagination.last_page) {
+        to = this.pagination.last_page;
+      }
+
+      var pagesArray = [];
+
+      while (from <= to) {
+        pagesArray.push(from);
+        from++;
+      }
+
+      return pagesArray;
+    } // filter: this.getAssistances(this.page, this.buscar, this.criterio),
+
+  },
+  methods: {
+    getAssistances: function getAssistances(page, buscar, criterio) {
+      console.log("getted");
+      var me = this;
+      var url = "assistances/data?page=" + page + "&buscar=" + buscar + "&criterio=" + criterio;
+      axios.get(url).then(function (response) {
+        var respuesta = response.data;
+        me.assistances = respuesta.assistances;
+        me.pagination = respuesta.pagination;
+      })["catch"](function (error) {
+        console.table(error);
+      });
+    },
+    getMemberships: function getMemberships() {
+      var me = this;
+      axios.get("memberships").then(function (response) {
+        console.log(response);
+        var respuesta = response.data;
+        me.memberships = respuesta;
+      })["catch"](function (error) {
+        console.log(error);
+      });
+    },
+    selectCriteria: function selectCriteria() {
+      this.buscar = "";
+    },
+    getRows: function getRows(event) {
+      var newVal = null;
+
+      if ("criterion" in event) {
+        newVal = event;
+      } else {
+        newVal = JSON.parse(JSON.stringify(event.target.options[event.target.options.selectedIndex]))._value;
+      }
+
+      this.showAssistances = newVal;
+    },
+    saveAssistance: function saveAssistance() {
+      var me = this;
+      var request = {
+        name: me.name,
+        code: me.name,
+        income: me.income,
+        membership: me.membership
+      };
+      axios.post("assistances/store", request).then(function (response) {
+        console.log(response);
+      })["catch"](function (error) {
+        console.table(error);
+      });
+    },
+    selectMembership: function selectMembership(event) {
+      var newVal = null;
+
+      if ("criterion" in event) {
+        newVal = event;
+      } else {
+        newVal = JSON.parse(JSON.stringify(event.target.options[event.target.options.selectedIndex]))._value;
+      }
+
+      console.log(newVal);
+      this.selectedMembership = newVal;
+    },
+    closeModal: function closeModal() {
+      this.modal = 0;
+      this.title = "";
+      this.errors = {}; //   this.userFiles();//reload component
+    },
+    openModal: function openModal(model, action) {
+      var data = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : [];
+
+      switch (model) {
+        case "assistances":
+          {
+            switch (action) {
+              case "store":
+                {
+                  this.modal = 1;
+                  this.modalTitle = "New assistance";
+                  this.actionType = 1;
+                  this.name = "";
+                  this.code = "";
+                  this.income = "";
+                  this.selectedMembership = "";
+                  break;
+                }
+
+              case "update":
+                {
+                  console.log(data);
+                  var mem = null;
+                  this.memberships.forEach(function (m) {
+                    if (m.name === data.membership) mem = m;
+                  }); // console.log(this.formatDateToInput(new Date(data.income)));
+                  //   console.log(new Date(data.income).toISOString().slice(0, 10));
+
+                  this.modal = 1;
+                  this.modalTitle = "Update assistance";
+                  this.actionType = 2;
+                  this.name = data.name;
+                  this.code = data.code;
+                  this.income = new Date(data.income).toISOString().slice(0, 10);
+                  this.selectedMembership = mem;
+                  break;
+                }
+            }
+          }
+      }
+    },
+    deleteAssistance: function deleteAssistance(assistance) {
+      var _this = this;
+
+      Swal.fire({
+        title: "Esta seguro que desea eliminar este objeto?",
+        type: "warning",
+        showCancelButton: true,
+        confirmButtonColor: "#3085d6",
+        cancelButtonColor: "#d33",
+        confirmButtonText: "Aceptar!",
+        cancelButtonText: "Cancelar",
+        confirmButtonClass: "btn btn-success",
+        cancelButtonClass: "btn btn-danger",
+        buttonsStyling: false,
+        reverseButtons: true
+      }).then(function (result) {
+        if (result.value) {
+          var me = _this;
+          axios.post("assistances/" + assistance + "/delete").then(function (response) {
+            console.log(response);
+            me.getAssistances(me.page, me.buscar, me.criterio);
+          })["catch"](function (error) {
+            console.log(error);
+          }); //
+        } else if ( // Read more about handling dismissals
+        result.dismiss === swal.DismissReason.cancel) {}
+      });
+    },
+    formatDateToInput: function formatDateToInput(date) {
+      var d = new Date(date),
+          month = "" + (d.getMonth() + 1),
+          day = "" + d.getDate(),
+          year = d.getFullYear();
+      if (month.length < 2) month = "0" + month;
+      if (day.length < 2) day = "0" + day;
+      return [day, month, year].join("/");
+    },
+    //Paginator
+    cambiarPagina: function cambiarPagina(page, buscar, criterio) {
+      var me = this; //Actualiza la página actual
+
+      me.pagination.current_page = page; //Envia la petición para visualizar la data de esa página
+
+      me.getAssistances(page, buscar, criterio);
+    }
+  },
+  mounted: function mounted() {
+    this.getMemberships();
+    this.getAssistances(1, this.buscar, this.criterio);
+  }
+});
+
+/***/ }),
+
 /***/ "./node_modules/babel-loader/lib/index.js??clonedRuleSet-5[0].rules[0].use[0]!./node_modules/vue-loader/lib/index.js??vue-loader-options!./resources/js/components/ChangeThemmeComponent.vue?vue&type=script&lang=js&":
 /*!****************************************************************************************************************************************************************************************************************************!*\
   !*** ./node_modules/babel-loader/lib/index.js??clonedRuleSet-5[0].rules[0].use[0]!./node_modules/vue-loader/lib/index.js??vue-loader-options!./resources/js/components/ChangeThemmeComponent.vue?vue&type=script&lang=js& ***!
@@ -2255,15 +2830,17 @@ __webpack_require__.r(__webpack_exports__);
         var movement = null;
         var messagge = null;
         var customer = response.data.customer;
+        var info = (customer.membership ? "Membership: " + customer.membership.name : "") + (customer.membership.payments ? "\n Expires at: " + customer.membership.payments[0].expires_at : "");
+        me.code = "";
 
         if ("entrada" in response.data) {
           movement = "entrada";
-          messagge = "Bienvenido " + customer.name;
+          messagge = "Bienvenido " + customer.name + "\n" + info;
         }
 
         if ("salida" in response.data) {
           movement = "salida";
-          messagge = "Gracias por asistir :) " + customer.name;
+          messagge = "Gracias por asistir :) " + customer.name + info;
         }
 
         Swal.fire({
@@ -2272,7 +2849,14 @@ __webpack_require__.r(__webpack_exports__);
           text: messagge
         });
       })["catch"](function (error) {
-        console.table(error);
+        if (error.response.status === 404) {
+          Swal.fire({
+            type: "error",
+            title: "Codigo invalido",
+            text: "El codigo es invalido"
+          });
+        } //   console.log(error);
+
       });
     }
   }
@@ -2703,7 +3287,7 @@ __webpack_require__.r(__webpack_exports__);
     getCustomers: function getCustomers(page, buscar, criterio) {
       console.log("getted");
       var me = this;
-      var url = "customers/data?page=" + page + "&buscar=" + buscar + "&criterio=" + criterio;
+      var url = "customers?page=" + page + "&buscar=" + buscar + "&criterio=" + criterio;
       axios.get(url).then(function (response) {
         var respuesta = response.data;
         me.customers = respuesta.customers;
@@ -2714,7 +3298,7 @@ __webpack_require__.r(__webpack_exports__);
     },
     getMemberships: function getMemberships() {
       var me = this;
-      axios.get("memberships").then(function (response) {
+      axios.get("select-memberships").then(function (response) {
         console.log(response);
         var respuesta = response.data;
         me.memberships = respuesta;
@@ -2855,8 +3439,8 @@ __webpack_require__.r(__webpack_exports__);
     }
   },
   mounted: function mounted() {
-    this.getMemberships();
     this.getCustomers(1, this.buscar, this.criterio);
+    this.getMemberships();
   }
 });
 
@@ -2913,6 +3497,1198 @@ __webpack_require__.r(__webpack_exports__);
 
       return (zero + num).slice(-digit);
     }
+  }
+});
+
+/***/ }),
+
+/***/ "./node_modules/babel-loader/lib/index.js??clonedRuleSet-5[0].rules[0].use[0]!./node_modules/vue-loader/lib/index.js??vue-loader-options!./resources/js/components/MembershipComponent.vue?vue&type=script&lang=js&":
+/*!**************************************************************************************************************************************************************************************************************************!*\
+  !*** ./node_modules/babel-loader/lib/index.js??clonedRuleSet-5[0].rules[0].use[0]!./node_modules/vue-loader/lib/index.js??vue-loader-options!./resources/js/components/MembershipComponent.vue?vue&type=script&lang=js& ***!
+  \**************************************************************************************************************************************************************************************************************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   "default": () => (__WEBPACK_DEFAULT_EXPORT__)
+/* harmony export */ });
+var _methods;
+
+function _defineProperty(obj, key, value) { if (key in obj) { Object.defineProperty(obj, key, { value: value, enumerable: true, configurable: true, writable: true }); } else { obj[key] = value; } return obj; }
+
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+/* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = ({
+  data: function data() {
+    var _ref;
+
+    return _ref = {
+      loading: false,
+      memberships: [],
+      user: {}
+    }, _defineProperty(_ref, "memberships", []), _defineProperty(_ref, "modal", ""), _defineProperty(_ref, "modalTitle", ""), _defineProperty(_ref, "actionType", 0), _defineProperty(_ref, "errors", null), _defineProperty(_ref, "name", null), _defineProperty(_ref, "code", null), _defineProperty(_ref, "income", null), _defineProperty(_ref, "membership", null), _defineProperty(_ref, "selectedMembership", null), _defineProperty(_ref, "pagination", {
+      total: 0,
+      current_page: 0,
+      per_page: 0,
+      last_page: 0,
+      from: 0,
+      to: 0
+    }), _defineProperty(_ref, "offset", 3), _defineProperty(_ref, "criterio", "name"), _defineProperty(_ref, "buscar", ""), _defineProperty(_ref, "showMemberships", 10), _defineProperty(_ref, "criterions", ["name", "code", "income"]), _ref;
+  },
+  computed: {
+    isActived: function isActived() {
+      return this.pagination.current_page;
+    },
+    //Calcula los elementos de la paginación
+    pagesNumber: function pagesNumber() {
+      if (!this.pagination.to) {
+        return [];
+      }
+
+      var from = this.pagination.current_page - this.offset;
+
+      if (from < 1) {
+        from = 1;
+      }
+
+      var to = from + this.offset * 2;
+
+      if (to >= this.pagination.last_page) {
+        to = this.pagination.last_page;
+      }
+
+      var pagesArray = [];
+
+      while (from <= to) {
+        pagesArray.push(from);
+        from++;
+      }
+
+      return pagesArray;
+    } // filter: this.getMemberships(this.page, this.buscar, this.criterio),
+
+  },
+  methods: (_methods = {
+    getMemberships: function getMemberships(page, buscar, criterio) {
+      console.log("getted");
+      var me = this;
+      var url = "memberships/data?page=" + page + "&buscar=" + buscar + "&criterio=" + criterio;
+      axios.get(url).then(function (response) {
+        var respuesta = response.data;
+        me.memberships = respuesta.memberships;
+        me.pagination = respuesta.pagination;
+      })["catch"](function (error) {
+        console.table(error);
+      });
+    }
+  }, _defineProperty(_methods, "getMemberships", function getMemberships() {
+    var me = this;
+    axios.get("memberships").then(function (response) {
+      console.log(response);
+      var respuesta = response.data;
+      me.memberships = respuesta;
+    })["catch"](function (error) {
+      console.log(error);
+    });
+  }), _defineProperty(_methods, "selectCriteria", function selectCriteria() {
+    this.buscar = "";
+  }), _defineProperty(_methods, "getRows", function getRows(event) {
+    var newVal = null;
+
+    if ("criterion" in event) {
+      newVal = event;
+    } else {
+      newVal = JSON.parse(JSON.stringify(event.target.options[event.target.options.selectedIndex]))._value;
+    }
+
+    this.showMemberships = newVal;
+  }), _defineProperty(_methods, "saveMembership", function saveMembership() {
+    var me = this;
+    var request = {
+      name: me.name,
+      code: me.name,
+      income: me.income,
+      membership: me.membership
+    };
+    axios.post("memberships/store", request).then(function (response) {
+      console.log(response);
+    })["catch"](function (error) {
+      console.table(error);
+    });
+  }), _defineProperty(_methods, "selectMembership", function selectMembership(event) {
+    var newVal = null;
+
+    if ("criterion" in event) {
+      newVal = event;
+    } else {
+      newVal = JSON.parse(JSON.stringify(event.target.options[event.target.options.selectedIndex]))._value;
+    }
+
+    console.log(newVal);
+    this.selectedMembership = newVal;
+  }), _defineProperty(_methods, "closeModal", function closeModal() {
+    this.modal = 0;
+    this.title = "";
+    this.errors = {}; //   this.userFiles();//reload component
+  }), _defineProperty(_methods, "openModal", function openModal(model, action) {
+    var data = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : [];
+
+    switch (model) {
+      case "memberships":
+        {
+          switch (action) {
+            case "store":
+              {
+                this.modal = 1;
+                this.modalTitle = "New customer";
+                this.actionType = 1;
+                this.name = "";
+                this.code = "";
+                this.income = "";
+                this.selectedMembership = "";
+                break;
+              }
+
+            case "update":
+              {
+                console.log(data);
+                var mem = null;
+                this.memberships.forEach(function (m) {
+                  if (m.name === data.membership) mem = m;
+                }); // console.log(this.formatDateToInput(new Date(data.income)));
+                //   console.log(new Date(data.income).toISOString().slice(0, 10));
+
+                this.modal = 1;
+                this.modalTitle = "Update customer";
+                this.actionType = 2;
+                this.name = data.name;
+                this.code = data.code;
+                this.income = new Date(data.income).toISOString().slice(0, 10);
+                this.selectedMembership = mem;
+                break;
+              }
+          }
+        }
+    }
+  }), _defineProperty(_methods, "deleteMembership", function deleteMembership(customer) {
+    var _this = this;
+
+    Swal.fire({
+      title: "Esta seguro que desea eliminar este objeto?",
+      type: "warning",
+      showCancelButton: true,
+      confirmButtonColor: "#3085d6",
+      cancelButtonColor: "#d33",
+      confirmButtonText: "Aceptar!",
+      cancelButtonText: "Cancelar",
+      confirmButtonClass: "btn btn-success",
+      cancelButtonClass: "btn btn-danger",
+      buttonsStyling: false,
+      reverseButtons: true
+    }).then(function (result) {
+      if (result.value) {
+        var me = _this;
+        axios.post("memberships/" + customer + "/delete").then(function (response) {
+          console.log(response);
+          me.getMemberships(me.page, me.buscar, me.criterio);
+        })["catch"](function (error) {
+          console.log(error);
+        }); //
+      } else if ( // Read more about handling dismissals
+      result.dismiss === swal.DismissReason.cancel) {}
+    });
+  }), _defineProperty(_methods, "formatDateToInput", function formatDateToInput(date) {
+    var d = new Date(date),
+        month = "" + (d.getMonth() + 1),
+        day = "" + d.getDate(),
+        year = d.getFullYear();
+    if (month.length < 2) month = "0" + month;
+    if (day.length < 2) day = "0" + day;
+    return [day, month, year].join("/");
+  }), _defineProperty(_methods, "cambiarPagina", function cambiarPagina(page, buscar, criterio) {
+    var me = this; //Actualiza la página actual
+
+    me.pagination.current_page = page; //Envia la petición para visualizar la data de esa página
+
+    me.getMemberships(page, buscar, criterio);
+  }), _methods),
+  mounted: function mounted() {
+    this.getMemberships();
+    this.getMemberships(1, this.buscar, this.criterio);
+  }
+});
+
+/***/ }),
+
+/***/ "./node_modules/babel-loader/lib/index.js??clonedRuleSet-5[0].rules[0].use[0]!./node_modules/vue-loader/lib/index.js??vue-loader-options!./resources/js/components/PaymentComponent.vue?vue&type=script&lang=js&":
+/*!***********************************************************************************************************************************************************************************************************************!*\
+  !*** ./node_modules/babel-loader/lib/index.js??clonedRuleSet-5[0].rules[0].use[0]!./node_modules/vue-loader/lib/index.js??vue-loader-options!./resources/js/components/PaymentComponent.vue?vue&type=script&lang=js& ***!
+  \***********************************************************************************************************************************************************************************************************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   "default": () => (__WEBPACK_DEFAULT_EXPORT__)
+/* harmony export */ });
+/* harmony import */ var _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! @babel/runtime/regenerator */ "./node_modules/@babel/runtime/regenerator/index.js");
+/* harmony import */ var _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(_babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0__);
+
+
+function asyncGeneratorStep(gen, resolve, reject, _next, _throw, key, arg) { try { var info = gen[key](arg); var value = info.value; } catch (error) { reject(error); return; } if (info.done) { resolve(value); } else { Promise.resolve(value).then(_next, _throw); } }
+
+function _asyncToGenerator(fn) { return function () { var self = this, args = arguments; return new Promise(function (resolve, reject) { var gen = fn.apply(self, args); function _next(value) { asyncGeneratorStep(gen, resolve, reject, _next, _throw, "next", value); } function _throw(err) { asyncGeneratorStep(gen, resolve, reject, _next, _throw, "throw", err); } _next(undefined); }); }; }
+
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+/* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = ({
+  data: function data() {
+    return {
+      loading: false,
+      payments: [],
+      user: {},
+      memberships: [],
+      customers: [],
+      modal: "",
+      modalTitle: "",
+      actionType: 0,
+      errors: null,
+      paid_at: null,
+      expires_at: null,
+      amount: 0,
+      membership: null,
+      selectedMembership: null,
+      selectedCustomer: null,
+      pagination: {
+        total: 0,
+        current_page: 0,
+        per_page: 0,
+        last_page: 0,
+        from: 0,
+        to: 0
+      },
+      offset: 3,
+      criterio: "paid_at",
+      buscar: "",
+      showPayments: 10,
+      criterions: ["paid_at", "expires_at", "customer"]
+    };
+  },
+  computed: {
+    isActived: function isActived() {
+      return this.pagination.current_page;
+    },
+    //Calcula los elementos de la paginación
+    pagesNumber: function pagesNumber() {
+      if (!this.pagination.to) {
+        return [];
+      }
+
+      var from = this.pagination.current_page - this.offset;
+
+      if (from < 1) {
+        from = 1;
+      }
+
+      var to = from + this.offset * 2;
+
+      if (to >= this.pagination.last_page) {
+        to = this.pagination.last_page;
+      }
+
+      var pagesArray = [];
+
+      while (from <= to) {
+        pagesArray.push(from);
+        from++;
+      }
+
+      return pagesArray;
+    } // filter: this.getPayments(this.page, this.buscar, this.criterio),
+
+  },
+  methods: {
+    getPayments: function getPayments(page, buscar, criterio) {
+      console.log("getted");
+      var me = this;
+      var url = "payments?page=" + page + "&buscar=" + buscar + "&criterio=" + criterio;
+      axios.get(url).then(function (response) {
+        var respuesta = response.data;
+        console.log(respuesta);
+        me.payments = respuesta.payments;
+        me.pagination = respuesta.pagination;
+      })["catch"](function (error) {
+        console.table(error);
+      });
+    },
+    getMemberships: function getMemberships() {
+      var me = this;
+      axios.get("select-memberships").then(function (response) {
+        console.log(response);
+        var respuesta = response.data;
+        me.memberships = respuesta;
+      })["catch"](function (error) {
+        console.log(error);
+      });
+    },
+    getCustomers: function getCustomers() {
+      var me = this;
+      axios.get("customers-select").then(function (response) {
+        console.log(response);
+        var respuesta = response.data;
+        me.customers = respuesta;
+      })["catch"](function (error) {
+        console.log(error);
+      });
+    },
+    selectCriteria: function selectCriteria() {
+      this.buscar = "";
+    },
+    getRows: function getRows(event) {
+      var newVal = null;
+
+      if ("criterion" in event) {
+        newVal = event;
+      } else {
+        newVal = JSON.parse(JSON.stringify(event.target.options[event.target.options.selectedIndex]))._value;
+      }
+
+      this.showPayments = newVal;
+    },
+    savePayment: function savePayment() {
+      var me = this;
+      var request = {
+        paid_at: me.paid_at,
+        expires_at: me.expires_at,
+        amount: me.amount,
+        membership: me.selectedMembership,
+        customer: me.selectedCustomer
+      };
+      axios.post("payments", request).then(function (response) {
+        console.log(response);
+        Swal.fire({
+          type: "success",
+          title: "Registro  de pago satisfactorio",
+          text: messagge,
+          timer: 3000
+        }); //   this.closeModal();
+      })["catch"](function (error) {
+        console.table(error);
+      });
+      this.closeModal();
+    },
+    selectMembership: function selectMembership(event) {
+      var newVal = null;
+
+      if ("criterion" in event) {
+        newVal = event;
+      } else {
+        newVal = JSON.parse(JSON.stringify(event.target.options[event.target.options.selectedIndex]))._value;
+      }
+
+      console.log(newVal);
+      this.selectedMembership = newVal;
+    },
+    selectCustomer: function selectCustomer(event) {
+      var newVal = null;
+
+      if ("criterion" in event) {
+        newVal = event;
+      } else {
+        newVal = JSON.parse(JSON.stringify(event.target.options[event.target.options.selectedIndex]))._value;
+      }
+
+      console.log(newVal);
+      this.selectedCustomer = newVal;
+    },
+    closeModal: function closeModal() {
+      this.modal = 0;
+      this.title = "";
+      this.errors = {};
+    },
+    openModal: function openModal(model, action) {
+      var _arguments = arguments,
+          _this = this;
+
+      return _asyncToGenerator( /*#__PURE__*/_babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default().mark(function _callee() {
+        var data, mem, cus;
+        return _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default().wrap(function _callee$(_context) {
+          while (1) {
+            switch (_context.prev = _context.next) {
+              case 0:
+                data = _arguments.length > 2 && _arguments[2] !== undefined ? _arguments[2] : [];
+                _context.t0 = model;
+                _context.next = _context.t0 === "payments" ? 4 : 30;
+                break;
+
+              case 4:
+                _context.t1 = action;
+                _context.next = _context.t1 === "store" ? 7 : _context.t1 === "update" ? 16 : 30;
+                break;
+
+              case 7:
+                _this.modal = 1;
+                _this.modalTitle = "New payment";
+                _this.actionType = 1;
+                _this.paid_at = "";
+                _this.expires_at = "";
+                _this.amount = "";
+                _this.selectedMembership = "";
+                _this.selectedCustomer = "";
+                return _context.abrupt("break", 30);
+
+              case 16:
+                console.log(data); //   return
+
+                mem = null; //   return;
+
+                _this.memberships.forEach(function (m) {
+                  console.log(m);
+                  if (m.name === data.membership) mem = m;
+                });
+
+                cus = null;
+
+                _this.customers.forEach(function (c) {
+                  console.log(c);
+                  if (c.name === data.customer) cus = c;
+                });
+
+                _this.modal = 1;
+                _this.modalTitle = "Update payment";
+                _this.actionType = 2;
+                _this.paid_at = new Date(data["paid at"]).toISOString().slice(0, 10);
+                _this.expires_at = new Date(data["expires at"]).toISOString().slice(0, 10);
+                _this.amount = data.amount;
+                _this.selectedMembership = mem;
+                _this.selectedCustomer = cus;
+                return _context.abrupt("break", 30);
+
+              case 30:
+              case "end":
+                return _context.stop();
+            }
+          }
+        }, _callee);
+      }))();
+    },
+    deletePayment: function deletePayment(payment) {
+      var _this2 = this;
+
+      Swal.fire({
+        title: "Esta seguro que desea eliminar este objeto?",
+        type: "warning",
+        showCancelButton: true,
+        confirmButtonColor: "#3085d6",
+        cancelButtonColor: "#d33",
+        confirmButtonText: "Aceptar!",
+        cancelButtonText: "Cancelar",
+        confirmButtonClass: "btn btn-success",
+        cancelButtonClass: "btn btn-danger",
+        buttonsStyling: false,
+        reverseButtons: true
+      }).then(function (result) {
+        if (result.value) {
+          var me = _this2;
+          axios.post("payments/" + payment + "/delete").then(function (response) {
+            console.log(response);
+            me.getPayments(me.page, me.buscar, me.criterio);
+          })["catch"](function (error) {
+            console.log(error);
+          }); //
+        } else if ( // Read more about handling dismissals
+        result.dismiss === swal.DismissReason.cancel) {}
+      });
+    },
+    formatDateToInput: function formatDateToInput(date) {
+      var d = new Date(date),
+          month = "" + (d.getMonth() + 1),
+          day = "" + d.getDate(),
+          year = d.getFullYear();
+      if (month.length < 2) month = "0" + month;
+      if (day.length < 2) day = "0" + day;
+      return [day, month, year].join("/");
+    },
+    //Paginator
+    cambiarPagina: function cambiarPagina(page, buscar, criterio) {
+      var me = this; //Actualiza la página actual
+
+      me.pagination.current_page = page; //Envia la petición para visualizar la data de esa página
+
+      me.getPayments(page, buscar, criterio);
+    }
+  },
+  mounted: function mounted() {
+    this.getPayments(1, this.buscar, this.criterio);
+    this.getMemberships();
+    this.getCustomers();
   }
 });
 
@@ -3239,7 +5015,7 @@ Vue.use(vue_disable_autocomplete__WEBPACK_IMPORTED_MODULE_0__["default"]);
     userAccount: function userAccount() {
       var _this = this;
 
-      console.log('any');
+      console.log("any");
       this.getBranches();
       var me = this;
       this.loading = true;
@@ -20939,6 +22715,770 @@ process.umask = function() { return 0; };
 
 /***/ }),
 
+/***/ "./node_modules/regenerator-runtime/runtime.js":
+/*!*****************************************************!*\
+  !*** ./node_modules/regenerator-runtime/runtime.js ***!
+  \*****************************************************/
+/***/ ((module) => {
+
+/**
+ * Copyright (c) 2014-present, Facebook, Inc.
+ *
+ * This source code is licensed under the MIT license found in the
+ * LICENSE file in the root directory of this source tree.
+ */
+
+var runtime = (function (exports) {
+  "use strict";
+
+  var Op = Object.prototype;
+  var hasOwn = Op.hasOwnProperty;
+  var undefined; // More compressible than void 0.
+  var $Symbol = typeof Symbol === "function" ? Symbol : {};
+  var iteratorSymbol = $Symbol.iterator || "@@iterator";
+  var asyncIteratorSymbol = $Symbol.asyncIterator || "@@asyncIterator";
+  var toStringTagSymbol = $Symbol.toStringTag || "@@toStringTag";
+
+  function define(obj, key, value) {
+    Object.defineProperty(obj, key, {
+      value: value,
+      enumerable: true,
+      configurable: true,
+      writable: true
+    });
+    return obj[key];
+  }
+  try {
+    // IE 8 has a broken Object.defineProperty that only works on DOM objects.
+    define({}, "");
+  } catch (err) {
+    define = function(obj, key, value) {
+      return obj[key] = value;
+    };
+  }
+
+  function wrap(innerFn, outerFn, self, tryLocsList) {
+    // If outerFn provided and outerFn.prototype is a Generator, then outerFn.prototype instanceof Generator.
+    var protoGenerator = outerFn && outerFn.prototype instanceof Generator ? outerFn : Generator;
+    var generator = Object.create(protoGenerator.prototype);
+    var context = new Context(tryLocsList || []);
+
+    // The ._invoke method unifies the implementations of the .next,
+    // .throw, and .return methods.
+    generator._invoke = makeInvokeMethod(innerFn, self, context);
+
+    return generator;
+  }
+  exports.wrap = wrap;
+
+  // Try/catch helper to minimize deoptimizations. Returns a completion
+  // record like context.tryEntries[i].completion. This interface could
+  // have been (and was previously) designed to take a closure to be
+  // invoked without arguments, but in all the cases we care about we
+  // already have an existing method we want to call, so there's no need
+  // to create a new function object. We can even get away with assuming
+  // the method takes exactly one argument, since that happens to be true
+  // in every case, so we don't have to touch the arguments object. The
+  // only additional allocation required is the completion record, which
+  // has a stable shape and so hopefully should be cheap to allocate.
+  function tryCatch(fn, obj, arg) {
+    try {
+      return { type: "normal", arg: fn.call(obj, arg) };
+    } catch (err) {
+      return { type: "throw", arg: err };
+    }
+  }
+
+  var GenStateSuspendedStart = "suspendedStart";
+  var GenStateSuspendedYield = "suspendedYield";
+  var GenStateExecuting = "executing";
+  var GenStateCompleted = "completed";
+
+  // Returning this object from the innerFn has the same effect as
+  // breaking out of the dispatch switch statement.
+  var ContinueSentinel = {};
+
+  // Dummy constructor functions that we use as the .constructor and
+  // .constructor.prototype properties for functions that return Generator
+  // objects. For full spec compliance, you may wish to configure your
+  // minifier not to mangle the names of these two functions.
+  function Generator() {}
+  function GeneratorFunction() {}
+  function GeneratorFunctionPrototype() {}
+
+  // This is a polyfill for %IteratorPrototype% for environments that
+  // don't natively support it.
+  var IteratorPrototype = {};
+  define(IteratorPrototype, iteratorSymbol, function () {
+    return this;
+  });
+
+  var getProto = Object.getPrototypeOf;
+  var NativeIteratorPrototype = getProto && getProto(getProto(values([])));
+  if (NativeIteratorPrototype &&
+      NativeIteratorPrototype !== Op &&
+      hasOwn.call(NativeIteratorPrototype, iteratorSymbol)) {
+    // This environment has a native %IteratorPrototype%; use it instead
+    // of the polyfill.
+    IteratorPrototype = NativeIteratorPrototype;
+  }
+
+  var Gp = GeneratorFunctionPrototype.prototype =
+    Generator.prototype = Object.create(IteratorPrototype);
+  GeneratorFunction.prototype = GeneratorFunctionPrototype;
+  define(Gp, "constructor", GeneratorFunctionPrototype);
+  define(GeneratorFunctionPrototype, "constructor", GeneratorFunction);
+  GeneratorFunction.displayName = define(
+    GeneratorFunctionPrototype,
+    toStringTagSymbol,
+    "GeneratorFunction"
+  );
+
+  // Helper for defining the .next, .throw, and .return methods of the
+  // Iterator interface in terms of a single ._invoke method.
+  function defineIteratorMethods(prototype) {
+    ["next", "throw", "return"].forEach(function(method) {
+      define(prototype, method, function(arg) {
+        return this._invoke(method, arg);
+      });
+    });
+  }
+
+  exports.isGeneratorFunction = function(genFun) {
+    var ctor = typeof genFun === "function" && genFun.constructor;
+    return ctor
+      ? ctor === GeneratorFunction ||
+        // For the native GeneratorFunction constructor, the best we can
+        // do is to check its .name property.
+        (ctor.displayName || ctor.name) === "GeneratorFunction"
+      : false;
+  };
+
+  exports.mark = function(genFun) {
+    if (Object.setPrototypeOf) {
+      Object.setPrototypeOf(genFun, GeneratorFunctionPrototype);
+    } else {
+      genFun.__proto__ = GeneratorFunctionPrototype;
+      define(genFun, toStringTagSymbol, "GeneratorFunction");
+    }
+    genFun.prototype = Object.create(Gp);
+    return genFun;
+  };
+
+  // Within the body of any async function, `await x` is transformed to
+  // `yield regeneratorRuntime.awrap(x)`, so that the runtime can test
+  // `hasOwn.call(value, "__await")` to determine if the yielded value is
+  // meant to be awaited.
+  exports.awrap = function(arg) {
+    return { __await: arg };
+  };
+
+  function AsyncIterator(generator, PromiseImpl) {
+    function invoke(method, arg, resolve, reject) {
+      var record = tryCatch(generator[method], generator, arg);
+      if (record.type === "throw") {
+        reject(record.arg);
+      } else {
+        var result = record.arg;
+        var value = result.value;
+        if (value &&
+            typeof value === "object" &&
+            hasOwn.call(value, "__await")) {
+          return PromiseImpl.resolve(value.__await).then(function(value) {
+            invoke("next", value, resolve, reject);
+          }, function(err) {
+            invoke("throw", err, resolve, reject);
+          });
+        }
+
+        return PromiseImpl.resolve(value).then(function(unwrapped) {
+          // When a yielded Promise is resolved, its final value becomes
+          // the .value of the Promise<{value,done}> result for the
+          // current iteration.
+          result.value = unwrapped;
+          resolve(result);
+        }, function(error) {
+          // If a rejected Promise was yielded, throw the rejection back
+          // into the async generator function so it can be handled there.
+          return invoke("throw", error, resolve, reject);
+        });
+      }
+    }
+
+    var previousPromise;
+
+    function enqueue(method, arg) {
+      function callInvokeWithMethodAndArg() {
+        return new PromiseImpl(function(resolve, reject) {
+          invoke(method, arg, resolve, reject);
+        });
+      }
+
+      return previousPromise =
+        // If enqueue has been called before, then we want to wait until
+        // all previous Promises have been resolved before calling invoke,
+        // so that results are always delivered in the correct order. If
+        // enqueue has not been called before, then it is important to
+        // call invoke immediately, without waiting on a callback to fire,
+        // so that the async generator function has the opportunity to do
+        // any necessary setup in a predictable way. This predictability
+        // is why the Promise constructor synchronously invokes its
+        // executor callback, and why async functions synchronously
+        // execute code before the first await. Since we implement simple
+        // async functions in terms of async generators, it is especially
+        // important to get this right, even though it requires care.
+        previousPromise ? previousPromise.then(
+          callInvokeWithMethodAndArg,
+          // Avoid propagating failures to Promises returned by later
+          // invocations of the iterator.
+          callInvokeWithMethodAndArg
+        ) : callInvokeWithMethodAndArg();
+    }
+
+    // Define the unified helper method that is used to implement .next,
+    // .throw, and .return (see defineIteratorMethods).
+    this._invoke = enqueue;
+  }
+
+  defineIteratorMethods(AsyncIterator.prototype);
+  define(AsyncIterator.prototype, asyncIteratorSymbol, function () {
+    return this;
+  });
+  exports.AsyncIterator = AsyncIterator;
+
+  // Note that simple async functions are implemented on top of
+  // AsyncIterator objects; they just return a Promise for the value of
+  // the final result produced by the iterator.
+  exports.async = function(innerFn, outerFn, self, tryLocsList, PromiseImpl) {
+    if (PromiseImpl === void 0) PromiseImpl = Promise;
+
+    var iter = new AsyncIterator(
+      wrap(innerFn, outerFn, self, tryLocsList),
+      PromiseImpl
+    );
+
+    return exports.isGeneratorFunction(outerFn)
+      ? iter // If outerFn is a generator, return the full iterator.
+      : iter.next().then(function(result) {
+          return result.done ? result.value : iter.next();
+        });
+  };
+
+  function makeInvokeMethod(innerFn, self, context) {
+    var state = GenStateSuspendedStart;
+
+    return function invoke(method, arg) {
+      if (state === GenStateExecuting) {
+        throw new Error("Generator is already running");
+      }
+
+      if (state === GenStateCompleted) {
+        if (method === "throw") {
+          throw arg;
+        }
+
+        // Be forgiving, per 25.3.3.3.3 of the spec:
+        // https://people.mozilla.org/~jorendorff/es6-draft.html#sec-generatorresume
+        return doneResult();
+      }
+
+      context.method = method;
+      context.arg = arg;
+
+      while (true) {
+        var delegate = context.delegate;
+        if (delegate) {
+          var delegateResult = maybeInvokeDelegate(delegate, context);
+          if (delegateResult) {
+            if (delegateResult === ContinueSentinel) continue;
+            return delegateResult;
+          }
+        }
+
+        if (context.method === "next") {
+          // Setting context._sent for legacy support of Babel's
+          // function.sent implementation.
+          context.sent = context._sent = context.arg;
+
+        } else if (context.method === "throw") {
+          if (state === GenStateSuspendedStart) {
+            state = GenStateCompleted;
+            throw context.arg;
+          }
+
+          context.dispatchException(context.arg);
+
+        } else if (context.method === "return") {
+          context.abrupt("return", context.arg);
+        }
+
+        state = GenStateExecuting;
+
+        var record = tryCatch(innerFn, self, context);
+        if (record.type === "normal") {
+          // If an exception is thrown from innerFn, we leave state ===
+          // GenStateExecuting and loop back for another invocation.
+          state = context.done
+            ? GenStateCompleted
+            : GenStateSuspendedYield;
+
+          if (record.arg === ContinueSentinel) {
+            continue;
+          }
+
+          return {
+            value: record.arg,
+            done: context.done
+          };
+
+        } else if (record.type === "throw") {
+          state = GenStateCompleted;
+          // Dispatch the exception by looping back around to the
+          // context.dispatchException(context.arg) call above.
+          context.method = "throw";
+          context.arg = record.arg;
+        }
+      }
+    };
+  }
+
+  // Call delegate.iterator[context.method](context.arg) and handle the
+  // result, either by returning a { value, done } result from the
+  // delegate iterator, or by modifying context.method and context.arg,
+  // setting context.delegate to null, and returning the ContinueSentinel.
+  function maybeInvokeDelegate(delegate, context) {
+    var method = delegate.iterator[context.method];
+    if (method === undefined) {
+      // A .throw or .return when the delegate iterator has no .throw
+      // method always terminates the yield* loop.
+      context.delegate = null;
+
+      if (context.method === "throw") {
+        // Note: ["return"] must be used for ES3 parsing compatibility.
+        if (delegate.iterator["return"]) {
+          // If the delegate iterator has a return method, give it a
+          // chance to clean up.
+          context.method = "return";
+          context.arg = undefined;
+          maybeInvokeDelegate(delegate, context);
+
+          if (context.method === "throw") {
+            // If maybeInvokeDelegate(context) changed context.method from
+            // "return" to "throw", let that override the TypeError below.
+            return ContinueSentinel;
+          }
+        }
+
+        context.method = "throw";
+        context.arg = new TypeError(
+          "The iterator does not provide a 'throw' method");
+      }
+
+      return ContinueSentinel;
+    }
+
+    var record = tryCatch(method, delegate.iterator, context.arg);
+
+    if (record.type === "throw") {
+      context.method = "throw";
+      context.arg = record.arg;
+      context.delegate = null;
+      return ContinueSentinel;
+    }
+
+    var info = record.arg;
+
+    if (! info) {
+      context.method = "throw";
+      context.arg = new TypeError("iterator result is not an object");
+      context.delegate = null;
+      return ContinueSentinel;
+    }
+
+    if (info.done) {
+      // Assign the result of the finished delegate to the temporary
+      // variable specified by delegate.resultName (see delegateYield).
+      context[delegate.resultName] = info.value;
+
+      // Resume execution at the desired location (see delegateYield).
+      context.next = delegate.nextLoc;
+
+      // If context.method was "throw" but the delegate handled the
+      // exception, let the outer generator proceed normally. If
+      // context.method was "next", forget context.arg since it has been
+      // "consumed" by the delegate iterator. If context.method was
+      // "return", allow the original .return call to continue in the
+      // outer generator.
+      if (context.method !== "return") {
+        context.method = "next";
+        context.arg = undefined;
+      }
+
+    } else {
+      // Re-yield the result returned by the delegate method.
+      return info;
+    }
+
+    // The delegate iterator is finished, so forget it and continue with
+    // the outer generator.
+    context.delegate = null;
+    return ContinueSentinel;
+  }
+
+  // Define Generator.prototype.{next,throw,return} in terms of the
+  // unified ._invoke helper method.
+  defineIteratorMethods(Gp);
+
+  define(Gp, toStringTagSymbol, "Generator");
+
+  // A Generator should always return itself as the iterator object when the
+  // @@iterator function is called on it. Some browsers' implementations of the
+  // iterator prototype chain incorrectly implement this, causing the Generator
+  // object to not be returned from this call. This ensures that doesn't happen.
+  // See https://github.com/facebook/regenerator/issues/274 for more details.
+  define(Gp, iteratorSymbol, function() {
+    return this;
+  });
+
+  define(Gp, "toString", function() {
+    return "[object Generator]";
+  });
+
+  function pushTryEntry(locs) {
+    var entry = { tryLoc: locs[0] };
+
+    if (1 in locs) {
+      entry.catchLoc = locs[1];
+    }
+
+    if (2 in locs) {
+      entry.finallyLoc = locs[2];
+      entry.afterLoc = locs[3];
+    }
+
+    this.tryEntries.push(entry);
+  }
+
+  function resetTryEntry(entry) {
+    var record = entry.completion || {};
+    record.type = "normal";
+    delete record.arg;
+    entry.completion = record;
+  }
+
+  function Context(tryLocsList) {
+    // The root entry object (effectively a try statement without a catch
+    // or a finally block) gives us a place to store values thrown from
+    // locations where there is no enclosing try statement.
+    this.tryEntries = [{ tryLoc: "root" }];
+    tryLocsList.forEach(pushTryEntry, this);
+    this.reset(true);
+  }
+
+  exports.keys = function(object) {
+    var keys = [];
+    for (var key in object) {
+      keys.push(key);
+    }
+    keys.reverse();
+
+    // Rather than returning an object with a next method, we keep
+    // things simple and return the next function itself.
+    return function next() {
+      while (keys.length) {
+        var key = keys.pop();
+        if (key in object) {
+          next.value = key;
+          next.done = false;
+          return next;
+        }
+      }
+
+      // To avoid creating an additional object, we just hang the .value
+      // and .done properties off the next function object itself. This
+      // also ensures that the minifier will not anonymize the function.
+      next.done = true;
+      return next;
+    };
+  };
+
+  function values(iterable) {
+    if (iterable) {
+      var iteratorMethod = iterable[iteratorSymbol];
+      if (iteratorMethod) {
+        return iteratorMethod.call(iterable);
+      }
+
+      if (typeof iterable.next === "function") {
+        return iterable;
+      }
+
+      if (!isNaN(iterable.length)) {
+        var i = -1, next = function next() {
+          while (++i < iterable.length) {
+            if (hasOwn.call(iterable, i)) {
+              next.value = iterable[i];
+              next.done = false;
+              return next;
+            }
+          }
+
+          next.value = undefined;
+          next.done = true;
+
+          return next;
+        };
+
+        return next.next = next;
+      }
+    }
+
+    // Return an iterator with no values.
+    return { next: doneResult };
+  }
+  exports.values = values;
+
+  function doneResult() {
+    return { value: undefined, done: true };
+  }
+
+  Context.prototype = {
+    constructor: Context,
+
+    reset: function(skipTempReset) {
+      this.prev = 0;
+      this.next = 0;
+      // Resetting context._sent for legacy support of Babel's
+      // function.sent implementation.
+      this.sent = this._sent = undefined;
+      this.done = false;
+      this.delegate = null;
+
+      this.method = "next";
+      this.arg = undefined;
+
+      this.tryEntries.forEach(resetTryEntry);
+
+      if (!skipTempReset) {
+        for (var name in this) {
+          // Not sure about the optimal order of these conditions:
+          if (name.charAt(0) === "t" &&
+              hasOwn.call(this, name) &&
+              !isNaN(+name.slice(1))) {
+            this[name] = undefined;
+          }
+        }
+      }
+    },
+
+    stop: function() {
+      this.done = true;
+
+      var rootEntry = this.tryEntries[0];
+      var rootRecord = rootEntry.completion;
+      if (rootRecord.type === "throw") {
+        throw rootRecord.arg;
+      }
+
+      return this.rval;
+    },
+
+    dispatchException: function(exception) {
+      if (this.done) {
+        throw exception;
+      }
+
+      var context = this;
+      function handle(loc, caught) {
+        record.type = "throw";
+        record.arg = exception;
+        context.next = loc;
+
+        if (caught) {
+          // If the dispatched exception was caught by a catch block,
+          // then let that catch block handle the exception normally.
+          context.method = "next";
+          context.arg = undefined;
+        }
+
+        return !! caught;
+      }
+
+      for (var i = this.tryEntries.length - 1; i >= 0; --i) {
+        var entry = this.tryEntries[i];
+        var record = entry.completion;
+
+        if (entry.tryLoc === "root") {
+          // Exception thrown outside of any try block that could handle
+          // it, so set the completion value of the entire function to
+          // throw the exception.
+          return handle("end");
+        }
+
+        if (entry.tryLoc <= this.prev) {
+          var hasCatch = hasOwn.call(entry, "catchLoc");
+          var hasFinally = hasOwn.call(entry, "finallyLoc");
+
+          if (hasCatch && hasFinally) {
+            if (this.prev < entry.catchLoc) {
+              return handle(entry.catchLoc, true);
+            } else if (this.prev < entry.finallyLoc) {
+              return handle(entry.finallyLoc);
+            }
+
+          } else if (hasCatch) {
+            if (this.prev < entry.catchLoc) {
+              return handle(entry.catchLoc, true);
+            }
+
+          } else if (hasFinally) {
+            if (this.prev < entry.finallyLoc) {
+              return handle(entry.finallyLoc);
+            }
+
+          } else {
+            throw new Error("try statement without catch or finally");
+          }
+        }
+      }
+    },
+
+    abrupt: function(type, arg) {
+      for (var i = this.tryEntries.length - 1; i >= 0; --i) {
+        var entry = this.tryEntries[i];
+        if (entry.tryLoc <= this.prev &&
+            hasOwn.call(entry, "finallyLoc") &&
+            this.prev < entry.finallyLoc) {
+          var finallyEntry = entry;
+          break;
+        }
+      }
+
+      if (finallyEntry &&
+          (type === "break" ||
+           type === "continue") &&
+          finallyEntry.tryLoc <= arg &&
+          arg <= finallyEntry.finallyLoc) {
+        // Ignore the finally entry if control is not jumping to a
+        // location outside the try/catch block.
+        finallyEntry = null;
+      }
+
+      var record = finallyEntry ? finallyEntry.completion : {};
+      record.type = type;
+      record.arg = arg;
+
+      if (finallyEntry) {
+        this.method = "next";
+        this.next = finallyEntry.finallyLoc;
+        return ContinueSentinel;
+      }
+
+      return this.complete(record);
+    },
+
+    complete: function(record, afterLoc) {
+      if (record.type === "throw") {
+        throw record.arg;
+      }
+
+      if (record.type === "break" ||
+          record.type === "continue") {
+        this.next = record.arg;
+      } else if (record.type === "return") {
+        this.rval = this.arg = record.arg;
+        this.method = "return";
+        this.next = "end";
+      } else if (record.type === "normal" && afterLoc) {
+        this.next = afterLoc;
+      }
+
+      return ContinueSentinel;
+    },
+
+    finish: function(finallyLoc) {
+      for (var i = this.tryEntries.length - 1; i >= 0; --i) {
+        var entry = this.tryEntries[i];
+        if (entry.finallyLoc === finallyLoc) {
+          this.complete(entry.completion, entry.afterLoc);
+          resetTryEntry(entry);
+          return ContinueSentinel;
+        }
+      }
+    },
+
+    "catch": function(tryLoc) {
+      for (var i = this.tryEntries.length - 1; i >= 0; --i) {
+        var entry = this.tryEntries[i];
+        if (entry.tryLoc === tryLoc) {
+          var record = entry.completion;
+          if (record.type === "throw") {
+            var thrown = record.arg;
+            resetTryEntry(entry);
+          }
+          return thrown;
+        }
+      }
+
+      // The context.catch method must only be called with a location
+      // argument that corresponds to a known catch block.
+      throw new Error("illegal catch attempt");
+    },
+
+    delegateYield: function(iterable, resultName, nextLoc) {
+      this.delegate = {
+        iterator: values(iterable),
+        resultName: resultName,
+        nextLoc: nextLoc
+      };
+
+      if (this.method === "next") {
+        // Deliberately forget the last sent value so that we don't
+        // accidentally pass it on to the delegate.
+        this.arg = undefined;
+      }
+
+      return ContinueSentinel;
+    }
+  };
+
+  // Regardless of whether this script is executing as a CommonJS module
+  // or not, return the runtime object so that we can declare the variable
+  // regeneratorRuntime in the outer scope, which allows this module to be
+  // injected easily by `bin/regenerator --include-runtime script.js`.
+  return exports;
+
+}(
+  // If this script is executing as a CommonJS module, use module.exports
+  // as the regeneratorRuntime namespace. Otherwise create a new empty
+  // object. Either way, the resulting object will be used to initialize
+  // the regeneratorRuntime variable at the top of this file.
+   true ? module.exports : 0
+));
+
+try {
+  regeneratorRuntime = runtime;
+} catch (accidentalStrictMode) {
+  // This module should not be running in strict mode, so the above
+  // assignment should always work unless something is misconfigured. Just
+  // in case runtime.js accidentally runs in strict mode, in modern engines
+  // we can explicitly access globalThis. In older engines we can escape
+  // strict mode using a global Function call. This could conceivably fail
+  // if a Content Security Policy forbids using Function, but in that case
+  // the proper solution is to fix the accidental strict mode problem. If
+  // you've misconfigured your bundler to force strict mode and applied a
+  // CSP to forbid Function, and you're not willing to fix either of those
+  // problems, please detail your unique predicament in a GitHub issue.
+  if (typeof globalThis === "object") {
+    globalThis.regeneratorRuntime = runtime;
+  } else {
+    Function("r", "regeneratorRuntime = r")(runtime);
+  }
+}
+
+
+/***/ }),
+
 /***/ "./node_modules/style-loader/dist/cjs.js!./node_modules/laravel-mix/node_modules/css-loader/dist/cjs.js??clonedRuleSet-11[0].rules[0].use[1]!./node_modules/vue-loader/lib/loaders/stylePostLoader.js!./node_modules/postcss-loader/dist/cjs.js??clonedRuleSet-11[0].rules[0].use[2]!./node_modules/sass-loader/dist/cjs.js??clonedRuleSet-11[0].rules[0].use[3]!./node_modules/vue-loader/lib/index.js??vue-loader-options!./resources/js/components/Content.vue?vue&type=style&index=0&id=7f690d44&lang=scss&scoped=true&":
 /*!**********************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************!*\
   !*** ./node_modules/style-loader/dist/cjs.js!./node_modules/laravel-mix/node_modules/css-loader/dist/cjs.js??clonedRuleSet-11[0].rules[0].use[1]!./node_modules/vue-loader/lib/loaders/stylePostLoader.js!./node_modules/postcss-loader/dist/cjs.js??clonedRuleSet-11[0].rules[0].use[2]!./node_modules/sass-loader/dist/cjs.js??clonedRuleSet-11[0].rules[0].use[3]!./node_modules/vue-loader/lib/index.js??vue-loader-options!./resources/js/components/Content.vue?vue&type=style&index=0&id=7f690d44&lang=scss&scoped=true& ***!
@@ -21354,6 +23894,45 @@ const disableAutocomplete = {
 
 /***/ }),
 
+/***/ "./resources/js/components/AssistanceComponent.vue":
+/*!*********************************************************!*\
+  !*** ./resources/js/components/AssistanceComponent.vue ***!
+  \*********************************************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   "default": () => (__WEBPACK_DEFAULT_EXPORT__)
+/* harmony export */ });
+/* harmony import */ var _AssistanceComponent_vue_vue_type_template_id_20870fec___WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./AssistanceComponent.vue?vue&type=template&id=20870fec& */ "./resources/js/components/AssistanceComponent.vue?vue&type=template&id=20870fec&");
+/* harmony import */ var _AssistanceComponent_vue_vue_type_script_lang_js___WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./AssistanceComponent.vue?vue&type=script&lang=js& */ "./resources/js/components/AssistanceComponent.vue?vue&type=script&lang=js&");
+/* harmony import */ var _node_modules_vue_loader_lib_runtime_componentNormalizer_js__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! !../../../node_modules/vue-loader/lib/runtime/componentNormalizer.js */ "./node_modules/vue-loader/lib/runtime/componentNormalizer.js");
+
+
+
+
+
+/* normalize component */
+;
+var component = (0,_node_modules_vue_loader_lib_runtime_componentNormalizer_js__WEBPACK_IMPORTED_MODULE_2__["default"])(
+  _AssistanceComponent_vue_vue_type_script_lang_js___WEBPACK_IMPORTED_MODULE_1__["default"],
+  _AssistanceComponent_vue_vue_type_template_id_20870fec___WEBPACK_IMPORTED_MODULE_0__.render,
+  _AssistanceComponent_vue_vue_type_template_id_20870fec___WEBPACK_IMPORTED_MODULE_0__.staticRenderFns,
+  false,
+  null,
+  null,
+  null
+  
+)
+
+/* hot reload */
+if (false) { var api; }
+component.options.__file = "resources/js/components/AssistanceComponent.vue"
+/* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (component.exports);
+
+/***/ }),
+
 /***/ "./resources/js/components/ChangeThemmeComponent.vue":
 /*!***********************************************************!*\
   !*** ./resources/js/components/ChangeThemmeComponent.vue ***!
@@ -21514,6 +24093,84 @@ component.options.__file = "resources/js/components/DigitalClock.vue"
 
 /***/ }),
 
+/***/ "./resources/js/components/MembershipComponent.vue":
+/*!*********************************************************!*\
+  !*** ./resources/js/components/MembershipComponent.vue ***!
+  \*********************************************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   "default": () => (__WEBPACK_DEFAULT_EXPORT__)
+/* harmony export */ });
+/* harmony import */ var _MembershipComponent_vue_vue_type_template_id_510b6fa8___WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./MembershipComponent.vue?vue&type=template&id=510b6fa8& */ "./resources/js/components/MembershipComponent.vue?vue&type=template&id=510b6fa8&");
+/* harmony import */ var _MembershipComponent_vue_vue_type_script_lang_js___WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./MembershipComponent.vue?vue&type=script&lang=js& */ "./resources/js/components/MembershipComponent.vue?vue&type=script&lang=js&");
+/* harmony import */ var _node_modules_vue_loader_lib_runtime_componentNormalizer_js__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! !../../../node_modules/vue-loader/lib/runtime/componentNormalizer.js */ "./node_modules/vue-loader/lib/runtime/componentNormalizer.js");
+
+
+
+
+
+/* normalize component */
+;
+var component = (0,_node_modules_vue_loader_lib_runtime_componentNormalizer_js__WEBPACK_IMPORTED_MODULE_2__["default"])(
+  _MembershipComponent_vue_vue_type_script_lang_js___WEBPACK_IMPORTED_MODULE_1__["default"],
+  _MembershipComponent_vue_vue_type_template_id_510b6fa8___WEBPACK_IMPORTED_MODULE_0__.render,
+  _MembershipComponent_vue_vue_type_template_id_510b6fa8___WEBPACK_IMPORTED_MODULE_0__.staticRenderFns,
+  false,
+  null,
+  null,
+  null
+  
+)
+
+/* hot reload */
+if (false) { var api; }
+component.options.__file = "resources/js/components/MembershipComponent.vue"
+/* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (component.exports);
+
+/***/ }),
+
+/***/ "./resources/js/components/PaymentComponent.vue":
+/*!******************************************************!*\
+  !*** ./resources/js/components/PaymentComponent.vue ***!
+  \******************************************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   "default": () => (__WEBPACK_DEFAULT_EXPORT__)
+/* harmony export */ });
+/* harmony import */ var _PaymentComponent_vue_vue_type_template_id_4f61e082___WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./PaymentComponent.vue?vue&type=template&id=4f61e082& */ "./resources/js/components/PaymentComponent.vue?vue&type=template&id=4f61e082&");
+/* harmony import */ var _PaymentComponent_vue_vue_type_script_lang_js___WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./PaymentComponent.vue?vue&type=script&lang=js& */ "./resources/js/components/PaymentComponent.vue?vue&type=script&lang=js&");
+/* harmony import */ var _node_modules_vue_loader_lib_runtime_componentNormalizer_js__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! !../../../node_modules/vue-loader/lib/runtime/componentNormalizer.js */ "./node_modules/vue-loader/lib/runtime/componentNormalizer.js");
+
+
+
+
+
+/* normalize component */
+;
+var component = (0,_node_modules_vue_loader_lib_runtime_componentNormalizer_js__WEBPACK_IMPORTED_MODULE_2__["default"])(
+  _PaymentComponent_vue_vue_type_script_lang_js___WEBPACK_IMPORTED_MODULE_1__["default"],
+  _PaymentComponent_vue_vue_type_template_id_4f61e082___WEBPACK_IMPORTED_MODULE_0__.render,
+  _PaymentComponent_vue_vue_type_template_id_4f61e082___WEBPACK_IMPORTED_MODULE_0__.staticRenderFns,
+  false,
+  null,
+  null,
+  null
+  
+)
+
+/* hot reload */
+if (false) { var api; }
+component.options.__file = "resources/js/components/PaymentComponent.vue"
+/* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (component.exports);
+
+/***/ }),
+
 /***/ "./resources/js/components/UserComponent.vue":
 /*!***************************************************!*\
   !*** ./resources/js/components/UserComponent.vue ***!
@@ -21550,6 +24207,22 @@ var component = (0,_node_modules_vue_loader_lib_runtime_componentNormalizer_js__
 if (false) { var api; }
 component.options.__file = "resources/js/components/UserComponent.vue"
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (component.exports);
+
+/***/ }),
+
+/***/ "./resources/js/components/AssistanceComponent.vue?vue&type=script&lang=js&":
+/*!**********************************************************************************!*\
+  !*** ./resources/js/components/AssistanceComponent.vue?vue&type=script&lang=js& ***!
+  \**********************************************************************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   "default": () => (__WEBPACK_DEFAULT_EXPORT__)
+/* harmony export */ });
+/* harmony import */ var _node_modules_babel_loader_lib_index_js_clonedRuleSet_5_0_rules_0_use_0_node_modules_vue_loader_lib_index_js_vue_loader_options_AssistanceComponent_vue_vue_type_script_lang_js___WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! -!../../../node_modules/babel-loader/lib/index.js??clonedRuleSet-5[0].rules[0].use[0]!../../../node_modules/vue-loader/lib/index.js??vue-loader-options!./AssistanceComponent.vue?vue&type=script&lang=js& */ "./node_modules/babel-loader/lib/index.js??clonedRuleSet-5[0].rules[0].use[0]!./node_modules/vue-loader/lib/index.js??vue-loader-options!./resources/js/components/AssistanceComponent.vue?vue&type=script&lang=js&");
+ /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (_node_modules_babel_loader_lib_index_js_clonedRuleSet_5_0_rules_0_use_0_node_modules_vue_loader_lib_index_js_vue_loader_options_AssistanceComponent_vue_vue_type_script_lang_js___WEBPACK_IMPORTED_MODULE_0__["default"]); 
 
 /***/ }),
 
@@ -21617,6 +24290,38 @@ __webpack_require__.r(__webpack_exports__);
 
 /***/ }),
 
+/***/ "./resources/js/components/MembershipComponent.vue?vue&type=script&lang=js&":
+/*!**********************************************************************************!*\
+  !*** ./resources/js/components/MembershipComponent.vue?vue&type=script&lang=js& ***!
+  \**********************************************************************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   "default": () => (__WEBPACK_DEFAULT_EXPORT__)
+/* harmony export */ });
+/* harmony import */ var _node_modules_babel_loader_lib_index_js_clonedRuleSet_5_0_rules_0_use_0_node_modules_vue_loader_lib_index_js_vue_loader_options_MembershipComponent_vue_vue_type_script_lang_js___WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! -!../../../node_modules/babel-loader/lib/index.js??clonedRuleSet-5[0].rules[0].use[0]!../../../node_modules/vue-loader/lib/index.js??vue-loader-options!./MembershipComponent.vue?vue&type=script&lang=js& */ "./node_modules/babel-loader/lib/index.js??clonedRuleSet-5[0].rules[0].use[0]!./node_modules/vue-loader/lib/index.js??vue-loader-options!./resources/js/components/MembershipComponent.vue?vue&type=script&lang=js&");
+ /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (_node_modules_babel_loader_lib_index_js_clonedRuleSet_5_0_rules_0_use_0_node_modules_vue_loader_lib_index_js_vue_loader_options_MembershipComponent_vue_vue_type_script_lang_js___WEBPACK_IMPORTED_MODULE_0__["default"]); 
+
+/***/ }),
+
+/***/ "./resources/js/components/PaymentComponent.vue?vue&type=script&lang=js&":
+/*!*******************************************************************************!*\
+  !*** ./resources/js/components/PaymentComponent.vue?vue&type=script&lang=js& ***!
+  \*******************************************************************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   "default": () => (__WEBPACK_DEFAULT_EXPORT__)
+/* harmony export */ });
+/* harmony import */ var _node_modules_babel_loader_lib_index_js_clonedRuleSet_5_0_rules_0_use_0_node_modules_vue_loader_lib_index_js_vue_loader_options_PaymentComponent_vue_vue_type_script_lang_js___WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! -!../../../node_modules/babel-loader/lib/index.js??clonedRuleSet-5[0].rules[0].use[0]!../../../node_modules/vue-loader/lib/index.js??vue-loader-options!./PaymentComponent.vue?vue&type=script&lang=js& */ "./node_modules/babel-loader/lib/index.js??clonedRuleSet-5[0].rules[0].use[0]!./node_modules/vue-loader/lib/index.js??vue-loader-options!./resources/js/components/PaymentComponent.vue?vue&type=script&lang=js&");
+ /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (_node_modules_babel_loader_lib_index_js_clonedRuleSet_5_0_rules_0_use_0_node_modules_vue_loader_lib_index_js_vue_loader_options_PaymentComponent_vue_vue_type_script_lang_js___WEBPACK_IMPORTED_MODULE_0__["default"]); 
+
+/***/ }),
+
 /***/ "./resources/js/components/UserComponent.vue?vue&type=script&lang=js&":
 /*!****************************************************************************!*\
   !*** ./resources/js/components/UserComponent.vue?vue&type=script&lang=js& ***!
@@ -21655,6 +24360,23 @@ __webpack_require__.r(__webpack_exports__);
 "use strict";
 __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _node_modules_style_loader_dist_cjs_js_node_modules_laravel_mix_node_modules_css_loader_dist_cjs_js_clonedRuleSet_11_0_rules_0_use_1_node_modules_vue_loader_lib_loaders_stylePostLoader_js_node_modules_postcss_loader_dist_cjs_js_clonedRuleSet_11_0_rules_0_use_2_node_modules_sass_loader_dist_cjs_js_clonedRuleSet_11_0_rules_0_use_3_node_modules_vue_loader_lib_index_js_vue_loader_options_DigitalClock_vue_vue_type_style_index_0_id_4c9825c1_lang_scss_scoped_true___WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! -!../../../node_modules/style-loader/dist/cjs.js!../../../node_modules/laravel-mix/node_modules/css-loader/dist/cjs.js??clonedRuleSet-11[0].rules[0].use[1]!../../../node_modules/vue-loader/lib/loaders/stylePostLoader.js!../../../node_modules/postcss-loader/dist/cjs.js??clonedRuleSet-11[0].rules[0].use[2]!../../../node_modules/sass-loader/dist/cjs.js??clonedRuleSet-11[0].rules[0].use[3]!../../../node_modules/vue-loader/lib/index.js??vue-loader-options!./DigitalClock.vue?vue&type=style&index=0&id=4c9825c1&lang=scss&scoped=true& */ "./node_modules/style-loader/dist/cjs.js!./node_modules/laravel-mix/node_modules/css-loader/dist/cjs.js??clonedRuleSet-11[0].rules[0].use[1]!./node_modules/vue-loader/lib/loaders/stylePostLoader.js!./node_modules/postcss-loader/dist/cjs.js??clonedRuleSet-11[0].rules[0].use[2]!./node_modules/sass-loader/dist/cjs.js??clonedRuleSet-11[0].rules[0].use[3]!./node_modules/vue-loader/lib/index.js??vue-loader-options!./resources/js/components/DigitalClock.vue?vue&type=style&index=0&id=4c9825c1&lang=scss&scoped=true&");
+
+
+/***/ }),
+
+/***/ "./resources/js/components/AssistanceComponent.vue?vue&type=template&id=20870fec&":
+/*!****************************************************************************************!*\
+  !*** ./resources/js/components/AssistanceComponent.vue?vue&type=template&id=20870fec& ***!
+  \****************************************************************************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   "render": () => (/* reexport safe */ _node_modules_vue_loader_lib_loaders_templateLoader_js_vue_loader_options_node_modules_vue_loader_lib_index_js_vue_loader_options_AssistanceComponent_vue_vue_type_template_id_20870fec___WEBPACK_IMPORTED_MODULE_0__.render),
+/* harmony export */   "staticRenderFns": () => (/* reexport safe */ _node_modules_vue_loader_lib_loaders_templateLoader_js_vue_loader_options_node_modules_vue_loader_lib_index_js_vue_loader_options_AssistanceComponent_vue_vue_type_template_id_20870fec___WEBPACK_IMPORTED_MODULE_0__.staticRenderFns)
+/* harmony export */ });
+/* harmony import */ var _node_modules_vue_loader_lib_loaders_templateLoader_js_vue_loader_options_node_modules_vue_loader_lib_index_js_vue_loader_options_AssistanceComponent_vue_vue_type_template_id_20870fec___WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! -!../../../node_modules/vue-loader/lib/loaders/templateLoader.js??vue-loader-options!../../../node_modules/vue-loader/lib/index.js??vue-loader-options!./AssistanceComponent.vue?vue&type=template&id=20870fec& */ "./node_modules/vue-loader/lib/loaders/templateLoader.js??vue-loader-options!./node_modules/vue-loader/lib/index.js??vue-loader-options!./resources/js/components/AssistanceComponent.vue?vue&type=template&id=20870fec&");
 
 
 /***/ }),
@@ -21727,6 +24449,40 @@ __webpack_require__.r(__webpack_exports__);
 
 /***/ }),
 
+/***/ "./resources/js/components/MembershipComponent.vue?vue&type=template&id=510b6fa8&":
+/*!****************************************************************************************!*\
+  !*** ./resources/js/components/MembershipComponent.vue?vue&type=template&id=510b6fa8& ***!
+  \****************************************************************************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   "render": () => (/* reexport safe */ _node_modules_vue_loader_lib_loaders_templateLoader_js_vue_loader_options_node_modules_vue_loader_lib_index_js_vue_loader_options_MembershipComponent_vue_vue_type_template_id_510b6fa8___WEBPACK_IMPORTED_MODULE_0__.render),
+/* harmony export */   "staticRenderFns": () => (/* reexport safe */ _node_modules_vue_loader_lib_loaders_templateLoader_js_vue_loader_options_node_modules_vue_loader_lib_index_js_vue_loader_options_MembershipComponent_vue_vue_type_template_id_510b6fa8___WEBPACK_IMPORTED_MODULE_0__.staticRenderFns)
+/* harmony export */ });
+/* harmony import */ var _node_modules_vue_loader_lib_loaders_templateLoader_js_vue_loader_options_node_modules_vue_loader_lib_index_js_vue_loader_options_MembershipComponent_vue_vue_type_template_id_510b6fa8___WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! -!../../../node_modules/vue-loader/lib/loaders/templateLoader.js??vue-loader-options!../../../node_modules/vue-loader/lib/index.js??vue-loader-options!./MembershipComponent.vue?vue&type=template&id=510b6fa8& */ "./node_modules/vue-loader/lib/loaders/templateLoader.js??vue-loader-options!./node_modules/vue-loader/lib/index.js??vue-loader-options!./resources/js/components/MembershipComponent.vue?vue&type=template&id=510b6fa8&");
+
+
+/***/ }),
+
+/***/ "./resources/js/components/PaymentComponent.vue?vue&type=template&id=4f61e082&":
+/*!*************************************************************************************!*\
+  !*** ./resources/js/components/PaymentComponent.vue?vue&type=template&id=4f61e082& ***!
+  \*************************************************************************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   "render": () => (/* reexport safe */ _node_modules_vue_loader_lib_loaders_templateLoader_js_vue_loader_options_node_modules_vue_loader_lib_index_js_vue_loader_options_PaymentComponent_vue_vue_type_template_id_4f61e082___WEBPACK_IMPORTED_MODULE_0__.render),
+/* harmony export */   "staticRenderFns": () => (/* reexport safe */ _node_modules_vue_loader_lib_loaders_templateLoader_js_vue_loader_options_node_modules_vue_loader_lib_index_js_vue_loader_options_PaymentComponent_vue_vue_type_template_id_4f61e082___WEBPACK_IMPORTED_MODULE_0__.staticRenderFns)
+/* harmony export */ });
+/* harmony import */ var _node_modules_vue_loader_lib_loaders_templateLoader_js_vue_loader_options_node_modules_vue_loader_lib_index_js_vue_loader_options_PaymentComponent_vue_vue_type_template_id_4f61e082___WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! -!../../../node_modules/vue-loader/lib/loaders/templateLoader.js??vue-loader-options!../../../node_modules/vue-loader/lib/index.js??vue-loader-options!./PaymentComponent.vue?vue&type=template&id=4f61e082& */ "./node_modules/vue-loader/lib/loaders/templateLoader.js??vue-loader-options!./node_modules/vue-loader/lib/index.js??vue-loader-options!./resources/js/components/PaymentComponent.vue?vue&type=template&id=4f61e082&");
+
+
+/***/ }),
+
 /***/ "./resources/js/components/UserComponent.vue?vue&type=template&id=7f050fd2&":
 /*!**********************************************************************************!*\
   !*** ./resources/js/components/UserComponent.vue?vue&type=template&id=7f050fd2& ***!
@@ -21740,6 +24496,954 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */   "staticRenderFns": () => (/* reexport safe */ _node_modules_vue_loader_lib_loaders_templateLoader_js_vue_loader_options_node_modules_vue_loader_lib_index_js_vue_loader_options_UserComponent_vue_vue_type_template_id_7f050fd2___WEBPACK_IMPORTED_MODULE_0__.staticRenderFns)
 /* harmony export */ });
 /* harmony import */ var _node_modules_vue_loader_lib_loaders_templateLoader_js_vue_loader_options_node_modules_vue_loader_lib_index_js_vue_loader_options_UserComponent_vue_vue_type_template_id_7f050fd2___WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! -!../../../node_modules/vue-loader/lib/loaders/templateLoader.js??vue-loader-options!../../../node_modules/vue-loader/lib/index.js??vue-loader-options!./UserComponent.vue?vue&type=template&id=7f050fd2& */ "./node_modules/vue-loader/lib/loaders/templateLoader.js??vue-loader-options!./node_modules/vue-loader/lib/index.js??vue-loader-options!./resources/js/components/UserComponent.vue?vue&type=template&id=7f050fd2&");
+
+
+/***/ }),
+
+/***/ "./node_modules/vue-loader/lib/loaders/templateLoader.js??vue-loader-options!./node_modules/vue-loader/lib/index.js??vue-loader-options!./resources/js/components/AssistanceComponent.vue?vue&type=template&id=20870fec&":
+/*!*******************************************************************************************************************************************************************************************************************************!*\
+  !*** ./node_modules/vue-loader/lib/loaders/templateLoader.js??vue-loader-options!./node_modules/vue-loader/lib/index.js??vue-loader-options!./resources/js/components/AssistanceComponent.vue?vue&type=template&id=20870fec& ***!
+  \*******************************************************************************************************************************************************************************************************************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   "render": () => (/* binding */ render),
+/* harmony export */   "staticRenderFns": () => (/* binding */ staticRenderFns)
+/* harmony export */ });
+var render = function () {
+  var _vm = this
+  var _h = _vm.$createElement
+  var _c = _vm._self._c || _h
+  return _vm.loading
+    ? _c("div", { staticStyle: { heigth: "100%" } }, [_vm._m(0)])
+    : _c(
+        "div",
+        [
+          _c("div", { staticClass: "row" }, [
+            _c("div", { staticClass: "col-12" }, [
+              _c("div", { staticClass: "card" }, [
+                _c(
+                  "div",
+                  {
+                    staticClass:
+                      "card-header border-bottom shadow-sm pt-4 mt-4 pb-2 mb-22",
+                  },
+                  [
+                    _c(
+                      "button",
+                      {
+                        staticClass: "btn btn-primary btn-lg fas fa-edit",
+                        attrs: { type: "button" },
+                        on: {
+                          click: function ($event) {
+                            return _vm.openModal("assistances", "store")
+                          },
+                        },
+                      },
+                      [_vm._v("\n            New Assistance\n          ")]
+                    ),
+                  ]
+                ),
+                _vm._v(" "),
+                _c("div", { staticClass: "card-body" }, [
+                  _c("h4", { staticClass: "card-title" }, [
+                    _vm._v("Assistances"),
+                  ]),
+                  _vm._v(" "),
+                  _c("div", { staticClass: "table-responsive" }, [
+                    _c(
+                      "div",
+                      {
+                        staticClass:
+                          "dataTables_wrapper container-fluid dt-bootstrap4",
+                        attrs: { id: "col_render_wrapper" },
+                      },
+                      [
+                        _c("div", { staticClass: "row" }, [
+                          _c("div", { staticClass: "col-sm-12 col-md-6" }, [
+                            _c(
+                              "div",
+                              {
+                                staticClass:
+                                  "input-group mb-3 dataTables_filter",
+                              },
+                              [
+                                _c(
+                                  "div",
+                                  { staticClass: "input-group-prepend" },
+                                  [
+                                    _c(
+                                      "select",
+                                      {
+                                        directives: [
+                                          {
+                                            name: "model",
+                                            rawName: "v-model",
+                                            value: _vm.criterio,
+                                            expression: "criterio",
+                                          },
+                                        ],
+                                        staticClass: "input-group-text",
+                                        on: {
+                                          change: [
+                                            function ($event) {
+                                              var $$selectedVal =
+                                                Array.prototype.filter
+                                                  .call(
+                                                    $event.target.options,
+                                                    function (o) {
+                                                      return o.selected
+                                                    }
+                                                  )
+                                                  .map(function (o) {
+                                                    var val =
+                                                      "_value" in o
+                                                        ? o._value
+                                                        : o.value
+                                                    return val
+                                                  })
+                                              _vm.criterio = $event.target
+                                                .multiple
+                                                ? $$selectedVal
+                                                : $$selectedVal[0]
+                                            },
+                                            _vm.selectCriteria,
+                                          ],
+                                        },
+                                      },
+                                      [
+                                        _c(
+                                          "optgroup",
+                                          _vm._l(
+                                            _vm.criterions,
+                                            function (criteria) {
+                                              return _c(
+                                                "option",
+                                                {
+                                                  domProps: { value: criteria },
+                                                },
+                                                [
+                                                  _vm._v(
+                                                    "\n                            " +
+                                                      _vm._s(criteria) +
+                                                      "\n                          "
+                                                  ),
+                                                ]
+                                              )
+                                            }
+                                          ),
+                                          0
+                                        ),
+                                      ]
+                                    ),
+                                  ]
+                                ),
+                                _vm._v(" "),
+                                (_vm.criterio == "income"
+                                  ? "date"
+                                  : _vm.criterio == "code"
+                                  ? "number"
+                                  : "text") === "checkbox"
+                                  ? _c("input", {
+                                      directives: [
+                                        {
+                                          name: "model",
+                                          rawName: "v-model",
+                                          value: _vm.buscar,
+                                          expression: "buscar",
+                                        },
+                                      ],
+                                      staticClass: "form-control",
+                                      attrs: {
+                                        placeholder:
+                                          _vm.criterio == "income"
+                                            ? "22/07/2022"
+                                            : _vm.criterio == "code"
+                                            ? "0123"
+                                            : "Benny Juarez",
+                                        type: "checkbox",
+                                      },
+                                      domProps: {
+                                        checked: Array.isArray(_vm.buscar)
+                                          ? _vm._i(_vm.buscar, null) > -1
+                                          : _vm.buscar,
+                                      },
+                                      on: {
+                                        keyup: function ($event) {
+                                          if (
+                                            !$event.type.indexOf("key") &&
+                                            _vm._k(
+                                              $event.keyCode,
+                                              "enter",
+                                              13,
+                                              $event.key,
+                                              "Enter"
+                                            )
+                                          ) {
+                                            return null
+                                          }
+                                          return _vm.getAssistances(
+                                            1,
+                                            _vm.buscar,
+                                            _vm.criterio
+                                          )
+                                        },
+                                        change: function ($event) {
+                                          var $$a = _vm.buscar,
+                                            $$el = $event.target,
+                                            $$c = $$el.checked ? true : false
+                                          if (Array.isArray($$a)) {
+                                            var $$v = null,
+                                              $$i = _vm._i($$a, $$v)
+                                            if ($$el.checked) {
+                                              $$i < 0 &&
+                                                (_vm.buscar = $$a.concat([$$v]))
+                                            } else {
+                                              $$i > -1 &&
+                                                (_vm.buscar = $$a
+                                                  .slice(0, $$i)
+                                                  .concat($$a.slice($$i + 1)))
+                                            }
+                                          } else {
+                                            _vm.buscar = $$c
+                                          }
+                                        },
+                                      },
+                                    })
+                                  : (_vm.criterio == "income"
+                                      ? "date"
+                                      : _vm.criterio == "code"
+                                      ? "number"
+                                      : "text") === "radio"
+                                  ? _c("input", {
+                                      directives: [
+                                        {
+                                          name: "model",
+                                          rawName: "v-model",
+                                          value: _vm.buscar,
+                                          expression: "buscar",
+                                        },
+                                      ],
+                                      staticClass: "form-control",
+                                      attrs: {
+                                        placeholder:
+                                          _vm.criterio == "income"
+                                            ? "22/07/2022"
+                                            : _vm.criterio == "code"
+                                            ? "0123"
+                                            : "Benny Juarez",
+                                        type: "radio",
+                                      },
+                                      domProps: {
+                                        checked: _vm._q(_vm.buscar, null),
+                                      },
+                                      on: {
+                                        keyup: function ($event) {
+                                          if (
+                                            !$event.type.indexOf("key") &&
+                                            _vm._k(
+                                              $event.keyCode,
+                                              "enter",
+                                              13,
+                                              $event.key,
+                                              "Enter"
+                                            )
+                                          ) {
+                                            return null
+                                          }
+                                          return _vm.getAssistances(
+                                            1,
+                                            _vm.buscar,
+                                            _vm.criterio
+                                          )
+                                        },
+                                        change: function ($event) {
+                                          _vm.buscar = null
+                                        },
+                                      },
+                                    })
+                                  : _c("input", {
+                                      directives: [
+                                        {
+                                          name: "model",
+                                          rawName: "v-model",
+                                          value: _vm.buscar,
+                                          expression: "buscar",
+                                        },
+                                      ],
+                                      staticClass: "form-control",
+                                      attrs: {
+                                        placeholder:
+                                          _vm.criterio == "income"
+                                            ? "22/07/2022"
+                                            : _vm.criterio == "code"
+                                            ? "0123"
+                                            : "Benny Juarez",
+                                        type:
+                                          _vm.criterio == "income"
+                                            ? "date"
+                                            : _vm.criterio == "code"
+                                            ? "number"
+                                            : "text",
+                                      },
+                                      domProps: { value: _vm.buscar },
+                                      on: {
+                                        keyup: function ($event) {
+                                          if (
+                                            !$event.type.indexOf("key") &&
+                                            _vm._k(
+                                              $event.keyCode,
+                                              "enter",
+                                              13,
+                                              $event.key,
+                                              "Enter"
+                                            )
+                                          ) {
+                                            return null
+                                          }
+                                          return _vm.getAssistances(
+                                            1,
+                                            _vm.buscar,
+                                            _vm.criterio
+                                          )
+                                        },
+                                        input: function ($event) {
+                                          if ($event.target.composing) {
+                                            return
+                                          }
+                                          _vm.buscar = $event.target.value
+                                        },
+                                      },
+                                    }),
+                                _vm._v(" "),
+                                _c(
+                                  "div",
+                                  { staticClass: "input-group-append" },
+                                  [
+                                    _c(
+                                      "button",
+                                      {
+                                        staticClass:
+                                          "btn-sm btn-primary input-group-text",
+                                        attrs: { type: "submit" },
+                                        on: {
+                                          click: function ($event) {
+                                            return _vm.getAssistances(
+                                              1,
+                                              _vm.buscar,
+                                              _vm.criterio
+                                            )
+                                          },
+                                        },
+                                      },
+                                      [_c("i", { staticClass: "fa fa-search" })]
+                                    ),
+                                  ]
+                                ),
+                              ]
+                            ),
+                          ]),
+                        ]),
+                        _vm._v(" "),
+                        _c("div", { staticClass: "row" }, [
+                          _c("div", { staticClass: "col-sm-12" }, [
+                            _c(
+                              "table",
+                              {
+                                staticClass:
+                                  "table table-bordered table-striped table-sm",
+                                staticStyle: { width: "100%" },
+                                attrs: {
+                                  id: "col_render",
+                                  role: "grid",
+                                  "aria-describedby": "col_render_info",
+                                },
+                              },
+                              [
+                                _c(
+                                  "thead",
+                                  _vm._l(
+                                    _vm.assistances,
+                                    function (assistance, index) {
+                                      return index < 1
+                                        ? _c(
+                                            "tr",
+                                            [
+                                              _vm._l(
+                                                assistance,
+                                                function (value, key, cIndex) {
+                                                  return _c("th", [
+                                                    _vm._v(
+                                                      "\n                          " +
+                                                        _vm._s(key) +
+                                                        "\n                        "
+                                                    ),
+                                                  ])
+                                                }
+                                              ),
+                                              _vm._v(" "),
+                                              _c("th"),
+                                            ],
+                                            2
+                                          )
+                                        : _vm._e()
+                                    }
+                                  ),
+                                  0
+                                ),
+                                _vm._v(" "),
+                                _c(
+                                  "tbody",
+                                  _vm._l(
+                                    _vm.assistances,
+                                    function (assistance, index) {
+                                      return index <= _vm.pagination.per_page
+                                        ? _c(
+                                            "tr",
+                                            [
+                                              _vm._l(
+                                                assistance,
+                                                function (value, key, cIndex) {
+                                                  return _c(
+                                                    "td",
+                                                    {
+                                                      attrs: {
+                                                        "max-height": "5px",
+                                                      },
+                                                    },
+                                                    [
+                                                      _vm._v(
+                                                        "\n                          " +
+                                                          _vm._s(value) +
+                                                          "\n                        "
+                                                      ),
+                                                    ]
+                                                  )
+                                                }
+                                              ),
+                                              _vm._v(" "),
+                                              _c("td", [
+                                                _c(
+                                                  "button",
+                                                  {
+                                                    staticClass:
+                                                      "btn btn-warning btn-sm",
+                                                    attrs: { type: "button" },
+                                                    on: {
+                                                      click: function ($event) {
+                                                        return _vm.openModal(
+                                                          "assistances",
+                                                          "update",
+                                                          assistance
+                                                        )
+                                                      },
+                                                    },
+                                                  },
+                                                  [
+                                                    _c("i", {
+                                                      staticClass:
+                                                        "icon-pencil",
+                                                    }),
+                                                  ]
+                                                ),
+                                                _vm._v(
+                                                  "\n                           \n                          "
+                                                ),
+                                                _c(
+                                                  "button",
+                                                  {
+                                                    staticClass:
+                                                      "btn btn-danger btn-sm",
+                                                    attrs: { type: "button" },
+                                                    on: {
+                                                      click: function ($event) {
+                                                        return _vm.deleteAssistance(
+                                                          assistance.id
+                                                        )
+                                                      },
+                                                    },
+                                                  },
+                                                  [
+                                                    _c("i", {
+                                                      staticClass: "icon-trash",
+                                                    }),
+                                                  ]
+                                                ),
+                                              ]),
+                                            ],
+                                            2
+                                          )
+                                        : _vm._e()
+                                    }
+                                  ),
+                                  0
+                                ),
+                                _vm._v(" "),
+                                _c(
+                                  "tfoot",
+                                  [
+                                    _c("tr"),
+                                    _vm._v(" "),
+                                    _vm._l(
+                                      _vm.assistances,
+                                      function (assistance, index) {
+                                        return index < 1
+                                          ? _c(
+                                              "tr",
+                                              [
+                                                _vm._l(
+                                                  assistance,
+                                                  function (
+                                                    value,
+                                                    key,
+                                                    cIndex
+                                                  ) {
+                                                    return _c("th", [
+                                                      _vm._v(_vm._s(key)),
+                                                    ])
+                                                  }
+                                                ),
+                                                _vm._v(" "),
+                                                _c("th"),
+                                              ],
+                                              2
+                                            )
+                                          : _vm._e()
+                                      }
+                                    ),
+                                  ],
+                                  2
+                                ),
+                              ]
+                            ),
+                          ]),
+                        ]),
+                        _vm._v(" "),
+                        _c("div", { staticClass: "row" }, [
+                          _vm._m(1),
+                          _vm._v(" "),
+                          _c("div", { staticClass: "col-sm-12 col-md-7" }, [
+                            _c(
+                              "div",
+                              {
+                                staticClass:
+                                  "dataTables_paginate paging_simple_numbers",
+                                attrs: { id: "col_render_paginate" },
+                              },
+                              [
+                                _c("nav", [
+                                  _c(
+                                    "ul",
+                                    { staticClass: "pagination" },
+                                    [
+                                      _vm.pagination.current_page > 1
+                                        ? _c(
+                                            "li",
+                                            { staticClass: "page-item" },
+                                            [
+                                              _c(
+                                                "a",
+                                                {
+                                                  staticClass: "page-link",
+                                                  attrs: { href: "#" },
+                                                  on: {
+                                                    click: function ($event) {
+                                                      $event.preventDefault()
+                                                      return _vm.cambiarPagina(
+                                                        _vm.pagination
+                                                          .current_page - 1,
+                                                        _vm.buscar,
+                                                        _vm.criterio
+                                                      )
+                                                    },
+                                                  },
+                                                },
+                                                [_vm._v("Ant")]
+                                              ),
+                                            ]
+                                          )
+                                        : _vm._e(),
+                                      _vm._v(" "),
+                                      _vm._l(_vm.pagesNumber, function (page) {
+                                        return _c(
+                                          "li",
+                                          {
+                                            key: page,
+                                            staticClass: "page-item",
+                                            class: [
+                                              page == _vm.isActived
+                                                ? "active"
+                                                : "",
+                                            ],
+                                          },
+                                          [
+                                            _c("a", {
+                                              staticClass: "page-link",
+                                              attrs: { href: "#" },
+                                              domProps: {
+                                                textContent: _vm._s(page),
+                                              },
+                                              on: {
+                                                click: function ($event) {
+                                                  $event.preventDefault()
+                                                  return _vm.cambiarPagina(
+                                                    page,
+                                                    _vm.buscar,
+                                                    _vm.criterio
+                                                  )
+                                                },
+                                              },
+                                            }),
+                                          ]
+                                        )
+                                      }),
+                                      _vm._v(" "),
+                                      _vm.pagination.current_page <
+                                      _vm.pagination.last_page
+                                        ? _c(
+                                            "li",
+                                            { staticClass: "page-item" },
+                                            [
+                                              _c(
+                                                "a",
+                                                {
+                                                  staticClass: "page-link",
+                                                  attrs: { href: "#" },
+                                                  on: {
+                                                    click: function ($event) {
+                                                      $event.preventDefault()
+                                                      return _vm.cambiarPagina(
+                                                        _vm.pagination
+                                                          .current_page + 1,
+                                                        _vm.buscar,
+                                                        _vm.criterio
+                                                      )
+                                                    },
+                                                  },
+                                                },
+                                                [_vm._v("Sig")]
+                                              ),
+                                            ]
+                                          )
+                                        : _vm._e(),
+                                    ],
+                                    2
+                                  ),
+                                ]),
+                              ]
+                            ),
+                          ]),
+                        ]),
+                      ]
+                    ),
+                  ]),
+                ]),
+              ]),
+            ]),
+          ]),
+          _vm._v(" "),
+          _vm.actionType == 1 || _vm.actionType == 2
+            ? [
+                _c(
+                  "div",
+                  {
+                    staticClass: "modal fade",
+                    class: { mostrar: _vm.modal },
+                    staticStyle: { display: "none", "overflow-y": "auto" },
+                    attrs: {
+                      tabindex: "-1",
+                      role: "dialog",
+                      "aria-labelledby": "myModalLabel",
+                      "aria-hidden": "true",
+                    },
+                  },
+                  [
+                    _c(
+                      "div",
+                      {
+                        staticClass: "modal-dialog modal-primary modal-lg",
+                        staticStyle: { "padding-top": "55px" },
+                        attrs: { role: "document" },
+                      },
+                      [
+                        _c("div", { staticClass: "modal-content" }, [
+                          _c("div", { staticClass: "modal-header" }, [
+                            _c("h4", {
+                              staticClass: "modal-title",
+                              domProps: { textContent: _vm._s(_vm.modalTitle) },
+                            }),
+                            _vm._v(" "),
+                            _c(
+                              "button",
+                              {
+                                staticClass: "close",
+                                attrs: {
+                                  type: "button",
+                                  "data-dismiss": "modal",
+                                  "aria-label": "Close",
+                                },
+                                on: {
+                                  click: function ($event) {
+                                    return _vm.closeModal()
+                                  },
+                                },
+                              },
+                              [
+                                _c(
+                                  "span",
+                                  { attrs: { "aria-hidden": "true" } },
+                                  [_vm._v("×")]
+                                ),
+                              ]
+                            ),
+                          ]),
+                          _vm._v(" "),
+                          _c("div", { staticClass: "modal-body" }, [
+                            _c("div", { staticClass: "flex flex-wrap -m-2" }, [
+                              _c("form", {}, [
+                                _c("div", { staticClass: "form-group mb-5" }, [
+                                  _c("label", { attrs: { for: "name" } }, [
+                                    _vm._v("name"),
+                                  ]),
+                                  _vm._v(" "),
+                                  _c("input", {
+                                    directives: [
+                                      {
+                                        name: "model",
+                                        rawName: "v-model",
+                                        value: _vm.name,
+                                        expression: "name",
+                                      },
+                                    ],
+                                    staticClass: "form-control",
+                                    attrs: { type: "text", id: "name" },
+                                    domProps: { value: _vm.name },
+                                    on: {
+                                      input: function ($event) {
+                                        if ($event.target.composing) {
+                                          return
+                                        }
+                                        _vm.name = $event.target.value
+                                      },
+                                    },
+                                  }),
+                                ]),
+                                _vm._v(" "),
+                                _c("div", { staticClass: "form-group mb-5" }, [
+                                  _c("label", { attrs: { for: "code" } }, [
+                                    _vm._v("code"),
+                                  ]),
+                                  _vm._v(" "),
+                                  _c("input", {
+                                    directives: [
+                                      {
+                                        name: "model",
+                                        rawName: "v-model",
+                                        value: _vm.code,
+                                        expression: "code",
+                                      },
+                                    ],
+                                    staticClass: "form-control",
+                                    attrs: { type: "text", id: "code" },
+                                    domProps: { value: _vm.code },
+                                    on: {
+                                      input: function ($event) {
+                                        if ($event.target.composing) {
+                                          return
+                                        }
+                                        _vm.code = $event.target.value
+                                      },
+                                    },
+                                  }),
+                                ]),
+                                _vm._v(" "),
+                                _c("div", { staticClass: "form-group mb-5" }, [
+                                  _c("label", { attrs: { for: "income" } }, [
+                                    _vm._v("income"),
+                                  ]),
+                                  _vm._v(" "),
+                                  _c("input", {
+                                    directives: [
+                                      {
+                                        name: "model",
+                                        rawName: "v-model",
+                                        value: _vm.income,
+                                        expression: "income",
+                                      },
+                                    ],
+                                    staticClass: "form-control text-right",
+                                    attrs: { type: "date", id: "income" },
+                                    domProps: { value: _vm.income },
+                                    on: {
+                                      input: function ($event) {
+                                        if ($event.target.composing) {
+                                          return
+                                        }
+                                        _vm.income = $event.target.value
+                                      },
+                                    },
+                                  }),
+                                ]),
+                                _vm._v(" "),
+                                _c("div", { staticClass: "form-group mb-5" }, [
+                                  _c(
+                                    "label",
+                                    { attrs: { for: "membership" } },
+                                    [_vm._v("Membership")]
+                                  ),
+                                  _vm._v(" "),
+                                  _c(
+                                    "select",
+                                    {
+                                      directives: [
+                                        {
+                                          name: "model",
+                                          rawName: "v-model",
+                                          value: _vm.selectedMembership,
+                                          expression: "selectedMembership",
+                                        },
+                                      ],
+                                      staticClass: "form-control p-0",
+                                      attrs: { id: "membership" },
+                                      on: {
+                                        change: [
+                                          function ($event) {
+                                            var $$selectedVal =
+                                              Array.prototype.filter
+                                                .call(
+                                                  $event.target.options,
+                                                  function (o) {
+                                                    return o.selected
+                                                  }
+                                                )
+                                                .map(function (o) {
+                                                  var val =
+                                                    "_value" in o
+                                                      ? o._value
+                                                      : o.value
+                                                  return val
+                                                })
+                                            _vm.selectedMembership = $event
+                                              .target.multiple
+                                              ? $$selectedVal
+                                              : $$selectedVal[0]
+                                          },
+                                          _vm.selectMembership,
+                                        ],
+                                      },
+                                    },
+                                    [
+                                      _c("option"),
+                                      _vm._v(" "),
+                                      _vm._l(
+                                        _vm.memberships,
+                                        function (membership) {
+                                          return _c(
+                                            "option",
+                                            { domProps: { value: membership } },
+                                            [
+                                              _vm._v(
+                                                "\n                      " +
+                                                  _vm._s(membership.name) +
+                                                  "\n                    "
+                                              ),
+                                            ]
+                                          )
+                                        }
+                                      ),
+                                    ],
+                                    2
+                                  ),
+                                ]),
+                              ]),
+                            ]),
+                          ]),
+                          _vm._v(" "),
+                          _c("div", { staticClass: "modal-footer" }, [
+                            _c(
+                              "button",
+                              {
+                                staticClass: "btn btn-primary fas fa-save",
+                                attrs: { type: "button" },
+                                on: { click: _vm.saveAssistance },
+                              },
+                              [_vm._v("\n              Save\n            ")]
+                            ),
+                            _vm._v(" "),
+                            _c(
+                              "button",
+                              {
+                                staticClass: "btn btn-danger",
+                                attrs: {
+                                  type: "button",
+                                  "data-dismiss": "modal",
+                                },
+                                on: {
+                                  click: function ($event) {
+                                    return _vm.closeModal()
+                                  },
+                                },
+                              },
+                              [_vm._v("\n              Close\n            ")]
+                            ),
+                          ]),
+                        ]),
+                      ]
+                    ),
+                  ]
+                ),
+              ]
+            : _vm._e(),
+        ],
+        2
+      )
+}
+var staticRenderFns = [
+  function () {
+    var _vm = this
+    var _h = _vm.$createElement
+    var _c = _vm._self._c || _h
+    return _c("div", { staticClass: "card shadow p-1 rounded" }, [
+      _c("div", { staticClass: "card-body d-flex justify-content-around" }, [
+        _c(
+          "div",
+          {
+            staticClass: "spinner-grow text-success center",
+            attrs: { role: "status" },
+          },
+          [_c("span", { staticClass: "sr-only" }, [_vm._v("Loading...")])]
+        ),
+      ]),
+    ])
+  },
+  function () {
+    var _vm = this
+    var _h = _vm.$createElement
+    var _c = _vm._self._c || _h
+    return _c("div", { staticClass: "col-sm-12 col-md-5" }, [
+      _c(
+        "div",
+        {
+          staticClass: "dataTables_info",
+          attrs: {
+            id: "col_render_info",
+            role: "status",
+            "aria-live": "polite",
+          },
+        },
+        [
+          _vm._v(
+            "\n                    Showing 1 to 10 of 57 entries\n                  "
+          ),
+        ]
+      ),
+    ])
+  },
+]
+render._withStripped = true
+
 
 
 /***/ }),
@@ -21997,10 +25701,11 @@ var render = function () {
   var _c = _vm._self._c || _h
   return _vm.loading
     ? _c("div", { staticStyle: { heigth: "100%" } }, [_vm._m(0)])
-    : _c(
-        "div",
-        [
-          _c("div", { staticClass: "row" }, [
+    : _c("div", [
+        _c(
+          "div",
+          { staticClass: "row" },
+          [
             _c("div", { staticClass: "col-12" }, [
               _c("div", { staticClass: "card" }, [
                 _c(
@@ -22021,7 +25726,7 @@ var render = function () {
                           },
                         },
                       },
-                      [_vm._v("\n            New Customer\n          ")]
+                      [_vm._v("\n              New Customer\n            ")]
                     ),
                   ]
                 ),
@@ -22105,9 +25810,9 @@ var render = function () {
                                                 },
                                                 [
                                                   _vm._v(
-                                                    "\n                            " +
+                                                    "\n                              " +
                                                       _vm._s(criteria) +
-                                                      "\n                          "
+                                                      "\n                            "
                                                   ),
                                                 ]
                                               )
@@ -22355,9 +26060,9 @@ var render = function () {
                                                 function (value, key, cIndex) {
                                                   return _c("th", [
                                                     _vm._v(
-                                                      "\n                          " +
+                                                      "\n                            " +
                                                         _vm._s(key) +
-                                                        "\n                        "
+                                                        "\n                          "
                                                     ),
                                                   ])
                                                 }
@@ -22394,9 +26099,9 @@ var render = function () {
                                                     },
                                                     [
                                                       _vm._v(
-                                                        "\n                          " +
+                                                        "\n                            " +
                                                           _vm._s(value) +
-                                                          "\n                        "
+                                                          "\n                          "
                                                       ),
                                                     ]
                                                   )
@@ -22428,7 +26133,7 @@ var render = function () {
                                                   ]
                                                 ),
                                                 _vm._v(
-                                                  "\n                           \n                          "
+                                                  "\n                             \n                            "
                                                 ),
                                                 _c(
                                                   "button",
@@ -22467,6 +26172,1035 @@ var render = function () {
                                     _vm._v(" "),
                                     _vm._l(
                                       _vm.customers,
+                                      function (customer, index) {
+                                        return index < 1
+                                          ? _c(
+                                              "tr",
+                                              [
+                                                _vm._l(
+                                                  customer,
+                                                  function (
+                                                    value,
+                                                    key,
+                                                    cIndex
+                                                  ) {
+                                                    return _c("th", [
+                                                      _vm._v(_vm._s(key)),
+                                                    ])
+                                                  }
+                                                ),
+                                                _vm._v(" "),
+                                                _c("th"),
+                                              ],
+                                              2
+                                            )
+                                          : _vm._e()
+                                      }
+                                    ),
+                                  ],
+                                  2
+                                ),
+                              ]
+                            ),
+                          ]),
+                        ]),
+                        _vm._v(" "),
+                        _c("div", { staticClass: "row" }, [
+                          _vm._m(1),
+                          _vm._v(" "),
+                          _c("div", { staticClass: "col-sm-12 col-md-7" }, [
+                            _c(
+                              "div",
+                              {
+                                staticClass:
+                                  "dataTables_paginate paging_simple_numbers",
+                                attrs: { id: "col_render_paginate" },
+                              },
+                              [
+                                _c("nav", [
+                                  _c(
+                                    "ul",
+                                    { staticClass: "pagination" },
+                                    [
+                                      _vm.pagination.current_page > 1
+                                        ? _c(
+                                            "li",
+                                            { staticClass: "page-item" },
+                                            [
+                                              _c(
+                                                "a",
+                                                {
+                                                  staticClass: "page-link",
+                                                  attrs: { href: "#" },
+                                                  on: {
+                                                    click: function ($event) {
+                                                      $event.preventDefault()
+                                                      return _vm.cambiarPagina(
+                                                        _vm.pagination
+                                                          .current_page - 1,
+                                                        _vm.buscar,
+                                                        _vm.criterio
+                                                      )
+                                                    },
+                                                  },
+                                                },
+                                                [_vm._v("Ant")]
+                                              ),
+                                            ]
+                                          )
+                                        : _vm._e(),
+                                      _vm._v(" "),
+                                      _vm._l(_vm.pagesNumber, function (page) {
+                                        return _c(
+                                          "li",
+                                          {
+                                            key: page,
+                                            staticClass: "page-item",
+                                            class: [
+                                              page == _vm.isActived
+                                                ? "active"
+                                                : "",
+                                            ],
+                                          },
+                                          [
+                                            _c("a", {
+                                              staticClass: "page-link",
+                                              attrs: { href: "#" },
+                                              domProps: {
+                                                textContent: _vm._s(page),
+                                              },
+                                              on: {
+                                                click: function ($event) {
+                                                  $event.preventDefault()
+                                                  return _vm.cambiarPagina(
+                                                    page,
+                                                    _vm.buscar,
+                                                    _vm.criterio
+                                                  )
+                                                },
+                                              },
+                                            }),
+                                          ]
+                                        )
+                                      }),
+                                      _vm._v(" "),
+                                      _vm.pagination.current_page <
+                                      _vm.pagination.last_page
+                                        ? _c(
+                                            "li",
+                                            { staticClass: "page-item" },
+                                            [
+                                              _c(
+                                                "a",
+                                                {
+                                                  staticClass: "page-link",
+                                                  attrs: { href: "#" },
+                                                  on: {
+                                                    click: function ($event) {
+                                                      $event.preventDefault()
+                                                      return _vm.cambiarPagina(
+                                                        _vm.pagination
+                                                          .current_page + 1,
+                                                        _vm.buscar,
+                                                        _vm.criterio
+                                                      )
+                                                    },
+                                                  },
+                                                },
+                                                [_vm._v("Sig")]
+                                              ),
+                                            ]
+                                          )
+                                        : _vm._e(),
+                                    ],
+                                    2
+                                  ),
+                                ]),
+                              ]
+                            ),
+                          ]),
+                        ]),
+                      ]
+                    ),
+                  ]),
+                ]),
+              ]),
+            ]),
+            _vm._v(" "),
+            _vm.actionType == 1 || _vm.actionType == 2
+              ? [
+                  _c(
+                    "div",
+                    {
+                      staticClass: "modal fade",
+                      class: { mostrar: _vm.modal },
+                      staticStyle: { display: "none", "overflow-y": "auto" },
+                      attrs: {
+                        tabindex: "-1",
+                        role: "dialog",
+                        "aria-labelledby": "myModalLabel",
+                        "aria-hidden": "true",
+                      },
+                    },
+                    [
+                      _c(
+                        "div",
+                        {
+                          staticClass: "modal-dialog modal-primary modal-lg",
+                          staticStyle: { "padding-top": "55px" },
+                          attrs: { role: "document" },
+                        },
+                        [
+                          _c("div", { staticClass: "modal-content" }, [
+                            _c("div", { staticClass: "modal-header" }, [
+                              _c("h4", {
+                                staticClass: "modal-title",
+                                domProps: {
+                                  textContent: _vm._s(_vm.modalTitle),
+                                },
+                              }),
+                              _vm._v(" "),
+                              _c(
+                                "button",
+                                {
+                                  staticClass: "close",
+                                  attrs: {
+                                    type: "button",
+                                    "data-dismiss": "modal",
+                                    "aria-label": "Close",
+                                  },
+                                  on: {
+                                    click: function ($event) {
+                                      return _vm.closeModal()
+                                    },
+                                  },
+                                },
+                                [
+                                  _c(
+                                    "span",
+                                    { attrs: { "aria-hidden": "true" } },
+                                    [_vm._v("×")]
+                                  ),
+                                ]
+                              ),
+                            ]),
+                            _vm._v(" "),
+                            _c("div", { staticClass: "modal-body" }, [
+                              _c(
+                                "div",
+                                { staticClass: "flex flex-wrap -m-2" },
+                                [
+                                  _c("form", {}, [
+                                    _c(
+                                      "div",
+                                      { staticClass: "form-group mb-5" },
+                                      [
+                                        _c(
+                                          "label",
+                                          { attrs: { for: "name" } },
+                                          [_vm._v("name")]
+                                        ),
+                                        _vm._v(" "),
+                                        _c("input", {
+                                          directives: [
+                                            {
+                                              name: "model",
+                                              rawName: "v-model",
+                                              value: _vm.name,
+                                              expression: "name",
+                                            },
+                                          ],
+                                          staticClass: "form-control",
+                                          attrs: { type: "text", id: "name" },
+                                          domProps: { value: _vm.name },
+                                          on: {
+                                            input: function ($event) {
+                                              if ($event.target.composing) {
+                                                return
+                                              }
+                                              _vm.name = $event.target.value
+                                            },
+                                          },
+                                        }),
+                                      ]
+                                    ),
+                                    _vm._v(" "),
+                                    _c(
+                                      "div",
+                                      { staticClass: "form-group mb-5" },
+                                      [
+                                        _c(
+                                          "label",
+                                          { attrs: { for: "code" } },
+                                          [_vm._v("code")]
+                                        ),
+                                        _vm._v(" "),
+                                        _c("input", {
+                                          directives: [
+                                            {
+                                              name: "model",
+                                              rawName: "v-model",
+                                              value: _vm.code,
+                                              expression: "code",
+                                            },
+                                          ],
+                                          staticClass: "form-control",
+                                          attrs: { type: "text", id: "code" },
+                                          domProps: { value: _vm.code },
+                                          on: {
+                                            input: function ($event) {
+                                              if ($event.target.composing) {
+                                                return
+                                              }
+                                              _vm.code = $event.target.value
+                                            },
+                                          },
+                                        }),
+                                      ]
+                                    ),
+                                    _vm._v(" "),
+                                    _c(
+                                      "div",
+                                      { staticClass: "form-group mb-5" },
+                                      [
+                                        _c(
+                                          "label",
+                                          { attrs: { for: "income" } },
+                                          [_vm._v("income")]
+                                        ),
+                                        _vm._v(" "),
+                                        _c("input", {
+                                          directives: [
+                                            {
+                                              name: "model",
+                                              rawName: "v-model",
+                                              value: _vm.income,
+                                              expression: "income",
+                                            },
+                                          ],
+                                          staticClass:
+                                            "form-control text-right",
+                                          attrs: { type: "date", id: "income" },
+                                          domProps: { value: _vm.income },
+                                          on: {
+                                            input: function ($event) {
+                                              if ($event.target.composing) {
+                                                return
+                                              }
+                                              _vm.income = $event.target.value
+                                            },
+                                          },
+                                        }),
+                                      ]
+                                    ),
+                                    _vm._v(" "),
+                                    _c(
+                                      "div",
+                                      { staticClass: "form-group mb-5" },
+                                      [
+                                        _c(
+                                          "label",
+                                          { attrs: { for: "membership" } },
+                                          [_vm._v("Membership")]
+                                        ),
+                                        _vm._v(" "),
+                                        _c(
+                                          "select",
+                                          {
+                                            directives: [
+                                              {
+                                                name: "model",
+                                                rawName: "v-model",
+                                                value: _vm.selectedMembership,
+                                                expression:
+                                                  "selectedMembership",
+                                              },
+                                            ],
+                                            staticClass: "form-control p-0",
+                                            attrs: { id: "membership" },
+                                            on: {
+                                              change: [
+                                                function ($event) {
+                                                  var $$selectedVal =
+                                                    Array.prototype.filter
+                                                      .call(
+                                                        $event.target.options,
+                                                        function (o) {
+                                                          return o.selected
+                                                        }
+                                                      )
+                                                      .map(function (o) {
+                                                        var val =
+                                                          "_value" in o
+                                                            ? o._value
+                                                            : o.value
+                                                        return val
+                                                      })
+                                                  _vm.selectedMembership =
+                                                    $event.target.multiple
+                                                      ? $$selectedVal
+                                                      : $$selectedVal[0]
+                                                },
+                                                _vm.selectMembership,
+                                              ],
+                                            },
+                                          },
+                                          [
+                                            _c("option"),
+                                            _vm._v(" "),
+                                            _vm._l(
+                                              _vm.memberships,
+                                              function (membership) {
+                                                return _c(
+                                                  "option",
+                                                  {
+                                                    domProps: {
+                                                      value: membership,
+                                                    },
+                                                  },
+                                                  [
+                                                    _vm._v(
+                                                      "\n                        " +
+                                                        _vm._s(
+                                                          membership.name
+                                                        ) +
+                                                        "\n                      "
+                                                    ),
+                                                  ]
+                                                )
+                                              }
+                                            ),
+                                          ],
+                                          2
+                                        ),
+                                      ]
+                                    ),
+                                  ]),
+                                ]
+                              ),
+                            ]),
+                            _vm._v(" "),
+                            _c("div", { staticClass: "modal-footer" }, [
+                              _c(
+                                "button",
+                                {
+                                  staticClass: "btn btn-primary fas fa-save",
+                                  attrs: { type: "button" },
+                                  on: { click: _vm.saveCustomer },
+                                },
+                                [
+                                  _vm._v(
+                                    "\n                Save\n              "
+                                  ),
+                                ]
+                              ),
+                              _vm._v(" "),
+                              _c(
+                                "button",
+                                {
+                                  staticClass: "btn btn-danger",
+                                  attrs: {
+                                    type: "button",
+                                    "data-dismiss": "modal",
+                                  },
+                                  on: {
+                                    click: function ($event) {
+                                      return _vm.closeModal()
+                                    },
+                                  },
+                                },
+                                [
+                                  _vm._v(
+                                    "\n                Close\n              "
+                                  ),
+                                ]
+                              ),
+                            ]),
+                          ]),
+                        ]
+                      ),
+                    ]
+                  ),
+                ]
+              : _vm._e(),
+          ],
+          2
+        ),
+      ])
+}
+var staticRenderFns = [
+  function () {
+    var _vm = this
+    var _h = _vm.$createElement
+    var _c = _vm._self._c || _h
+    return _c("div", { staticClass: "card shadow p-1 rounded" }, [
+      _c("div", { staticClass: "card-body d-flex justify-content-around" }, [
+        _c(
+          "div",
+          {
+            staticClass: "spinner-grow text-success center",
+            attrs: { role: "status" },
+          },
+          [_c("span", { staticClass: "sr-only" }, [_vm._v("Loading...")])]
+        ),
+      ]),
+    ])
+  },
+  function () {
+    var _vm = this
+    var _h = _vm.$createElement
+    var _c = _vm._self._c || _h
+    return _c("div", { staticClass: "col-sm-12 col-md-5" }, [
+      _c(
+        "div",
+        {
+          staticClass: "dataTables_info",
+          attrs: {
+            id: "col_render_info",
+            role: "status",
+            "aria-live": "polite",
+          },
+        },
+        [
+          _vm._v(
+            "\n                      Showing 1 to 10 of 57 entries\n                    "
+          ),
+        ]
+      ),
+    ])
+  },
+]
+render._withStripped = true
+
+
+
+/***/ }),
+
+/***/ "./node_modules/vue-loader/lib/loaders/templateLoader.js??vue-loader-options!./node_modules/vue-loader/lib/index.js??vue-loader-options!./resources/js/components/DigitalClock.vue?vue&type=template&id=4c9825c1&scoped=true&":
+/*!************************************************************************************************************************************************************************************************************************************!*\
+  !*** ./node_modules/vue-loader/lib/loaders/templateLoader.js??vue-loader-options!./node_modules/vue-loader/lib/index.js??vue-loader-options!./resources/js/components/DigitalClock.vue?vue&type=template&id=4c9825c1&scoped=true& ***!
+  \************************************************************************************************************************************************************************************************************************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   "render": () => (/* binding */ render),
+/* harmony export */   "staticRenderFns": () => (/* binding */ staticRenderFns)
+/* harmony export */ });
+var render = function () {
+  var _vm = this
+  var _h = _vm.$createElement
+  var _c = _vm._self._c || _h
+  return _c(
+    "div",
+    { staticClass: "clock-body shadow-lg p-4 m-4 rounded  col-md-8 m-auto" },
+    [
+      _c("div", { attrs: { id: "clock" } }, [
+        _c("p", { staticClass: "date" }, [_vm._v(_vm._s(_vm.clock.date))]),
+        _vm._v(" "),
+        _c("p", { staticClass: "time" }, [_vm._v(_vm._s(_vm.clock.time))]),
+        _vm._v(" "),
+        _c("p", { staticClass: "text" }, [_vm._v("DIGITAL CLOCK with Vue.js")]),
+      ]),
+    ]
+  )
+}
+var staticRenderFns = []
+render._withStripped = true
+
+
+
+/***/ }),
+
+/***/ "./node_modules/vue-loader/lib/loaders/templateLoader.js??vue-loader-options!./node_modules/vue-loader/lib/index.js??vue-loader-options!./resources/js/components/MembershipComponent.vue?vue&type=template&id=510b6fa8&":
+/*!*******************************************************************************************************************************************************************************************************************************!*\
+  !*** ./node_modules/vue-loader/lib/loaders/templateLoader.js??vue-loader-options!./node_modules/vue-loader/lib/index.js??vue-loader-options!./resources/js/components/MembershipComponent.vue?vue&type=template&id=510b6fa8& ***!
+  \*******************************************************************************************************************************************************************************************************************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   "render": () => (/* binding */ render),
+/* harmony export */   "staticRenderFns": () => (/* binding */ staticRenderFns)
+/* harmony export */ });
+var render = function () {
+  var _vm = this
+  var _h = _vm.$createElement
+  var _c = _vm._self._c || _h
+  return _vm.loading
+    ? _c("div", { staticStyle: { heigth: "100%" } }, [_vm._m(0)])
+    : _c(
+        "div",
+        [
+          _c("div", { staticClass: "row" }, [
+            _c("div", { staticClass: "col-12" }, [
+              _c("div", { staticClass: "card" }, [
+                _c(
+                  "div",
+                  {
+                    staticClass:
+                      "card-header border-bottom shadow-sm pt-4 mt-4 pb-2 mb-22",
+                  },
+                  [
+                    _c(
+                      "button",
+                      {
+                        staticClass: "btn btn-primary btn-lg fas fa-edit",
+                        attrs: { type: "button" },
+                        on: {
+                          click: function ($event) {
+                            return _vm.openModal("memberships", "store")
+                          },
+                        },
+                      },
+                      [_vm._v("\n            New Membership\n          ")]
+                    ),
+                  ]
+                ),
+                _vm._v(" "),
+                _c("div", { staticClass: "card-body" }, [
+                  _c("h4", { staticClass: "card-title" }, [
+                    _vm._v("Memberships"),
+                  ]),
+                  _vm._v(" "),
+                  _c("div", { staticClass: "table-responsive" }, [
+                    _c(
+                      "div",
+                      {
+                        staticClass:
+                          "dataTables_wrapper container-fluid dt-bootstrap4",
+                        attrs: { id: "col_render_wrapper" },
+                      },
+                      [
+                        _c("div", { staticClass: "row" }, [
+                          _c("div", { staticClass: "col-sm-12 col-md-6" }, [
+                            _c(
+                              "div",
+                              {
+                                staticClass:
+                                  "input-group mb-3 dataTables_filter",
+                              },
+                              [
+                                _c(
+                                  "div",
+                                  { staticClass: "input-group-prepend" },
+                                  [
+                                    _c(
+                                      "select",
+                                      {
+                                        directives: [
+                                          {
+                                            name: "model",
+                                            rawName: "v-model",
+                                            value: _vm.criterio,
+                                            expression: "criterio",
+                                          },
+                                        ],
+                                        staticClass: "input-group-text",
+                                        on: {
+                                          change: [
+                                            function ($event) {
+                                              var $$selectedVal =
+                                                Array.prototype.filter
+                                                  .call(
+                                                    $event.target.options,
+                                                    function (o) {
+                                                      return o.selected
+                                                    }
+                                                  )
+                                                  .map(function (o) {
+                                                    var val =
+                                                      "_value" in o
+                                                        ? o._value
+                                                        : o.value
+                                                    return val
+                                                  })
+                                              _vm.criterio = $event.target
+                                                .multiple
+                                                ? $$selectedVal
+                                                : $$selectedVal[0]
+                                            },
+                                            _vm.selectCriteria,
+                                          ],
+                                        },
+                                      },
+                                      [
+                                        _c(
+                                          "optgroup",
+                                          _vm._l(
+                                            _vm.criterions,
+                                            function (criteria) {
+                                              return _c(
+                                                "option",
+                                                {
+                                                  domProps: { value: criteria },
+                                                },
+                                                [
+                                                  _vm._v(
+                                                    "\n                            " +
+                                                      _vm._s(criteria) +
+                                                      "\n                          "
+                                                  ),
+                                                ]
+                                              )
+                                            }
+                                          ),
+                                          0
+                                        ),
+                                      ]
+                                    ),
+                                  ]
+                                ),
+                                _vm._v(" "),
+                                (_vm.criterio == "income"
+                                  ? "date"
+                                  : _vm.criterio == "code"
+                                  ? "number"
+                                  : "text") === "checkbox"
+                                  ? _c("input", {
+                                      directives: [
+                                        {
+                                          name: "model",
+                                          rawName: "v-model",
+                                          value: _vm.buscar,
+                                          expression: "buscar",
+                                        },
+                                      ],
+                                      staticClass: "form-control",
+                                      attrs: {
+                                        placeholder:
+                                          _vm.criterio == "income"
+                                            ? "22/07/2022"
+                                            : _vm.criterio == "code"
+                                            ? "0123"
+                                            : "Benny Juarez",
+                                        type: "checkbox",
+                                      },
+                                      domProps: {
+                                        checked: Array.isArray(_vm.buscar)
+                                          ? _vm._i(_vm.buscar, null) > -1
+                                          : _vm.buscar,
+                                      },
+                                      on: {
+                                        keyup: function ($event) {
+                                          if (
+                                            !$event.type.indexOf("key") &&
+                                            _vm._k(
+                                              $event.keyCode,
+                                              "enter",
+                                              13,
+                                              $event.key,
+                                              "Enter"
+                                            )
+                                          ) {
+                                            return null
+                                          }
+                                          return _vm.getMemberships(
+                                            1,
+                                            _vm.buscar,
+                                            _vm.criterio
+                                          )
+                                        },
+                                        change: function ($event) {
+                                          var $$a = _vm.buscar,
+                                            $$el = $event.target,
+                                            $$c = $$el.checked ? true : false
+                                          if (Array.isArray($$a)) {
+                                            var $$v = null,
+                                              $$i = _vm._i($$a, $$v)
+                                            if ($$el.checked) {
+                                              $$i < 0 &&
+                                                (_vm.buscar = $$a.concat([$$v]))
+                                            } else {
+                                              $$i > -1 &&
+                                                (_vm.buscar = $$a
+                                                  .slice(0, $$i)
+                                                  .concat($$a.slice($$i + 1)))
+                                            }
+                                          } else {
+                                            _vm.buscar = $$c
+                                          }
+                                        },
+                                      },
+                                    })
+                                  : (_vm.criterio == "income"
+                                      ? "date"
+                                      : _vm.criterio == "code"
+                                      ? "number"
+                                      : "text") === "radio"
+                                  ? _c("input", {
+                                      directives: [
+                                        {
+                                          name: "model",
+                                          rawName: "v-model",
+                                          value: _vm.buscar,
+                                          expression: "buscar",
+                                        },
+                                      ],
+                                      staticClass: "form-control",
+                                      attrs: {
+                                        placeholder:
+                                          _vm.criterio == "income"
+                                            ? "22/07/2022"
+                                            : _vm.criterio == "code"
+                                            ? "0123"
+                                            : "Benny Juarez",
+                                        type: "radio",
+                                      },
+                                      domProps: {
+                                        checked: _vm._q(_vm.buscar, null),
+                                      },
+                                      on: {
+                                        keyup: function ($event) {
+                                          if (
+                                            !$event.type.indexOf("key") &&
+                                            _vm._k(
+                                              $event.keyCode,
+                                              "enter",
+                                              13,
+                                              $event.key,
+                                              "Enter"
+                                            )
+                                          ) {
+                                            return null
+                                          }
+                                          return _vm.getMemberships(
+                                            1,
+                                            _vm.buscar,
+                                            _vm.criterio
+                                          )
+                                        },
+                                        change: function ($event) {
+                                          _vm.buscar = null
+                                        },
+                                      },
+                                    })
+                                  : _c("input", {
+                                      directives: [
+                                        {
+                                          name: "model",
+                                          rawName: "v-model",
+                                          value: _vm.buscar,
+                                          expression: "buscar",
+                                        },
+                                      ],
+                                      staticClass: "form-control",
+                                      attrs: {
+                                        placeholder:
+                                          _vm.criterio == "income"
+                                            ? "22/07/2022"
+                                            : _vm.criterio == "code"
+                                            ? "0123"
+                                            : "Benny Juarez",
+                                        type:
+                                          _vm.criterio == "income"
+                                            ? "date"
+                                            : _vm.criterio == "code"
+                                            ? "number"
+                                            : "text",
+                                      },
+                                      domProps: { value: _vm.buscar },
+                                      on: {
+                                        keyup: function ($event) {
+                                          if (
+                                            !$event.type.indexOf("key") &&
+                                            _vm._k(
+                                              $event.keyCode,
+                                              "enter",
+                                              13,
+                                              $event.key,
+                                              "Enter"
+                                            )
+                                          ) {
+                                            return null
+                                          }
+                                          return _vm.getMemberships(
+                                            1,
+                                            _vm.buscar,
+                                            _vm.criterio
+                                          )
+                                        },
+                                        input: function ($event) {
+                                          if ($event.target.composing) {
+                                            return
+                                          }
+                                          _vm.buscar = $event.target.value
+                                        },
+                                      },
+                                    }),
+                                _vm._v(" "),
+                                _c(
+                                  "div",
+                                  { staticClass: "input-group-append" },
+                                  [
+                                    _c(
+                                      "button",
+                                      {
+                                        staticClass:
+                                          "btn-sm btn-primary input-group-text",
+                                        attrs: { type: "submit" },
+                                        on: {
+                                          click: function ($event) {
+                                            return _vm.getMemberships(
+                                              1,
+                                              _vm.buscar,
+                                              _vm.criterio
+                                            )
+                                          },
+                                        },
+                                      },
+                                      [_c("i", { staticClass: "fa fa-search" })]
+                                    ),
+                                  ]
+                                ),
+                              ]
+                            ),
+                          ]),
+                        ]),
+                        _vm._v(" "),
+                        _c("div", { staticClass: "row" }, [
+                          _c("div", { staticClass: "col-sm-12" }, [
+                            _c(
+                              "table",
+                              {
+                                staticClass:
+                                  "table table-bordered table-striped table-sm",
+                                staticStyle: { width: "100%" },
+                                attrs: {
+                                  id: "col_render",
+                                  role: "grid",
+                                  "aria-describedby": "col_render_info",
+                                },
+                              },
+                              [
+                                _c(
+                                  "thead",
+                                  _vm._l(
+                                    _vm.memberships,
+                                    function (customer, index) {
+                                      return index < 1
+                                        ? _c(
+                                            "tr",
+                                            [
+                                              _vm._l(
+                                                customer,
+                                                function (value, key, cIndex) {
+                                                  return _c("th", [
+                                                    _vm._v(
+                                                      "\n                          " +
+                                                        _vm._s(key) +
+                                                        "\n                        "
+                                                    ),
+                                                  ])
+                                                }
+                                              ),
+                                              _vm._v(" "),
+                                              _c("th"),
+                                            ],
+                                            2
+                                          )
+                                        : _vm._e()
+                                    }
+                                  ),
+                                  0
+                                ),
+                                _vm._v(" "),
+                                _c(
+                                  "tbody",
+                                  _vm._l(
+                                    _vm.memberships,
+                                    function (customer, index) {
+                                      return index <= _vm.pagination.per_page
+                                        ? _c(
+                                            "tr",
+                                            [
+                                              _vm._l(
+                                                customer,
+                                                function (value, key, cIndex) {
+                                                  return _c(
+                                                    "td",
+                                                    {
+                                                      attrs: {
+                                                        "max-height": "5px",
+                                                      },
+                                                    },
+                                                    [
+                                                      _vm._v(
+                                                        "\n                          " +
+                                                          _vm._s(value) +
+                                                          "\n                        "
+                                                      ),
+                                                    ]
+                                                  )
+                                                }
+                                              ),
+                                              _vm._v(" "),
+                                              _c("td", [
+                                                _c(
+                                                  "button",
+                                                  {
+                                                    staticClass:
+                                                      "btn btn-warning btn-sm",
+                                                    attrs: { type: "button" },
+                                                    on: {
+                                                      click: function ($event) {
+                                                        return _vm.openModal(
+                                                          "memberships",
+                                                          "update",
+                                                          customer
+                                                        )
+                                                      },
+                                                    },
+                                                  },
+                                                  [
+                                                    _c("i", {
+                                                      staticClass:
+                                                        "icon-pencil",
+                                                    }),
+                                                  ]
+                                                ),
+                                                _vm._v(
+                                                  "\n                           \n                          "
+                                                ),
+                                                _c(
+                                                  "button",
+                                                  {
+                                                    staticClass:
+                                                      "btn btn-danger btn-sm",
+                                                    attrs: { type: "button" },
+                                                    on: {
+                                                      click: function ($event) {
+                                                        return _vm.deleteMembership(
+                                                          customer.id
+                                                        )
+                                                      },
+                                                    },
+                                                  },
+                                                  [
+                                                    _c("i", {
+                                                      staticClass: "icon-trash",
+                                                    }),
+                                                  ]
+                                                ),
+                                              ]),
+                                            ],
+                                            2
+                                          )
+                                        : _vm._e()
+                                    }
+                                  ),
+                                  0
+                                ),
+                                _vm._v(" "),
+                                _c(
+                                  "tfoot",
+                                  [
+                                    _c("tr"),
+                                    _vm._v(" "),
+                                    _vm._l(
+                                      _vm.memberships,
                                       function (customer, index) {
                                         return index < 1
                                           ? _c(
@@ -22846,7 +27580,7 @@ var render = function () {
                               {
                                 staticClass: "btn btn-primary fas fa-save",
                                 attrs: { type: "button" },
-                                on: { click: _vm.saveCustomer },
+                                on: { click: _vm.saveMembership },
                               },
                               [_vm._v("\n              Save\n            ")]
                             ),
@@ -22927,10 +27661,10 @@ render._withStripped = true
 
 /***/ }),
 
-/***/ "./node_modules/vue-loader/lib/loaders/templateLoader.js??vue-loader-options!./node_modules/vue-loader/lib/index.js??vue-loader-options!./resources/js/components/DigitalClock.vue?vue&type=template&id=4c9825c1&scoped=true&":
-/*!************************************************************************************************************************************************************************************************************************************!*\
-  !*** ./node_modules/vue-loader/lib/loaders/templateLoader.js??vue-loader-options!./node_modules/vue-loader/lib/index.js??vue-loader-options!./resources/js/components/DigitalClock.vue?vue&type=template&id=4c9825c1&scoped=true& ***!
-  \************************************************************************************************************************************************************************************************************************************/
+/***/ "./node_modules/vue-loader/lib/loaders/templateLoader.js??vue-loader-options!./node_modules/vue-loader/lib/index.js??vue-loader-options!./resources/js/components/PaymentComponent.vue?vue&type=template&id=4f61e082&":
+/*!****************************************************************************************************************************************************************************************************************************!*\
+  !*** ./node_modules/vue-loader/lib/loaders/templateLoader.js??vue-loader-options!./node_modules/vue-loader/lib/index.js??vue-loader-options!./resources/js/components/PaymentComponent.vue?vue&type=template&id=4f61e082& ***!
+  \****************************************************************************************************************************************************************************************************************************/
 /***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
 
 "use strict";
@@ -22943,21 +27677,1009 @@ var render = function () {
   var _vm = this
   var _h = _vm.$createElement
   var _c = _vm._self._c || _h
-  return _c(
-    "div",
-    { staticClass: "clock-body shadow-lg p-4 m-4 rounded  col-md-8 m-auto" },
-    [
-      _c("div", { attrs: { id: "clock" } }, [
-        _c("p", { staticClass: "date" }, [_vm._v(_vm._s(_vm.clock.date))]),
-        _vm._v(" "),
-        _c("p", { staticClass: "time" }, [_vm._v(_vm._s(_vm.clock.time))]),
-        _vm._v(" "),
-        _c("p", { staticClass: "text" }, [_vm._v("DIGITAL CLOCK with Vue.js")]),
-      ]),
-    ]
-  )
+  return _vm.loading
+    ? _c("div", { staticStyle: { heigth: "100%" } }, [_vm._m(0)])
+    : _c(
+        "div",
+        [
+          _c("div", { staticClass: "row" }, [
+            _c("div", { staticClass: "col-12" }, [
+              _c("div", { staticClass: "card" }, [
+                _c(
+                  "div",
+                  {
+                    staticClass:
+                      "card-header border-bottom shadow-sm pt-4 mt-4 pb-2 mb-22",
+                  },
+                  [
+                    _c(
+                      "button",
+                      {
+                        staticClass: "btn btn-primary btn-lg fas fa-edit",
+                        attrs: { type: "button" },
+                        on: {
+                          click: function ($event) {
+                            return _vm.openModal("payments", "store")
+                          },
+                        },
+                      },
+                      [_vm._v("\n            New Payment\n          ")]
+                    ),
+                  ]
+                ),
+                _vm._v(" "),
+                _c("div", { staticClass: "card-body" }, [
+                  _c("h4", { staticClass: "card-title" }, [_vm._v("Payments")]),
+                  _vm._v(" "),
+                  _c("div", { staticClass: "table-responsive" }, [
+                    _c(
+                      "div",
+                      {
+                        staticClass:
+                          "dataTables_wrapper container-fluid dt-bootstrap4",
+                        attrs: { id: "col_render_wrapper" },
+                      },
+                      [
+                        _c("div", { staticClass: "row" }, [
+                          _c("div", { staticClass: "col-sm-12 col-md-6" }, [
+                            _c(
+                              "div",
+                              {
+                                staticClass:
+                                  "input-group mb-3 dataTables_filter",
+                              },
+                              [
+                                _c(
+                                  "div",
+                                  { staticClass: "input-group-prepend" },
+                                  [
+                                    _c(
+                                      "select",
+                                      {
+                                        directives: [
+                                          {
+                                            name: "model",
+                                            rawName: "v-model",
+                                            value: _vm.criterio,
+                                            expression: "criterio",
+                                          },
+                                        ],
+                                        staticClass: "input-group-text",
+                                        on: {
+                                          change: [
+                                            function ($event) {
+                                              var $$selectedVal =
+                                                Array.prototype.filter
+                                                  .call(
+                                                    $event.target.options,
+                                                    function (o) {
+                                                      return o.selected
+                                                    }
+                                                  )
+                                                  .map(function (o) {
+                                                    var val =
+                                                      "_value" in o
+                                                        ? o._value
+                                                        : o.value
+                                                    return val
+                                                  })
+                                              _vm.criterio = $event.target
+                                                .multiple
+                                                ? $$selectedVal
+                                                : $$selectedVal[0]
+                                            },
+                                            _vm.selectCriteria,
+                                          ],
+                                        },
+                                      },
+                                      [
+                                        _c(
+                                          "optgroup",
+                                          _vm._l(
+                                            _vm.criterions,
+                                            function (criteria) {
+                                              return _c(
+                                                "option",
+                                                {
+                                                  domProps: { value: criteria },
+                                                },
+                                                [
+                                                  _vm._v(
+                                                    "\n                            " +
+                                                      _vm._s(criteria) +
+                                                      "\n                          "
+                                                  ),
+                                                ]
+                                              )
+                                            }
+                                          ),
+                                          0
+                                        ),
+                                      ]
+                                    ),
+                                  ]
+                                ),
+                                _vm._v(" "),
+                                (_vm.criterio == "paid_at" ||
+                                _vm.criterio == "expires_at"
+                                  ? "date"
+                                  : _vm.criterio == "code"
+                                  ? "number"
+                                  : "text") === "checkbox"
+                                  ? _c("input", {
+                                      directives: [
+                                        {
+                                          name: "model",
+                                          rawName: "v-model",
+                                          value: _vm.buscar,
+                                          expression: "buscar",
+                                        },
+                                      ],
+                                      staticClass: "form-control",
+                                      attrs: {
+                                        placeholder:
+                                          _vm.criterio == "paid_at" ||
+                                          _vm.criterio == "expires_at"
+                                            ? "22/07/2022"
+                                            : _vm.criterio == "customer"
+                                            ? "0123"
+                                            : "Benny Juarez",
+                                        type: "checkbox",
+                                      },
+                                      domProps: {
+                                        checked: Array.isArray(_vm.buscar)
+                                          ? _vm._i(_vm.buscar, null) > -1
+                                          : _vm.buscar,
+                                      },
+                                      on: {
+                                        keyup: function ($event) {
+                                          if (
+                                            !$event.type.indexOf("key") &&
+                                            _vm._k(
+                                              $event.keyCode,
+                                              "enter",
+                                              13,
+                                              $event.key,
+                                              "Enter"
+                                            )
+                                          ) {
+                                            return null
+                                          }
+                                          return _vm.getPayments(
+                                            1,
+                                            _vm.buscar,
+                                            _vm.criterio
+                                          )
+                                        },
+                                        change: function ($event) {
+                                          var $$a = _vm.buscar,
+                                            $$el = $event.target,
+                                            $$c = $$el.checked ? true : false
+                                          if (Array.isArray($$a)) {
+                                            var $$v = null,
+                                              $$i = _vm._i($$a, $$v)
+                                            if ($$el.checked) {
+                                              $$i < 0 &&
+                                                (_vm.buscar = $$a.concat([$$v]))
+                                            } else {
+                                              $$i > -1 &&
+                                                (_vm.buscar = $$a
+                                                  .slice(0, $$i)
+                                                  .concat($$a.slice($$i + 1)))
+                                            }
+                                          } else {
+                                            _vm.buscar = $$c
+                                          }
+                                        },
+                                      },
+                                    })
+                                  : (_vm.criterio == "paid_at" ||
+                                    _vm.criterio == "expires_at"
+                                      ? "date"
+                                      : _vm.criterio == "code"
+                                      ? "number"
+                                      : "text") === "radio"
+                                  ? _c("input", {
+                                      directives: [
+                                        {
+                                          name: "model",
+                                          rawName: "v-model",
+                                          value: _vm.buscar,
+                                          expression: "buscar",
+                                        },
+                                      ],
+                                      staticClass: "form-control",
+                                      attrs: {
+                                        placeholder:
+                                          _vm.criterio == "paid_at" ||
+                                          _vm.criterio == "expires_at"
+                                            ? "22/07/2022"
+                                            : _vm.criterio == "customer"
+                                            ? "0123"
+                                            : "Benny Juarez",
+                                        type: "radio",
+                                      },
+                                      domProps: {
+                                        checked: _vm._q(_vm.buscar, null),
+                                      },
+                                      on: {
+                                        keyup: function ($event) {
+                                          if (
+                                            !$event.type.indexOf("key") &&
+                                            _vm._k(
+                                              $event.keyCode,
+                                              "enter",
+                                              13,
+                                              $event.key,
+                                              "Enter"
+                                            )
+                                          ) {
+                                            return null
+                                          }
+                                          return _vm.getPayments(
+                                            1,
+                                            _vm.buscar,
+                                            _vm.criterio
+                                          )
+                                        },
+                                        change: function ($event) {
+                                          _vm.buscar = null
+                                        },
+                                      },
+                                    })
+                                  : _c("input", {
+                                      directives: [
+                                        {
+                                          name: "model",
+                                          rawName: "v-model",
+                                          value: _vm.buscar,
+                                          expression: "buscar",
+                                        },
+                                      ],
+                                      staticClass: "form-control",
+                                      attrs: {
+                                        placeholder:
+                                          _vm.criterio == "paid_at" ||
+                                          _vm.criterio == "expires_at"
+                                            ? "22/07/2022"
+                                            : _vm.criterio == "customer"
+                                            ? "0123"
+                                            : "Benny Juarez",
+                                        type:
+                                          _vm.criterio == "paid_at" ||
+                                          _vm.criterio == "expires_at"
+                                            ? "date"
+                                            : _vm.criterio == "code"
+                                            ? "number"
+                                            : "text",
+                                      },
+                                      domProps: { value: _vm.buscar },
+                                      on: {
+                                        keyup: function ($event) {
+                                          if (
+                                            !$event.type.indexOf("key") &&
+                                            _vm._k(
+                                              $event.keyCode,
+                                              "enter",
+                                              13,
+                                              $event.key,
+                                              "Enter"
+                                            )
+                                          ) {
+                                            return null
+                                          }
+                                          return _vm.getPayments(
+                                            1,
+                                            _vm.buscar,
+                                            _vm.criterio
+                                          )
+                                        },
+                                        input: function ($event) {
+                                          if ($event.target.composing) {
+                                            return
+                                          }
+                                          _vm.buscar = $event.target.value
+                                        },
+                                      },
+                                    }),
+                                _vm._v(" "),
+                                _c(
+                                  "div",
+                                  { staticClass: "input-group-append" },
+                                  [
+                                    _c(
+                                      "button",
+                                      {
+                                        staticClass:
+                                          "btn-sm btn-primary input-group-text",
+                                        attrs: { type: "submit" },
+                                        on: {
+                                          click: function ($event) {
+                                            return _vm.getPayments(
+                                              1,
+                                              _vm.buscar,
+                                              _vm.criterio
+                                            )
+                                          },
+                                        },
+                                      },
+                                      [_c("i", { staticClass: "fa fa-search" })]
+                                    ),
+                                  ]
+                                ),
+                              ]
+                            ),
+                          ]),
+                        ]),
+                        _vm._v(" "),
+                        _c("div", { staticClass: "row" }, [
+                          _c("div", { staticClass: "col-sm-12" }, [
+                            _c(
+                              "table",
+                              {
+                                staticClass:
+                                  "table table-bordered table-striped table-sm",
+                                staticStyle: { width: "100%" },
+                                attrs: {
+                                  id: "col_render",
+                                  role: "grid",
+                                  "aria-describedby": "col_render_info",
+                                },
+                              },
+                              [
+                                _c(
+                                  "thead",
+                                  _vm._l(
+                                    _vm.payments,
+                                    function (payment, index) {
+                                      return index < 1
+                                        ? _c(
+                                            "tr",
+                                            [
+                                              _vm._l(
+                                                payment,
+                                                function (value, key, cIndex) {
+                                                  return _c("th", [
+                                                    _vm._v(
+                                                      "\n                          " +
+                                                        _vm._s(key) +
+                                                        "\n                        "
+                                                    ),
+                                                  ])
+                                                }
+                                              ),
+                                              _vm._v(" "),
+                                              _c("th"),
+                                            ],
+                                            2
+                                          )
+                                        : _vm._e()
+                                    }
+                                  ),
+                                  0
+                                ),
+                                _vm._v(" "),
+                                _c(
+                                  "tbody",
+                                  _vm._l(
+                                    _vm.payments,
+                                    function (payment, index) {
+                                      return index <= _vm.pagination.per_page
+                                        ? _c(
+                                            "tr",
+                                            [
+                                              _vm._l(
+                                                payment,
+                                                function (value, key, cIndex) {
+                                                  return _c(
+                                                    "td",
+                                                    {
+                                                      attrs: {
+                                                        "max-height": "5px",
+                                                      },
+                                                    },
+                                                    [
+                                                      _vm._v(
+                                                        "\n                          " +
+                                                          _vm._s(value) +
+                                                          "\n                        "
+                                                      ),
+                                                    ]
+                                                  )
+                                                }
+                                              ),
+                                              _vm._v(" "),
+                                              _c("td", [
+                                                _c(
+                                                  "button",
+                                                  {
+                                                    staticClass:
+                                                      "btn btn-warning btn-sm",
+                                                    attrs: { type: "button" },
+                                                    on: {
+                                                      click: function ($event) {
+                                                        return _vm.openModal(
+                                                          "payments",
+                                                          "update",
+                                                          payment
+                                                        )
+                                                      },
+                                                    },
+                                                  },
+                                                  [
+                                                    _c("i", {
+                                                      staticClass:
+                                                        "icon-pencil",
+                                                    }),
+                                                  ]
+                                                ),
+                                                _vm._v(
+                                                  "\n                           \n                          "
+                                                ),
+                                                _c(
+                                                  "button",
+                                                  {
+                                                    staticClass:
+                                                      "btn btn-danger btn-sm",
+                                                    attrs: { type: "button" },
+                                                    on: {
+                                                      click: function ($event) {
+                                                        return _vm.deletePayment(
+                                                          payment.id
+                                                        )
+                                                      },
+                                                    },
+                                                  },
+                                                  [
+                                                    _c("i", {
+                                                      staticClass: "icon-trash",
+                                                    }),
+                                                  ]
+                                                ),
+                                              ]),
+                                            ],
+                                            2
+                                          )
+                                        : _vm._e()
+                                    }
+                                  ),
+                                  0
+                                ),
+                                _vm._v(" "),
+                                _c(
+                                  "tfoot",
+                                  [
+                                    _c("tr"),
+                                    _vm._v(" "),
+                                    _vm._l(
+                                      _vm.payments,
+                                      function (payment, index) {
+                                        return index < 1
+                                          ? _c(
+                                              "tr",
+                                              [
+                                                _vm._l(
+                                                  payment,
+                                                  function (
+                                                    value,
+                                                    key,
+                                                    cIndex
+                                                  ) {
+                                                    return _c("th", [
+                                                      _vm._v(_vm._s(key)),
+                                                    ])
+                                                  }
+                                                ),
+                                                _vm._v(" "),
+                                                _c("th"),
+                                              ],
+                                              2
+                                            )
+                                          : _vm._e()
+                                      }
+                                    ),
+                                  ],
+                                  2
+                                ),
+                              ]
+                            ),
+                          ]),
+                        ]),
+                        _vm._v(" "),
+                        _c("div", { staticClass: "row" }, [
+                          _vm._m(1),
+                          _vm._v(" "),
+                          _c("div", { staticClass: "col-sm-12 col-md-7" }, [
+                            _c(
+                              "div",
+                              {
+                                staticClass:
+                                  "dataTables_paginate paging_simple_numbers",
+                                attrs: { id: "col_render_paginate" },
+                              },
+                              [
+                                _c("nav", [
+                                  _c(
+                                    "ul",
+                                    { staticClass: "pagination" },
+                                    [
+                                      _vm.pagination.current_page > 1
+                                        ? _c(
+                                            "li",
+                                            { staticClass: "page-item" },
+                                            [
+                                              _c(
+                                                "a",
+                                                {
+                                                  staticClass: "page-link",
+                                                  attrs: { href: "#" },
+                                                  on: {
+                                                    click: function ($event) {
+                                                      $event.preventDefault()
+                                                      return _vm.cambiarPagina(
+                                                        _vm.pagination
+                                                          .current_page - 1,
+                                                        _vm.buscar,
+                                                        _vm.criterio
+                                                      )
+                                                    },
+                                                  },
+                                                },
+                                                [_vm._v("Ant")]
+                                              ),
+                                            ]
+                                          )
+                                        : _vm._e(),
+                                      _vm._v(" "),
+                                      _vm._l(_vm.pagesNumber, function (page) {
+                                        return _c(
+                                          "li",
+                                          {
+                                            key: page,
+                                            staticClass: "page-item",
+                                            class: [
+                                              page == _vm.isActived
+                                                ? "active"
+                                                : "",
+                                            ],
+                                          },
+                                          [
+                                            _c("a", {
+                                              staticClass: "page-link",
+                                              attrs: { href: "#" },
+                                              domProps: {
+                                                textContent: _vm._s(page),
+                                              },
+                                              on: {
+                                                click: function ($event) {
+                                                  $event.preventDefault()
+                                                  return _vm.cambiarPagina(
+                                                    page,
+                                                    _vm.buscar,
+                                                    _vm.criterio
+                                                  )
+                                                },
+                                              },
+                                            }),
+                                          ]
+                                        )
+                                      }),
+                                      _vm._v(" "),
+                                      _vm.pagination.current_page <
+                                      _vm.pagination.last_page
+                                        ? _c(
+                                            "li",
+                                            { staticClass: "page-item" },
+                                            [
+                                              _c(
+                                                "a",
+                                                {
+                                                  staticClass: "page-link",
+                                                  attrs: { href: "#" },
+                                                  on: {
+                                                    click: function ($event) {
+                                                      $event.preventDefault()
+                                                      return _vm.cambiarPagina(
+                                                        _vm.pagination
+                                                          .current_page + 1,
+                                                        _vm.buscar,
+                                                        _vm.criterio
+                                                      )
+                                                    },
+                                                  },
+                                                },
+                                                [_vm._v("Sig")]
+                                              ),
+                                            ]
+                                          )
+                                        : _vm._e(),
+                                    ],
+                                    2
+                                  ),
+                                ]),
+                              ]
+                            ),
+                          ]),
+                        ]),
+                      ]
+                    ),
+                  ]),
+                ]),
+              ]),
+            ]),
+          ]),
+          _vm._v(" "),
+          _vm.actionType == 1 || _vm.actionType == 2
+            ? [
+                _c(
+                  "div",
+                  {
+                    staticClass: "modal fade",
+                    class: { mostrar: _vm.modal },
+                    staticStyle: { display: "none", "overflow-y": "auto" },
+                    attrs: {
+                      tabindex: "-1",
+                      role: "dialog",
+                      "aria-labelledby": "myModalLabel",
+                      "aria-hidden": "true",
+                    },
+                  },
+                  [
+                    _c(
+                      "div",
+                      {
+                        staticClass: "modal-dialog modal-primary modal-lg",
+                        staticStyle: { "padding-top": "55px" },
+                        attrs: { role: "document" },
+                      },
+                      [
+                        _c("div", { staticClass: "modal-content" }, [
+                          _c("div", { staticClass: "modal-header" }, [
+                            _c("h4", {
+                              staticClass: "modal-title",
+                              domProps: { textContent: _vm._s(_vm.modalTitle) },
+                            }),
+                            _vm._v(" "),
+                            _c(
+                              "button",
+                              {
+                                staticClass: "close",
+                                attrs: {
+                                  type: "button",
+                                  "data-dismiss": "modal",
+                                  "aria-label": "Close",
+                                },
+                                on: {
+                                  click: function ($event) {
+                                    return _vm.closeModal()
+                                  },
+                                },
+                              },
+                              [
+                                _c(
+                                  "span",
+                                  { attrs: { "aria-hidden": "true" } },
+                                  [_vm._v("×")]
+                                ),
+                              ]
+                            ),
+                          ]),
+                          _vm._v(" "),
+                          _c("div", { staticClass: "modal-body" }, [
+                            _c("div", { staticClass: "flex flex-wrap -m-2" }, [
+                              _c("form", {}, [
+                                _c("div", { staticClass: "form-group mb-5" }, [
+                                  _c("label", { attrs: { for: "paid_at" } }, [
+                                    _vm._v("Paid at"),
+                                  ]),
+                                  _vm._v(" "),
+                                  _c("input", {
+                                    directives: [
+                                      {
+                                        name: "model",
+                                        rawName: "v-model",
+                                        value: _vm.paid_at,
+                                        expression: "paid_at",
+                                      },
+                                    ],
+                                    staticClass: "form-control",
+                                    attrs: { type: "date", id: "paid_at" },
+                                    domProps: { value: _vm.paid_at },
+                                    on: {
+                                      input: function ($event) {
+                                        if ($event.target.composing) {
+                                          return
+                                        }
+                                        _vm.paid_at = $event.target.value
+                                      },
+                                    },
+                                  }),
+                                ]),
+                                _vm._v(" "),
+                                _c("div", { staticClass: "form-group mb-5" }, [
+                                  _c(
+                                    "label",
+                                    { attrs: { for: "expires_at" } },
+                                    [_vm._v("expires at")]
+                                  ),
+                                  _vm._v(" "),
+                                  _c("input", {
+                                    directives: [
+                                      {
+                                        name: "model",
+                                        rawName: "v-model",
+                                        value: _vm.expires_at,
+                                        expression: "expires_at",
+                                      },
+                                    ],
+                                    staticClass: "form-control",
+                                    attrs: { type: "date", id: "expires_at" },
+                                    domProps: { value: _vm.expires_at },
+                                    on: {
+                                      input: function ($event) {
+                                        if ($event.target.composing) {
+                                          return
+                                        }
+                                        _vm.expires_at = $event.target.value
+                                      },
+                                    },
+                                  }),
+                                ]),
+                                _vm._v(" "),
+                                _c("div", { staticClass: "form-group mb-5" }, [
+                                  _c("label", { attrs: { for: "amount" } }, [
+                                    _vm._v("amount"),
+                                  ]),
+                                  _vm._v(" "),
+                                  _c("input", {
+                                    directives: [
+                                      {
+                                        name: "model",
+                                        rawName: "v-model",
+                                        value: _vm.amount,
+                                        expression: "amount",
+                                      },
+                                    ],
+                                    staticClass: "form-control",
+                                    attrs: { type: "number", id: "amount" },
+                                    domProps: { value: _vm.amount },
+                                    on: {
+                                      input: function ($event) {
+                                        if ($event.target.composing) {
+                                          return
+                                        }
+                                        _vm.amount = $event.target.value
+                                      },
+                                    },
+                                  }),
+                                ]),
+                                _vm._v(" "),
+                                _c("div", { staticClass: "form-group mb-5" }, [
+                                  _c(
+                                    "label",
+                                    { attrs: { for: "membership" } },
+                                    [_vm._v("Membership")]
+                                  ),
+                                  _vm._v(" "),
+                                  _c(
+                                    "select",
+                                    {
+                                      directives: [
+                                        {
+                                          name: "model",
+                                          rawName: "v-model",
+                                          value: _vm.selectedMembership,
+                                          expression: "selectedMembership",
+                                        },
+                                      ],
+                                      staticClass: "form-control p-0",
+                                      attrs: { id: "membership" },
+                                      on: {
+                                        change: [
+                                          function ($event) {
+                                            var $$selectedVal =
+                                              Array.prototype.filter
+                                                .call(
+                                                  $event.target.options,
+                                                  function (o) {
+                                                    return o.selected
+                                                  }
+                                                )
+                                                .map(function (o) {
+                                                  var val =
+                                                    "_value" in o
+                                                      ? o._value
+                                                      : o.value
+                                                  return val
+                                                })
+                                            _vm.selectedMembership = $event
+                                              .target.multiple
+                                              ? $$selectedVal
+                                              : $$selectedVal[0]
+                                          },
+                                          _vm.selectMembership,
+                                        ],
+                                      },
+                                    },
+                                    [
+                                      _c("option"),
+                                      _vm._v(" "),
+                                      _vm._l(
+                                        _vm.memberships,
+                                        function (membership) {
+                                          return _c(
+                                            "option",
+                                            { domProps: { value: membership } },
+                                            [
+                                              _vm._v(
+                                                "\n                      " +
+                                                  _vm._s(membership.name) +
+                                                  "\n                    "
+                                              ),
+                                            ]
+                                          )
+                                        }
+                                      ),
+                                    ],
+                                    2
+                                  ),
+                                ]),
+                                _vm._v(" "),
+                                _c("div", { staticClass: "form-group mb-5" }, [
+                                  _c(
+                                    "label",
+                                    { attrs: { for: "membership" } },
+                                    [_vm._v("Customer")]
+                                  ),
+                                  _vm._v(" "),
+                                  _c(
+                                    "select",
+                                    {
+                                      directives: [
+                                        {
+                                          name: "model",
+                                          rawName: "v-model",
+                                          value: _vm.selectedCustomer,
+                                          expression: "selectedCustomer",
+                                        },
+                                      ],
+                                      staticClass: "form-control p-0",
+                                      attrs: { id: "membership" },
+                                      on: {
+                                        change: [
+                                          function ($event) {
+                                            var $$selectedVal =
+                                              Array.prototype.filter
+                                                .call(
+                                                  $event.target.options,
+                                                  function (o) {
+                                                    return o.selected
+                                                  }
+                                                )
+                                                .map(function (o) {
+                                                  var val =
+                                                    "_value" in o
+                                                      ? o._value
+                                                      : o.value
+                                                  return val
+                                                })
+                                            _vm.selectedCustomer = $event.target
+                                              .multiple
+                                              ? $$selectedVal
+                                              : $$selectedVal[0]
+                                          },
+                                          _vm.selectCustomer,
+                                        ],
+                                      },
+                                    },
+                                    [
+                                      _c("option"),
+                                      _vm._v(" "),
+                                      _vm._l(
+                                        _vm.customers,
+                                        function (customer) {
+                                          return _c(
+                                            "option",
+                                            { domProps: { value: customer } },
+                                            [
+                                              _vm._v(
+                                                "\n                      " +
+                                                  _vm._s(customer.name) +
+                                                  "\n                    "
+                                              ),
+                                            ]
+                                          )
+                                        }
+                                      ),
+                                    ],
+                                    2
+                                  ),
+                                ]),
+                              ]),
+                            ]),
+                          ]),
+                          _vm._v(" "),
+                          _c("div", { staticClass: "modal-footer" }, [
+                            _c(
+                              "button",
+                              {
+                                staticClass: "btn btn-primary fas fa-save",
+                                attrs: { type: "button" },
+                                on: { click: _vm.savePayment },
+                              },
+                              [_vm._v("\n              Save\n            ")]
+                            ),
+                            _vm._v(" "),
+                            _c(
+                              "button",
+                              {
+                                staticClass: "btn btn-danger",
+                                attrs: {
+                                  type: "button",
+                                  "data-dismiss": "modal",
+                                },
+                                on: {
+                                  click: function ($event) {
+                                    return _vm.closeModal()
+                                  },
+                                },
+                              },
+                              [_vm._v("\n              Close\n            ")]
+                            ),
+                          ]),
+                        ]),
+                      ]
+                    ),
+                  ]
+                ),
+              ]
+            : _vm._e(),
+        ],
+        2
+      )
 }
-var staticRenderFns = []
+var staticRenderFns = [
+  function () {
+    var _vm = this
+    var _h = _vm.$createElement
+    var _c = _vm._self._c || _h
+    return _c("div", { staticClass: "card shadow p-1 rounded" }, [
+      _c("div", { staticClass: "card-body d-flex justify-content-around" }, [
+        _c(
+          "div",
+          {
+            staticClass: "spinner-grow text-success center",
+            attrs: { role: "status" },
+          },
+          [_c("span", { staticClass: "sr-only" }, [_vm._v("Loading...")])]
+        ),
+      ]),
+    ])
+  },
+  function () {
+    var _vm = this
+    var _h = _vm.$createElement
+    var _c = _vm._self._c || _h
+    return _c("div", { staticClass: "col-sm-12 col-md-5" }, [
+      _c(
+        "div",
+        {
+          staticClass: "dataTables_info",
+          attrs: {
+            id: "col_render_info",
+            role: "status",
+            "aria-live": "polite",
+          },
+        },
+        [
+          _vm._v(
+            "\n                    Showing 1 to 10 of 57 entries\n                  "
+          ),
+        ]
+      ),
+    ])
+  },
+]
 render._withStripped = true
 
 
@@ -35939,11 +41661,14 @@ Vue.component('change_themme', (__webpack_require__(/*! ./components/ChangeThemm
 Vue.component('content-component', (__webpack_require__(/*! ./components/Content.vue */ "./resources/js/components/Content.vue")["default"]));
 Vue.component('user-component', (__webpack_require__(/*! ./components/UserComponent.vue */ "./resources/js/components/UserComponent.vue")["default"]));
 Vue.component('customers-component', (__webpack_require__(/*! ./components/CustomerComponent.vue */ "./resources/js/components/CustomerComponent.vue")["default"]));
+Vue.component('asistance-component', (__webpack_require__(/*! ./components/AssistanceComponent.vue */ "./resources/js/components/AssistanceComponent.vue")["default"]));
+Vue.component('membership-component', (__webpack_require__(/*! ./components/MembershipComponent.vue */ "./resources/js/components/MembershipComponent.vue")["default"]));
+Vue.component('payment-component', (__webpack_require__(/*! ./components/PaymentComponent.vue */ "./resources/js/components/PaymentComponent.vue")["default"]));
 var app = new Vue({
   //el: '#app',
   el: '#main-wrapper',
   data: {
-    menu: 0
+    menu: 2
   }
 });
 })();

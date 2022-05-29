@@ -318,7 +318,7 @@ export default {
     },
 
     userAccount() {
-    console.log('any');
+      console.log("any");
       this.getBranches();
       let me = this;
       this.loading = true;

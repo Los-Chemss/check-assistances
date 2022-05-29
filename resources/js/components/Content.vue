@@ -4,8 +4,8 @@
       <div class="card">
         <div class="card-body">
           <div class="row">
-            <div class="card" >
-              <div class="card-header" id="aca" >
+            <div class="card">
+              <div class="card-header" id="aca">
                 <h1 v-if="branch" class="division">
                   <p class="division">Division: {{ branch.division }}</p>
                   <!-- <br /> -->
@@ -112,14 +112,21 @@ export default {
           let movement = null;
           let messagge = null;
           let customer = response.data.customer;
+          let info =
+            (customer.membership ? "Membership: " + customer.membership.name : "") +
+            (customer.membership.payments
+              ? "\n Expires at: " + customer.membership.payments[0].expires_at
+              : "");
+
+          me.code = "";
 
           if ("entrada" in response.data) {
             movement = "entrada";
-            messagge = "Bienvenido " + customer.name;
+            messagge = "Bienvenido " + customer.name + "\n" + info;
           }
           if ("salida" in response.data) {
             movement = "salida";
-            messagge = "Gracias por asistir :) " + customer.name;
+            messagge = "Gracias por asistir :) " + customer.name +  info;
           }
 
           Swal.fire({
@@ -129,13 +136,20 @@ export default {
           });
         })
         .catch((error) => {
-          console.table(error);
+          if (error.response.status === 404) {
+            Swal.fire({
+              type: "error",
+              title: "Codigo invalido",
+              text: "El codigo es invalido",
+            });
+          }
+          //   console.log(error);
         });
     },
   },
 };
 </script>
-<style lang="scss" scoped >
+<style lang="scss" scoped>
 .card {
   width: 100%;
 }
@@ -146,11 +160,11 @@ export default {
   background-size: 100%;
 }
 
-.card-header{
+.card-header {
   font-family: "Share Tech Mono", monospace;
-   color: #240303;
+  color: #240303;
   text-align: center;
-  position:relative;
+  position: relative;
   left: 50%;
   top: 10%;
   transform: translate(-50%, -50%);

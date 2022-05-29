@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\AssistanceController;
 use App\Http\Controllers\CustomerController;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
@@ -7,6 +8,7 @@ use App\Http\Controllers\UserController;
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\FactorController;
 use App\Http\Controllers\MembershipController;
+use App\Http\Controllers\PaymentController;
 use App\Mail\TestingMail;
 use Illuminate\Support\Facades\Mail;
 
@@ -55,14 +57,25 @@ Route::middleware(['auth'])->group(function () {
     // Route::get('/user_themme', [UserController::class, 'changeThemme']);
 
     //Customers
-    Route::get('customers',  [CustomerController::class, 'view']);
-    Route::get('customers/data',  [CustomerController::class, 'index']);
+    // Route::get('customers',  [CustomerController::class, 'view']);
+    Route::get('customers',  [CustomerController::class, 'index']);
+    Route::get('customers-select',  [CustomerController::class, 'select']);
     Route::post('customers/store',  [CustomerController::class, 'store']);
     Route::post('customers/{id}/update',  [CustomerController::class, 'update']);
     Route::post('customers/{id}/delete',  [CustomerController::class, 'destroy']);
 
     Route::get('memberships',  [MembershipController::class, 'index']);
+    Route::get('select-memberships',  [MembershipController::class, 'select']);
     Route::post('memberships',  [MembershipController::class, 'store']);
+    Route::post('memberships/{id}/delete',  [MembershipController::class, 'destroy']);
+
+    Route::get('payments',  [PaymentController::class, 'index']);
+    Route::post('payments',  [PaymentController::class, 'store']);
+    Route::post('payments/{id}/delete',  [PaymentController::class, 'destroy']);
+
+    Route::get('assistances',  [AssistanceController::class, 'index']);
+    Route::post('assistances',  [AssistanceController::class, 'store']);
+    Route::post('assistances/{id}/delete',  [AssistanceController::class, 'destroy']);
 
     Route::any('{any}', function () {
         abort(404);

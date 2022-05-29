@@ -45,19 +45,18 @@ class AssistanceController extends Controller
     public function store(Request $request)
     {
         try {
+            // return $request;
             $code = $request->code;
-            $customer = Customer::where('code', $code)->firstOrFail();
+            $customer = Customer::where('code', $code)->first();
+            if (!$customer) return response('User not found', 404);
+            $branch = Branch::where('id', $request->branch)->first(); //It be found by ip ? or aautenticatin manager
+            if (!$branch) return response('Branch not found', 404);
 
-            $customer = $customer->with(['membership' => function ($q) use ($customer) {
-                $q->with(['payments' => function ($q1) use ($customer) {
-                    $q1->where('customer_id', $customer->id)->orderBy('expires_at', 'desc');
+            $customer = Customer::where('id', $customer->id)->with(['membership' => function ($q) use ($customer) {
+                $q->with(['payments' => function ($q1) use ($customer) { //->where('customer_id', $customer->id)
+                    $q1->orderBy('expires_at', 'desc')->first();
                 }]);
             }])->first();
-
-            if (!$customer) return response('User not found', 404);
-
-            $branch = Branch::where('id', $request->branch)->first(); //It be found by ip ? or aautenticatin manager
-            if (!$branch) return 404;
 
             $data = [
                 'customer_id' => $customer->id,
@@ -65,13 +64,12 @@ class AssistanceController extends Controller
                 'branch_id' => $branch->id, // By location (Maybe ip)
             ];
 
-            $resp = null;
-
             $assisted = Assistance::where('customer_id', $customer->id)
                 ->where('branch_id', $branch->id)
                 ->orderBy('input', 'desc')
                 ->first();
 
+            $resp = null;
             if ($assisted && $assisted['input'] != null && $assisted['output'] == null) {
                 $assisted->output = date("Y-m-d H:i:s");
                 $assisted->save();

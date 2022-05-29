@@ -22,8 +22,8 @@
                             {{-- <li class="sidebar-item">
                                 <change_themme></change_themme>
                             </li> --}}
-                            <li class="sidebar-item">
-                                <a href="{{ route('profile') }}" class="sidebar-link p-0">
+                            <li  @click="menu = 5"  class="sidebar-item">
+                                <a href="#" class="sidebar-link p-0">
                                     <i class="mdi mdi-adjust"></i>
                                     <span class="hide-menu"> My Profile </span>
                                 </a>
@@ -43,29 +43,30 @@
                     </li>
                 @endif
                 {{--  --}}
-                <li class="sidebar-item"> <a class="sidebar-link waves-effect waves-dark sidebar-link"
-                        href="{{ route('dashboard') }}" aria-expanded="false"><i data-feather="home"
-                            class="feather-icon"></i>
-                        <span class="hide-menu">Home</span></a>
-                </li>
                 @if (Auth::user())
-                    <li class="sidebar-item"> <a class="sidebar-link waves-effect waves-dark sidebar-link"
-                            href="/customers" aria-expanded="false">
+                    <li @click="menu = 0" class="sidebar-item"> <a href="#"
+                            class="sidebar-link waves-effect waves-dark sidebar-link" aria-expanded="false"><i
+                                data-feather="home" class="feather-icon"></i>
+                            <span class="hide-menu">Home</span></a>
+                    </li>
+                    <li @click="menu = 1" class="sidebar-item"> <a href="#"
+                            class="sidebar-link waves-effect waves-dark sidebar-link" aria-expanded="false">
                             <i data-feather="users" class="feather-icon"></i>
                             <span class="hide-menu">Customers</span></a>
                     </li>
-                    <li class="sidebar-item"> <a class="sidebar-link waves-effect waves-dark sidebar-link"
-                            href="/payments" aria-expanded="false">
+                    <li @click="menu = 2" class="sidebar-item"> <a
+                            class="sidebar-link waves-effect waves-dark sidebar-link"
+                            aria-expanded="false">
                             <i data-feather="users" class="feather-icon"></i>
                             <span class="hide-menu">Payments</span></a>
                     </li>
-                    <li class="sidebar-item"> <a class="sidebar-link waves-effect waves-dark sidebar-link"
-                            href="/assistances" aria-expanded="false">
+                    <li @click="menu = 3" class="sidebar-item"> <a
+                            class="sidebar-link waves-effect waves-dark sidebar-link" href="#" aria-expanded="false">
                             <i data-feather="users" class="feather-icon"></i>
                             <span class="hide-menu">Assistances</span></a>
                     </li>
-                    <li class="sidebar-item"> <a class="sidebar-link waves-effect waves-dark sidebar-link"
-                            href="/memberships" aria-expanded="false">
+                    <li @click="menu = 4" class="sidebar-item"> <a
+                            class="sidebar-link waves-effect waves-dark sidebar-link" href="#" aria-expanded="false">
                             <i data-feather="users" class="feather-icon"></i>
                             <span class="hide-menu">Membership</span></a>
                     </li>

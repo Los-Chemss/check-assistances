@@ -28,9 +28,9 @@ class MembershipController extends Controller
         foreach ($companies as $c) {
             array_push($companyIds, $c->id);
         }
-        $memberships = Membership::whereIn('company_id', $companyIds)->get();
-        return $memberships;
-      /*   return [
+        $memberships = Membership::whereIn('company_id', $companyIds)->paginate(10);
+
+        return [
             'pagination' => [
                 'total'        => $memberships->total(),
                 'current_page' => $memberships->currentPage(),
@@ -40,7 +40,21 @@ class MembershipController extends Controller
                 'to'           => $memberships->lastItem(),
             ],
             'memberships' => $memberships
-        ]; */
+        ];
+    }
+    public function select(Request $request)
+    {
+        $user = Auth::user();
+        if (!$user) return response(null, 404);
+        $branch = Branch::where('id', $user->branch_id)->first();
+        $companies = Company::where('user_id', $user->id)
+            ->where('id', $branch->company_id)->get();
+        $companyIds = [];
+        foreach ($companies as $c) {
+            array_push($companyIds, $c->id);
+        }
+        $memberships = Membership::whereIn('company_id', $companyIds)->get();
+        return $memberships;
     }
 
     /**

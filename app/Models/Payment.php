@@ -9,6 +9,8 @@ class Payment extends Model
 {
     use HasFactory;
 
+    protected $guarded = [];
+
     public function membership()
     {
         return $this->belongsTo(Membership::class);
@@ -16,5 +18,11 @@ class Payment extends Model
     public function customer()
     {
         return $this->belongsTo(Customer::class);
+    }
+    public function scopeCriterion($query, $criteria, $input)
+    {
+        return $query->where($criteria, '>=', date('Y-m-d', strtotime($input)));
+
+        // return $query->where($criteria, 'LIKE', "%$input%");
     }
 }

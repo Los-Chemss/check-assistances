@@ -13,13 +13,17 @@ window.Vue = require('vue').default;
 Vue.component('change_themme', require('./components/ChangeThemmeComponent.vue').default);
 Vue.component('content-component', require('./components/Content.vue').default);
 Vue.component('user-component', require('./components/UserComponent.vue').default);
+
 Vue.component('customers-component', require('./components/CustomerComponent.vue').default);
+Vue.component('asistance-component', require('./components/AssistanceComponent.vue').default);
+Vue.component('membership-component', require('./components/MembershipComponent.vue').default);
+Vue.component('payment-component', require('./components/PaymentComponent.vue').default);
 
 
 const app = new Vue({
     //el: '#app',
     el: '#main-wrapper',
     data: {
-        menu: 0
+        menu: 2
     },
 });

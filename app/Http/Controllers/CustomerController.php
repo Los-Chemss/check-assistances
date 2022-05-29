@@ -58,8 +58,8 @@ class CustomerController extends Controller
                     'code' => $cus->code,
                     'income' => $cus->income,
                     'membership' => $cus->membership['name'],
-                    'last paid' => $payment? $payment->paid_at:'',
-                    'expires at' => $payment? $payment->expires_at:''
+                    'last paid' => $payment ? date($payment->paid_at) : '',
+                    'expires at' => $payment ? date($payment->expires_at) : ''
                 ]);
             }
             return [
@@ -76,6 +76,16 @@ class CustomerController extends Controller
         } catch (Exception $e) {
             return response($e->getMessage());
         }
+    }
+    public function select()
+    {
+        $customers = Customer::where('company_id', 2)->with(['membership' => function ($query) {
+            $query->with(['payments' => function ($q) {
+                $q->with('membership');
+                // $q->where('customer_id', 'customer.id')->orderBy('paid_at', 'desc')->first();
+            }]);
+        }])->get();
+        return $customers;
     }
 
     public function view()
@@ -180,10 +190,10 @@ class CustomerController extends Controller
      * @param  \App\Models\Customer  $customer
      * @return \Illuminate\Http\Response
      */
-    public function destroy( $id)
+    public function destroy($id)
     {
-        return Customer::where('id',$id)->delete();
-            // return $customer;
+        return Customer::where('id', $id)->delete();
+        // return $customer;
 
         // $customer->delete();
         // return response()->json();
