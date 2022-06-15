@@ -72,7 +72,7 @@
                             : 'text'
                         "
                         v-model="buscar"
-                        @keyup.enter="getMemberships(1, buscar, criterio)"
+                        @keyup.enter="listMemberships(1, buscar, criterio)"
                         class="form-control"
                         :placeholder="
                           criterio == 'income'
@@ -85,7 +85,7 @@
                       <div class="input-group-append">
                         <button
                           type="submit"
-                          @click="getMemberships(1, buscar, criterio)"
+                          @click="listMemberships(1, buscar, criterio)"
                           class="btn-sm btn-primary input-group-text"
                         >
                           <i class="fa fa-search"></i>
@@ -104,8 +104,8 @@
                       aria-describedby="col_render_info"
                     >
                       <thead>
-                        <tr v-for="(customer, index) in memberships" v-if="index < 1">
-                          <th v-for="(value, key, cIndex) in customer">
+                        <tr v-for="(membership, index) in memberships" v-if="index < 1">
+                          <th v-for="(value, key, cIndex) in membership">
                             {{ key }}
                           </th>
                           <th></th>
@@ -113,10 +113,10 @@
                       </thead>
                       <tbody>
                         <tr
-                          v-for="(customer, index) in memberships"
+                          v-for="(membership, index) in memberships"
                           v-if="index <= pagination.per_page"
                         >
-                          <td v-for="(value, key, cIndex) in customer" max-height="5px">
+                          <td v-for="(value, key, cIndex) in membership" max-height="5px">
                             {{ value }}
                           </td>
                           <td>
@@ -271,44 +271,35 @@
               <div class="flex flex-wrap -m-2">
                 <form class="">
                   <div class="form-group mb-5">
-                    <label for="name">name</label>
-                    <input type="text" class="form-control" id="name" v-model="name" />
+                    <label for="name">Nombre</label>
+                    <input
+                      type="text"
+                      class="form-control"
+                      id="name"
+                      placeholder="trimestral"
+                      v-model="name"
+                    />
                     <!--    <span class="bar"></span> -->
                   </div>
                   <div class="form-group mb-5">
-                    <label for="code">code</label>
-                    <input type="text" class="form-control" id="code" v-model="code" />
-                    <!-- <span class="bar"></span> -->
-                  </div>
-                  <div class="form-group mb-5">
-                    <label for="income">income</label>
+                    <label for="price">Precio</label>
                     <input
-                      type="date"
-                      class="form-control text-right"
-                      id="income"
-                      v-model="income"
+                      type="number"
+                      class="form-control"
+                      id="price"
+                      v-model="price"
                     />
                     <!-- <span class="bar"></span> -->
                   </div>
                   <div class="form-group mb-5">
-                    <label for="membership">Membership</label>
-                    <select
-                      class="form-control p-0"
-                      id="membership"
-                      v-model="selectedMembership"
-                      @change="selectMembership"
-                    >
-                      <option></option>
-                      <option v-for="membership in memberships" :value="membership">
-                        {{ membership.name }}
-                      </option>
-                    </select>
-                    <!--  <label
-                      for=""
-                      class="border border-danger rounded"
-                      v-if="actionType === 2"
-                      >{{ selectedMembership }}</label
-                    > -->
+                    <label for="period">Periodo (Duracion en dias)</label>
+                    <input
+                      type="number"
+                      class="form-control text-right"
+                      id="period"
+                      placeholder="90"
+                      v-model="period"
+                    />
                     <!-- <span class="bar"></span> -->
                   </div>
                 </form>
@@ -349,17 +340,15 @@ export default {
       loading: false,
       memberships: [],
       user: {},
-      memberships: [],
       modal: "",
       modalTitle: "",
       actionType: 0,
       errors: null,
       name: null,
-      code: null,
-      income: null,
+      period: null,
+      price: null,
       membership: null,
       selectedMembership: null,
-
       pagination: {
         total: 0,
         current_page: 0,
@@ -409,15 +398,16 @@ export default {
   },
 
   methods: {
-    getMemberships(page, buscar, criterio) {
+    listMemberships(page, buscar, criterio) {
       console.log("getted");
       let me = this;
       let url =
-        "memberships/data?page=" + page + "&buscar=" + buscar + "&criterio=" + criterio;
+        "memberships?page=" + page + "&buscar=" + buscar + "&criterio=" + criterio;
       axios
         .get(url)
         .then((response) => {
           var respuesta = response.data;
+          console.log(respuesta);
           me.memberships = respuesta.memberships;
           me.pagination = respuesta.pagination;
         })
@@ -588,7 +578,7 @@ export default {
 
   mounted() {
     this.getMemberships();
-    this.getMemberships(1, this.buscar, this.criterio);
+    this.listMemberships(1, this.buscar, this.criterio);
   },
 };
 </script>

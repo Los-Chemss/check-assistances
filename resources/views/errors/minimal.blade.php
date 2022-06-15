@@ -16,7 +16,7 @@
         }
 
         .container-fluid {
-            background-image: url('/{{ env('ASSET_URL') }}images/fondocanada.jpg');
+            background-image: url('/{{ env('ASSET_URL') }}images/fondogym.jpg');
             background-repeat: no-repeat;
             background-attachment: fixed;
             background-size: auto;

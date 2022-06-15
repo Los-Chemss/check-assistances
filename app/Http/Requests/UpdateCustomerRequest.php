@@ -28,8 +28,6 @@ class UpdateCustomerRequest extends FormRequest
              "name",
             "code",
             "income",
-            "created_at",
-            "updated_at",
             "company_id",
             "membership_id",
             */];

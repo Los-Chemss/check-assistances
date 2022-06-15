@@ -6,19 +6,20 @@
         <!-- Logo -->
         <a class="navbar-brand" href="{{ route('dashboard') }}">
             <!-- Logo icon -->
-            <b class="logo-icon">
+            <b class="logo">
                 <!--You can put here icon as well  -->
-                <img src="/{{ env('ASSET_URL') }}images\cropped_ger_logo.png" width="40px" sizes="40x40" alt="homepage" class="dark-logo" />
-                <img src="/{{ env('ASSET_URL') }}images\cropped_ger_logo.png" width="40px" sizes="40x40" alt="homepage" class="light-logo" />
+                <img src="/{{ env('ASSET_URL') }}images\urbanlogo-1024x1024.png" width="60px" sizes="40x40"
+                    alt="homepage" class="dark-logo" />
+                <img src="/{{ env('ASSET_URL') }}images\urbanlogo-1024x1024.png" width="60px"  alt="homepage" class="light-logo" />
             </b>
             <!--End Logo icon -->
             <!-- Logo text -->
-            <span class="logo-text">
+            {{-- <span class="logo-text">
                 <img src="/{{ env('ASSET_URL') }}images\ger_logo.png" sizes="160x34" alt="homepage" class="light-logo "
                     width="160px" />
-                <img src="/{{ env('ASSET_URL') }}images\ger_logo.png" sizes="160x34" alt="homepage" class="dark-logo "
+                <img src="/{{ env('ASSET_URL') }}images\ger_logo.png" sizes="160x34" a\urbanlogo-1024x1024.pnglt="homepage" class="dark-logo "
                     width="160px" />
-            </span>
+            </span> --}}
         </a>
         <!-- Toggle which is visible on mobile only -->
         <!-- ============================================================== -->

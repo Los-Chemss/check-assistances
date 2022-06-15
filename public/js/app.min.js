@@ -3517,19 +3517,6 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
 /* harmony export */   "default": () => (__WEBPACK_DEFAULT_EXPORT__)
 /* harmony export */ });
-var _methods;
-
-function _defineProperty(obj, key, value) { if (key in obj) { Object.defineProperty(obj, key, { value: value, enumerable: true, configurable: true, writable: true }); } else { obj[key] = value; } return obj; }
-
-//
-//
-//
-//
-//
-//
-//
-//
-//
 //
 //
 //
@@ -3867,20 +3854,33 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
 //
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = ({
   data: function data() {
-    var _ref;
-
-    return _ref = {
+    return {
       loading: false,
       memberships: [],
-      user: {}
-    }, _defineProperty(_ref, "memberships", []), _defineProperty(_ref, "modal", ""), _defineProperty(_ref, "modalTitle", ""), _defineProperty(_ref, "actionType", 0), _defineProperty(_ref, "errors", null), _defineProperty(_ref, "name", null), _defineProperty(_ref, "code", null), _defineProperty(_ref, "income", null), _defineProperty(_ref, "membership", null), _defineProperty(_ref, "selectedMembership", null), _defineProperty(_ref, "pagination", {
-      total: 0,
-      current_page: 0,
-      per_page: 0,
-      last_page: 0,
-      from: 0,
-      to: 0
-    }), _defineProperty(_ref, "offset", 3), _defineProperty(_ref, "criterio", "name"), _defineProperty(_ref, "buscar", ""), _defineProperty(_ref, "showMemberships", 10), _defineProperty(_ref, "criterions", ["name", "code", "income"]), _ref;
+      user: {},
+      modal: "",
+      modalTitle: "",
+      actionType: 0,
+      errors: null,
+      name: null,
+      period: null,
+      price: null,
+      membership: null,
+      selectedMembership: null,
+      pagination: {
+        total: 0,
+        current_page: 0,
+        per_page: 0,
+        last_page: 0,
+        from: 0,
+        to: 0
+      },
+      offset: 3,
+      criterio: "name",
+      buscar: "",
+      showMemberships: 10,
+      criterions: ["name", "code", "income"]
+    };
   },
   computed: {
     isActived: function isActived() {
@@ -3915,153 +3915,165 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
     } // filter: this.getMemberships(this.page, this.buscar, this.criterio),
 
   },
-  methods: (_methods = {
-    getMemberships: function getMemberships(page, buscar, criterio) {
+  methods: {
+    listMemberships: function listMemberships(page, buscar, criterio) {
       console.log("getted");
       var me = this;
-      var url = "memberships/data?page=" + page + "&buscar=" + buscar + "&criterio=" + criterio;
+      var url = "memberships?page=" + page + "&buscar=" + buscar + "&criterio=" + criterio;
       axios.get(url).then(function (response) {
         var respuesta = response.data;
+        console.log(respuesta);
         me.memberships = respuesta.memberships;
         me.pagination = respuesta.pagination;
       })["catch"](function (error) {
         console.table(error);
       });
-    }
-  }, _defineProperty(_methods, "getMemberships", function getMemberships() {
-    var me = this;
-    axios.get("memberships").then(function (response) {
-      console.log(response);
-      var respuesta = response.data;
-      me.memberships = respuesta;
-    })["catch"](function (error) {
-      console.log(error);
-    });
-  }), _defineProperty(_methods, "selectCriteria", function selectCriteria() {
-    this.buscar = "";
-  }), _defineProperty(_methods, "getRows", function getRows(event) {
-    var newVal = null;
+    },
+    getMemberships: function getMemberships() {
+      var me = this;
+      axios.get("memberships").then(function (response) {
+        console.log(response);
+        var respuesta = response.data;
+        me.memberships = respuesta;
+      })["catch"](function (error) {
+        console.log(error);
+      });
+    },
+    selectCriteria: function selectCriteria() {
+      this.buscar = "";
+    },
+    getRows: function getRows(event) {
+      var newVal = null;
 
-    if ("criterion" in event) {
-      newVal = event;
-    } else {
-      newVal = JSON.parse(JSON.stringify(event.target.options[event.target.options.selectedIndex]))._value;
-    }
+      if ("criterion" in event) {
+        newVal = event;
+      } else {
+        newVal = JSON.parse(JSON.stringify(event.target.options[event.target.options.selectedIndex]))._value;
+      }
 
-    this.showMemberships = newVal;
-  }), _defineProperty(_methods, "saveMembership", function saveMembership() {
-    var me = this;
-    var request = {
-      name: me.name,
-      code: me.name,
-      income: me.income,
-      membership: me.membership
-    };
-    axios.post("memberships/store", request).then(function (response) {
-      console.log(response);
-    })["catch"](function (error) {
-      console.table(error);
-    });
-  }), _defineProperty(_methods, "selectMembership", function selectMembership(event) {
-    var newVal = null;
+      this.showMemberships = newVal;
+    },
+    saveMembership: function saveMembership() {
+      var me = this;
+      var request = {
+        name: me.name,
+        code: me.name,
+        income: me.income,
+        membership: me.membership
+      };
+      axios.post("memberships/store", request).then(function (response) {
+        console.log(response);
+      })["catch"](function (error) {
+        console.table(error);
+      });
+    },
+    selectMembership: function selectMembership(event) {
+      var newVal = null;
 
-    if ("criterion" in event) {
-      newVal = event;
-    } else {
-      newVal = JSON.parse(JSON.stringify(event.target.options[event.target.options.selectedIndex]))._value;
-    }
+      if ("criterion" in event) {
+        newVal = event;
+      } else {
+        newVal = JSON.parse(JSON.stringify(event.target.options[event.target.options.selectedIndex]))._value;
+      }
 
-    console.log(newVal);
-    this.selectedMembership = newVal;
-  }), _defineProperty(_methods, "closeModal", function closeModal() {
-    this.modal = 0;
-    this.title = "";
-    this.errors = {}; //   this.userFiles();//reload component
-  }), _defineProperty(_methods, "openModal", function openModal(model, action) {
-    var data = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : [];
+      console.log(newVal);
+      this.selectedMembership = newVal;
+    },
+    closeModal: function closeModal() {
+      this.modal = 0;
+      this.title = "";
+      this.errors = {}; //   this.userFiles();//reload component
+    },
+    openModal: function openModal(model, action) {
+      var data = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : [];
 
-    switch (model) {
-      case "memberships":
-        {
-          switch (action) {
-            case "store":
-              {
-                this.modal = 1;
-                this.modalTitle = "New customer";
-                this.actionType = 1;
-                this.name = "";
-                this.code = "";
-                this.income = "";
-                this.selectedMembership = "";
-                break;
-              }
+      switch (model) {
+        case "memberships":
+          {
+            switch (action) {
+              case "store":
+                {
+                  this.modal = 1;
+                  this.modalTitle = "New customer";
+                  this.actionType = 1;
+                  this.name = "";
+                  this.code = "";
+                  this.income = "";
+                  this.selectedMembership = "";
+                  break;
+                }
 
-            case "update":
-              {
-                console.log(data);
-                var mem = null;
-                this.memberships.forEach(function (m) {
-                  if (m.name === data.membership) mem = m;
-                }); // console.log(this.formatDateToInput(new Date(data.income)));
-                //   console.log(new Date(data.income).toISOString().slice(0, 10));
+              case "update":
+                {
+                  console.log(data);
+                  var mem = null;
+                  this.memberships.forEach(function (m) {
+                    if (m.name === data.membership) mem = m;
+                  }); // console.log(this.formatDateToInput(new Date(data.income)));
+                  //   console.log(new Date(data.income).toISOString().slice(0, 10));
 
-                this.modal = 1;
-                this.modalTitle = "Update customer";
-                this.actionType = 2;
-                this.name = data.name;
-                this.code = data.code;
-                this.income = new Date(data.income).toISOString().slice(0, 10);
-                this.selectedMembership = mem;
-                break;
-              }
+                  this.modal = 1;
+                  this.modalTitle = "Update customer";
+                  this.actionType = 2;
+                  this.name = data.name;
+                  this.code = data.code;
+                  this.income = new Date(data.income).toISOString().slice(0, 10);
+                  this.selectedMembership = mem;
+                  break;
+                }
+            }
           }
-        }
+      }
+    },
+    deleteMembership: function deleteMembership(customer) {
+      var _this = this;
+
+      Swal.fire({
+        title: "Esta seguro que desea eliminar este objeto?",
+        type: "warning",
+        showCancelButton: true,
+        confirmButtonColor: "#3085d6",
+        cancelButtonColor: "#d33",
+        confirmButtonText: "Aceptar!",
+        cancelButtonText: "Cancelar",
+        confirmButtonClass: "btn btn-success",
+        cancelButtonClass: "btn btn-danger",
+        buttonsStyling: false,
+        reverseButtons: true
+      }).then(function (result) {
+        if (result.value) {
+          var me = _this;
+          axios.post("memberships/" + customer + "/delete").then(function (response) {
+            console.log(response);
+            me.getMemberships(me.page, me.buscar, me.criterio);
+          })["catch"](function (error) {
+            console.log(error);
+          }); //
+        } else if ( // Read more about handling dismissals
+        result.dismiss === swal.DismissReason.cancel) {}
+      });
+    },
+    formatDateToInput: function formatDateToInput(date) {
+      var d = new Date(date),
+          month = "" + (d.getMonth() + 1),
+          day = "" + d.getDate(),
+          year = d.getFullYear();
+      if (month.length < 2) month = "0" + month;
+      if (day.length < 2) day = "0" + day;
+      return [day, month, year].join("/");
+    },
+    //Paginator
+    cambiarPagina: function cambiarPagina(page, buscar, criterio) {
+      var me = this; //Actualiza la página actual
+
+      me.pagination.current_page = page; //Envia la petición para visualizar la data de esa página
+
+      me.getMemberships(page, buscar, criterio);
     }
-  }), _defineProperty(_methods, "deleteMembership", function deleteMembership(customer) {
-    var _this = this;
-
-    Swal.fire({
-      title: "Esta seguro que desea eliminar este objeto?",
-      type: "warning",
-      showCancelButton: true,
-      confirmButtonColor: "#3085d6",
-      cancelButtonColor: "#d33",
-      confirmButtonText: "Aceptar!",
-      cancelButtonText: "Cancelar",
-      confirmButtonClass: "btn btn-success",
-      cancelButtonClass: "btn btn-danger",
-      buttonsStyling: false,
-      reverseButtons: true
-    }).then(function (result) {
-      if (result.value) {
-        var me = _this;
-        axios.post("memberships/" + customer + "/delete").then(function (response) {
-          console.log(response);
-          me.getMemberships(me.page, me.buscar, me.criterio);
-        })["catch"](function (error) {
-          console.log(error);
-        }); //
-      } else if ( // Read more about handling dismissals
-      result.dismiss === swal.DismissReason.cancel) {}
-    });
-  }), _defineProperty(_methods, "formatDateToInput", function formatDateToInput(date) {
-    var d = new Date(date),
-        month = "" + (d.getMonth() + 1),
-        day = "" + d.getDate(),
-        year = d.getFullYear();
-    if (month.length < 2) month = "0" + month;
-    if (day.length < 2) day = "0" + day;
-    return [day, month, year].join("/");
-  }), _defineProperty(_methods, "cambiarPagina", function cambiarPagina(page, buscar, criterio) {
-    var me = this; //Actualiza la página actual
-
-    me.pagination.current_page = page; //Envia la petición para visualizar la data de esa página
-
-    me.getMemberships(page, buscar, criterio);
-  }), _methods),
+  },
   mounted: function mounted() {
     this.getMemberships();
-    this.getMemberships(1, this.buscar, this.criterio);
+    this.listMemberships(1, this.buscar, this.criterio);
   }
 });
 
@@ -26817,7 +26829,7 @@ var render = function () {
                                           ) {
                                             return null
                                           }
-                                          return _vm.getMemberships(
+                                          return _vm.listMemberships(
                                             1,
                                             _vm.buscar,
                                             _vm.criterio
@@ -26886,7 +26898,7 @@ var render = function () {
                                           ) {
                                             return null
                                           }
-                                          return _vm.getMemberships(
+                                          return _vm.listMemberships(
                                             1,
                                             _vm.buscar,
                                             _vm.criterio
@@ -26936,7 +26948,7 @@ var render = function () {
                                           ) {
                                             return null
                                           }
-                                          return _vm.getMemberships(
+                                          return _vm.listMemberships(
                                             1,
                                             _vm.buscar,
                                             _vm.criterio
@@ -26963,7 +26975,7 @@ var render = function () {
                                         attrs: { type: "submit" },
                                         on: {
                                           click: function ($event) {
-                                            return _vm.getMemberships(
+                                            return _vm.listMemberships(
                                               1,
                                               _vm.buscar,
                                               _vm.criterio
@@ -26999,13 +27011,13 @@ var render = function () {
                                   "thead",
                                   _vm._l(
                                     _vm.memberships,
-                                    function (customer, index) {
+                                    function (membership, index) {
                                       return index < 1
                                         ? _c(
                                             "tr",
                                             [
                                               _vm._l(
-                                                customer,
+                                                membership,
                                                 function (value, key, cIndex) {
                                                   return _c("th", [
                                                     _vm._v(
@@ -27031,13 +27043,13 @@ var render = function () {
                                   "tbody",
                                   _vm._l(
                                     _vm.memberships,
-                                    function (customer, index) {
+                                    function (membership, index) {
                                       return index <= _vm.pagination.per_page
                                         ? _c(
                                             "tr",
                                             [
                                               _vm._l(
-                                                customer,
+                                                membership,
                                                 function (value, key, cIndex) {
                                                   return _c(
                                                     "td",
@@ -27069,7 +27081,7 @@ var render = function () {
                                                         return _vm.openModal(
                                                           "memberships",
                                                           "update",
-                                                          customer
+                                                          _vm.customer
                                                         )
                                                       },
                                                     },
@@ -27093,7 +27105,7 @@ var render = function () {
                                                     on: {
                                                       click: function ($event) {
                                                         return _vm.deleteMembership(
-                                                          customer.id
+                                                          _vm.customer.id
                                                         )
                                                       },
                                                     },
@@ -27338,7 +27350,7 @@ var render = function () {
                               _c("form", {}, [
                                 _c("div", { staticClass: "form-group mb-5" }, [
                                   _c("label", { attrs: { for: "name" } }, [
-                                    _vm._v("name"),
+                                    _vm._v("Nombre"),
                                   ]),
                                   _vm._v(" "),
                                   _c("input", {
@@ -27351,7 +27363,11 @@ var render = function () {
                                       },
                                     ],
                                     staticClass: "form-control",
-                                    attrs: { type: "text", id: "name" },
+                                    attrs: {
+                                      type: "text",
+                                      id: "name",
+                                      placeholder: "trimestral",
+                                    },
                                     domProps: { value: _vm.name },
                                     on: {
                                       input: function ($event) {
@@ -27365,8 +27381,8 @@ var render = function () {
                                 ]),
                                 _vm._v(" "),
                                 _c("div", { staticClass: "form-group mb-5" }, [
-                                  _c("label", { attrs: { for: "code" } }, [
-                                    _vm._v("code"),
+                                  _c("label", { attrs: { for: "price" } }, [
+                                    _vm._v("Precio"),
                                   ]),
                                   _vm._v(" "),
                                   _c("input", {
@@ -27374,27 +27390,27 @@ var render = function () {
                                       {
                                         name: "model",
                                         rawName: "v-model",
-                                        value: _vm.code,
-                                        expression: "code",
+                                        value: _vm.price,
+                                        expression: "price",
                                       },
                                     ],
                                     staticClass: "form-control",
-                                    attrs: { type: "text", id: "code" },
-                                    domProps: { value: _vm.code },
+                                    attrs: { type: "number", id: "price" },
+                                    domProps: { value: _vm.price },
                                     on: {
                                       input: function ($event) {
                                         if ($event.target.composing) {
                                           return
                                         }
-                                        _vm.code = $event.target.value
+                                        _vm.price = $event.target.value
                                       },
                                     },
                                   }),
                                 ]),
                                 _vm._v(" "),
                                 _c("div", { staticClass: "form-group mb-5" }, [
-                                  _c("label", { attrs: { for: "income" } }, [
-                                    _vm._v("income"),
+                                  _c("label", { attrs: { for: "period" } }, [
+                                    _vm._v("Periodo (Duracion en dias)"),
                                   ]),
                                   _vm._v(" "),
                                   _c("input", {
@@ -27402,93 +27418,26 @@ var render = function () {
                                       {
                                         name: "model",
                                         rawName: "v-model",
-                                        value: _vm.income,
-                                        expression: "income",
+                                        value: _vm.period,
+                                        expression: "period",
                                       },
                                     ],
                                     staticClass: "form-control text-right",
-                                    attrs: { type: "date", id: "income" },
-                                    domProps: { value: _vm.income },
+                                    attrs: {
+                                      type: "number",
+                                      id: "period",
+                                      placeholder: "90",
+                                    },
+                                    domProps: { value: _vm.period },
                                     on: {
                                       input: function ($event) {
                                         if ($event.target.composing) {
                                           return
                                         }
-                                        _vm.income = $event.target.value
+                                        _vm.period = $event.target.value
                                       },
                                     },
                                   }),
-                                ]),
-                                _vm._v(" "),
-                                _c("div", { staticClass: "form-group mb-5" }, [
-                                  _c(
-                                    "label",
-                                    { attrs: { for: "membership" } },
-                                    [_vm._v("Membership")]
-                                  ),
-                                  _vm._v(" "),
-                                  _c(
-                                    "select",
-                                    {
-                                      directives: [
-                                        {
-                                          name: "model",
-                                          rawName: "v-model",
-                                          value: _vm.selectedMembership,
-                                          expression: "selectedMembership",
-                                        },
-                                      ],
-                                      staticClass: "form-control p-0",
-                                      attrs: { id: "membership" },
-                                      on: {
-                                        change: [
-                                          function ($event) {
-                                            var $$selectedVal =
-                                              Array.prototype.filter
-                                                .call(
-                                                  $event.target.options,
-                                                  function (o) {
-                                                    return o.selected
-                                                  }
-                                                )
-                                                .map(function (o) {
-                                                  var val =
-                                                    "_value" in o
-                                                      ? o._value
-                                                      : o.value
-                                                  return val
-                                                })
-                                            _vm.selectedMembership = $event
-                                              .target.multiple
-                                              ? $$selectedVal
-                                              : $$selectedVal[0]
-                                          },
-                                          _vm.selectMembership,
-                                        ],
-                                      },
-                                    },
-                                    [
-                                      _c("option"),
-                                      _vm._v(" "),
-                                      _vm._l(
-                                        _vm.memberships,
-                                        function (membership) {
-                                          return _c(
-                                            "option",
-                                            { domProps: { value: membership } },
-                                            [
-                                              _vm._v(
-                                                "\n                      " +
-                                                  _vm._s(membership.name) +
-                                                  "\n                    "
-                                              ),
-                                            ]
-                                          )
-                                        }
-                                      ),
-                                    ],
-                                    2
-                                  ),
                                 ]),
                               ]),
                             ]),

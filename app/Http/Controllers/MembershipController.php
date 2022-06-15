@@ -30,6 +30,15 @@ class MembershipController extends Controller
         }
         $memberships = Membership::whereIn('company_id', $companyIds)->paginate(10);
 
+        $membershipRes = [];
+
+        foreach ($memberships as $mem) {
+            array_push($membershipRes, [
+                'id' => $mem->id,
+                'Nombre' => $mem->name,
+                'Precio' => $mem->price,
+            ]);
+        }
         return [
             'pagination' => [
                 'total'        => $memberships->total(),
@@ -39,7 +48,7 @@ class MembershipController extends Controller
                 'from'         => $memberships->firstItem(),
                 'to'           => $memberships->lastItem(),
             ],
-            'memberships' => $memberships
+            'memberships' => $membershipRes
         ];
     }
     public function select(Request $request)

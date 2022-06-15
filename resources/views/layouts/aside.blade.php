@@ -22,7 +22,7 @@
                             {{-- <li class="sidebar-item">
                                 <change_themme></change_themme>
                             </li> --}}
-                            <li  @click="menu = 5"  class="sidebar-item">
+                            <li @click="menu = 5" class="sidebar-item">
                                 <a href="#" class="sidebar-link p-0">
                                     <i class="mdi mdi-adjust"></i>
                                     <span class="hide-menu"> My Profile </span>
@@ -55,8 +55,7 @@
                             <span class="hide-menu">Customers</span></a>
                     </li>
                     <li @click="menu = 2" class="sidebar-item"> <a
-                            class="sidebar-link waves-effect waves-dark sidebar-link"
-                            aria-expanded="false">
+                            class="sidebar-link waves-effect waves-dark sidebar-link" aria-expanded="false">
                             <i data-feather="users" class="feather-icon"></i>
                             <span class="hide-menu">Payments</span></a>
                     </li>
@@ -69,6 +68,11 @@
                             class="sidebar-link waves-effect waves-dark sidebar-link" href="#" aria-expanded="false">
                             <i data-feather="users" class="feather-icon"></i>
                             <span class="hide-menu">Membership</span></a>
+                    </li>
+                    <li @click="menu = 6" class="sidebar-item"> <a
+                            class="sidebar-link waves-effect waves-dark sidebar-link" href="#" aria-expanded="false">
+                            <i data-feather="users" class="feather-icon"></i>
+                            <span class="hide-menu">Users</span></a>
                     </li>
 
 

@@ -12,9 +12,9 @@
     <meta name="csrf-token" content="{{ csrf_token() }}">
     <!-- Favicon icon -->
     @if (env('APP_ENV') === 'local')
-        <link rel="icon" type="image/png" sizes="16x16" href="/{{ env('ASSET_URL') }}images/cropped_invert.png">
+        <link rel="icon" type="image/png" sizes="16x16" href="/{{ env('ASSET_URL') }}images/urbanlogo-1024x1024.png">
     @else
-        <link rel="icon" type="image/png" sizes="16x16" href="/{{ env('ASSET_URL') }}images/cropped_ger_logo.png">
+        <link rel="icon" type="image/png" sizes="16x16" href="/{{ env('ASSET_URL') }}images/urbanlogo-1024x1024.png">
     @endif
     <title>Express entry evaluarion| @yield('title') </title>
     <link rel="canonical" href="https://www.wrappixel.com/{{ env('ASSET_URL') }}templates/adminpro/" />
@@ -48,7 +48,7 @@
             top: 0;
             position: fixed;
             z-index: 99999;
-            background: url(/{{ env('ASSET_URL') }}images/fondocanada.jpg) no-repeat center center;
+            background: url(/{{ env('ASSET_URL') }}images/fondogym.jpg) no-repeat center center;
             background-size: cover;
             /* background-color: rgb(21, 122, 184); */
         }
@@ -60,14 +60,13 @@
             border-radius: 50%;
             animation: lds-ripple 1s cubic-bezier(0, .1, .5, 1) infinite;
         }
-
     </style>
 </head>
 
 <body>
     <div class="preloader">
         <div class="lds-ripple">
-            <img src="/{{ env('ASSET_URL') }}images/maple1.png" alt="mappleSheet" width="175px"
+            <img src="/{{ env('ASSET_URL') }}images/urbanlogo-1024x1024.png" alt="mappleSheet" width="175px"
                 class="lds-pos2 fas fa-spin shadow-lg rounded-circle">
         </div>
     </div>
@@ -76,13 +75,14 @@
         <!-- ============================================================== -->
         <!-- Main wrapper - style you can find in pages.scss -->
         <!-- ============================================================== -->
-        <header class="topbar">
-            @include('layouts.navbar')
-        </header>
-        @include('layouts.aside')
+        @if (Auth::user())
+            <header class="topbar">
+                @include('layouts.navbar')
+            </header>
+        @endif
 
         @if (!Auth::user())
-            {{-- @yield('content') --}}{{-- login view --}}
+            @yield('content'){{-- login view --}}
             @php
                 $user_auth_data = [
                     'isLoggedin' => false,
@@ -91,6 +91,7 @@
         @endif
         {{-- @else --}}
         @if (Auth::user())
+            @include('layouts.aside')
             {{-- <header class="topbar">
             @include('layouts.navbar')
              </header> --}}
@@ -108,9 +109,9 @@
         {{-- body --}}
         <div class="page-wrapper">
             {{-- <div class="container-fluid"> --}}
-            @yield('content')
+            {{-- @yield('content') --}}
             @if (Auth::user())
-                {{-- @yield('content') --}}
+                @yield('content')
             @endif
             {{-- </div> --}}
             <footer class="footer">
