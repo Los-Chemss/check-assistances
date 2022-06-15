@@ -18,12 +18,45 @@ class AssistanceController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function index()
+    public function index(Request $request)
     {
-        return Assistance::with('customer')
-            ->with('branch')
-            ->get();
-        return Assistance::all();
+        try {
+            $buscar = $request->buscar;
+            $criterio = $request->criterio;
+
+            $asistances = Assistance::with('customer')
+                ->with('branch')
+                ->when($buscar && $criterio, function ($q) use ($criterio, $buscar) {
+                    $q->criterion($criterio, $buscar);
+                })
+                // ->criterion($criterio, $buscar)
+                ->paginate(10);
+            $asistancesRes = [];
+            foreach ($asistances as $as) {
+                array_push($asistancesRes, [
+                    'id' => $as->id,
+                    'nombre' => $as->customer->name,
+                    'entrada' => $as->input,
+                    'salida' => $as->output,
+                    'sucursal' => $as->branch->division,
+                ]);
+            }
+
+            return [
+                'pagination' => [
+                    'total'        => $asistances->total(),
+                    'current_page' => $asistances->currentPage(),
+                    'per_page'     => $asistances->perPage(),
+                    'last_page'    => $asistances->lastPage(),
+                    'from'         => $asistances->firstItem(),
+                    'to'           => $asistances->lastItem(),
+                ],
+                'asistances' =>  $asistancesRes
+            ];
+        } catch (Exception $e) {
+            $c = $this;
+            return response($e->getMessage(),   __FUNCTION__);
+        }
     }
 
     /**
@@ -45,7 +78,6 @@ class AssistanceController extends Controller
     public function store(Request $request)
     {
         try {
-            // return $request;
             $code = $request->code;
             $customer = Customer::where('code', $code)->first();
             if (!$customer) return response('User not found', 404);

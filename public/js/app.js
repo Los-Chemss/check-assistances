@@ -2384,24 +2384,6 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = ({
   data: function data() {
     return {
@@ -2470,10 +2452,11 @@ __webpack_require__.r(__webpack_exports__);
     getAssistances: function getAssistances(page, buscar, criterio) {
       console.log("getted");
       var me = this;
-      var url = "assistances/data?page=" + page + "&buscar=" + buscar + "&criterio=" + criterio;
+      var url = "assistances?page=" + page + "&buscar=" + buscar + "&criterio=" + criterio;
       axios.get(url).then(function (response) {
+        console.log(response.data);
         var respuesta = response.data;
-        me.assistances = respuesta.assistances;
+        me.assistances = respuesta.asistances;
         me.pagination = respuesta.pagination;
       })["catch"](function (error) {
         console.table(error);
@@ -3219,6 +3202,10 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
+//
+//
+//
+//
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = ({
   data: function data() {
     return {
@@ -3235,6 +3222,7 @@ __webpack_require__.r(__webpack_exports__);
       income: null,
       membership: null,
       selectedMembership: null,
+      customer_id: null,
       pagination: {
         total: 0,
         current_page: 0,
@@ -3333,6 +3321,23 @@ __webpack_require__.r(__webpack_exports__);
       })["catch"](function (error) {
         console.table(error);
       });
+      this.closeModal();
+    },
+    updateCustomer: function updateCustomer() {
+      var me = this;
+      var request = {
+        name: me.name,
+        code: me.name,
+        income: me.income,
+        membership: me.membership,
+        id: me.customer_id
+      };
+      axios.put("customers/update/", request).then(function (response) {
+        console.log(response);
+      })["catch"](function (error) {
+        console.table(error);
+      });
+      this.closeModal();
     },
     selectMembership: function selectMembership(event) {
       var newVal = null;
@@ -3349,7 +3354,7 @@ __webpack_require__.r(__webpack_exports__);
     closeModal: function closeModal() {
       this.modal = 0;
       this.title = "";
-      this.errors = {}; //   this.userFiles();//reload component
+      this.errors = {};
     },
     openModal: function openModal(model, action) {
       var data = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : [];
@@ -3376,9 +3381,7 @@ __webpack_require__.r(__webpack_exports__);
                   var mem = null;
                   this.memberships.forEach(function (m) {
                     if (m.name === data.membership) mem = m;
-                  }); // console.log(this.formatDateToInput(new Date(data.income)));
-                  //   console.log(new Date(data.income).toISOString().slice(0, 10));
-
+                  });
                   this.modal = 1;
                   this.modalTitle = "Update customer";
                   this.actionType = 2;
@@ -3386,6 +3389,7 @@ __webpack_require__.r(__webpack_exports__);
                   this.code = data.code;
                   this.income = new Date(data.income).toISOString().slice(0, 10);
                   this.selectedMembership = mem;
+                  this.customer_id = data.id;
                   break;
                 }
             }
@@ -24524,29 +24528,6 @@ var render = function () {
           _c("div", { staticClass: "row" }, [
             _c("div", { staticClass: "col-12" }, [
               _c("div", { staticClass: "card" }, [
-                _c(
-                  "div",
-                  {
-                    staticClass:
-                      "card-header border-bottom shadow-sm pt-4 mt-4 pb-2 mb-22",
-                  },
-                  [
-                    _c(
-                      "button",
-                      {
-                        staticClass: "btn btn-primary btn-lg fas fa-edit",
-                        attrs: { type: "button" },
-                        on: {
-                          click: function ($event) {
-                            return _vm.openModal("assistances", "store")
-                          },
-                        },
-                      },
-                      [_vm._v("\n            New Assistance\n          ")]
-                    ),
-                  ]
-                ),
-                _vm._v(" "),
                 _c("div", { staticClass: "card-body" }, [
                   _c("h4", { staticClass: "card-title" }, [
                     _vm._v("Assistances"),
@@ -24870,23 +24851,19 @@ var render = function () {
                                       return index < 1
                                         ? _c(
                                             "tr",
-                                            [
-                                              _vm._l(
-                                                assistance,
-                                                function (value, key, cIndex) {
-                                                  return _c("th", [
-                                                    _vm._v(
-                                                      "\n                          " +
-                                                        _vm._s(key) +
-                                                        "\n                        "
-                                                    ),
-                                                  ])
-                                                }
-                                              ),
-                                              _vm._v(" "),
-                                              _c("th"),
-                                            ],
-                                            2
+                                            _vm._l(
+                                              assistance,
+                                              function (value, key, cIndex) {
+                                                return _c("th", [
+                                                  _vm._v(
+                                                    "\n                          " +
+                                                      _vm._s(key) +
+                                                      "\n                        "
+                                                  ),
+                                                ])
+                                              }
+                                            ),
+                                            0
                                           )
                                         : _vm._e()
                                     }
@@ -24902,78 +24879,27 @@ var render = function () {
                                       return index <= _vm.pagination.per_page
                                         ? _c(
                                             "tr",
-                                            [
-                                              _vm._l(
-                                                assistance,
-                                                function (value, key, cIndex) {
-                                                  return _c(
-                                                    "td",
-                                                    {
-                                                      attrs: {
-                                                        "max-height": "5px",
-                                                      },
-                                                    },
-                                                    [
-                                                      _vm._v(
-                                                        "\n                          " +
-                                                          _vm._s(value) +
-                                                          "\n                        "
-                                                      ),
-                                                    ]
-                                                  )
-                                                }
-                                              ),
-                                              _vm._v(" "),
-                                              _c("td", [
-                                                _c(
-                                                  "button",
+                                            _vm._l(
+                                              assistance,
+                                              function (value, key, cIndex) {
+                                                return _c(
+                                                  "td",
                                                   {
-                                                    staticClass:
-                                                      "btn btn-warning btn-sm",
-                                                    attrs: { type: "button" },
-                                                    on: {
-                                                      click: function ($event) {
-                                                        return _vm.openModal(
-                                                          "assistances",
-                                                          "update",
-                                                          assistance
-                                                        )
-                                                      },
+                                                    attrs: {
+                                                      "max-height": "5px",
                                                     },
                                                   },
                                                   [
-                                                    _c("i", {
-                                                      staticClass:
-                                                        "icon-pencil",
-                                                    }),
+                                                    _vm._v(
+                                                      "\n                          " +
+                                                        _vm._s(value) +
+                                                        "\n                        "
+                                                    ),
                                                   ]
-                                                ),
-                                                _vm._v(
-                                                  "\n                           \n                          "
-                                                ),
-                                                _c(
-                                                  "button",
-                                                  {
-                                                    staticClass:
-                                                      "btn btn-danger btn-sm",
-                                                    attrs: { type: "button" },
-                                                    on: {
-                                                      click: function ($event) {
-                                                        return _vm.deleteAssistance(
-                                                          assistance.id
-                                                        )
-                                                      },
-                                                    },
-                                                  },
-                                                  [
-                                                    _c("i", {
-                                                      staticClass: "icon-trash",
-                                                    }),
-                                                  ]
-                                                ),
-                                              ]),
-                                            ],
-                                            2
+                                                )
+                                              }
+                                            ),
+                                            0
                                           )
                                         : _vm._e()
                                     }
@@ -24992,23 +24918,15 @@ var render = function () {
                                         return index < 1
                                           ? _c(
                                               "tr",
-                                              [
-                                                _vm._l(
-                                                  assistance,
-                                                  function (
-                                                    value,
-                                                    key,
-                                                    cIndex
-                                                  ) {
-                                                    return _c("th", [
-                                                      _vm._v(_vm._s(key)),
-                                                    ])
-                                                  }
-                                                ),
-                                                _vm._v(" "),
-                                                _c("th"),
-                                              ],
-                                              2
+                                              _vm._l(
+                                                assistance,
+                                                function (value, key, cIndex) {
+                                                  return _c("th", [
+                                                    _vm._v(_vm._s(key)),
+                                                  ])
+                                                }
+                                              ),
+                                              0
                                             )
                                           : _vm._e()
                                       }
@@ -25726,7 +25644,7 @@ var render = function () {
                           },
                         },
                       },
-                      [_vm._v("\n              New Customer\n            ")]
+                      [_vm._v("\n            New Customer\n          ")]
                     ),
                   ]
                 ),
@@ -25810,9 +25728,9 @@ var render = function () {
                                                 },
                                                 [
                                                   _vm._v(
-                                                    "\n                              " +
+                                                    "\n                            " +
                                                       _vm._s(criteria) +
-                                                      "\n                            "
+                                                      "\n                          "
                                                   ),
                                                 ]
                                               )
@@ -26060,9 +25978,9 @@ var render = function () {
                                                 function (value, key, cIndex) {
                                                   return _c("th", [
                                                     _vm._v(
-                                                      "\n                            " +
+                                                      "\n                          " +
                                                         _vm._s(key) +
-                                                        "\n                          "
+                                                        "\n                        "
                                                     ),
                                                   ])
                                                 }
@@ -26099,9 +26017,9 @@ var render = function () {
                                                     },
                                                     [
                                                       _vm._v(
-                                                        "\n                            " +
+                                                        "\n                          " +
                                                           _vm._s(value) +
-                                                          "\n                          "
+                                                          "\n                        "
                                                       ),
                                                     ]
                                                   )
@@ -26133,7 +26051,7 @@ var render = function () {
                                                   ]
                                                 ),
                                                 _vm._v(
-                                                  "\n                             \n                            "
+                                                  "\n                           \n                          "
                                                 ),
                                                 _c(
                                                   "button",
@@ -26353,6 +26271,8 @@ var render = function () {
                         [
                           _c("div", { staticClass: "modal-content" }, [
                             _c("div", { staticClass: "modal-header" }, [
+                              _c("h1", [_vm._v(_vm._s(_vm.actionType))]),
+                              _vm._v(" "),
                               _c("h4", {
                                 staticClass: "modal-title",
                                 domProps: {
@@ -26586,7 +26506,7 @@ var render = function () {
                                 {
                                   staticClass: "btn btn-primary fas fa-save",
                                   attrs: { type: "button" },
-                                  on: { click: _vm.saveCustomer },
+                                  on: { click: _vm.updateCustomer },
                                 },
                                 [
                                   _vm._v(
@@ -26663,7 +26583,7 @@ var staticRenderFns = [
         },
         [
           _vm._v(
-            "\n                      Showing 1 to 10 of 57 entries\n                    "
+            "\n                    Showing 1 to 10 of 57 entries\n                  "
           ),
         ]
       ),

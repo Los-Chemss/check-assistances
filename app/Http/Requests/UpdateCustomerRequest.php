@@ -13,7 +13,7 @@ class UpdateCustomerRequest extends FormRequest
      */
     public function authorize()
     {
-        return false;
+        return auth()->check();
     }
 
     /**
@@ -24,7 +24,14 @@ class UpdateCustomerRequest extends FormRequest
     public function rules()
     {
         return [
-            //
-        ];
+            /*
+             "name",
+            "code",
+            "income",
+            "created_at",
+            "updated_at",
+            "company_id",
+            "membership_id",
+            */];
     }
 }

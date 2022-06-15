@@ -23,4 +23,11 @@ class Assistance extends Model
     {
         return $this->belongsTo(Branch::class);
     }
+    public function scopeCriterion($query, $criteria, $input)
+    {
+       /*  if ($criteria == 'income' && $input) {
+            return $query->where('income', '>=', date('Y-m-d', strtotime($input)));
+        } */
+        return $query->where($criteria, 'LIKE', "%$input%");
+    }
 }

@@ -12,7 +12,7 @@
     <div class="row">
       <div class="col-12">
         <div class="card">
-          <div class="card-header border-bottom shadow-sm pt-4 mt-4 pb-2 mb-22">
+         <!--  <div class="card-header border-bottom shadow-sm pt-4 mt-4 pb-2 mb-22">
             <button
               type="button"
               class="btn btn-primary btn-lg fas fa-edit"
@@ -20,7 +20,7 @@
             >
               New Assistance
             </button>
-          </div>
+          </div> -->
           <div class="card-body">
             <h4 class="card-title">Assistances</h4>
             <div class="table-responsive">
@@ -90,7 +90,7 @@
                           <th v-for="(value, key, cIndex) in assistance">
                             {{ key }}
                           </th>
-                          <th></th>
+                         <!--  <th></th> -->
                         </tr>
                       </thead>
                       <tbody>
@@ -101,7 +101,7 @@
                           <td v-for="(value, key, cIndex) in assistance" max-height="5px">
                             {{ value }}
                           </td>
-                          <td>
+                          <!-- <td>
                             <button
                               type="button"
                               @click="openModal('assistances', 'update', assistance)"
@@ -117,32 +117,14 @@
                             >
                               <i class="icon-trash"></i>
                             </button>
-                            <!--   <template v-if="categoria.condicion">
-                              <button
-                                type="button"
-                                class="btn btn-danger btn-sm"
-                                @click="desactivarCategoria(categoria.id)"
-                              >
-                                <i class="icon-trash"></i>
-                              </button>
-                            </template>
-                            <template v-else>
-                              <button
-                                type="button"
-                                class="btn btn-info btn-sm"
-                                @click="activarCategoria(categoria.id)"
-                              >
-                                <i class="icon-check"></i>
-                              </button>
-                            </template> -->
-                          </td>
+                          </td> -->
                         </tr>
                       </tbody>
                       <tfoot>
                         <tr></tr>
                         <tr v-for="(assistance, index) in assistances" v-if="index < 1">
                           <th v-for="(value, key, cIndex) in assistance">{{ key }}</th>
-                          <th></th>
+                         <!--  <th></th> -->
                         </tr>
                       </tfoot>
                     </table>
@@ -395,12 +377,14 @@ export default {
       console.log("getted");
       let me = this;
       let url =
-        "assistances/data?page=" + page + "&buscar=" + buscar + "&criterio=" + criterio;
+        "assistances?page=" + page + "&buscar=" + buscar + "&criterio=" + criterio;
       axios
         .get(url)
         .then((response) => {
+          console.log(response.data);
+
           var respuesta = response.data;
-          me.assistances = respuesta.assistances;
+          me.assistances = respuesta.asistances;
           me.pagination = respuesta.pagination;
         })
         .catch((error) => {

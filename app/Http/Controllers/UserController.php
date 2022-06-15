@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Requests\NewUserRequest;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
@@ -92,6 +93,16 @@ class UserController extends Controller
             $newTheme = $user->themme_layout;
             $user->themme_layout = $newTheme;
             $user->save();
+        }
+    }
+
+    public function newUser(NewUserRequest $request)
+    {
+        try {
+            $newUser = $request->all();
+        } catch (Exception $e) {
+            $c = $this;
+            return $this->catchEx($e->getMessage(), $c,  __FUNCTION__);
         }
     }
 }
