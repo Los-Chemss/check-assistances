@@ -23,6 +23,11 @@ use Illuminate\Support\Facades\Mail;
 |
 */
 
+Route::get('/', function(){
+
+    return "here";
+});
+
 Route::get('/send_mail', function () { //test function only
     try {
         Mail::to('heriberto.h@gercanada.com')->send(new TestingMail());
@@ -31,6 +36,7 @@ Route::get('/send_mail', function () { //test function only
         return $e->getMessage();
     }
 });
+
 
 Auth::routes();
 
