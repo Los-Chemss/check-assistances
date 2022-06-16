@@ -115,7 +115,7 @@ export default {
           console.log(customer);
           let info =
             (customer.membership ? "Membership: " + customer.membership.name : "") +
-            (customer.membership.payments
+            (customer.membership.payments && customer.membership.payments[0]
               ? "\n Expires at: " + customer.membership.payments[0].expires_at
               : "");
 
