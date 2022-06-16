@@ -112,13 +112,13 @@ export default {
           let movement = null;
           let messagge = null;
           let customer = response.data.customer;
+          console.log(customer);
           let info =
             (customer.membership ? "Membership: " + customer.membership.name : "") +
             (customer.membership.payments
               ? "\n Expires at: " + customer.membership.payments[0].expires_at
               : "");
 
-          console.log(customer);
 
           me.code = "";
           if ("entrada" in response.data) {
