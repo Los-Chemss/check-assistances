@@ -18,18 +18,25 @@ class BranchSeeder extends Seeder
 
         Branch::create(
             [
-                'division'=>'Sucursal 1',
-                'location'=>'Santa Elena, Experiencia'
-            ]);
+                'division' => 'Sucursal 1',
+                'location' => 'Santa Elena, Experiencia',
+                'company_id' => 1
+            ]
+        );
         Branch::create(
             [
-                'division'=>'Sucursal 2',
-                'location'=>'Tucson'
-            ]);
+                'division' => 'Sucursal 2',
+                'location' => 'Tucson',
+                'company_id' => 1
+
+            ]
+        );
         Branch::create(
             [
-                'division'=>'Sucursal 3',
-                'location'=>' Filosofos'
-            ]);
+                'division' => 'Sucursal 3',
+                'location' => ' Filosofos',
+                'company_id' => 1
+            ]
+        );
     }
 }
