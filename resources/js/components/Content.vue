@@ -118,8 +118,9 @@ export default {
               ? "\n Expires at: " + customer.membership.payments[0].expires_at
               : "");
 
-          me.code = "";
+          console.log(customer);
 
+          me.code = "";
           if ("entrada" in response.data) {
             movement = "entrada";
             messagge = "Bienvenido " + customer.name + "\n" + info;
