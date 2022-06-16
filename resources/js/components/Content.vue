@@ -119,7 +119,6 @@ export default {
               ? "\n Expires at: " + customer.membership.payments[0].expires_at
               : "");
 
-
           me.code = "";
           if ("entrada" in response.data) {
             movement = "entrada";
@@ -134,6 +133,7 @@ export default {
             type: "success",
             title: "Registro  de " + movement + " satisfactorio",
             text: messagge,
+            timer: 4000,
           });
         })
         .catch((error) => {
@@ -143,6 +143,7 @@ export default {
               type: "error",
               title: "Codigo invalido",
               text: "El codigo es invalido",
+              timer: 4000,
             });
           }
         });

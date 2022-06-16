@@ -16,7 +16,7 @@
     @else
         <link rel="icon" type="image/png" sizes="16x16" href="/{{ env('ASSET_URL') }}images/urbanlogo-1024x1024.png">
     @endif
-    <title>Express entry evaluarion| @yield('title') </title>
+    <title>{{ env('APP_NAME') }}| @yield('title') </title>
     <link rel="canonical" href="https://www.wrappixel.com/{{ env('ASSET_URL') }}templates/adminpro/" />
 
     <link rel="stylesheet"

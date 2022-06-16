@@ -10,12 +10,7 @@ class AddBranchIdToAssistancesTable extends Migration
     public function up()
     {
         Schema::table('assistances', function (Blueprint $table) {
-
-            $branch = new Branch();
-            $branch->division = 'otra';
-            $branch->save();
-
-            $table->unsignedBigInteger('branch_id')->default($branch->id);
+            $table->unsignedBigInteger('branch_id')->nullable();
             $table->foreign('branch_id')->references('id')->on('branches');
         });
     }
