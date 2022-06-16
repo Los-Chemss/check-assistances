@@ -126,7 +126,7 @@ export default {
           }
           if ("salida" in response.data) {
             movement = "salida";
-            messagge = "Gracias por asistir :) " + customer.name +  info;
+            messagge = "Gracias por asistir :) " + customer.name + info;
           }
 
           Swal.fire({
@@ -136,6 +136,7 @@ export default {
           });
         })
         .catch((error) => {
+          console.log(error);
           if (error.response.status === 404) {
             Swal.fire({
               type: "error",
@@ -143,7 +144,6 @@ export default {
               text: "El codigo es invalido",
             });
           }
-          //   console.log(error);
         });
     },
   },
