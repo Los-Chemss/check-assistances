@@ -36,15 +36,16 @@ class UserController extends Controller
      */
     public function update(Request $request)
     {
+        // return $request;
         try {
             $user = User::Where('id', Auth::user()->id)->firstOrFail();
-            if ($user->name) {
+            if ($request->name) {
                 $user->name = $request->name;
             }
-            if ($user->last_name) {
+            if ($request->last_name) {
                 $user->last_name = $request->last_name;
             }
-            if ($user->branch) {
+            if ($request->branch) {
                 $user->branch_id = $request->branch;
             }
             $user->save();

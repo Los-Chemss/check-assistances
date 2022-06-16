@@ -357,6 +357,7 @@ export default {
         })
         .then(function (response) {
           console.log(response);
+          return;
           Swal.fire({
             type: "success",
             title: "Account updated",
