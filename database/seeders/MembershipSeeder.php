@@ -17,11 +17,13 @@ class MembershipSeeder extends Seeder
                 'name' => 'monthly',
                 'price' => 300,
                 'company_id' => $company->id,
+                'period' => 30,
             ]);
             Membership::create([
                 'name' => 'yearly',
                 'price' => 1300,
                 'company_id' => $company->id,
+                'period' => 365
             ]);
         }
     }

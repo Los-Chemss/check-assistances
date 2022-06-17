@@ -53,7 +53,7 @@
                             : 'text'
                         "
                         v-model="buscar"
-                        @keyup.enter="getPayments(1, buscar, criterio)"
+                        @keyup.enter="listPayments(1, buscar, criterio)"
                         class="form-control"
                         :placeholder="
                           criterio == 'paid_at' || criterio == 'expires_at'
@@ -66,7 +66,7 @@
                       <div class="input-group-append">
                         <button
                           type="submit"
-                          @click="getPayments(1, buscar, criterio)"
+                          @click="listPayments(1, buscar, criterio)"
                           class="btn-sm btn-primary input-group-text"
                         >
                           <i class="fa fa-search"></i>
@@ -244,28 +244,6 @@
                     <!--    <span class="bar"></span> -->
                   </div>
                   <div class="form-group mb-5">
-                    <label for="expires_at">expires at</label
-                    ><!-- be disabled -->
-                    <input
-                      type="date"
-                      class="form-control"
-                      id="expires_at"
-                      v-model="expires_at"
-                    />
-                    <!-- <span class="bar"></span> -->
-                  </div>
-                  <div class="form-group mb-5">
-                    <label for="amount">amount</label
-                    ><!-- be disabled -->
-                    <input
-                      type="number"
-                      class="form-control"
-                      id="amount"
-                      v-model="amount"
-                    />
-                    <!-- <span class="bar"></span> -->
-                  </div>
-                  <div class="form-group mb-5">
                     <label for="membership">Membership</label>
                     <select
                       class="form-control p-0"
@@ -275,7 +253,7 @@
                     >
                       <option></option>
                       <option v-for="membership in memberships" :value="membership">
-                        {{ membership.name }}
+                        {{ membership.name }} | ${{ membership.price }}
                       </option>
                     </select>
                   </div>
@@ -301,11 +279,20 @@
             <!-- form -->
             <div class="modal-footer">
               <button
+                v-if="actionType == 1"
                 type="button"
                 class="btn btn-primary fas fa-save"
                 @click="savePayment"
               >
                 Save
+              </button>
+              <button
+                v-if="actionType == 2"
+                type="button"
+                class="btn btn-primary fas fa-save"
+                @click="updatePayment"
+              >
+                Update
               </button>
               <button
                 @click="closeModal()"
@@ -355,9 +342,9 @@ export default {
       offset: 3,
       criterio: "paid_at",
       buscar: "",
-
+      payment_id: null,
       showPayments: 10,
-      criterions: ["paid_at", "expires_at", "customer"],
+      criterions: ["paid_at", "expires_at", "customer", "membership"],
     };
   },
 
@@ -370,7 +357,6 @@ export default {
       if (!this.pagination.to) {
         return [];
       }
-
       var from = this.pagination.current_page - this.offset;
       if (from < 1) {
         from = 1;
@@ -380,7 +366,6 @@ export default {
       if (to >= this.pagination.last_page) {
         to = this.pagination.last_page;
       }
-
       var pagesArray = [];
       while (from <= to) {
         pagesArray.push(from);
@@ -388,12 +373,11 @@ export default {
       }
       return pagesArray;
     },
-
-    // filter: this.getPayments(this.page, this.buscar, this.criterio),
+    // filter: this.listPayments(this.page, this.buscar, this.criterio),
   },
 
   methods: {
-    getPayments(page, buscar, criterio) {
+    listPayments(page, buscar, criterio) {
       console.log("getted");
       let me = this;
       let url = "payments?page=" + page + "&buscar=" + buscar + "&criterio=" + criterio;
@@ -402,7 +386,7 @@ export default {
         .then((response) => {
           var respuesta = response.data;
           console.log(respuesta);
-          me.payments = respuesta.payments;
+          me.payments = respuesta.payments.data;
           me.pagination = respuesta.pagination;
         })
         .catch((error) => {
@@ -457,22 +441,60 @@ export default {
       let me = this;
       let request = {
         paid_at: me.paid_at,
-        expires_at: me.expires_at,
-        amount: me.amount,
         membership: me.selectedMembership,
         customer: me.selectedCustomer,
       };
       axios
         .post("payments", request)
         .then((response) => {
+          let respuesta = response.data;
           console.log(response);
+          let message =
+            "Ha pagado una membresia " +
+            respuesta.membership.name +
+            " con una duracion de " +
+            respuesta.membership.name +
+            " dias. Y expira el " +
+            respuesta.payment.expires_at;
           Swal.fire({
             type: "success",
             title: "Registro  de pago satisfactorio",
-            text: messagge,
-            timer: 3000,
+            text: message,
+            timer: 8000,
           });
-          //   this.closeModal();
+        })
+        .catch((error) => {
+          console.table(error);
+        });
+      this.closeModal();
+    },
+
+    updatePayment() {
+      let me = this;
+      let request = {
+        paid_at: me.paid_at,
+        membership: me.selectedMembership,
+        customer: me.selectedCustomer,
+        id: me.payment_id,
+      };
+      axios
+        .post("payments/" + request.id + "/update", request)
+        .then((response) => {
+          let respuesta = response.data;
+          console.log(response);
+          let message =
+            "Ha actualizado el pago a  una membresia " +
+            respuesta.membership.name +
+            " con una duracion de " +
+            respuesta.membership.name +
+            " dias. Y expira el " +
+            respuesta.payment.expires_at;
+          Swal.fire({
+            type: "success",
+            title: "Registro  de pago satisfactorio",
+            text: message,
+            timer: 8000,
+          });
         })
         .catch((error) => {
           console.table(error);
@@ -492,6 +514,7 @@ export default {
       console.log(newVal);
       this.selectedMembership = newVal;
     },
+
     selectCustomer(event) {
       let newVal = null;
       if ("criterion" in event) {
@@ -520,17 +543,13 @@ export default {
               this.modalTitle = "New payment";
               this.actionType = 1;
               this.paid_at = "";
-              this.expires_at = "";
-              this.amount = "";
               this.selectedMembership = "";
               this.selectedCustomer = "";
               break;
             }
             case "update": {
               console.log(data);
-              //   return
               let mem = null;
-              //   return;
               this.memberships.forEach((m) => {
                 console.log(m);
                 if (m.name === data.membership) mem = m;
@@ -540,15 +559,13 @@ export default {
                 console.log(c);
                 if (c.name === data.customer) cus = c;
               });
-
               this.modal = 1;
               this.modalTitle = "Update payment";
               this.actionType = 2;
               this.paid_at = new Date(data["paid at"]).toISOString().slice(0, 10);
-              this.expires_at = new Date(data["expires at"]).toISOString().slice(0, 10);
-              this.amount = data.amount;
               this.selectedMembership = mem;
               this.selectedCustomer = cus;
+              this.payment_id = data.id;
               break;
             }
           }
@@ -573,10 +590,10 @@ export default {
         if (result.value) {
           let me = this;
           axios
-            .post("payments/" + payment + "/delete")
+            .delete("payments/", payment)
             .then((response) => {
               console.log(response);
-              me.getPayments(me.page, me.buscar, me.criterio);
+              me.listPayments(me.page, me.buscar, me.criterio);
             })
             .catch((error) => {
               console.log(error);
@@ -607,12 +624,12 @@ export default {
       //Actualiza la página actual
       me.pagination.current_page = page;
       //Envia la petición para visualizar la data de esa página
-      me.getPayments(page, buscar, criterio);
+      me.listPayments(page, buscar, criterio);
     },
   },
 
   mounted() {
-    this.getPayments(1, this.buscar, this.criterio);
+    this.listPayments(1, this.buscar, this.criterio);
     this.getMemberships();
     this.getCustomers();
   },

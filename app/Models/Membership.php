@@ -8,8 +8,9 @@ use Illuminate\Database\Eloquent\Model;
 class Membership extends Model
 {
     use HasFactory;
-
-    public function payments(){
+    protected $guarded = [];
+    public function payments()
+    {
         return $this->hasMany(Payment::class);
     }
 }

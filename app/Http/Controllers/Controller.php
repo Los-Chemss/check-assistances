@@ -57,4 +57,10 @@ class Controller extends BaseController
         array_push($errors, $obj);
         return Storage::put('json_logs.json', $errors);
     }
+    public function catchEx($msgErr, $class, $fun)
+    {
+        $c =  explode('\\', get_class($class));
+        $className = array_pop($c);
+        return response(['error' => $msgErr, 'at' => "$className -> $fun"], 500);
+    }
 }

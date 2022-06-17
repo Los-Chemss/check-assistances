@@ -7,6 +7,7 @@ use App\Http\Requests\StoreMembershipRequest;
 use App\Http\Requests\UpdateMembershipRequest;
 use App\Models\Branch;
 use App\Models\Company;
+use Exception;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Request;
 
@@ -35,8 +36,9 @@ class MembershipController extends Controller
         foreach ($memberships as $mem) {
             array_push($membershipRes, [
                 'id' => $mem->id,
-                'Nombre' => $mem->name,
-                'Precio' => $mem->price,
+                'name' => $mem->name,
+                'price' => $mem->price,
+                'period' => $mem->period,
             ]);
         }
         return [
@@ -82,9 +84,14 @@ class MembershipController extends Controller
      * @param  \App\Http\Requests\StoreMembershipRequest  $request
      * @return \Illuminate\Http\Response
      */
-    public function store(Request $request)
+    public function store(StoreMembershipRequest $request)
     {
-        return Membership::create($request->all());
+        try {
+            return Membership::create($request->all());
+        } catch (Exception $e) {
+            $c = $this;
+            return $this->catchEx($e->getMessage(), $c,  __FUNCTION__);
+        }
     }
 
     /**

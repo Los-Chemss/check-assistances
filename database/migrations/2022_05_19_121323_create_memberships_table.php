@@ -10,8 +10,9 @@ class CreateMembershipsTable extends Migration
     {
         Schema::create('memberships', function (Blueprint $table) {
             $table->id();
-            $table->string('name');//yearly|monthly|weekly
-            $table->double('price');//
+            $table->string('name'); //yearly|monthly|weekly
+            $table->double('price'); //
+            $table->integer('period')->default(30);
             //autocharge | autoexpire
             $table->timestamps();
         });

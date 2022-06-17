@@ -71,8 +71,13 @@ Route::middleware(['auth'])->group(function () {
     Route::post('memberships',  [MembershipController::class, 'store']);
     Route::post('memberships/{id}/delete',  [MembershipController::class, 'destroy']);
 
+    /*   Route::resource('payments', PaymentController::class);
+    Route::resource('memberships', MembershipController::class); */
+
+
     Route::get('payments',  [PaymentController::class, 'index']);
     Route::post('payments',  [PaymentController::class, 'store']);
+    Route::post('payments/{payment}/update',  [PaymentController::class, 'update']);
     Route::post('payments/{id}/delete',  [PaymentController::class, 'destroy']);
 
     Route::get('assistances',  [AssistanceController::class, 'index']);

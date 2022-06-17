@@ -36,7 +36,6 @@ class UserController extends Controller
      */
     public function update(Request $request)
     {
-        // return $request;
         try {
             $user = User::Where('id', Auth::user()->id)->firstOrFail();
             if ($request->name) {

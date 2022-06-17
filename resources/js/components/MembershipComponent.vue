@@ -65,9 +65,9 @@
                       </div>
                       <input
                         :type="
-                          criterio == 'income'
+                          criterio == 'period'
                             ? 'date'
-                            : criterio == 'code'
+                            : criterio == 'price'
                             ? 'number'
                             : 'text'
                         "
@@ -75,9 +75,9 @@
                         @keyup.enter="listMemberships(1, buscar, criterio)"
                         class="form-control"
                         :placeholder="
-                          criterio == 'income'
+                          criterio == 'period'
                             ? '22/07/2022'
-                            : criterio == 'code'
+                            : criterio == 'price'
                             ? '0123'
                             : 'Benny Juarez'
                         "
@@ -122,7 +122,7 @@
                           <td>
                             <button
                               type="button"
-                              @click="openModal('memberships', 'update', customer)"
+                              @click="openModal('memberships', 'update', membership)"
                               class="btn btn-warning btn-sm"
                             >
                               <i class="icon-pencil"></i>
@@ -131,7 +131,7 @@
                             <button
                               type="button"
                               class="btn btn-danger btn-sm"
-                              @click="deleteMembership(customer.id)"
+                              @click="deleteMembership(membership.id)"
                             >
                               <i class="icon-trash"></i>
                             </button>
@@ -158,8 +158,8 @@
                       </tbody>
                       <tfoot>
                         <tr></tr>
-                        <tr v-for="(customer, index) in memberships" v-if="index < 1">
-                          <th v-for="(value, key, cIndex) in customer">{{ key }}</th>
+                        <tr v-for="(membership, index) in memberships" v-if="index < 1">
+                          <th v-for="(value, key, cIndex) in membership">{{ key }}</th>
                           <th></th>
                         </tr>
                       </tfoot>
@@ -360,9 +360,8 @@ export default {
       offset: 3,
       criterio: "name",
       buscar: "",
-
       showMemberships: 10,
-      criterions: ["name", "code", "income"],
+      criterions: ["name", "price", "period"],
     };
   },
 
@@ -416,7 +415,7 @@ export default {
         });
     },
 
-    getMemberships() {
+    /*     getMemberships() {
       let me = this;
       axios
         .get("memberships")
@@ -428,7 +427,7 @@ export default {
         .catch((error) => {
           console.log(error);
         });
-    },
+    }, */
 
     selectCriteria() {
       this.buscar = "";
@@ -450,18 +449,31 @@ export default {
       let me = this;
       let request = {
         name: me.name,
-        code: me.name,
-        income: me.income,
-        membership: me.membership,
+        price: me.price,
+        period: me.period,
       };
       axios
-        .post("memberships/store", request)
+        .post("memberships", request)
         .then((response) => {
           console.log(response);
+          let message = "Se ha agregado un nuevo plan de membresia";
+          Swal.fire({
+            type: "success",
+            title: "Registro  de membresia satisfactorio",
+            text: message,
+            timer: 8000,
+          });
         })
         .catch((error) => {
+          Swal.fire({
+            type: "error",
+            title: "No se pudo crear el registro",
+            text: message,
+            timer: 3000,
+          });
           console.table(error);
         });
+      this.closeModal();
     },
 
     selectMembership(event) {
@@ -490,30 +502,22 @@ export default {
           switch (action) {
             case "store": {
               this.modal = 1;
-              this.modalTitle = "New customer";
+              this.modalTitle = "New membership";
               this.actionType = 1;
               this.name = "";
-              this.code = "";
-              this.income = "";
-              this.selectedMembership = "";
+              this.price = "";
+              this.period = "";
               break;
             }
             case "update": {
               console.log(data);
-              let mem = null;
-              this.memberships.forEach((m) => {
-                if (m.name === data.membership) mem = m;
-              });
-
-              // console.log(this.formatDateToInput(new Date(data.income)));
-              //   console.log(new Date(data.income).toISOString().slice(0, 10));
               this.modal = 1;
-              this.modalTitle = "Update customer";
+              this.modalTitle = "Update membership";
               this.actionType = 2;
               this.name = data.name;
-              this.code = data.code;
-              this.income = new Date(data.income).toISOString().slice(0, 10);
-              this.selectedMembership = mem;
+              this.price = data.price;
+              this.period = data.period;
+              this.membership_id = data.id;
               break;
             }
           }
@@ -521,7 +525,7 @@ export default {
       }
     },
 
-    deleteMembership(customer) {
+    deleteMembership(membership) {
       Swal.fire({
         title: "Esta seguro que desea eliminar este objeto?",
         type: "warning",
@@ -538,12 +542,24 @@ export default {
         if (result.value) {
           let me = this;
           axios
-            .post("memberships/" + customer + "/delete")
+            .post("memberships/" + membership + "/delete")
             .then((response) => {
               console.log(response);
-              me.getMemberships(me.page, me.buscar, me.criterio);
+              Swal.fire({
+                type: "success",
+                title: "Registro eliminado",
+                text: "Eliminado satisfactoria mente",
+                timer: 8000,
+              });
+              me.listMemberships(me.page, me.buscar, me.criterio);
             })
             .catch((error) => {
+              Swal.fire({
+                type: "error",
+                title: "No se pudo eliminar el registro",
+                text: "El registro no pudo ser eliminado",
+                timer: 8000,
+              });
               console.log(error);
             });
           //
@@ -572,12 +588,11 @@ export default {
       //Actualiza la página actual
       me.pagination.current_page = page;
       //Envia la petición para visualizar la data de esa página
-      me.getMemberships(page, buscar, criterio);
+      me.listMemberships(page, buscar, criterio);
     },
   },
 
   mounted() {
-    this.getMemberships();
     this.listMemberships(1, this.buscar, this.criterio);
   },
 };
