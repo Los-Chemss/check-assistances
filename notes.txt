@@ -1,0 +1,15 @@
+#Config git ftp
+git config git-ftp.url "ftp://155.138.140.57"
+git config git-ftp.user "heriberto@gervimex.com"
+git config git-ftp.password "urbanfit_01"
+git ftp init
+
+#Get docker  db address
+docker inspect -f '{{range.NetworkSettings.Networks}}{{.IPAddress}}{{end}}' check-assistance-mysql-1
+
+
+#Front keys
+frontimm
+Gercanada_001
+
+

@@ -96,7 +96,7 @@ class AssistanceController extends Controller
                 'branch_id' => $branch->id, // By location (Maybe ip)
             ];
 
-            $assisted = Assistance::where('customer_id', $customer->id)
+            /*  $assisted = Assistance::where('customer_id', $customer->id)
                 ->where('branch_id', $branch->id)
                 ->orderBy('input', 'desc')
                 ->first();
@@ -108,7 +108,8 @@ class AssistanceController extends Controller
                 $resp =  ['salida' => $assisted, 'customer' => $customer];
             } else {
                 $resp =  ['entrada' => Assistance::create($data), 'customer' => $customer];
-            }
+            } */
+            $resp =  ['entrada' => Assistance::create($data), 'customer' => $customer];
             return response()->json($resp, 200);
         } catch (Exception $e) {
             return $e->getMessage();

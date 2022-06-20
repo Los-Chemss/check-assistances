@@ -140,7 +140,12 @@ class CustomerController extends Controller
             'name' => $request->name,
             'code' => $request->code,
             'income' => $request->income,
-            'company_id' => $company->id
+            'company_id' => $company->id,
+            'lastname' => $request->lastname,
+            'address' => $request->address,
+            'province' => $request->province,
+            'postcode' => $request->postcode,
+            'phone' => $request->phone
         ];
         return Customer::create($data);
         try {
@@ -157,7 +162,21 @@ class CustomerController extends Controller
      */
     public function show(Customer $customer)
     {
-        return $customer;
+        try {
+            $return = Customer::where('id', $customer->id)
+                ->with('membership')
+                ->with('payments', function ($q) {
+                    $q->with('membership');
+                })
+                ->with('asistances', function ($q) {
+                    $q->with('branch');
+                })
+                ->first();
+            return response()->json($return);
+        } catch (Exception $e) {
+            $c = $this;
+            return $this->catchEx($e->getMessage(), $c,  __FUNCTION__);
+        }
     }
 
     /**

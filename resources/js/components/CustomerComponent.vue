@@ -9,133 +9,123 @@
     </div>
   </div>
   <div v-else>
-    <div class="row">
-      <div class="col-12">
-        <div class="card">
-          <div class="card-header border-bottom shadow-sm pt-4 mt-4 pb-2 mb-22">
-            <button
-              type="button"
-              class="btn btn-primary btn-lg fas fa-edit"
-              @click="openModal('customers', 'store')"
-            >
-              New Customer
-            </button>
-          </div>
-          <div class="card-body">
-            <h4 class="card-title">Customers</h4>
-            <div class="table-responsive">
-              <div
-                id="col_render_wrapper"
-                class="dataTables_wrapper container-fluid dt-bootstrap4"
+    <template v-if="template === 0">
+      <div class="row">
+        <div class="col-12">
+          <div class="card">
+            <div class="card-header border-bottom shadow-sm pt-4 mt-4 pb-2 mb-22">
+              <button
+                type="button"
+                class="btn btn-primary btn-lg fas fa-edit"
+                @click="openModal('customers', 'store')"
               >
-                <div class="row">
-                  <!--   <div class="col-sm-12 col-md-6">
-                  <div class="input-group-prepend" id="col_render_length">
-                      <label class="mr-2">Show</label>
-                      <select
-                        name="col_render_length  "
-                        aria-controls="col_render"
-                        class="form-control-sm input-group-text"
-                        v-model="showCustomers"
-                        @change="getRows()"
-                      >
-                        <option value="10">10</option>
-                        <option value="25">25</option>
-                        <option value="50">50</option>
-                        <option value="100">100</option>
-                      </select>
-                      <label class="ml-2">entries</label>
-                    </div>
-                  </div> -->
-                  <div class="col-sm-12 col-md-6">
-                    <div class="input-group mb-3 dataTables_filter">
-                      <div class="input-group-prepend">
-                        <!--  <span class="input-group-text">$</span> -->
-                        <select
-                          class="input-group-text"
-                          v-model="criterio"
-                          @change="selectCriteria"
-                        >
-                          <optgroup>
-                            <option v-for="criteria in criterions" :value="criteria">
-                              {{ criteria }}
-                            </option>
-                          </optgroup>
-                        </select>
-                      </div>
-                      <input
-                        :type="
-                          criterio == 'income'
-                            ? 'date'
-                            : criterio == 'code'
-                            ? 'number'
-                            : 'text'
-                        "
-                        v-model="buscar"
-                        @keyup.enter="getCustomers(1, buscar, criterio)"
-                        class="form-control"
-                        :placeholder="
-                          criterio == 'income'
-                            ? '22/07/2022'
-                            : criterio == 'code'
-                            ? '0123'
-                            : 'Benny Juarez'
-                        "
-                      />
-                      <div class="input-group-append">
-                        <button
-                          type="submit"
-                          @click="getCustomers(1, buscar, criterio)"
-                          class="btn-sm btn-primary input-group-text"
-                        >
-                          <i class="fa fa-search"></i>
-                        </button>
+               Nuevo cliente
+              </button>
+            </div>
+            <div class="card-body">
+              <h4 class="card-title">Customers</h4>
+              <div class="table-responsive">
+                <div
+                  id="col_render_wrapper"
+                  class="dataTables_wrapper container-fluid dt-bootstrap4"
+                >
+                  <div class="row">
+                    <div class="col-sm-12 col-md-6">
+                      <div class="input-group mb-3 dataTables_filter">
+                        <div class="input-group-prepend">
+                          <!--  <span class="input-group-text">$</span> -->
+                          <select
+                            class="input-group-text"
+                            v-model="criterio"
+                            @change="selectCriteria"
+                          >
+                            <optgroup>
+                              <option v-for="criteria in criterions" :value="criteria">
+                                {{ criteria }}
+                              </option>
+                            </optgroup>
+                          </select>
+                        </div>
+                        <input
+                          :type="
+                            criterio == 'income'
+                              ? 'date'
+                              : criterio == 'code'
+                              ? 'number'
+                              : 'text'
+                          "
+                          v-model="buscar"
+                          @keyup.enter="getCustomers(1, buscar, criterio)"
+                          class="form-control"
+                          :placeholder="
+                            criterio == 'income'
+                              ? '22/07/2022'
+                              : criterio == 'code'
+                              ? '0123'
+                              : 'Benny Juarez'
+                          "
+                        />
+                        <div class="input-group-append">
+                          <button
+                            type="submit"
+                            @click="getCustomers(1, buscar, criterio)"
+                            class="btn-sm btn-primary input-group-text"
+                          >
+                            <i class="fa fa-search"></i>
+                          </button>
+                        </div>
                       </div>
                     </div>
                   </div>
-                </div>
-                <div class="row">
-                  <div class="col-sm-12">
-                    <table
-                      id="col_render"
-                      class="table table-bordered table-striped table-sm"
-                      style="width: 100%"
-                      role="grid"
-                      aria-describedby="col_render_info"
-                    >
-                      <thead>
-                        <tr v-for="(customer, index) in customers" v-if="index < 1">
-                          <th v-for="(value, key, cIndex) in customer">
-                            {{ key }}
-                          </th>
-                          <th></th>
-                        </tr>
-                      </thead>
-                      <tbody>
-                        <tr
-                          v-for="(customer, index) in customers"
-                          v-if="index <= pagination.per_page"
-                        >
-                          <td v-for="(value, key, cIndex) in customer" max-height="5px">
-                            {{ value }}
-                          </td>
-                          <td>
-                            <button
-                              type="button"
-                              @click="openModal('customers', 'update', customer)"
-                              class="btn btn-warning btn-sm"
-                            >
-                              <i class="icon-pencil"></i>
-                            </button>
-                            &nbsp;
-                            <button
-                              type="button"
-                              class="btn btn-danger btn-sm"
-                              @click="deleteCustomer(customer.id)"
-                            >
-                              <i class="icon-trash"></i>
-                            </button>
-                            <!--   <template v-if="categoria.condicion">
+                  <div class="row">
+                    <div class="col-sm-12">
+                      <table
+                        id="col_render"
+                        class="table table-bordered table-striped table-sm"
+                        style="width: 100%"
+                        role="grid"
+                        aria-describedby="col_render_info"
+                      >
+                        <thead>
+                          <tr v-for="(customer, index) in customers" v-if="index < 1">
+                            <th v-for="(value, key, cIndex) in customer">
+                              {{ key }}
+                            </th>
+                            <th></th>
+                          </tr>
+                        </thead>
+                        <tbody>
+                          <tr
+                            v-for="(customer, index) in customers"
+                            v-if="index <= pagination.per_page"
+                          >
+                            <td v-for="(value, key, cIndex) in customer" max-height="5px">
+                              {{ value }}
+                            </td>
+                            <td>
+                              <button
+                                type="button"
+                                @click="openModal('customers', 'update', customer)"
+                                class="btn btn-warning btn-sm"
+                              >
+                                <i class="icon-pencil"></i>
+                              </button>
+                              &nbsp;
+                              <button
+                                type="button"
+                                class="btn btn-danger btn-sm"
+                                @click="deleteCustomer(customer.id)"
+                              >
+                                <i class="icon-trash"></i>
+                              </button>
+                              <button
+                                type="button"
+                                class="btn btn-info btn-sm"
+                                @click="showCustomer(customer.id)"
+                              >
+                                <i class="icon-eye"></i>
+                              </button>
+                              <!--   <template v-if="categoria.condicion">
                               <button
                                 type="button"
                                 class="btn btn-danger btn-sm"
@@ -153,197 +143,423 @@
                                 <i class="icon-check"></i>
                               </button>
                             </template> -->
+                            </td>
+                          </tr>
+                        </tbody>
+                        <tfoot>
+                          <tr></tr>
+                          <tr v-for="(customer, index) in customers" v-if="index < 1">
+                            <th v-for="(value, key, cIndex) in customer">{{ key }}</th>
+                            <th></th>
+                          </tr>
+                        </tfoot>
+                      </table>
+                    </div>
+                  </div>
+                  <div class="row">
+                    <div class="col-sm-12 col-md-5">
+                      <div
+                        class="dataTables_info"
+                        id="col_render_info"
+                        role="status"
+                        aria-live="polite"
+                      >
+                        Showing 1 to 10 of 57 entries
+                      </div>
+                    </div>
+                    <div class="col-sm-12 col-md-7">
+                      <div
+                        class="dataTables_paginate paging_simple_numbers"
+                        id="col_render_paginate"
+                      >
+                        <nav>
+                          <ul class="pagination">
+                            <li class="page-item" v-if="pagination.current_page > 1">
+                              <a
+                                class="page-link"
+                                href="#"
+                                @click.prevent="
+                                  cambiarPagina(
+                                    pagination.current_page - 1,
+                                    buscar,
+                                    criterio
+                                  )
+                                "
+                                >Ant</a
+                              >
+                            </li>
+                            <li
+                              class="page-item"
+                              v-for="page in pagesNumber"
+                              :key="page"
+                              :class="[page == isActived ? 'active' : '']"
+                            >
+                              <a
+                                class="page-link"
+                                href="#"
+                                @click.prevent="cambiarPagina(page, buscar, criterio)"
+                                v-text="page"
+                              ></a>
+                            </li>
+                            <li
+                              class="page-item"
+                              v-if="pagination.current_page < pagination.last_page"
+                            >
+                              <a
+                                class="page-link"
+                                href="#"
+                                @click.prevent="
+                                  cambiarPagina(
+                                    pagination.current_page + 1,
+                                    buscar,
+                                    criterio
+                                  )
+                                "
+                                >Sig</a
+                              >
+                            </li>
+                          </ul>
+                        </nav>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <template v-if="actionType == 1 || actionType == 2">
+          <div
+            class="modal fade"
+            tabindex="-1"
+            :class="{ mostrar: modal }"
+            role="dialog"
+            aria-labelledby="myModalLabel"
+            style="display: none; overflow-y: auto"
+            aria-hidden="true"
+          >
+            <div
+              class="modal-dialog modal-primary modal-lg"
+              style="padding-top: 55px"
+              role="document"
+            >
+              <div class="modal-content">
+                <div class="modal-header">
+                  <!-- <h1>{{ actionType }}</h1> -->
+                  <h4 class="modal-title" v-text="modalTitle"></h4>
+                  <button
+                    type="button"
+                    class="close"
+                    data-dismiss="modal"
+                    @click="closeModal()"
+                    aria-label="Close"
+                  >
+                    <span aria-hidden="true">×</span>
+                  </button>
+                </div>
+                <div class="modal-body">
+                  <div class="flex flex-wrap -m-2">
+                    <form class="p-2 m-2">
+                      <div class="row">
+                        <div class="form-group col-md-4">
+                          <label for="name">Nombre</label>
+                          <input
+                            type="text"
+                            class="form-control"
+                            id="name"
+                            placeholder="Homero J."
+                            v-model="name"
+                          />
+                          <!--    <span class="bar"></span> -->
+                        </div>
+                        <div class="form-group col-md-4">
+                          <label for="lastname">Apellidos</label>
+                          <input
+                            placeholder="Simpson"
+                            type="text"
+                            class="form-control"
+                            id="lastname"
+                            v-model="lastname"
+                          />
+                        </div>
+                        <div class="form-group col-md-4">
+                          <label for="code">code</label>
+                          <input
+                            type="text"
+                            class="form-control"
+                            id="code"
+                            v-model="code"
+                          />
+                          <!-- <span class="bar"></span> -->
+                        </div>
+                      </div>
+                      <div class="row">
+                        <div class="form-group col-md-4">
+                          <label for="address">Direccion</label>
+                          <input
+                            type="text"
+                            class="form-control"
+                            placeholder="Grove St #800 ST Fierro CA"
+                            id="address"
+                            v-model="address"
+                          />
+                        </div>
+                        <div class="form-group col-md-4">
+                          <label for="province">Estado</label>
+                          <input
+                            type="text"
+                            placeholder="California"
+                            class="form-control"
+                            id="province"
+                            v-model="province"
+                          />
+                        </div>
+                        <div class="form-group col-md-4">
+                          <label for="postcode">Código postal</label>
+                          <input
+                            type="text"
+                            class="form-control"
+                            placeholder="99900"
+                            id="postcode"
+                            v-model="postcode"
+                          />
+                        </div>
+                      </div>
+
+                      <div class="row">
+                        <div class="form-group col-md-4">
+                          <label for="phone">Numero de telefono</label>
+                          <input
+                            type="text"
+                            placeholder="+5233445555"
+                            class="form-control"
+                            id="phone"
+                            v-model="phone"
+                          />
+                        </div>
+                        <div class="form-group col-md-4">
+                          <label for="membership">Membership</label>
+                          <select
+                            class="form-control p-0"
+                            id="membership"
+                            v-model="selectedMembership"
+                            @change="selectMembership"
+                          >
+                            <option></option>
+                            <option v-for="membership in memberships" :value="membership">
+                              {{ membership.name }}
+                            </option>
+                          </select>
+                        </div>
+
+                        <div class="form-group col-md-4">
+                          <label for="income">income</label>
+                          <input
+                            type="date"
+                            class="form-control text-right"
+                            id="income"
+                            v-model="income"
+                          />
+                          <!-- <span class="bar"></span> -->
+                        </div>
+                      </div>
+                    </form>
+                    <!--   </div>
+                </div> -->
+                  </div>
+                </div>
+                <!-- form -->
+
+                <div class="modal-footer">
+                  <button
+                    type="button"
+                    @click="updateCustomer"
+                    class="btn btn-primary fas fa-save"
+                  >
+                    Save
+                  </button>
+
+                  <button
+                    @click="closeModal()"
+                    type="button"
+                    class="btn btn-danger"
+                    data-dismiss="modal"
+                  >
+                    Close
+                  </button>
+                </div>
+              </div>
+              <!-- /.modal-content -->
+            </div>
+            <!-- /.modal-dialog -->
+          </div>
+        </template>
+      </div>
+    </template>
+    <template v-if="template === 1">
+      <button type="btn " class="btn-success"  @click="backToList">
+        <i class="far fa-arrow-alt-circle-left"></i> Volver a la lista
+      </button>
+      <div class="row">
+        <!-- Column -->
+        <div class="col-lg-12">
+          <div class="card">
+            <div class="card-body">
+              <!-- <h3 class="card-title">Detalles</h3>
+              <h6 class="card-subtitle">{{ customerInfo.name }}</h6> -->
+              <div class="row">
+                <div class="col-lg-3 col-md-3 col-sm-6">
+                  <div class="white-box text-center">
+                    <img
+                      src="https://placekitten.com/300/300"
+                      class="img-fluid rounded-circle shadow-lg p-2"
+                    />
+                  </div>
+                </div>
+                <div class="col-lg-9 col-md-9 col-sm-6">
+                  <!-- <h4 class="box-title mt-5">Product description</h4> -->
+                  <div class="table-responsive">
+                    <table class="table">
+                      <tbody>
+                        <tr>
+                          <th width="390">Nombre</th>
+                          <td>{{ customerInfo.name }}</td>
+                        </tr>
+                        <tr>
+                          <th width="390">Apellidos</th>
+                          <td>{{ customerInfo.lastname }}</td>
+                        </tr>
+                        <tr>
+                          <th width="390">Codigo</th>
+                          <td>{{ customerInfo.code }}</td>
+                        </tr>
+                        <tr>
+                          <th width="390">Fecha de ingreso</th>
+                          <td>{{ customerInfo.income }}</td>
+                        </tr>
+                        <tr>
+                          <th width="390">Direccion</th>
+                          <td>{{ customerInfo.province }}</td>
+                        </tr>
+                        <tr>
+                          <th width="390">Estado</th>
+                          <td>{{ customerInfo.address }}</td>
+                        </tr>
+                        <tr>
+                          <th width="390">Codigo postal</th>
+                          <td>{{ customerInfo.postcode }}</td>
+                        </tr>
+                        <tr>
+                          <th width="390">Membresia</th>
+                          <td>
+                            {{ customerInfo.membership.name }} |
+                            {{ customerInfo.membership.price }}
                           </td>
                         </tr>
                       </tbody>
-                      <tfoot>
-                        <tr></tr>
-                        <tr v-for="(customer, index) in customers" v-if="index < 1">
-                          <th v-for="(value, key, cIndex) in customer">{{ key }}</th>
-                          <th></th>
-                        </tr>
-                      </tfoot>
                     </table>
                   </div>
                 </div>
-                <div class="row">
-                  <div class="col-sm-12 col-md-5">
-                    <div
-                      class="dataTables_info"
-                      id="col_render_info"
-                      role="status"
-                      aria-live="polite"
-                    >
-                      Showing 1 to 10 of 57 entries
-                    </div>
-                  </div>
-                  <div class="col-sm-12 col-md-7">
-                    <div
-                      class="dataTables_paginate paging_simple_numbers"
-                      id="col_render_paginate"
-                    >
-                      <nav>
-                        <ul class="pagination">
-                          <li class="page-item" v-if="pagination.current_page > 1">
-                            <a
-                              class="page-link"
-                              href="#"
-                              @click.prevent="
-                                cambiarPagina(
-                                  pagination.current_page - 1,
-                                  buscar,
-                                  criterio
-                                )
-                              "
-                              >Ant</a
-                            >
-                          </li>
-                          <li
-                            class="page-item"
-                            v-for="page in pagesNumber"
-                            :key="page"
-                            :class="[page == isActived ? 'active' : '']"
+                <div class="col-lg-12 col-md-12 col-sm-12">
+                  <!-- <h3 class="box-title mt-5">General Info</h3> -->
+
+                  <!-- Here we go -->
+                  <div class="card">
+                    <div class="card-body">
+                      <!-- <h4 class="card-title mb-3">Default Tabs</h4> -->
+                      <ul class="nav nav-tabs mb-3">
+                        <li class="nav-item">
+                          <a
+                            href="#home"
+                            data-toggle="tab"
+                            aria-expanded="false"
+                            class="nav-link active"
                           >
-                            <a
-                              class="page-link"
-                              href="#"
-                              @click.prevent="cambiarPagina(page, buscar, criterio)"
-                              v-text="page"
-                            ></a>
-                          </li>
-                          <li
-                            class="page-item"
-                            v-if="pagination.current_page < pagination.last_page"
+                            <i class="mdi mdi-cash-multiple d-lg-none d-block mr-1"></i>
+                            <span class="d-none d-lg-block">Pagos</span>
+                          </a>
+                        </li>
+                        <li class="nav-item">
+                          <a
+                            href="#profile"
+                            data-toggle="tab"
+                            aria-expanded="true"
+                            class="nav-link"
                           >
-                            <a
-                              class="page-link"
-                              href="#"
-                              @click.prevent="
-                                cambiarPagina(
-                                  pagination.current_page + 1,
-                                  buscar,
-                                  criterio
-                                )
-                              "
-                              >Sig</a
-                            >
-                          </li>
-                        </ul>
-                      </nav>
+                            <i class="mdi mdi-login-variant d-lg-none d-block mr-1"></i>
+                            <span class="d-none d-lg-block">Asistencias</span>
+                          </a>
+                        </li>
+                        <!--  <li class="nav-item">
+                                        <a href="#settings" data-toggle="tab" aria-expanded="false" class="nav-link">
+                                            <i class="mdi mdi-settings-outline d-lg-none d-block mr-1"></i>
+                                            <span class="d-none d-lg-block">Settings</span>
+                                        </a>
+                                    </li> -->
+                      </ul>
+
+                      <div class="tab-content">
+                        <div class="tab-pane active" id="home">
+                          <div class="table-responsive">
+                            <table class="table">
+                              <thead>
+                                <tr>
+                                  <th>Dia de pago</th>
+                                  <!-- <th>Monto</th> -->
+                                  <th>Membresia</th>
+                                  <th>Expira el :</th>
+                                </tr>
+                              </thead>
+                              <tbody>
+                                <tr v-for="payment in customerInfo.payments">
+                                  <td>{{ payment.paid_at }}</td>
+                                  <!-- <td>{{ payment.amount }}</td> -->
+                                  <td>
+                                    {{ payment.membership.name }}|
+                                    {{ payment.membership.price }}|
+                                    {{ payment.membership.period }}
+                                    dias
+                                  </td>
+                                  <td>{{ payment.expires_at }}</td>
+                                </tr>
+                              </tbody>
+                            </table>
+                          </div>
+                        </div>
+                        <div class="tab-pane" id="profile">
+                          <div class="table-responsive">
+                            <table class="table">
+                              <thead>
+                                <tr>
+                                  <th>Fecha</th>
+                                  <th>Sucursal</th>
+                                </tr>
+                              </thead>
+                              <tbody>
+                                <tr v-for="asistance in customerInfo.asistances">
+                                  <td>{{ asistance.input }}</td>
+                                  <td>
+                                    {{ asistance.branch.division }} |
+                                    {{ asistance.branch.location }}
+                                  </td>
+                                </tr>
+                              </tbody>
+                            </table>
+                          </div>
+                        </div>
+                      </div>
                     </div>
+                    <!-- end card-body-->
                   </div>
+                  <!-- accordions -->
                 </div>
               </div>
             </div>
           </div>
         </div>
+        <!-- Column -->
       </div>
-      <template v-if="actionType == 1 || actionType == 2">
-        <div
-          class="modal fade"
-          tabindex="-1"
-          :class="{ mostrar: modal }"
-          role="dialog"
-          aria-labelledby="myModalLabel"
-          style="display: none; overflow-y: auto"
-          aria-hidden="true"
-        >
-          <div
-            class="modal-dialog modal-primary modal-lg"
-            style="padding-top: 55px"
-            role="document"
-          >
-            <div class="modal-content">
-              <div class="modal-header">
-                <h1>{{ actionType }}</h1>
-                <h4 class="modal-title" v-text="modalTitle"></h4>
-                <button
-                  type="button"
-                  class="close"
-                  data-dismiss="modal"
-                  @click="closeModal()"
-                  aria-label="Close"
-                >
-                  <span aria-hidden="true">×</span>
-                </button>
-              </div>
-              <div class="modal-body">
-                <div class="flex flex-wrap -m-2">
-                  <form class="">
-                    <div class="form-group mb-5">
-                      <label for="name">name</label>
-                      <input type="text" class="form-control" id="name" v-model="name" />
-                      <!--    <span class="bar"></span> -->
-                    </div>
-                    <div class="form-group mb-5">
-                      <label for="code">code</label>
-                      <input type="text" class="form-control" id="code" v-model="code" />
-                      <!-- <span class="bar"></span> -->
-                    </div>
-                    <div class="form-group mb-5">
-                      <label for="income">income</label>
-                      <input
-                        type="date"
-                        class="form-control text-right"
-                        id="income"
-                        v-model="income"
-                      />
-                      <!-- <span class="bar"></span> -->
-                    </div>
-                    <div class="form-group mb-5">
-                      <label for="membership">Membership</label>
-                      <select
-                        class="form-control p-0"
-                        id="membership"
-                        v-model="selectedMembership"
-                        @change="selectMembership"
-                      >
-                        <option></option>
-                        <option v-for="membership in memberships" :value="membership">
-                          {{ membership.name }}
-                        </option>
-                      </select>
-                      <!--  <label
-                      for=""
-                      class="border border-danger rounded"
-                      v-if="actionType === 2"
-                      >{{ selectedMembership }}</label
-                    > -->
-                      <!-- <span class="bar"></span> -->
-                    </div>
-                  </form>
-                  <!--   </div>
-                </div> -->
-                </div>
-              </div>
-              <!-- form -->
-
-              <div class="modal-footer">
-                <button
-                  type="button"
-                  @click="updateCustomer"
-                  class="btn btn-primary fas fa-save"
-                >
-                  <!-- @click="actionType == 2 ? updateCustomer : saveCustomer" -->
-                  Save
-                </button>
-
-                <button
-                  @click="closeModal()"
-                  type="button"
-                  class="btn btn-danger"
-                  data-dismiss="modal"
-                >
-                  Close
-                </button>
-              </div>
-            </div>
-            <!-- /.modal-content -->
-          </div>
-          <!-- /.modal-dialog -->
-        </div>
-      </template>
-    </div>
+    </template>
   </div>
 </template>
 <script>
@@ -353,17 +569,26 @@ export default {
       loading: false,
       customers: [],
       user: {},
+      template: 0,
       memberships: [],
       modal: "",
       modalTitle: "",
       actionType: 0,
       errors: null,
-      name: null,
-      code: null,
-      income: null,
-      membership: null,
+      customer: {
+        name: null,
+        lastname: null,
+        address: null,
+        province: null,
+        postcode: null,
+        phone: null,
+        code: null,
+        income: null,
+        membership: null,
+        customer_id: null,
+      },
+
       selectedMembership: null,
-      customer_id: null,
 
       pagination: {
         total: 0,
@@ -379,6 +604,18 @@ export default {
 
       showCustomers: 10,
       criterions: ["name", "code", "income"],
+      customerInfo: {
+        name: null,
+        lastname: null,
+        code: null,
+        income: null,
+        address: null,
+        province: null,
+        postcode: null,
+        phone: null,
+        membership: null,
+        id: null,
+      },
     };
   },
 
@@ -417,6 +654,7 @@ export default {
     getCustomers(page, buscar, criterio) {
       console.log("getted");
       let me = this;
+      me.template = 0;
       let url = "customers?page=" + page + "&buscar=" + buscar + "&criterio=" + criterio;
       axios
         .get(url)
@@ -463,10 +701,15 @@ export default {
     saveCustomer() {
       let me = this;
       let request = {
-        name: me.name,
-        code: me.name,
-        income: me.income,
-        membership: me.membership,
+        name: me.customer.name,
+        lastname: me.customer.lastname,
+        code: me.customer.name,
+        income: me.customer.income,
+        address: me.customer.address,
+        province: me.customer.province,
+        postcode: me.customer.postcode,
+        phone: me.customer.phone,
+        membership: me.customer.membership,
       };
       axios
         .post("customers/store", request)
@@ -482,11 +725,16 @@ export default {
     updateCustomer() {
       let me = this;
       let request = {
-        name: me.name,
-        code: me.name,
-        income: me.income,
-        membership: me.membership,
-        id: me.customer_id,
+        name: me.customer.name,
+        lastname: me.customer.lastname,
+        code: me.customer.name,
+        income: me.customer.income,
+        address: me.customer.address,
+        province: me.customer.province,
+        postcode: me.customer.postcode,
+        phone: me.customer.phone,
+        membership: me.customer.membership,
+        id: me.customer.customer_id,
       };
       axios
         .put("customers/update/", request)
@@ -524,7 +772,7 @@ export default {
           switch (action) {
             case "store": {
               this.modal = 1;
-              this.modalTitle = "New customer";
+              this.modalTitle = "Crear nuevo cliente";
               this.actionType = 1;
               this.name = "";
               this.code = "";
@@ -539,9 +787,14 @@ export default {
                 if (m.name === data.membership) mem = m;
               });
               this.modal = 1;
-              this.modalTitle = "Update customer";
+              this.modalTitle = "Actualizar cliente";
               this.actionType = 2;
               this.name = data.name;
+              this.lastname = data.lastname;
+              this.address = data.address;
+              this.province = data.province;
+              this.postcode = data.postcode;
+              this.phone = data.phone;
               this.code = data.code;
               this.income = new Date(data.income).toISOString().slice(0, 10);
               this.selectedMembership = mem;
@@ -551,6 +804,37 @@ export default {
           }
         }
       }
+    },
+
+    showCustomer(customer) {
+      console.log(customer);
+      let me = this;
+      me.template = 1;
+      axios
+        .get("customers/" + customer)
+        .then((response) => {
+          console.log(response);
+          let cus = response.data;
+          console.log(cus);
+          me.customerInfo.name = cus.name;
+          me.customerInfo.lastname = cus.lastname;
+          me.customerInfo.code = cus.code;
+          me.customerInfo.income = cus.income;
+          me.customerInfo.address = cus.address;
+          me.customerInfo.province = cus.province;
+          me.customerInfo.postcode = cus.postcode;
+          me.customerInfo.phone = cus.phone;
+          me.customerInfo.membership = cus.membership;
+          me.customerInfo.payments = cus.payments;
+          me.customerInfo.asistances = cus.asistances;
+          me.customerInfo.id = cus.id;
+
+          /*  return;
+          me.customerInfo = response; */
+        })
+        .catch((error) => {
+          console.log(error);
+        });
     },
 
     deleteCustomer(customer) {
@@ -605,6 +889,12 @@ export default {
       me.pagination.current_page = page;
       //Envia la petición para visualizar la data de esa página
       me.getCustomers(page, buscar, criterio);
+    },
+
+    backToList() {
+      let me = this;
+      me.template = 0;
+      me.getCustomers(1, this.buscar, this.criterio);
     },
   },
 

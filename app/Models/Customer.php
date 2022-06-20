@@ -17,11 +17,16 @@ class Customer extends Model
     }
     public function membership()
     {
-        return $this->belongsTo(Membership::class)->select('id', 'name');
+        return $this->belongsTo(Membership::class);
+        // return $this->belongsTo(Membership::class)->select('id', 'name');
     }
     public function payments()
     {
         return $this->hasMany(Payment::class);
+    }
+    public function asistances()
+    {
+        return $this->hasMany(Assistance::class);
     }
     //Scopes
     public function scopeCriterion($query, $criteria, $input)

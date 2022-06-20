@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\Branch;
 use App\Http\Requests\StoreBranchRequest;
 use App\Http\Requests\UpdateBranchRequest;
+use Exception;
 use Illuminate\Support\Facades\Auth;
 
 class BranchController extends Controller
@@ -16,9 +17,14 @@ class BranchController extends Controller
      */
     public function index()
     {
-        $user = Auth::user();
-        $branches = Branch::With('company')->get();
-        return response()->json($branches);
+        try {
+            $user = Auth::user();
+            $branches = Branch::With('company')->get();
+            return response()->json($branches);
+        } catch (Exception $e) {
+            $c = $this;
+            return $this->catchEx($e->getMessage(), $c,  __FUNCTION__);
+        }
 
         // return Branch::all();
     }
