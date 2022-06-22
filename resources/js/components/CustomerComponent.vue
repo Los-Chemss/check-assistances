@@ -19,7 +19,7 @@
                 class="btn btn-primary btn-lg fas fa-edit"
                 @click="openModal('customers', 'store')"
               >
-               Nuevo cliente
+                Nuevo cliente
               </button>
             </div>
             <div class="card-body">
@@ -397,7 +397,7 @@
       </div>
     </template>
     <template v-if="template === 1">
-      <button type="btn " class="btn-success"  @click="backToList">
+      <button type="btn " class="btn-success" @click="backToList">
         <i class="far fa-arrow-alt-circle-left"></i> Volver a la lista
       </button>
       <div class="row">
@@ -585,7 +585,7 @@ export default {
         code: null,
         income: null,
         membership: null,
-        customer_id: null,
+        id: null,
       },
 
       selectedMembership: null,
@@ -734,7 +734,7 @@ export default {
         postcode: me.customer.postcode,
         phone: me.customer.phone,
         membership: me.customer.membership,
-        id: me.customer.customer_id,
+        id: me.customer.id,
       };
       axios
         .put("customers/update/", request)
@@ -798,7 +798,7 @@ export default {
               this.code = data.code;
               this.income = new Date(data.income).toISOString().slice(0, 10);
               this.selectedMembership = mem;
-              this.customer_id = data.id;
+              this.customer.id = data.id;
               break;
             }
           }

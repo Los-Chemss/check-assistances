@@ -123,10 +123,19 @@ class MembershipController extends Controller
      * @param  \App\Models\Membership  $membership
      * @return \Illuminate\Http\Response
      */
-    public function update(UpdateMembershipRequest $request, Membership $membership)
+    public function update(UpdateMembershipRequest $request/* , Membership $membership */)
     {
-        $membership->update($request->all());
-        return $membership;
+        if (isset($request)) {
+            $membership = Membership::where('id', $request->id)->first();
+            foreach ($request->all() as $key => $val) {
+                if ($membership->$key) {
+                    $membership->$key = $val;
+                }
+            }
+            $membership->save();
+            return response()->json(200);
+        }
+        return 200;
     }
 
     /**
@@ -135,8 +144,10 @@ class MembershipController extends Controller
      * @param  \App\Models\Membership  $membership
      * @return \Illuminate\Http\Response
      */
-    public function destroy(Membership $membership)
+    public function destroy($id)
     {
-        return $membership->delete();
+        $membership = Membership::where('id', $id)->first();
+        $membership->delete();
+        return 200;
     }
 }

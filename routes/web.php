@@ -70,6 +70,7 @@ Route::middleware(['auth'])->group(function () {
     Route::get('memberships',  [MembershipController::class, 'index']);
     Route::get('select-memberships',  [MembershipController::class, 'select']);
     Route::post('memberships',  [MembershipController::class, 'store']);
+    Route::put('memberships/update',  [MembershipController::class, 'update']);
     Route::post('memberships/{id}/delete',  [MembershipController::class, 'destroy']);
 
     /*   Route::resource('payments', PaymentController::class);

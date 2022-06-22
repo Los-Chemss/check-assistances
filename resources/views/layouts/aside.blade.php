@@ -25,17 +25,19 @@
                             <li @click="menu = 5" class="sidebar-item">
                                 <a href="#" class="sidebar-link p-0">
                                     <i class="mdi mdi-adjust"></i>
-                                    <span class="hide-menu"> My Profile </span>
+                                    <span class="hide-menu">Perfil </span>
                                 </a>
                             </li>
 
                             <li class="sidebar-item">
                                 <form method="POST" action="{{ route('logout') }}">
                                     @csrf
-                                    <a class="sidebar-link p-0" href="route('logout')" onclick="event.preventDefault();
-                                this.closest('form').submit();" aria-expanded="false">
+                                    <a class="sidebar-link p-0" href="route('logout')"
+                                        onclick="event.preventDefault();
+                                this.closest('form').submit();"
+                                        aria-expanded="false">
                                         <i class="mdi mdi-adjust"></i>
-                                        <span class="hide-menu"> Logout </span>
+                                        <span class="hide-menu"> Cerrar sesion </span>
                                     </a>
                                 </form>
                             </li>
@@ -47,42 +49,45 @@
                     <li @click="menu = 0" class="sidebar-item"> <a href="#"
                             class="sidebar-link waves-effect waves-dark sidebar-link" aria-expanded="false"><i
                                 data-feather="home" class="feather-icon"></i>
-                            <span class="hide-menu">Home</span></a>
+                            <span class="hide-menu">Check in </span></a>
                     </li>
                     <li @click="menu = 1" class="sidebar-item"> <a href="#"
                             class="sidebar-link waves-effect waves-dark sidebar-link" aria-expanded="false">
                             <i data-feather="users" class="feather-icon"></i>
-                            <span class="hide-menu">Customers</span></a>
+                            <span class="hide-menu">Clientes</span></a>
                     </li>
                     <li @click="menu = 2" class="sidebar-item"> <a
                             class="sidebar-link waves-effect waves-dark sidebar-link" aria-expanded="false">
                             <i data-feather="users" class="feather-icon"></i>
-                            <span class="hide-menu">Payments</span></a>
+                            <span class="hide-menu">Pagos</span></a>
                     </li>
                     <li @click="menu = 3" class="sidebar-item"> <a
-                            class="sidebar-link waves-effect waves-dark sidebar-link" href="#" aria-expanded="false">
+                            class="sidebar-link waves-effect waves-dark sidebar-link" href="#"
+                            aria-expanded="false">
                             <i data-feather="users" class="feather-icon"></i>
-                            <span class="hide-menu">Assistances</span></a>
+                            <span class="hide-menu">Asistencias</span></a>
                     </li>
                     <li @click="menu = 4" class="sidebar-item"> <a
-                            class="sidebar-link waves-effect waves-dark sidebar-link" href="#" aria-expanded="false">
+                            class="sidebar-link waves-effect waves-dark sidebar-link" href="#"
+                            aria-expanded="false">
                             <i data-feather="users" class="feather-icon"></i>
-                            <span class="hide-menu">Membership</span></a>
+                            <span class="hide-menu">Membresias</span></a>
                     </li>
                     <li @click="menu = 6" class="sidebar-item"> <a
-                            class="sidebar-link waves-effect waves-dark sidebar-link" href="#" aria-expanded="false">
+                            class="sidebar-link waves-effect waves-dark sidebar-link" href="#"
+                            aria-expanded="false">
                             <i data-feather="users" class="feather-icon"></i>
-                            <span class="hide-menu">Users</span></a>
+                            <span class="hide-menu">Usuarios</span></a>
                     </li>
-
-
                     <li class="sidebar-item">
                         <form method="POST" action="{{ route('logout') }}">
                             @csrf
-                            <a class="sidebar-link waves-effect waves-dark sidebar-link" href="route('logout')" onclick="event.preventDefault();
-                         this.closest('form').submit();" aria-expanded="false">
+                            <a class="sidebar-link waves-effect waves-dark sidebar-link" href="route('logout')"
+                                onclick="event.preventDefault();
+                         this.closest('form').submit();"
+                                aria-expanded="false">
                                 <i data-feather="log-out" class="feather-icon"></i>
-                                <span class="hide-menu"> Log Out</span>
+                                <span class="hide-menu"> Cerrar sesion</span>
                             </a>
                         </form>
                     </li>

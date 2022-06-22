@@ -33,12 +33,10 @@ class CustomerController extends Controller
     public function index(Request $request)
     {
         try {
-
             $buscar = $request->buscar;
             $criterio = $request->criterio;
 
             $user = Auth::user() ? Auth::user() : auth('sanctum')->user();
-            // return $user;
             if (!$user) return response(null, 404);
 
             //
@@ -199,7 +197,16 @@ class CustomerController extends Controller
      */
     public function update(UpdateCustomerRequest $request, Customer $customer)
     {
-        $customer->update($request->all());
+        if (isset($request)) {
+            foreach ($request->all() as $key => $val) {
+                if ($customer->$key) {
+                    $customer->$key = $val;
+                }
+            }
+            $customer->save();
+            return response()->json(200);
+        }
+        return 200;
         return $customer;
     }
 

@@ -3448,7 +3448,7 @@ __webpack_require__.r(__webpack_exports__);
         code: null,
         income: null,
         membership: null,
-        customer_id: null
+        id: null
       },
       selectedMembership: null,
       pagination: {
@@ -3581,7 +3581,7 @@ __webpack_require__.r(__webpack_exports__);
         postcode: me.customer.postcode,
         phone: me.customer.phone,
         membership: me.customer.membership,
-        id: me.customer.customer_id
+        id: me.customer.id
       };
       axios.put("customers/update/", request).then(function (response) {
         console.log(response);
@@ -3645,7 +3645,7 @@ __webpack_require__.r(__webpack_exports__);
                   this.code = data.code;
                   this.income = new Date(data.income).toISOString().slice(0, 10);
                   this.selectedMembership = mem;
-                  this.customer_id = data.id;
+                  this.customer.id = data.id;
                   break;
                 }
             }
@@ -4139,6 +4139,15 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
+//
+//
+//
+//
+//
+//
+//
+//
+//
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = ({
   data: function data() {
     return {
@@ -4149,10 +4158,13 @@ __webpack_require__.r(__webpack_exports__);
       modalTitle: "",
       actionType: 0,
       errors: null,
-      name: null,
-      period: null,
-      price: null,
-      membership: null,
+      membership: {
+        name: null,
+        period: null,
+        price: null,
+        id: null
+      },
+      //   membership: null,
       selectedMembership: null,
       pagination: {
         total: 0,
@@ -4271,6 +4283,34 @@ __webpack_require__.r(__webpack_exports__);
       });
       this.closeModal();
     },
+    updateMembership: function updateMembership() {
+      var me = this;
+      var request = {
+        name: me.membership.name,
+        price: me.membership.price,
+        period: me.membership.period,
+        id: me.membership.id
+      };
+      axios.put("memberships/update", request).then(function (response) {
+        console.log(response);
+        var message = "Se ha actualizado un  plan de membresia";
+        Swal.fire({
+          type: "success",
+          title: "Actualizacion  de membresia satisfactorio",
+          text: message,
+          timer: 8000
+        });
+      })["catch"](function (error) {
+        Swal.fire({
+          type: "error",
+          title: "No se pudo actualizar el registro",
+          text: "Malio merga",
+          timer: 3000
+        });
+        console.table(error);
+      });
+      this.closeModal();
+    },
     selectMembership: function selectMembership(event) {
       var newVal = null;
 
@@ -4286,7 +4326,8 @@ __webpack_require__.r(__webpack_exports__);
     closeModal: function closeModal() {
       this.modal = 0;
       this.title = "";
-      this.errors = {}; //   this.userFiles();//reload component
+      this.errors = {};
+      this.listMemberships(1, this.buscar, this.criterio); //   this.userFiles();//reload component
     },
     openModal: function openModal(model, action) {
       var data = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : [];
@@ -4309,13 +4350,14 @@ __webpack_require__.r(__webpack_exports__);
               case "update":
                 {
                   console.log(data);
+                  console.log(this.membership);
                   this.modal = 1;
                   this.modalTitle = "Update membership";
                   this.actionType = 2;
-                  this.name = data.name;
-                  this.price = data.price;
-                  this.period = data.period;
-                  this.membership_id = data.id;
+                  this.membership.name = data.name;
+                  this.membership.price = data.price;
+                  this.membership.period = data.period;
+                  this.membership.id = data.id;
                   break;
                 }
             }
@@ -25979,7 +26021,7 @@ var render = function () {
                               },
                               [
                                 _vm._v(
-                                  "\n             Nuevo cliente\n            "
+                                  "\n              Nuevo cliente\n            "
                                 ),
                               ]
                             ),
@@ -28578,8 +28620,8 @@ var render = function () {
                                       {
                                         name: "model",
                                         rawName: "v-model",
-                                        value: _vm.name,
-                                        expression: "name",
+                                        value: _vm.membership.name,
+                                        expression: "membership.name",
                                       },
                                     ],
                                     staticClass: "form-control",
@@ -28588,13 +28630,17 @@ var render = function () {
                                       id: "name",
                                       placeholder: "trimestral",
                                     },
-                                    domProps: { value: _vm.name },
+                                    domProps: { value: _vm.membership.name },
                                     on: {
                                       input: function ($event) {
                                         if ($event.target.composing) {
                                           return
                                         }
-                                        _vm.name = $event.target.value
+                                        _vm.$set(
+                                          _vm.membership,
+                                          "name",
+                                          $event.target.value
+                                        )
                                       },
                                     },
                                   }),
@@ -28610,19 +28656,23 @@ var render = function () {
                                       {
                                         name: "model",
                                         rawName: "v-model",
-                                        value: _vm.price,
-                                        expression: "price",
+                                        value: _vm.membership.price,
+                                        expression: "membership.price",
                                       },
                                     ],
                                     staticClass: "form-control",
                                     attrs: { type: "number", id: "price" },
-                                    domProps: { value: _vm.price },
+                                    domProps: { value: _vm.membership.price },
                                     on: {
                                       input: function ($event) {
                                         if ($event.target.composing) {
                                           return
                                         }
-                                        _vm.price = $event.target.value
+                                        _vm.$set(
+                                          _vm.membership,
+                                          "price",
+                                          $event.target.value
+                                        )
                                       },
                                     },
                                   }),
@@ -28638,8 +28688,8 @@ var render = function () {
                                       {
                                         name: "model",
                                         rawName: "v-model",
-                                        value: _vm.period,
-                                        expression: "period",
+                                        value: _vm.membership.period,
+                                        expression: "membership.period",
                                       },
                                     ],
                                     staticClass: "form-control text-right",
@@ -28648,13 +28698,17 @@ var render = function () {
                                       id: "period",
                                       placeholder: "90",
                                     },
-                                    domProps: { value: _vm.period },
+                                    domProps: { value: _vm.membership.period },
                                     on: {
                                       input: function ($event) {
                                         if ($event.target.composing) {
                                           return
                                         }
-                                        _vm.period = $event.target.value
+                                        _vm.$set(
+                                          _vm.membership,
+                                          "period",
+                                          $event.target.value
+                                        )
                                       },
                                     },
                                   }),
@@ -28664,15 +28718,33 @@ var render = function () {
                           ]),
                           _vm._v(" "),
                           _c("div", { staticClass: "modal-footer" }, [
-                            _c(
-                              "button",
-                              {
-                                staticClass: "btn btn-primary fas fa-save",
-                                attrs: { type: "button" },
-                                on: { click: _vm.saveMembership },
-                              },
-                              [_vm._v("\n              Save\n            ")]
-                            ),
+                            _vm.actionType === 1
+                              ? _c(
+                                  "button",
+                                  {
+                                    staticClass: "btn btn-primary fas fa-save",
+                                    attrs: { type: "button" },
+                                    on: { click: _vm.saveMembership },
+                                  },
+                                  [_vm._v("\n              Save\n            ")]
+                                )
+                              : _vm._e(),
+                            _vm._v(" "),
+                            _vm.actionType === 2
+                              ? _c(
+                                  "button",
+                                  {
+                                    staticClass: "btn btn-primary fas fa-save",
+                                    attrs: { type: "button" },
+                                    on: { click: _vm.updateMembership },
+                                  },
+                                  [
+                                    _vm._v(
+                                      "\n              Update\n            "
+                                    ),
+                                  ]
+                                )
+                              : _vm._e(),
                             _vm._v(" "),
                             _c(
                               "button",

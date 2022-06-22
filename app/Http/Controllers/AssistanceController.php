@@ -37,7 +37,7 @@ class AssistanceController extends Controller
                     'id' => $as->id,
                     'nombre' => $as->customer->name,
                     'entrada' => $as->input,
-                    'salida' => $as->output,
+                    // 'salida' => $as->output,
                     'sucursal' => $as->branch->division,
                 ]);
             }

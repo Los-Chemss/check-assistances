@@ -277,7 +277,7 @@
                       class="form-control"
                       id="name"
                       placeholder="trimestral"
-                      v-model="name"
+                      v-model="membership.name"
                     />
                     <!--    <span class="bar"></span> -->
                   </div>
@@ -287,7 +287,7 @@
                       type="number"
                       class="form-control"
                       id="price"
-                      v-model="price"
+                      v-model="membership.price"
                     />
                     <!-- <span class="bar"></span> -->
                   </div>
@@ -298,7 +298,7 @@
                       class="form-control text-right"
                       id="period"
                       placeholder="90"
-                      v-model="period"
+                      v-model="membership.period"
                     />
                     <!-- <span class="bar"></span> -->
                   </div>
@@ -310,11 +310,20 @@
             <!-- form -->
             <div class="modal-footer">
               <button
+                v-if="actionType === 1"
                 type="button"
                 class="btn btn-primary fas fa-save"
                 @click="saveMembership"
               >
                 Save
+              </button>
+              <button
+                v-if="actionType === 2"
+                type="button"
+                class="btn btn-primary fas fa-save"
+                @click="updateMembership"
+              >
+                Update
               </button>
               <button
                 @click="closeModal()"
@@ -344,10 +353,13 @@ export default {
       modalTitle: "",
       actionType: 0,
       errors: null,
-      name: null,
-      period: null,
-      price: null,
-      membership: null,
+      membership: {
+        name: null,
+        period: null,
+        price: null,
+        id: null,
+      },
+      //   membership: null,
       selectedMembership: null,
       pagination: {
         total: 0,
@@ -476,6 +488,38 @@ export default {
       this.closeModal();
     },
 
+    updateMembership() {
+      let me = this;
+      let request = {
+        name: me.membership.name,
+        price: me.membership.price,
+        period: me.membership.period,
+        id: me.membership.id,
+      };
+      axios
+        .put("memberships/update", request)
+        .then((response) => {
+          console.log(response);
+          let message = "Se ha actualizado un  plan de membresia";
+          Swal.fire({
+            type: "success",
+            title: "Actualizacion  de membresia satisfactorio",
+            text: message,
+            timer: 8000,
+          });
+        })
+        .catch((error) => {
+          Swal.fire({
+            type: "error",
+            title: "No se pudo actualizar el registro",
+            text: "Malio merga",
+            timer: 3000,
+          });
+          console.table(error);
+        });
+      this.closeModal();
+    },
+
     selectMembership(event) {
       let newVal = null;
       if ("criterion" in event) {
@@ -493,6 +537,7 @@ export default {
       this.modal = 0;
       this.title = "";
       this.errors = {};
+      this.listMemberships(1, this.buscar, this.criterio);
       //   this.userFiles();//reload component
     },
 
@@ -511,13 +556,14 @@ export default {
             }
             case "update": {
               console.log(data);
+              console.log(this.membership);
               this.modal = 1;
               this.modalTitle = "Update membership";
               this.actionType = 2;
-              this.name = data.name;
-              this.price = data.price;
-              this.period = data.period;
-              this.membership_id = data.id;
+              this.membership.name = data.name;
+              this.membership.price = data.price;
+              this.membership.period = data.period;
+              this.membership.id = data.id;
               break;
             }
           }
@@ -570,6 +616,7 @@ export default {
         }
       });
     },
+
     formatDateToInput(date) {
       var d = new Date(date),
         month = "" + (d.getMonth() + 1),
