@@ -59,7 +59,9 @@ class PaymentController extends Controller
                 ->select(
                     'payments.id as id',
                     'customers.name as customer',
+                    'customers.id as customerId',
                     'memberships.name as membership',
+                    'memberships.id as membershipId',
                     'payments.paid_at as paid_at',
                     'payments.expires_at as expires_at',
                 )
@@ -164,8 +166,27 @@ class PaymentController extends Controller
      */
     public function update(UpdatePaymentRequest $request, Payment $payment)
     {
-        $payment->update($request->all());
-        return $payment;
+        try {
+            $membership = Membership::Where('id', $payment->membership_id)->first();
+            if ($request->membership) {
+                $membership = Membership::where('id', $request->membership['id'])->first();
+                $payment->membership_id = $request->membership['id'];
+            }
+            if ($request->payd_at) {
+                $payment->payd_at = $request->payd_at;
+            }
+            if ($request->membership || $request->payd_at) {
+                $payment->expires_at = date('Y-m-d', strtotime($request->paid_at . "+ $membership->period days"));
+            }
+            if ($request->customer) {
+                $payment->customer_id = $request->customer['id'];
+            }
+            $payment->save();
+            return response('updated', 200);
+        } catch (Exception $e) {
+            $c = $this;
+            return $this->catchEx($e->getMessage(), $c,  __FUNCTION__ . ' | ' . $e->getLine());
+        }
     }
 
     /**
@@ -176,6 +197,11 @@ class PaymentController extends Controller
      */
     public function destroy($id)
     {
-        return Payment::where('id', $id)->delete();
+        try {
+            return Payment::where('id', $id)->first()->delete();
+        } catch (Exception $e) {
+            $c = $this;
+            return $this->catchEx($e->getMessage(), $c,  __FUNCTION__ . ' | ' . $e->getLine());
+        }
     }
 }

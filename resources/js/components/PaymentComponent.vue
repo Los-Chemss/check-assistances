@@ -86,7 +86,10 @@
                     >
                       <thead>
                         <tr v-for="(payment, index) in payments" v-if="index < 1">
-                          <th v-for="(value, key, cIndex) in payment">
+                          <th
+                            v-for="(value, key, cIndex) in payment"
+                            v-if="key != 'customerId' || key != 'embershipId'"
+                          >
                             {{ key }}
                           </th>
                           <th></th>
@@ -97,7 +100,11 @@
                           v-for="(payment, index) in payments"
                           v-if="index <= pagination.per_page"
                         >
-                          <td v-for="(value, key, cIndex) in payment" max-height="5px">
+                          <td
+                            v-for="(value, key, cIndex) in payment"
+                            max-height="5px"
+                            v-if="key != 'customerId' || key != 'embershipId'"
+                          >
                             {{ value }}
                           </td>
                           <td>
@@ -122,7 +129,12 @@
                       <tfoot>
                         <tr></tr>
                         <tr v-for="(payment, index) in payments" v-if="index < 1">
-                          <th v-for="(value, key, cIndex) in payment">{{ key }}</th>
+                          <th
+                            v-for="(value, key, cIndex) in payment"
+                            v-if="key != 'customerId' || key != 'embershipId'"
+                          >
+                            {{ key }}
+                          </th>
                           <th></th>
                         </tr>
                       </tfoot>
@@ -482,21 +494,21 @@ export default {
         .then((response) => {
           let respuesta = response.data;
           console.log(response);
-          let message =
-            "Ha actualizado el pago a  una membresia " +
-            respuesta.membership.name +
-            " con una duracion de " +
-            respuesta.membership.name +
-            " dias. Y expira el " +
-            respuesta.payment.expires_at;
+
           Swal.fire({
             type: "success",
-            title: "Registro  de pago satisfactorio",
-            text: message,
+            title: "Pago actualizado",
+            text: "Pago actualizado exitosamente",
             timer: 8000,
           });
         })
         .catch((error) => {
+          Swal.fire({
+            type: "error",
+            title: "No actualizado",
+            text: "No se pudo guardar cambios :(",
+            timer: 8000,
+          });
           console.table(error);
         });
       this.closeModal();
@@ -532,6 +544,7 @@ export default {
       this.modal = 0;
       this.title = "";
       this.errors = {};
+      this.listPayments(this.pagination.current_page, this.buscar, this.criterio);
     },
 
     async openModal(model, action, data = []) {
@@ -548,21 +561,20 @@ export default {
               break;
             }
             case "update": {
-              console.log(data);
               let mem = null;
               this.memberships.forEach((m) => {
-                console.log(m);
-                if (m.name === data.membership) mem = m;
+                if (m.id === data.membershipId) {
+                  mem = m;
+                }
               });
               let cus = null;
               this.customers.forEach((c) => {
-                console.log(c);
-                if (c.name === data.customer) cus = c;
+                if (c.id === data.customerId) cus = c;
               });
               this.modal = 1;
               this.modalTitle = "Update payment";
               this.actionType = 2;
-              this.paid_at = new Date(data["paid at"]).toISOString().slice(0, 10);
+              this.paid_at = new Date(data["paid_at"]).toISOString().slice(0, 10);
               this.selectedMembership = mem;
               this.selectedCustomer = cus;
               this.payment_id = data.id;
@@ -590,15 +602,26 @@ export default {
         if (result.value) {
           let me = this;
           axios
-            .delete("payments/", payment)
+            .post("payments/" + payment + "/delete")
             .then((response) => {
+              Swal.fire({
+                type: "success",
+                title: "Registro  eliminado con éxito",
+                text: "El pago ha sido eliminado !",
+                timer: 5000,
+              });
               console.log(response);
               me.listPayments(me.page, me.buscar, me.criterio);
             })
             .catch((error) => {
+              Swal.fire({
+                type: "error",
+                title: "No pudo ser eliminado",
+                text: "Verifique si hay datos que dependan de éste",
+                timer: 5000,
+              });
               console.log(error);
             });
-          //
         } else if (
           // Read more about handling dismissals
           result.dismiss === swal.DismissReason.cancel
@@ -606,6 +629,7 @@ export default {
         }
       });
     },
+
     formatDateToInput(date) {
       var d = new Date(date),
         month = "" + (d.getMonth() + 1),
