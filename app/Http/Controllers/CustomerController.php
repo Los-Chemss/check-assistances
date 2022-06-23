@@ -136,6 +136,7 @@ class CustomerController extends Controller
         $company = Company::where('user_id', $user->id)->where('id', $branch->company_id)->first();
         $data = [
             'name' => $request->name,
+            'lastname' => $request->lastname,
             'code' => $request->code,
             'income' => $request->income,
             'company_id' => $company->id,
@@ -197,17 +198,23 @@ class CustomerController extends Controller
      */
     public function update(UpdateCustomerRequest $request, Customer $customer)
     {
-        if (isset($request)) {
-            foreach ($request->all() as $key => $val) {
-                if ($customer->$key) {
-                    $customer->$key = $val;
+        try {
+            if (isset($request)) {
+                foreach ($request->all() as $key => $val) {
+                    return $customer->$key;
+                    if ($customer->$key) {
+                        $customer->$key = $val;
+                    }
                 }
+                $customer->save();
+                return response()->json(200);
             }
-            $customer->save();
-            return response()->json(200);
+            return response('Updated', 200);
+            // return $customer;
+        } catch (Exception $e) {
+            $c = $this;
+            return $this->catchEx($e->getMessage(), $c,  __FUNCTION__ . ' | ' . $e->getLine());
         }
-        return 200;
-        return $customer;
     }
 
     /**

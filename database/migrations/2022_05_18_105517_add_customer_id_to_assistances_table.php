@@ -10,12 +10,12 @@ class AddCustomerIdToAssistancesTable extends Migration
     public function up()
     {
         Schema::table('assistances', function (Blueprint $table) {
-            $company = new Customer();
+            /*    $company = new Customer();
             $company->name = 'Otras';
             $company->code = '0000';
-            $company->save();
+            $company->save(); */
 
-            $table->unsignedBigInteger('customer_id')->default($company->id);
+            $table->unsignedBigInteger('customer_id')->nullable();
             $table->foreign('customer_id')->references('id')->on('customers');
         });
     }

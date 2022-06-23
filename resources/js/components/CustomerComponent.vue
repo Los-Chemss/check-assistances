@@ -268,7 +268,7 @@
                             class="form-control"
                             id="name"
                             placeholder="Homero J."
-                            v-model="name"
+                            v-model="customer.name"
                           />
                           <!--    <span class="bar"></span> -->
                         </div>
@@ -279,7 +279,7 @@
                             type="text"
                             class="form-control"
                             id="lastname"
-                            v-model="lastname"
+                            v-model="customer.lastname"
                           />
                         </div>
                         <div class="form-group col-md-4">
@@ -288,7 +288,7 @@
                             type="text"
                             class="form-control"
                             id="code"
-                            v-model="code"
+                            v-model="customer.code"
                           />
                           <!-- <span class="bar"></span> -->
                         </div>
@@ -301,7 +301,7 @@
                             class="form-control"
                             placeholder="Grove St #800 ST Fierro CA"
                             id="address"
-                            v-model="address"
+                            v-model="customer.address"
                           />
                         </div>
                         <div class="form-group col-md-4">
@@ -311,7 +311,7 @@
                             placeholder="California"
                             class="form-control"
                             id="province"
-                            v-model="province"
+                            v-model="customer.province"
                           />
                         </div>
                         <div class="form-group col-md-4">
@@ -321,7 +321,7 @@
                             class="form-control"
                             placeholder="99900"
                             id="postcode"
-                            v-model="postcode"
+                            v-model="customer.postcode"
                           />
                         </div>
                       </div>
@@ -334,7 +334,7 @@
                             placeholder="+5233445555"
                             class="form-control"
                             id="phone"
-                            v-model="phone"
+                            v-model="customer.phone"
                           />
                         </div>
                         <div class="form-group col-md-4">
@@ -358,7 +358,7 @@
                             type="date"
                             class="form-control text-right"
                             id="income"
-                            v-model="income"
+                            v-model="customer.income"
                           />
                           <!-- <span class="bar"></span> -->
                         </div>
@@ -372,11 +372,20 @@
 
                 <div class="modal-footer">
                   <button
+                    v-if="actionType === 1"
+                    type="button"
+                    @click="saveCustomer"
+                    class="btn btn-primary fas fa-save"
+                  >
+                    Guardar
+                  </button>
+                  <button
+                    v-if="actionType === 2"
                     type="button"
                     @click="updateCustomer"
                     class="btn btn-primary fas fa-save"
                   >
-                    Save
+                    Actualizar
                   </button>
 
                   <button
@@ -385,7 +394,7 @@
                     class="btn btn-danger"
                     data-dismiss="modal"
                   >
-                    Close
+                    Cancelar
                   </button>
                 </div>
               </div>
@@ -703,7 +712,7 @@ export default {
       let request = {
         name: me.customer.name,
         lastname: me.customer.lastname,
-        code: me.customer.name,
+        code: me.customer.code,
         income: me.customer.income,
         address: me.customer.address,
         province: me.customer.province,
@@ -727,17 +736,17 @@ export default {
       let request = {
         name: me.customer.name,
         lastname: me.customer.lastname,
-        code: me.customer.name,
+        code: me.customer.code,
         income: me.customer.income,
         address: me.customer.address,
         province: me.customer.province,
         postcode: me.customer.postcode,
         phone: me.customer.phone,
         membership: me.customer.membership,
-        id: me.customer.id,
+        // id: me.customer.id,
       };
       axios
-        .put("customers/update/", request)
+        .put("customers/" + me.customer.id + "/update/", request)
         .then((response) => {
           console.log(response);
         })
@@ -774,9 +783,14 @@ export default {
               this.modal = 1;
               this.modalTitle = "Crear nuevo cliente";
               this.actionType = 1;
-              this.name = "";
-              this.code = "";
-              this.income = "";
+              this.customer.name = "";
+              this.customer.lastname = "";
+              this.customer.code = "";
+              this.customer.income = "";
+              this.customer.address = "";
+              this.customer.province = "";
+              this.customer.postcode = "";
+              this.customer.phone = "";
               this.selectedMembership = "";
               break;
             }
@@ -789,14 +803,14 @@ export default {
               this.modal = 1;
               this.modalTitle = "Actualizar cliente";
               this.actionType = 2;
-              this.name = data.name;
-              this.lastname = data.lastname;
-              this.address = data.address;
-              this.province = data.province;
-              this.postcode = data.postcode;
-              this.phone = data.phone;
-              this.code = data.code;
-              this.income = new Date(data.income).toISOString().slice(0, 10);
+              this.customer.name = data.name;
+              this.customer.lastname = data.lastname;
+              this.customer.address = data.address;
+              this.customer.province = data.province;
+              this.customer.postcode = data.postcode;
+              this.customer.phone = data.phone;
+              this.customer.code = data.code;
+              this.customer.income = new Date(data.income).toISOString().slice(0, 10);
               this.selectedMembership = mem;
               this.customer.id = data.id;
               break;

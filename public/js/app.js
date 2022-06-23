@@ -3156,6 +3156,36 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
 // https://codepen.io/gau/pen/LjQwGp
 
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = ({
@@ -3184,7 +3214,8 @@ __webpack_require__.r(__webpack_exports__);
       date: "",
       branches: [],
       branch: null,
-      selectedBranch: null
+      selectedBranch: null,
+      fullScreen: 0
     };
   },
   created: function created() {
@@ -3198,7 +3229,9 @@ __webpack_require__.r(__webpack_exports__);
       this.authenticated = false;
     }
   },
-  mounted: function mounted() {},
+  mounted: function mounted() {
+    document.getElementById("code").focus();
+  },
   methods: {
     assistance: function assistance() {
       var me = this;
@@ -3228,20 +3261,53 @@ __webpack_require__.r(__webpack_exports__);
           type: "success",
           title: "Registro  de " + movement + " satisfactorio",
           text: messagge,
-          timer: 4000
+          timer: 4000,
+          target: document.getElementById("checkCard")
         });
       })["catch"](function (error) {
-        console.log(error);
+        console.table(error);
 
         if (error.response.status === 404) {
           Swal.fire({
             type: "error",
             title: "Codigo invalido",
             text: "El codigo es invalido",
-            timer: 4000
+            timer: 4000,
+            target: document.getElementById("checkCard")
           });
         }
       });
+    },
+    openFullscreen: function openFullscreen() {
+      var me = this;
+      var elem = document.getElementById("checkCard");
+      document.getElementById("code").focus();
+      me.fullScreen = 1;
+
+      if (elem.requestFullscreen) {
+        elem.requestFullscreen();
+      } else if (elem.webkitRequestFullscreen) {
+        /* Safari */
+        elem.webkitRequestFullscreen();
+      } else if (elem.msRequestFullscreen) {
+        /* IE11 */
+        elem.msRequestFullscreen();
+      }
+    },
+    closeFullscreen: function closeFullscreen() {
+      var me = this;
+      document.getElementById("code").focus();
+      me.fullScreen = 0;
+
+      if (document.exitFullscreen) {
+        document.exitFullscreen();
+      } else if (document.webkitExitFullscreen) {
+        /* Safari */
+        document.webkitExitFullscreen();
+      } else if (document.msExitFullscreen) {
+        /* IE11 */
+        document.msExitFullscreen();
+      }
     }
   }
 });
@@ -3259,6 +3325,15 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
 /* harmony export */   "default": () => (__WEBPACK_DEFAULT_EXPORT__)
 /* harmony export */ });
+//
+//
+//
+//
+//
+//
+//
+//
+//
 //
 //
 //
@@ -3951,7 +4026,7 @@ __webpack_require__.r(__webpack_exports__);
       var request = {
         name: me.customer.name,
         lastname: me.customer.lastname,
-        code: me.customer.name,
+        code: me.customer.code,
         income: me.customer.income,
         address: me.customer.address,
         province: me.customer.province,
@@ -3971,16 +4046,16 @@ __webpack_require__.r(__webpack_exports__);
       var request = {
         name: me.customer.name,
         lastname: me.customer.lastname,
-        code: me.customer.name,
+        code: me.customer.code,
         income: me.customer.income,
         address: me.customer.address,
         province: me.customer.province,
         postcode: me.customer.postcode,
         phone: me.customer.phone,
-        membership: me.customer.membership,
-        id: me.customer.id
+        membership: me.customer.membership // id: me.customer.id,
+
       };
-      axios.put("customers/update/", request).then(function (response) {
+      axios.put("customers/" + me.customer.id + "/update/", request).then(function (response) {
         console.log(response);
       })["catch"](function (error) {
         console.table(error);
@@ -4016,9 +4091,14 @@ __webpack_require__.r(__webpack_exports__);
                   this.modal = 1;
                   this.modalTitle = "Crear nuevo cliente";
                   this.actionType = 1;
-                  this.name = "";
-                  this.code = "";
-                  this.income = "";
+                  this.customer.name = "";
+                  this.customer.lastname = "";
+                  this.customer.code = "";
+                  this.customer.income = "";
+                  this.customer.address = "";
+                  this.customer.province = "";
+                  this.customer.postcode = "";
+                  this.customer.phone = "";
                   this.selectedMembership = "";
                   break;
                 }
@@ -4033,14 +4113,14 @@ __webpack_require__.r(__webpack_exports__);
                   this.modal = 1;
                   this.modalTitle = "Actualizar cliente";
                   this.actionType = 2;
-                  this.name = data.name;
-                  this.lastname = data.lastname;
-                  this.address = data.address;
-                  this.province = data.province;
-                  this.postcode = data.postcode;
-                  this.phone = data.phone;
-                  this.code = data.code;
-                  this.income = new Date(data.income).toISOString().slice(0, 10);
+                  this.customer.name = data.name;
+                  this.customer.lastname = data.lastname;
+                  this.customer.address = data.address;
+                  this.customer.province = data.province;
+                  this.customer.postcode = data.postcode;
+                  this.customer.phone = data.phone;
+                  this.customer.code = data.code;
+                  this.customer.income = new Date(data.income).toISOString().slice(0, 10);
                   this.selectedMembership = mem;
                   this.customer.id = data.id;
                   break;
@@ -25507,7 +25587,55 @@ var render = function () {
       _c("div", { staticClass: "card" }, [
         _c("div", { staticClass: "card-body" }, [
           _c("div", { staticClass: "row" }, [
-            _c("div", { staticClass: "card" }, [
+            _c("div", { staticClass: "card", attrs: { id: "checkCard" } }, [
+              _c("div", { staticClass: "row" }, [
+                _c("div", { staticClass: "col-md-12 ml4" }, [
+                  _vm.fullScreen === 0
+                    ? _c(
+                        "button",
+                        {
+                          staticClass: "btn btn-secondary float-right m-0",
+                          attrs: {
+                            "data-toggle": "tooltip",
+                            "data-placement": "bottom",
+                            title: "Abrir en pantalla completa",
+                            "data-original-title": "Abrir en pantalla completa",
+                            type: "button",
+                          },
+                          on: {
+                            click: function ($event) {
+                              return _vm.openFullscreen()
+                            },
+                          },
+                        },
+                        [_c("i", { staticClass: "mdi mdi-fullscreen" })]
+                      )
+                    : _vm._e(),
+                  _vm._v(" "),
+                  _vm.fullScreen === 1
+                    ? _c(
+                        "button",
+                        {
+                          staticClass: "btn btn-secondary float-right m-0",
+                          attrs: {
+                            "data-toggle": "tooltip",
+                            "data-placement": "bottom",
+                            title: "Salir de pantalla completa",
+                            "data-original-title": "Salir de pantalla completa",
+                            type: "button",
+                          },
+                          on: {
+                            click: function ($event) {
+                              return _vm.closeFullscreen()
+                            },
+                          },
+                        },
+                        [_c("i", { staticClass: "mdi mdi-fullscreen-exit" })]
+                      )
+                    : _vm._e(),
+                ]),
+              ]),
+              _vm._v(" "),
               _c("div", { staticClass: "card-header", attrs: { id: "aca" } }, [
                 _vm.branch
                   ? _c("h1", { staticClass: "division" }, [
@@ -25553,65 +25681,74 @@ var render = function () {
                         ),
                         _vm._v(" "),
                         _c("form", { staticClass: "mt-3" }, [
-                          _c("div", { staticClass: "input-group mb-3" }, [
-                            _c("input", {
-                              directives: [
-                                {
-                                  name: "model",
-                                  rawName: "v-model",
-                                  value: _vm.code,
-                                  expression: "code",
+                          _c(
+                            "div",
+                            {
+                              staticClass: "input-group mb-3",
+                              attrs: { name: "checkForm" },
+                            },
+                            [
+                              _c("input", {
+                                directives: [
+                                  {
+                                    name: "model",
+                                    rawName: "v-model",
+                                    value: _vm.code,
+                                    expression: "code",
+                                  },
+                                ],
+                                staticClass: "form-control text-center",
+                                attrs: {
+                                  id: "code",
+                                  type: "number",
+                                  placeholder: "1921",
+                                  "aria-label": "",
+                                  "aria-describedby": "basic-addon1",
+                                  minlength: "4",
+                                  maxlength: "4",
+                                  autofocus: "",
+                                  required: "",
                                 },
-                              ],
-                              staticClass: "form-control text-center",
-                              attrs: {
-                                type: "number",
-                                placeholder: "1921",
-                                "aria-label": "",
-                                "aria-describedby": "basic-addon1",
-                                minlength: "4",
-                                maxlength: "4",
-                                required: "",
-                              },
-                              domProps: { value: _vm.code },
-                              on: {
-                                keydown: function ($event) {
-                                  if (
-                                    !$event.type.indexOf("key") &&
-                                    _vm._k(
-                                      $event.keyCode,
-                                      "enter",
-                                      13,
-                                      $event.key,
-                                      "Enter"
-                                    )
-                                  ) {
-                                    return null
-                                  }
-                                  $event.preventDefault()
-                                  return _vm.assistance.apply(null, arguments)
+                                domProps: { value: _vm.code },
+                                on: {
+                                  keydown: function ($event) {
+                                    if (
+                                      !$event.type.indexOf("key") &&
+                                      _vm._k(
+                                        $event.keyCode,
+                                        "enter",
+                                        13,
+                                        $event.key,
+                                        "Enter"
+                                      )
+                                    ) {
+                                      return null
+                                    }
+                                    $event.preventDefault()
+                                    return _vm.assistance.apply(null, arguments)
+                                  },
+                                  input: function ($event) {
+                                    if ($event.target.composing) {
+                                      return
+                                    }
+                                    _vm.code = $event.target.value
+                                  },
                                 },
-                                input: function ($event) {
-                                  if ($event.target.composing) {
-                                    return
-                                  }
-                                  _vm.code = $event.target.value
-                                },
-                              },
-                            }),
-                            _vm._v(" "),
-                            _c("div", { staticClass: "input-group-append" }, [
-                              _c(
-                                "button",
-                                {
-                                  staticClass: "btn btn-info",
-                                  attrs: { type: "button" },
-                                  on: { click: _vm.assistance },
-                                },
-                                [_c("i", { staticClass: "icon-login" })]
-                              ),
-                            ]),
-                          ]),
+                              }),
+                              _vm._v(" "),
+                              _c("div", { staticClass: "input-group-append" }, [
+                                _c(
+                                  "button",
+                                  {
+                                    staticClass: "btn btn-info",
+                                    attrs: { type: "button" },
+                                    on: { click: _vm.assistance },
+                                  },
+                                  [_c("i", { staticClass: "icon-login" })]
+                                ),
+                              ]),
+                            ]
+                          ),
                         ]),
                       ]
                     ),
@@ -26503,8 +26640,10 @@ var render = function () {
                                                           {
                                                             name: "model",
                                                             rawName: "v-model",
-                                                            value: _vm.name,
-                                                            expression: "name",
+                                                            value:
+                                                              _vm.customer.name,
+                                                            expression:
+                                                              "customer.name",
                                                           },
                                                         ],
                                                         staticClass:
@@ -26516,7 +26655,8 @@ var render = function () {
                                                             "Homero J.",
                                                         },
                                                         domProps: {
-                                                          value: _vm.name,
+                                                          value:
+                                                            _vm.customer.name,
                                                         },
                                                         on: {
                                                           input: function (
@@ -26528,8 +26668,12 @@ var render = function () {
                                                             ) {
                                                               return
                                                             }
-                                                            _vm.name =
-                                                              $event.target.value
+                                                            _vm.$set(
+                                                              _vm.customer,
+                                                              "name",
+                                                              $event.target
+                                                                .value
+                                                            )
                                                           },
                                                         },
                                                       }),
@@ -26558,9 +26702,11 @@ var render = function () {
                                                           {
                                                             name: "model",
                                                             rawName: "v-model",
-                                                            value: _vm.lastname,
+                                                            value:
+                                                              _vm.customer
+                                                                .lastname,
                                                             expression:
-                                                              "lastname",
+                                                              "customer.lastname",
                                                           },
                                                         ],
                                                         staticClass:
@@ -26572,7 +26718,9 @@ var render = function () {
                                                           id: "lastname",
                                                         },
                                                         domProps: {
-                                                          value: _vm.lastname,
+                                                          value:
+                                                            _vm.customer
+                                                              .lastname,
                                                         },
                                                         on: {
                                                           input: function (
@@ -26584,8 +26732,12 @@ var render = function () {
                                                             ) {
                                                               return
                                                             }
-                                                            _vm.lastname =
-                                                              $event.target.value
+                                                            _vm.$set(
+                                                              _vm.customer,
+                                                              "lastname",
+                                                              $event.target
+                                                                .value
+                                                            )
                                                           },
                                                         },
                                                       }),
@@ -26614,8 +26766,10 @@ var render = function () {
                                                           {
                                                             name: "model",
                                                             rawName: "v-model",
-                                                            value: _vm.code,
-                                                            expression: "code",
+                                                            value:
+                                                              _vm.customer.code,
+                                                            expression:
+                                                              "customer.code",
                                                           },
                                                         ],
                                                         staticClass:
@@ -26625,7 +26779,8 @@ var render = function () {
                                                           id: "code",
                                                         },
                                                         domProps: {
-                                                          value: _vm.code,
+                                                          value:
+                                                            _vm.customer.code,
                                                         },
                                                         on: {
                                                           input: function (
@@ -26637,8 +26792,12 @@ var render = function () {
                                                             ) {
                                                               return
                                                             }
-                                                            _vm.code =
-                                                              $event.target.value
+                                                            _vm.$set(
+                                                              _vm.customer,
+                                                              "code",
+                                                              $event.target
+                                                                .value
+                                                            )
                                                           },
                                                         },
                                                       }),
@@ -26673,9 +26832,11 @@ var render = function () {
                                                           {
                                                             name: "model",
                                                             rawName: "v-model",
-                                                            value: _vm.address,
+                                                            value:
+                                                              _vm.customer
+                                                                .address,
                                                             expression:
-                                                              "address",
+                                                              "customer.address",
                                                           },
                                                         ],
                                                         staticClass:
@@ -26687,7 +26848,9 @@ var render = function () {
                                                           id: "address",
                                                         },
                                                         domProps: {
-                                                          value: _vm.address,
+                                                          value:
+                                                            _vm.customer
+                                                              .address,
                                                         },
                                                         on: {
                                                           input: function (
@@ -26699,8 +26862,12 @@ var render = function () {
                                                             ) {
                                                               return
                                                             }
-                                                            _vm.address =
-                                                              $event.target.value
+                                                            _vm.$set(
+                                                              _vm.customer,
+                                                              "address",
+                                                              $event.target
+                                                                .value
+                                                            )
                                                           },
                                                         },
                                                       }),
@@ -26729,9 +26896,11 @@ var render = function () {
                                                           {
                                                             name: "model",
                                                             rawName: "v-model",
-                                                            value: _vm.province,
+                                                            value:
+                                                              _vm.customer
+                                                                .province,
                                                             expression:
-                                                              "province",
+                                                              "customer.province",
                                                           },
                                                         ],
                                                         staticClass:
@@ -26743,7 +26912,9 @@ var render = function () {
                                                           id: "province",
                                                         },
                                                         domProps: {
-                                                          value: _vm.province,
+                                                          value:
+                                                            _vm.customer
+                                                              .province,
                                                         },
                                                         on: {
                                                           input: function (
@@ -26755,8 +26926,12 @@ var render = function () {
                                                             ) {
                                                               return
                                                             }
-                                                            _vm.province =
-                                                              $event.target.value
+                                                            _vm.$set(
+                                                              _vm.customer,
+                                                              "province",
+                                                              $event.target
+                                                                .value
+                                                            )
                                                           },
                                                         },
                                                       }),
@@ -26789,9 +26964,11 @@ var render = function () {
                                                           {
                                                             name: "model",
                                                             rawName: "v-model",
-                                                            value: _vm.postcode,
+                                                            value:
+                                                              _vm.customer
+                                                                .postcode,
                                                             expression:
-                                                              "postcode",
+                                                              "customer.postcode",
                                                           },
                                                         ],
                                                         staticClass:
@@ -26802,7 +26979,9 @@ var render = function () {
                                                           id: "postcode",
                                                         },
                                                         domProps: {
-                                                          value: _vm.postcode,
+                                                          value:
+                                                            _vm.customer
+                                                              .postcode,
                                                         },
                                                         on: {
                                                           input: function (
@@ -26814,8 +26993,12 @@ var render = function () {
                                                             ) {
                                                               return
                                                             }
-                                                            _vm.postcode =
-                                                              $event.target.value
+                                                            _vm.$set(
+                                                              _vm.customer,
+                                                              "postcode",
+                                                              $event.target
+                                                                .value
+                                                            )
                                                           },
                                                         },
                                                       }),
@@ -26854,8 +27037,11 @@ var render = function () {
                                                           {
                                                             name: "model",
                                                             rawName: "v-model",
-                                                            value: _vm.phone,
-                                                            expression: "phone",
+                                                            value:
+                                                              _vm.customer
+                                                                .phone,
+                                                            expression:
+                                                              "customer.phone",
                                                           },
                                                         ],
                                                         staticClass:
@@ -26867,7 +27053,8 @@ var render = function () {
                                                           id: "phone",
                                                         },
                                                         domProps: {
-                                                          value: _vm.phone,
+                                                          value:
+                                                            _vm.customer.phone,
                                                         },
                                                         on: {
                                                           input: function (
@@ -26879,8 +27066,12 @@ var render = function () {
                                                             ) {
                                                               return
                                                             }
-                                                            _vm.phone =
-                                                              $event.target.value
+                                                            _vm.$set(
+                                                              _vm.customer,
+                                                              "phone",
+                                                              $event.target
+                                                                .value
+                                                            )
                                                           },
                                                         },
                                                       }),
@@ -27018,9 +27209,11 @@ var render = function () {
                                                           {
                                                             name: "model",
                                                             rawName: "v-model",
-                                                            value: _vm.income,
+                                                            value:
+                                                              _vm.customer
+                                                                .income,
                                                             expression:
-                                                              "income",
+                                                              "customer.income",
                                                           },
                                                         ],
                                                         staticClass:
@@ -27030,7 +27223,8 @@ var render = function () {
                                                           id: "income",
                                                         },
                                                         domProps: {
-                                                          value: _vm.income,
+                                                          value:
+                                                            _vm.customer.income,
                                                         },
                                                         on: {
                                                           input: function (
@@ -27042,8 +27236,12 @@ var render = function () {
                                                             ) {
                                                               return
                                                             }
-                                                            _vm.income =
-                                                              $event.target.value
+                                                            _vm.$set(
+                                                              _vm.customer,
+                                                              "income",
+                                                              $event.target
+                                                                .value
+                                                            )
                                                           },
                                                         },
                                                       }),
@@ -27058,20 +27256,39 @@ var render = function () {
                                     ]),
                                     _vm._v(" "),
                                     _c("div", { staticClass: "modal-footer" }, [
-                                      _c(
-                                        "button",
-                                        {
-                                          staticClass:
-                                            "btn btn-primary fas fa-save",
-                                          attrs: { type: "button" },
-                                          on: { click: _vm.updateCustomer },
-                                        },
-                                        [
-                                          _vm._v(
-                                            "\n                  Save\n                "
-                                          ),
-                                        ]
-                                      ),
+                                      _vm.actionType === 1
+                                        ? _c(
+                                            "button",
+                                            {
+                                              staticClass:
+                                                "btn btn-primary fas fa-save",
+                                              attrs: { type: "button" },
+                                              on: { click: _vm.saveCustomer },
+                                            },
+                                            [
+                                              _vm._v(
+                                                "\n                  Guardar\n                "
+                                              ),
+                                            ]
+                                          )
+                                        : _vm._e(),
+                                      _vm._v(" "),
+                                      _vm.actionType === 2
+                                        ? _c(
+                                            "button",
+                                            {
+                                              staticClass:
+                                                "btn btn-primary fas fa-save",
+                                              attrs: { type: "button" },
+                                              on: { click: _vm.updateCustomer },
+                                            },
+                                            [
+                                              _vm._v(
+                                                "\n                  Actualizar\n                "
+                                              ),
+                                            ]
+                                          )
+                                        : _vm._e(),
                                       _vm._v(" "),
                                       _c(
                                         "button",
@@ -27089,7 +27306,7 @@ var render = function () {
                                         },
                                         [
                                           _vm._v(
-                                            "\n                  Close\n                "
+                                            "\n                  Cancelar\n                "
                                           ),
                                         ]
                                       ),

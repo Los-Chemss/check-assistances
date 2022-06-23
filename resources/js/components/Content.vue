@@ -4,7 +4,35 @@
       <div class="card">
         <div class="card-body">
           <div class="row">
-            <div class="card">
+            <div class="card" id="checkCard">
+              <div class="row">
+                <div class="col-md-12 ml4">
+                  <button
+                    v-if="fullScreen === 0"
+                    @click="openFullscreen()"
+                    data-toggle="tooltip"
+                    data-placement="bottom"
+                    title="Abrir en pantalla completa"
+                    data-original-title="Abrir en pantalla completa"
+                    type="button"
+                    class="btn btn-secondary float-right m-0"
+                  >
+                    <i class="mdi mdi-fullscreen"></i>
+                  </button>
+                  <button
+                    v-if="fullScreen === 1"
+                    @click="closeFullscreen()"
+                    data-toggle="tooltip"
+                    data-placement="bottom"
+                    title="Salir de pantalla completa"
+                    data-original-title="Salir de pantalla completa"
+                    type="button"
+                    class="btn btn-secondary float-right m-0"
+                  >
+                    <i class="mdi mdi-fullscreen-exit"></i>
+                  </button>
+                </div>
+              </div>
               <div class="card-header" id="aca">
                 <h1 v-if="branch" class="division">
                   <p class="division">Division: {{ branch.division }}</p>
@@ -24,9 +52,10 @@
                       Put your code for register input or output
                     </h4>
                     <form class="mt-3">
-                      <div class="input-group mb-3">
+                      <div class="input-group mb-3" name="checkForm">
                         <input
                           class="form-control text-center"
+                          id="code"
                           type="number"
                           v-model="code"
                           placeholder="1921"
@@ -35,6 +64,7 @@
                           minlength="4"
                           maxlength="4"
                           v-on:keydown.enter.prevent="assistance"
+                          autofocus
                           required
                         />
                         <div class="input-group-append">
@@ -85,6 +115,8 @@ export default {
       branches: [],
       branch: null,
       selectedBranch: null,
+
+      fullScreen: 0,
     };
   },
 
@@ -100,7 +132,9 @@ export default {
     }
   },
 
-  mounted() {},
+  mounted() {
+    document.getElementById("code").focus();
+  },
 
   methods: {
     assistance() {
@@ -128,25 +162,58 @@ export default {
             movement = "salida";
             messagge = "Gracias por asistir :) " + customer.name + info;
           }
-
           Swal.fire({
             type: "success",
             title: "Registro  de " + movement + " satisfactorio",
             text: messagge,
             timer: 4000,
+            target: document.getElementById("checkCard"),
           });
         })
         .catch((error) => {
-          console.log(error);
+          console.table(error);
           if (error.response.status === 404) {
             Swal.fire({
               type: "error",
               title: "Codigo invalido",
               text: "El codigo es invalido",
               timer: 4000,
+              target: document.getElementById("checkCard"),
             });
           }
         });
+    },
+
+    openFullscreen() {
+      let me = this;
+      let elem = document.getElementById("checkCard");
+      document.getElementById("code").focus();
+
+      me.fullScreen = 1;
+      if (elem.requestFullscreen) {
+        elem.requestFullscreen();
+      } else if (elem.webkitRequestFullscreen) {
+        /* Safari */
+        elem.webkitRequestFullscreen();
+      } else if (elem.msRequestFullscreen) {
+        /* IE11 */
+        elem.msRequestFullscreen();
+      }
+    },
+
+    closeFullscreen() {
+      let me = this;
+      document.getElementById("code").focus();
+      me.fullScreen = 0;
+      if (document.exitFullscreen) {
+        document.exitFullscreen();
+      } else if (document.webkitExitFullscreen) {
+        /* Safari */
+        document.webkitExitFullscreen();
+      } else if (document.msExitFullscreen) {
+        /* IE11 */
+        document.msExitFullscreen();
+      }
     },
   },
 };
