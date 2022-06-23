@@ -59,8 +59,8 @@
                           criterio == 'paid_at' || criterio == 'expires_at'
                             ? '22/07/2022'
                             : criterio == 'customer'
-                            ? '0123'
-                            : 'Benny Juarez'
+                            ? 'Benny Juarez'
+                            : 'Monthly'
                         "
                       />
                       <div class="input-group-append">

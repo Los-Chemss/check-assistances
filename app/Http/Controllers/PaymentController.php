@@ -27,21 +27,34 @@ class PaymentController extends Controller
             $buscar = $request->buscar;
             $criterio = $request->criterio;
 
+            // return $request;
+
             $user = Auth::user() ? Auth::user() : auth('sanctum')->user();
             if (!$user) return response(null, 404);
-            $payments = Payment::criterion($criterio, $buscar)->with('customer')->with('membership')
-                ->paginate(10); //add pagination
-            $payments = Payment::criterion($criterio, $buscar)->join('customers', function ($j) use ($criterio, $buscar) {
-                $j->on('customers.id', 'payments.customer_id');
-                $j->when($criterio == 'customer', function ($q) use ($criterio, $buscar) {
-                    $q->criterion($criterio, $buscar);
-                });
-            })
+
+
+            $payments = Payment::when(
+                ($criterio == 'paid_at' || $criterio == 'expires_at') && $buscar,
+                function ($q) use ($criterio, $buscar) {
+                    if ($criterio == 'paid_at') {
+                        $q->where('paid_at', 'like', "%$buscar%");
+                    }
+                    if ($criterio == 'expires_at') {
+                        $q->Where('expires_at', 'like', "%$buscar%");
+                    }
+                }
+            )
+                ->join('customers', function ($j) use ($criterio, $buscar) {
+                    $j->on('customers.id', 'payments.customer_id');
+                    if ($criterio === 'customer') {
+                        $j->where('name', 'like', "%$buscar%")->orWhere('code', 'like', "%$buscar%");
+                    }
+                })
                 ->join('memberships', function ($j) use ($criterio, $buscar) {
                     $j->on('memberships.id', 'payments.membership_id');
-                    $j->when($criterio == 'membership', function ($q) use ($criterio, $buscar) {
-                        $q->criterion($criterio, $buscar);
-                    });
+                    if ($criterio == 'membership' && $buscar) {
+                        $j->where('memberships.name', 'like', "%$buscar%");
+                    }
                 })
                 ->select(
                     'payments.id as id',
@@ -50,11 +63,7 @@ class PaymentController extends Controller
                     'payments.paid_at as paid_at',
                     'payments.expires_at as expires_at',
                 )
-                ->paginate();
-            // return $payments;
-
-
-            /*  $paymentsRes = [];
+                ->paginate();   /*  $paymentsRes = [];
             foreach ($payments as $pay) {
                 array_push($paymentsRes, [
                     'id' => $pay->id,
