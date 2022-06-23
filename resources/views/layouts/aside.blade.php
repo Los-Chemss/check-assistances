@@ -57,7 +57,8 @@
                             <span class="hide-menu">Clientes</span></a>
                     </li>
                     <li @click="menu = 2" class="sidebar-item"> <a
-                            class="sidebar-link waves-effect waves-dark sidebar-link" aria-expanded="false">
+                            class="sidebar-link waves-effect waves-dark sidebar-link" href="#"
+                            aria-expanded="false">
                             <i data-feather="dollar-sign" class="feather-icon"></i>
                             <span class="hide-menu">Pagos</span></a>
                     </li>

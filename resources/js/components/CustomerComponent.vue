@@ -52,6 +52,8 @@
                               ? 'date'
                               : criterio == 'code'
                               ? 'number'
+                              : criterio == 'branch'
+                              ? 'text'
                               : 'text'
                           "
                           v-model="buscar"
@@ -62,7 +64,9 @@
                               ? '22/07/2022'
                               : criterio == 'code'
                               ? '0123'
-                              : 'Benny Juarez'
+                              : criterio == 'branch'
+                              ? 'Nombre de sucursal o direccion'
+                              : 'Nombre o apellidos del cliente'
                           "
                         />
                         <div class="input-group-append">
@@ -612,7 +616,7 @@ export default {
       buscar: "",
 
       showCustomers: 10,
-      criterions: ["name", "code", "income"],
+      criterions: ["name", "code", "income", "branch"],
       customerInfo: {
         name: null,
         lastname: null,
@@ -669,6 +673,7 @@ export default {
         .get(url)
         .then((response) => {
           var respuesta = response.data;
+          console.log(respuesta);
           me.customers = respuesta.customers;
           me.pagination = respuesta.pagination;
         })
@@ -742,11 +747,11 @@ export default {
         province: me.customer.province,
         postcode: me.customer.postcode,
         phone: me.customer.phone,
-        membership: me.customer.membership,
-        // id: me.customer.id,
+        membership_id: me.customer.membership_id,
+        id: me.customer.id,
       };
       axios
-        .put("customers/" + me.customer.id + "/update/", request)
+        .put("customers/update/", request)
         .then((response) => {
           console.log(response);
         })
@@ -799,6 +804,7 @@ export default {
               let mem = null;
               this.memberships.forEach((m) => {
                 if (m.name === data.membership) mem = m;
+                console.log(mem);
               });
               this.modal = 1;
               this.modalTitle = "Actualizar cliente";
@@ -811,6 +817,7 @@ export default {
               this.customer.phone = data.phone;
               this.customer.code = data.code;
               this.customer.income = new Date(data.income).toISOString().slice(0, 10);
+              this.customer.membership_id = mem.id;
               this.selectedMembership = mem;
               this.customer.id = data.id;
               break;

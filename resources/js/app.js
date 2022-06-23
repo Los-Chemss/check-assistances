@@ -24,6 +24,6 @@ const app = new Vue({
     //el: '#app',
     el: '#main-wrapper',
     data: {
-        menu: 2
+        menu: 0
     },
 });

@@ -2,7 +2,7 @@ const mix = require('laravel-mix');
 require('dotenv').config();
 
 
-// new webpack.EnvironmentPlugin(['APP_ENV', 'MIX_APP_ENV']);
+new webpack.EnvironmentPlugin(['APP_ENV', 'MIX_APP_ENV']);
 /*
  |--------------------------------------------------------------------------
  | Mix Asset Management

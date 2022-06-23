@@ -1,9 +1,9 @@
 <template>
-  <div class="clock-body shadow-lg p-4 m-4 rounded  col-md-8 m-auto">
+  <div class="clock-body shadow-lg p-4 m-4 rounded col-md-8 m-auto">
     <div id="clock" class="">
       <p class="date">{{ clock.date }}</p>
       <p class="time">{{ clock.time }}</p>
-      <p class="text">DIGITAL CLOCK with Vue.js</p>
+      <!-- <p class="text">DIGITAL CLOCK with Vue.js</p> -->
     </div>
   </div>
 </template>
@@ -13,7 +13,8 @@ export default {
   data() {
     return {
       clock: { time: "", date: "" },
-      week: ["SUN", "MON", "TUE", "WED", "THU", "FRI", "SAT"],
+    //   week: ["SUN", "MON", "TUE", "WED", "THU", "FRI", "SAT"],
+      week: ["DOM", "LUN", "MAR", "MIE", "JUE", "VIE", "SAB"],
       timerID: setInterval(this.updateTime, 1000),
     };
   },
@@ -52,14 +53,17 @@ export default {
 };
 </script>
 <style lang="scss" scoped>
+
 html,
+
+
 .clock-body {
   height: 300px;
 }
 .clock-body {
-  background: #0f3854;
+/*   background: #0f3854;
   background: radial-gradient(ellipse at center, #0a2e38 0%, #000000 70%);
-  background-size: 100%;
+  background-size: 100%; */
 }
 p {
   margin: 0;
@@ -69,7 +73,7 @@ p {
   font-family: "Share Tech Mono", monospace;
   color: #240303;
   text-align: center;
-  position:relative;
+  position: relative;
   left: 50%;
   top: 50%;
   transform: translate(-50%, -50%);

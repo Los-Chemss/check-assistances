@@ -25,4 +25,9 @@ class Payment extends Model
 
         // return $query->where($criteria, 'LIKE', "%$input%");
     }
+
+    public function branch()
+    {
+        return $this->belongsTo(Branch::class, 'registered_on_branch_id');
+    }
 }

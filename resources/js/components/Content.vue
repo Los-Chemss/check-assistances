@@ -1,80 +1,87 @@
 <template>
-  <div class="container-fluid">
-    <div class="row">
-      <div class="card">
-        <div class="card-body">
-          <div class="row">
-            <div class="card" id="checkCard">
-              <div class="row">
-                <div class="col-md-12 ml4">
-                  <button
-                    v-if="fullScreen === 0"
-                    @click="openFullscreen()"
-                    data-toggle="tooltip"
-                    data-placement="bottom"
-                    title="Abrir en pantalla completa"
-                    data-original-title="Abrir en pantalla completa"
-                    type="button"
-                    class="btn btn-secondary float-right m-0"
-                  >
-                    <i class="mdi mdi-fullscreen"></i>
-                  </button>
-                  <button
-                    v-if="fullScreen === 1"
-                    @click="closeFullscreen()"
-                    data-toggle="tooltip"
-                    data-placement="bottom"
-                    title="Salir de pantalla completa"
-                    data-original-title="Salir de pantalla completa"
-                    type="button"
-                    class="btn btn-secondary float-right m-0"
-                  >
-                    <i class="mdi mdi-fullscreen-exit"></i>
-                  </button>
-                </div>
+  <!--  <div class="container-fluid"> -->
+  <div class="row">
+    <div class="card clockCard">
+      <div class="card-body">
+        <div class="row">
+          <div class="card" id="checkCard">
+            <div class="row">
+              <div class="col-md-12 ml4">
+                <button
+                  v-if="fullScreen === 0"
+                  @click="openFullscreen()"
+                  data-toggle="tooltip"
+                  data-placement="bottom"
+                  title="Abrir en pantalla completa"
+                  data-original-title="Abrir en pantalla completa"
+                  type="button"
+                  class="btn btn-secondary float-right m-0"
+                >
+                  <i class="mdi mdi-fullscreen"></i>
+                </button>
+                <button
+                  v-if="fullScreen === 1"
+                  @click="closeFullscreen()"
+                  data-toggle="tooltip"
+                  data-placement="bottom"
+                  title="Salir de pantalla completa"
+                  data-original-title="Salir de pantalla completa"
+                  type="button"
+                  class="btn btn-secondary float-right m-0"
+                >
+                  <i class="mdi mdi-fullscreen-exit"></i>
+                </button>
               </div>
-              <div class="card-header" id="aca">
-                <h1 v-if="branch" class="division">
-                  <p class="division">Division: {{ branch.division }}</p>
-                  <!-- <br /> -->
-                  <p class="location">Location: {{ branch.location }}</p>
-                </h1>
-                <h1 v-else class="bg'danger">
-                  <p>No branch selected. Please select one.</p>
-                </h1>
-                <div class="col-md-8 m-auto"></div>
-              </div>
-              <div class="card-body">
-                <div class="row">
-                  <DigitalClock />
-                  <div class="col-md-8 m-auto mb-4 shadow-sm pb-4 mt-3 pt-4">
-                    <h4 class="card-title text-center text-danger">
-                      Put your code for register input or output
-                    </h4>
-                    <form class="mt-3">
-                      <div class="input-group mb-3" name="checkForm">
-                        <input
-                          class="form-control text-center"
-                          id="code"
-                          type="number"
-                          v-model="code"
-                          placeholder="1921"
-                          aria-label=""
-                          aria-describedby="basic-addon1"
-                          minlength="4"
-                          maxlength="4"
-                          v-on:keydown.enter.prevent="assistance"
-                          autofocus
-                          required
-                        />
-                        <div class="input-group-append">
-                          <button class="btn btn-info" type="button" @click="assistance">
-                            <i class="icon-login"></i>
-                          </button>
-                        </div>
+             <!--    <div class="col-md-12 text-center m-auto border border-danger">
+                <img
+                  src="images/urbanlogo-1024x1024.png"
+                  height="100px"
+                  alt="logo"
+                />
+              </div> -->
+            </div>
+            
+            <div class="card-header" id="aca">
+              <h1 v-if="branch" class="division">
+                <p class="division">Sucursal: {{ branch.division }}</p>
+                <!-- <br /> -->
+                <p class="location">Direccion: {{ branch.location }}</p>
+              </h1>
+              <h1 v-else class="bg'danger">
+                <p>No branch selected. Please select one.</p>
+              </h1>
+            
+            </div>
+            <div class="card-body ">
+              <div class="col-md-12">
+                <DigitalClock />
+                <div class="col-md-8 m-auto mb-4 pb-4 mt-3 pt-4">
+                  <h4 class="card-title text-center text-danger">
+                    Ingresa tu codigo de socio
+                  </h4>
+                  <form class="mt-3">
+                    <div class="input-group mb-3" name="checkForm">
+                      <input
+                        class="form-control text-center"
+                        id="code"
+                        type="number"
+                        v-model="code"
+                        placeholder="1921"
+                        aria-label=""
+                        aria-describedby="basic-addon1"
+                        minlength="4"
+                        maxlength="4"
+                        v-on:keydown.enter.prevent="assistance"
+                        autofocus
+                        required
+                      />
+                      <div class="input-group-append">
+                        <button class="btn btn-info" type="button" @click="assistance">
+                          <i class="icon-login"></i>
+                        </button>
                       </div>
-                    </form>
-                  </div>
+                    </div>
+                  </form>
                 </div>
               </div>
             </div>
@@ -83,6 +90,7 @@
       </div>
     </div>
   </div>
+  <!--   </div> -->
 </template>
 <script>
 // https://codepen.io/gau/pen/LjQwGp
@@ -134,6 +142,7 @@ export default {
 
   mounted() {
     document.getElementById("code").focus();
+    // console.log(process.env);
   },
 
   methods: {
@@ -227,6 +236,14 @@ export default {
   background: #0f3854;
   background: radial-gradient(ellipse at center, #0a2e38 0%, #000000 70%);
   background-size: 100%;
+}
+
+.card .dark {
+  background-color: #daf6ff;
+}
+
+.card-body {
+  //  opacity: 35%;
 }
 
 .card-header {

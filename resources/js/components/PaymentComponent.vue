@@ -50,6 +50,8 @@
                             ? 'date'
                             : criterio == 'code'
                             ? 'number'
+                            : criterio == 'branch'
+                            ? 'text'
                             : 'text'
                         "
                         v-model="buscar"
@@ -59,7 +61,9 @@
                           criterio == 'paid_at' || criterio == 'expires_at'
                             ? '22/07/2022'
                             : criterio == 'customer'
-                            ? 'Benny Juarez'
+                            ? 'Nombre o apellidos del cliente'
+                            : criterio == 'branch'
+                            ? 'Nombre de sucursal o direccion'
                             : 'Monthly'
                         "
                       />
@@ -356,7 +360,7 @@ export default {
       buscar: "",
       payment_id: null,
       showPayments: 10,
-      criterions: ["paid_at", "expires_at", "customer", "membership"],
+      criterions: ["paid_at", "expires_at", "customer", "membership", "branch"],
     };
   },
 
@@ -397,7 +401,7 @@ export default {
         .get(url)
         .then((response) => {
           var respuesta = response.data;
-          console.log(respuesta);
+          //   console.log(respuesta);
           me.payments = respuesta.payments.data;
           me.pagination = respuesta.pagination;
         })
@@ -411,7 +415,7 @@ export default {
       axios
         .get("select-memberships")
         .then((response) => {
-          console.log(response);
+          //   console.log(response);
           var respuesta = response.data;
           me.memberships = respuesta;
         })
@@ -424,7 +428,7 @@ export default {
       axios
         .get("customers-select")
         .then((response) => {
-          console.log(response);
+          //   console.log(response);
           var respuesta = response.data;
           me.customers = respuesta;
         })
@@ -460,7 +464,6 @@ export default {
         .post("payments", request)
         .then((response) => {
           let respuesta = response.data;
-          console.log(response);
           let message =
             "Ha pagado una membresia " +
             respuesta.membership.name +
@@ -493,8 +496,6 @@ export default {
         .post("payments/" + request.id + "/update", request)
         .then((response) => {
           let respuesta = response.data;
-          console.log(response);
-
           Swal.fire({
             type: "success",
             title: "Pago actualizado",
@@ -523,7 +524,6 @@ export default {
           JSON.stringify(event.target.options[event.target.options.selectedIndex])
         )._value;
       }
-      console.log(newVal);
       this.selectedMembership = newVal;
     },
 
@@ -536,7 +536,6 @@ export default {
           JSON.stringify(event.target.options[event.target.options.selectedIndex])
         )._value;
       }
-      console.log(newVal);
       this.selectedCustomer = newVal;
     },
 
@@ -610,7 +609,7 @@ export default {
                 text: "El pago ha sido eliminado !",
                 timer: 5000,
               });
-              console.log(response);
+              //   console.log(response);
               me.listPayments(me.page, me.buscar, me.criterio);
             })
             .catch((error) => {

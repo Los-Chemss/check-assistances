@@ -15,26 +15,25 @@ class BranchSeeder extends Seeder
     public function run()
     {
         //Branch::factory()->count(3)->create();
-
         Branch::create(
             [
-                'division' => 'Sucursal 1',
+                'division' => 'Santa Elena',
                 'location' => 'Santa Elena, Experiencia',
                 'company_id' => 1
             ]
         );
         Branch::create(
             [
-                'division' => 'Sucursal 2',
-                'location' => 'Tucson',
+                'division' => 'Jardines alcalde',
+                'location' => 'Amado aguirre',
                 'company_id' => 1
 
             ]
         );
         Branch::create(
             [
-                'division' => 'Sucursal 3',
-                'location' => ' Filosofos',
+                'division' => 'Colinas de la normal',
+                'location' => ' Av. Paseo de los filosofos',
                 'company_id' => 1
             ]
         );

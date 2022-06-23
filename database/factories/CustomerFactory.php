@@ -2,6 +2,7 @@
 
 namespace Database\Factories;
 
+use App\Models\Branch;
 use App\Models\Company;
 use App\Models\Customer;
 use App\Models\Membership;
@@ -31,18 +32,21 @@ class CustomerFactory extends Factory
         };
 
         return [
-            'name' => $this->faker->name(),
+            'name' => $this->faker->firstName(),
             'lastname' => $this->faker->lastName(),
             'code' => $unique,
             'income' => $this->faker->dateTime(),
             'membership_id' =>  function () use ($companyId) {
-                return  Membership::query()->inRandomOrder()->first()->id;
+                return  Membership::query()/* ->where('company_id', $companyId) */->inRandomOrder()->first()->id;
             },
             'company_id' => $companyId,
             'address' => $this->faker->address(),
             'province' => $this->faker->state(),
             'postcode' => $this->faker->postcode(),
-            'phone' => $this->faker->phoneNumber()
+            'phone' => $this->faker->phoneNumber(),
+            'registered_on_branch_id'=> function () use ($companyId) {
+                return  Branch::query()/* ->where('company_id', $companyId) */->inRandomOrder()->first()->id;
+            },
         ];
     }
 }

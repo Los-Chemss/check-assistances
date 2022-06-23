@@ -44,6 +44,9 @@
     @yield('styles')
 
     <style>
+       /*  .container-fluid{
+             background: url(/{{ env('ASSET_URL') }}images/fondogym.jpg) no-repeat center center;
+        } */
         .preloader {
             width: 100%;
             height: 100%;

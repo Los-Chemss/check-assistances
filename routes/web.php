@@ -64,7 +64,7 @@ Route::middleware(['auth'])->group(function () {
     Route::get('customers/{customer}',  [CustomerController::class, 'show']);
     Route::get('customers-select',  [CustomerController::class, 'select']);
     Route::post('customers/store',  [CustomerController::class, 'store']);
-    Route::put('customers/{id}/update',  [CustomerController::class, 'update']);
+    Route::put('customers/update',  [CustomerController::class, 'update']);
     Route::post('customers/{id}/delete',  [CustomerController::class, 'destroy']);
 
     Route::get('memberships',  [MembershipController::class, 'index']);

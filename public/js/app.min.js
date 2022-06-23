@@ -3186,6 +3186,14 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
+//
+//
+//
+//
+//
+//
+//
+//
 // https://codepen.io/gau/pen/LjQwGp
 
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = ({
@@ -3230,7 +3238,7 @@ __webpack_require__.r(__webpack_exports__);
     }
   },
   mounted: function mounted() {
-    document.getElementById("code").focus();
+    document.getElementById("code").focus(); // console.log(process.env);
   },
   methods: {
     assistance: function assistance() {
@@ -3898,6 +3906,10 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
+//
+//
+//
+//
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = ({
   data: function data() {
     return {
@@ -3935,7 +3947,7 @@ __webpack_require__.r(__webpack_exports__);
       criterio: "name",
       buscar: "",
       showCustomers: 10,
-      criterions: ["name", "code", "income"],
+      criterions: ["name", "code", "income", "branch"],
       customerInfo: {
         name: null,
         lastname: null,
@@ -3991,6 +4003,7 @@ __webpack_require__.r(__webpack_exports__);
       var url = "customers?page=" + page + "&buscar=" + buscar + "&criterio=" + criterio;
       axios.get(url).then(function (response) {
         var respuesta = response.data;
+        console.log(respuesta);
         me.customers = respuesta.customers;
         me.pagination = respuesta.pagination;
       })["catch"](function (error) {
@@ -4052,10 +4065,10 @@ __webpack_require__.r(__webpack_exports__);
         province: me.customer.province,
         postcode: me.customer.postcode,
         phone: me.customer.phone,
-        membership: me.customer.membership // id: me.customer.id,
-
+        membership_id: me.customer.membership_id,
+        id: me.customer.id
       };
-      axios.put("customers/" + me.customer.id + "/update/", request).then(function (response) {
+      axios.put("customers/update/", request).then(function (response) {
         console.log(response);
       })["catch"](function (error) {
         console.table(error);
@@ -4109,6 +4122,7 @@ __webpack_require__.r(__webpack_exports__);
                   var mem = null;
                   this.memberships.forEach(function (m) {
                     if (m.name === data.membership) mem = m;
+                    console.log(mem);
                   });
                   this.modal = 1;
                   this.modalTitle = "Actualizar cliente";
@@ -4121,6 +4135,7 @@ __webpack_require__.r(__webpack_exports__);
                   this.customer.phone = data.phone;
                   this.customer.code = data.code;
                   this.customer.income = new Date(data.income).toISOString().slice(0, 10);
+                  this.customer.membership_id = mem.id;
                   this.selectedMembership = mem;
                   this.customer.id = data.id;
                   break;
@@ -4242,7 +4257,8 @@ __webpack_require__.r(__webpack_exports__);
         time: "",
         date: ""
       },
-      week: ["SUN", "MON", "TUE", "WED", "THU", "FRI", "SAT"],
+      //   week: ["SUN", "MON", "TUE", "WED", "THU", "FRI", "SAT"],
+      week: ["DOM", "LUN", "MAR", "MIE", "JUE", "VIE", "SAB"],
       timerID: setInterval(this.updateTime, 1000)
     };
   },
@@ -5250,6 +5266,10 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
 //
 //
 //
+//
+//
+//
+//
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = ({
   data: function data() {
     return {
@@ -5281,7 +5301,7 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
       buscar: "",
       payment_id: null,
       showPayments: 10,
-      criterions: ["paid_at", "expires_at", "customer", "membership"]
+      criterions: ["paid_at", "expires_at", "customer", "membership", "branch"]
     };
   },
   computed: {
@@ -5323,8 +5343,8 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
       var me = this;
       var url = "payments?page=" + page + "&buscar=" + buscar + "&criterio=" + criterio;
       axios.get(url).then(function (response) {
-        var respuesta = response.data;
-        console.log(respuesta);
+        var respuesta = response.data; //   console.log(respuesta);
+
         me.payments = respuesta.payments.data;
         me.pagination = respuesta.pagination;
       })["catch"](function (error) {
@@ -5334,7 +5354,7 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
     getMemberships: function getMemberships() {
       var me = this;
       axios.get("select-memberships").then(function (response) {
-        console.log(response);
+        //   console.log(response);
         var respuesta = response.data;
         me.memberships = respuesta;
       })["catch"](function (error) {
@@ -5344,7 +5364,7 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
     getCustomers: function getCustomers() {
       var me = this;
       axios.get("customers-select").then(function (response) {
-        console.log(response);
+        //   console.log(response);
         var respuesta = response.data;
         me.customers = respuesta;
       })["catch"](function (error) {
@@ -5374,7 +5394,6 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
       };
       axios.post("payments", request).then(function (response) {
         var respuesta = response.data;
-        console.log(response);
         var message = "Ha pagado una membresia " + respuesta.membership.name + " con una duracion de " + respuesta.membership.name + " dias. Y expira el " + respuesta.payment.expires_at;
         Swal.fire({
           type: "success",
@@ -5397,7 +5416,6 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
       };
       axios.post("payments/" + request.id + "/update", request).then(function (response) {
         var respuesta = response.data;
-        console.log(response);
         Swal.fire({
           type: "success",
           title: "Pago actualizado",
@@ -5424,7 +5442,6 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
         newVal = JSON.parse(JSON.stringify(event.target.options[event.target.options.selectedIndex]))._value;
       }
 
-      console.log(newVal);
       this.selectedMembership = newVal;
     },
     selectCustomer: function selectCustomer(event) {
@@ -5436,7 +5453,6 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
         newVal = JSON.parse(JSON.stringify(event.target.options[event.target.options.selectedIndex]))._value;
       }
 
-      console.log(newVal);
       this.selectedCustomer = newVal;
     },
     closeModal: function closeModal() {
@@ -5530,8 +5546,8 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
               title: "Registro  eliminado con éxito",
               text: "El pago ha sido eliminado !",
               timer: 5000
-            });
-            console.log(response);
+            }); //   console.log(response);
+
             me.listPayments(me.page, me.buscar, me.criterio);
           })["catch"](function (error) {
             Swal.fire({
@@ -6058,7 +6074,7 @@ __webpack_require__.r(__webpack_exports__);
 
 var ___CSS_LOADER_EXPORT___ = _node_modules_laravel_mix_node_modules_css_loader_dist_runtime_api_js__WEBPACK_IMPORTED_MODULE_0___default()(function(i){return i[1]});
 // Module
-___CSS_LOADER_EXPORT___.push([module.id, ".card[data-v-7f690d44] {\n  width: 100%;\n}\n.card[data-v-7f690d44] {\n  background: #0f3854;\n  background: radial-gradient(ellipse at center, #0a2e38 0%, #000000 70%);\n  background-size: 100%;\n}\n.card-header[data-v-7f690d44] {\n  font-family: \"Share Tech Mono\", monospace;\n  color: #240303;\n  text-align: center;\n  position: relative;\n  left: 50%;\n  top: 10%;\n  transform: translate(-50%, -50%);\n  color: #daf6ff;\n  text-shadow: 0 0 20px #0aafe6, 0 0 20px rgba(10, 175, 230, 0);\n}\n.card-header .division[data-v-7f690d44] {\n  letter-spacing: 0.05em;\n  font-size: 45px;\n  padding: 5px 0;\n}\n.card-header .location[data-v-7f690d44] {\n  letter-spacing: 0.1em;\n  font-size: 24px;\n}\n.card-header .text[data-v-7f690d44] {\n  letter-spacing: 0.1em;\n  font-size: 12px;\n  padding: 20px 0 0;\n}", ""]);
+___CSS_LOADER_EXPORT___.push([module.id, ".card[data-v-7f690d44] {\n  width: 100%;\n}\n.card[data-v-7f690d44] {\n  background: #0f3854;\n  background: radial-gradient(ellipse at center, #0a2e38 0%, #000000 70%);\n  background-size: 100%;\n}\n.card .dark[data-v-7f690d44] {\n  background-color: #daf6ff;\n}\n.card-header[data-v-7f690d44] {\n  font-family: \"Share Tech Mono\", monospace;\n  color: #240303;\n  text-align: center;\n  position: relative;\n  left: 50%;\n  top: 10%;\n  transform: translate(-50%, -50%);\n  color: #daf6ff;\n  text-shadow: 0 0 20px #0aafe6, 0 0 20px rgba(10, 175, 230, 0);\n}\n.card-header .division[data-v-7f690d44] {\n  letter-spacing: 0.05em;\n  font-size: 45px;\n  padding: 5px 0;\n}\n.card-header .location[data-v-7f690d44] {\n  letter-spacing: 0.1em;\n  font-size: 24px;\n}\n.card-header .text[data-v-7f690d44] {\n  letter-spacing: 0.1em;\n  font-size: 12px;\n  padding: 20px 0 0;\n}", ""]);
 // Exports
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (___CSS_LOADER_EXPORT___);
 
@@ -6082,7 +6098,7 @@ __webpack_require__.r(__webpack_exports__);
 
 var ___CSS_LOADER_EXPORT___ = _node_modules_laravel_mix_node_modules_css_loader_dist_runtime_api_js__WEBPACK_IMPORTED_MODULE_0___default()(function(i){return i[1]});
 // Module
-___CSS_LOADER_EXPORT___.push([module.id, "html[data-v-4c9825c1],\n.clock-body[data-v-4c9825c1] {\n  height: 300px;\n}\n.clock-body[data-v-4c9825c1] {\n  background: #0f3854;\n  background: radial-gradient(ellipse at center, #0a2e38 0%, #000000 70%);\n  background-size: 100%;\n}\np[data-v-4c9825c1] {\n  margin: 0;\n  padding: 0;\n}\n#clock[data-v-4c9825c1] {\n  font-family: \"Share Tech Mono\", monospace;\n  color: #240303;\n  text-align: center;\n  position: relative;\n  left: 50%;\n  top: 50%;\n  transform: translate(-50%, -50%);\n  color: #daf6ff;\n  text-shadow: 0 0 20px #0aafe6, 0 0 20px rgba(10, 175, 230, 0);\n}\n#clock .time[data-v-4c9825c1] {\n  letter-spacing: 0.05em;\n  font-size: 45px;\n  padding: 5px 0;\n}\n#clock .date[data-v-4c9825c1] {\n  letter-spacing: 0.1em;\n  font-size: 24px;\n}\n#clock .text[data-v-4c9825c1] {\n  letter-spacing: 0.1em;\n  font-size: 12px;\n  padding: 20px 0 0;\n}\n.center[data-v-4c9825c1] {\n  margin: auto;\n  width: 50%;\n  border: 3px solid green;\n  padding: 10px;\n}", ""]);
+___CSS_LOADER_EXPORT___.push([module.id, "html[data-v-4c9825c1],\n.clock-body[data-v-4c9825c1] {\n  height: 300px;\n}\n.clock-body[data-v-4c9825c1] {\n  /*   background: #0f3854;\n    background: radial-gradient(ellipse at center, #0a2e38 0%, #000000 70%);\n    background-size: 100%; */\n}\np[data-v-4c9825c1] {\n  margin: 0;\n  padding: 0;\n}\n#clock[data-v-4c9825c1] {\n  font-family: \"Share Tech Mono\", monospace;\n  color: #240303;\n  text-align: center;\n  position: relative;\n  left: 50%;\n  top: 50%;\n  transform: translate(-50%, -50%);\n  color: #daf6ff;\n  text-shadow: 0 0 20px #0aafe6, 0 0 20px rgba(10, 175, 230, 0);\n}\n#clock .time[data-v-4c9825c1] {\n  letter-spacing: 0.05em;\n  font-size: 45px;\n  padding: 5px 0;\n}\n#clock .date[data-v-4c9825c1] {\n  letter-spacing: 0.1em;\n  font-size: 24px;\n}\n#clock .text[data-v-4c9825c1] {\n  letter-spacing: 0.1em;\n  font-size: 12px;\n  padding: 20px 0 0;\n}\n.center[data-v-4c9825c1] {\n  margin: auto;\n  width: 50%;\n  border: 3px solid green;\n  padding: 10px;\n}", ""]);
 // Exports
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (___CSS_LOADER_EXPORT___);
 
@@ -25582,180 +25598,171 @@ var render = function () {
   var _vm = this
   var _h = _vm.$createElement
   var _c = _vm._self._c || _h
-  return _c("div", { staticClass: "container-fluid" }, [
-    _c("div", { staticClass: "row" }, [
-      _c("div", { staticClass: "card" }, [
-        _c("div", { staticClass: "card-body" }, [
-          _c("div", { staticClass: "row" }, [
-            _c("div", { staticClass: "card", attrs: { id: "checkCard" } }, [
-              _c("div", { staticClass: "row" }, [
-                _c("div", { staticClass: "col-md-12 ml4" }, [
-                  _vm.fullScreen === 0
-                    ? _c(
-                        "button",
-                        {
-                          staticClass: "btn btn-secondary float-right m-0",
-                          attrs: {
-                            "data-toggle": "tooltip",
-                            "data-placement": "bottom",
-                            title: "Abrir en pantalla completa",
-                            "data-original-title": "Abrir en pantalla completa",
-                            type: "button",
-                          },
-                          on: {
-                            click: function ($event) {
-                              return _vm.openFullscreen()
-                            },
-                          },
-                        },
-                        [_c("i", { staticClass: "mdi mdi-fullscreen" })]
-                      )
-                    : _vm._e(),
-                  _vm._v(" "),
-                  _vm.fullScreen === 1
-                    ? _c(
-                        "button",
-                        {
-                          staticClass: "btn btn-secondary float-right m-0",
-                          attrs: {
-                            "data-toggle": "tooltip",
-                            "data-placement": "bottom",
-                            title: "Salir de pantalla completa",
-                            "data-original-title": "Salir de pantalla completa",
-                            type: "button",
-                          },
-                          on: {
-                            click: function ($event) {
-                              return _vm.closeFullscreen()
-                            },
-                          },
-                        },
-                        [_c("i", { staticClass: "mdi mdi-fullscreen-exit" })]
-                      )
-                    : _vm._e(),
-                ]),
-              ]),
-              _vm._v(" "),
-              _c("div", { staticClass: "card-header", attrs: { id: "aca" } }, [
-                _vm.branch
-                  ? _c("h1", { staticClass: "division" }, [
-                      _c("p", { staticClass: "division" }, [
-                        _vm._v("Division: " + _vm._s(_vm.branch.division)),
-                      ]),
-                      _vm._v(" "),
-                      _c("p", { staticClass: "location" }, [
-                        _vm._v("Location: " + _vm._s(_vm.branch.location)),
-                      ]),
-                    ])
-                  : _c("h1", { staticClass: "bg'danger" }, [
-                      _c("p", [
-                        _vm._v("No branch selected. Please select one."),
-                      ]),
-                    ]),
-                _vm._v(" "),
-                _c("div", { staticClass: "col-md-8 m-auto" }),
-              ]),
-              _vm._v(" "),
-              _c("div", { staticClass: "card-body" }, [
-                _c(
-                  "div",
-                  { staticClass: "row" },
-                  [
-                    _c("DigitalClock"),
-                    _vm._v(" "),
-                    _c(
-                      "div",
+  return _c("div", { staticClass: "row" }, [
+    _c("div", { staticClass: "card clockCard" }, [
+      _c("div", { staticClass: "card-body" }, [
+        _c("div", { staticClass: "row" }, [
+          _c("div", { staticClass: "card", attrs: { id: "checkCard" } }, [
+            _c("div", { staticClass: "row" }, [
+              _c("div", { staticClass: "col-md-12 ml4" }, [
+                _vm.fullScreen === 0
+                  ? _c(
+                      "button",
                       {
-                        staticClass:
-                          "col-md-8 m-auto mb-4 shadow-sm pb-4 mt-3 pt-4",
+                        staticClass: "btn btn-secondary float-right m-0",
+                        attrs: {
+                          "data-toggle": "tooltip",
+                          "data-placement": "bottom",
+                          title: "Abrir en pantalla completa",
+                          "data-original-title": "Abrir en pantalla completa",
+                          type: "button",
+                        },
+                        on: {
+                          click: function ($event) {
+                            return _vm.openFullscreen()
+                          },
+                        },
                       },
-                      [
+                      [_c("i", { staticClass: "mdi mdi-fullscreen" })]
+                    )
+                  : _vm._e(),
+                _vm._v(" "),
+                _vm.fullScreen === 1
+                  ? _c(
+                      "button",
+                      {
+                        staticClass: "btn btn-secondary float-right m-0",
+                        attrs: {
+                          "data-toggle": "tooltip",
+                          "data-placement": "bottom",
+                          title: "Salir de pantalla completa",
+                          "data-original-title": "Salir de pantalla completa",
+                          type: "button",
+                        },
+                        on: {
+                          click: function ($event) {
+                            return _vm.closeFullscreen()
+                          },
+                        },
+                      },
+                      [_c("i", { staticClass: "mdi mdi-fullscreen-exit" })]
+                    )
+                  : _vm._e(),
+              ]),
+            ]),
+            _vm._v(" "),
+            _c("div", { staticClass: "card-header", attrs: { id: "aca" } }, [
+              _vm.branch
+                ? _c("h1", { staticClass: "division" }, [
+                    _c("p", { staticClass: "division" }, [
+                      _vm._v("Sucursal: " + _vm._s(_vm.branch.division)),
+                    ]),
+                    _vm._v(" "),
+                    _c("p", { staticClass: "location" }, [
+                      _vm._v("Direccion: " + _vm._s(_vm.branch.location)),
+                    ]),
+                  ])
+                : _c("h1", { staticClass: "bg'danger" }, [
+                    _c("p", [_vm._v("No branch selected. Please select one.")]),
+                  ]),
+            ]),
+            _vm._v(" "),
+            _c("div", { staticClass: "card-body " }, [
+              _c(
+                "div",
+                { staticClass: "col-md-12" },
+                [
+                  _c("DigitalClock"),
+                  _vm._v(" "),
+                  _c(
+                    "div",
+                    { staticClass: "col-md-8 m-auto mb-4 pb-4 mt-3 pt-4" },
+                    [
+                      _c(
+                        "h4",
+                        { staticClass: "card-title text-center text-danger" },
+                        [
+                          _vm._v(
+                            "\n                  Ingresa tu codigo de socio\n                "
+                          ),
+                        ]
+                      ),
+                      _vm._v(" "),
+                      _c("form", { staticClass: "mt-3" }, [
                         _c(
-                          "h4",
-                          { staticClass: "card-title text-center text-danger" },
+                          "div",
+                          {
+                            staticClass: "input-group mb-3",
+                            attrs: { name: "checkForm" },
+                          },
                           [
-                            _vm._v(
-                              "\n                    Put your code for register input or output\n                  "
-                            ),
+                            _c("input", {
+                              directives: [
+                                {
+                                  name: "model",
+                                  rawName: "v-model",
+                                  value: _vm.code,
+                                  expression: "code",
+                                },
+                              ],
+                              staticClass: "form-control text-center",
+                              attrs: {
+                                id: "code",
+                                type: "number",
+                                placeholder: "1921",
+                                "aria-label": "",
+                                "aria-describedby": "basic-addon1",
+                                minlength: "4",
+                                maxlength: "4",
+                                autofocus: "",
+                                required: "",
+                              },
+                              domProps: { value: _vm.code },
+                              on: {
+                                keydown: function ($event) {
+                                  if (
+                                    !$event.type.indexOf("key") &&
+                                    _vm._k(
+                                      $event.keyCode,
+                                      "enter",
+                                      13,
+                                      $event.key,
+                                      "Enter"
+                                    )
+                                  ) {
+                                    return null
+                                  }
+                                  $event.preventDefault()
+                                  return _vm.assistance.apply(null, arguments)
+                                },
+                                input: function ($event) {
+                                  if ($event.target.composing) {
+                                    return
+                                  }
+                                  _vm.code = $event.target.value
+                                },
+                              },
+                            }),
+                            _vm._v(" "),
+                            _c("div", { staticClass: "input-group-append" }, [
+                              _c(
+                                "button",
+                                {
+                                  staticClass: "btn btn-info",
+                                  attrs: { type: "button" },
+                                  on: { click: _vm.assistance },
+                                },
+                                [_c("i", { staticClass: "icon-login" })]
+                              ),
+                            ]),
                           ]
                         ),
-                        _vm._v(" "),
-                        _c("form", { staticClass: "mt-3" }, [
-                          _c(
-                            "div",
-                            {
-                              staticClass: "input-group mb-3",
-                              attrs: { name: "checkForm" },
-                            },
-                            [
-                              _c("input", {
-                                directives: [
-                                  {
-                                    name: "model",
-                                    rawName: "v-model",
-                                    value: _vm.code,
-                                    expression: "code",
-                                  },
-                                ],
-                                staticClass: "form-control text-center",
-                                attrs: {
-                                  id: "code",
-                                  type: "number",
-                                  placeholder: "1921",
-                                  "aria-label": "",
-                                  "aria-describedby": "basic-addon1",
-                                  minlength: "4",
-                                  maxlength: "4",
-                                  autofocus: "",
-                                  required: "",
-                                },
-                                domProps: { value: _vm.code },
-                                on: {
-                                  keydown: function ($event) {
-                                    if (
-                                      !$event.type.indexOf("key") &&
-                                      _vm._k(
-                                        $event.keyCode,
-                                        "enter",
-                                        13,
-                                        $event.key,
-                                        "Enter"
-                                      )
-                                    ) {
-                                      return null
-                                    }
-                                    $event.preventDefault()
-                                    return _vm.assistance.apply(null, arguments)
-                                  },
-                                  input: function ($event) {
-                                    if ($event.target.composing) {
-                                      return
-                                    }
-                                    _vm.code = $event.target.value
-                                  },
-                                },
-                              }),
-                              _vm._v(" "),
-                              _c("div", { staticClass: "input-group-append" }, [
-                                _c(
-                                  "button",
-                                  {
-                                    staticClass: "btn btn-info",
-                                    attrs: { type: "button" },
-                                    on: { click: _vm.assistance },
-                                  },
-                                  [_c("i", { staticClass: "icon-login" })]
-                                ),
-                              ]),
-                            ]
-                          ),
-                        ]),
-                      ]
-                    ),
-                  ],
-                  1
-                ),
-              ]),
+                      ]),
+                    ]
+                  ),
+                ],
+                1
+              ),
             ]),
           ]),
         ]),
@@ -25937,6 +25944,8 @@ var render = function () {
                                             ? "date"
                                             : _vm.criterio == "code"
                                             ? "number"
+                                            : _vm.criterio == "branch"
+                                            ? "text"
                                             : "text") === "checkbox"
                                             ? _c("input", {
                                                 directives: [
@@ -25954,7 +25963,9 @@ var render = function () {
                                                       ? "22/07/2022"
                                                       : _vm.criterio == "code"
                                                       ? "0123"
-                                                      : "Benny Juarez",
+                                                      : _vm.criterio == "branch"
+                                                      ? "Nombre de sucursal o direccion"
+                                                      : "Nombre o apellidos del cliente",
                                                   type: "checkbox",
                                                 },
                                                 domProps: {
@@ -26018,6 +26029,8 @@ var render = function () {
                                                 ? "date"
                                                 : _vm.criterio == "code"
                                                 ? "number"
+                                                : _vm.criterio == "branch"
+                                                ? "text"
                                                 : "text") === "radio"
                                             ? _c("input", {
                                                 directives: [
@@ -26035,7 +26048,9 @@ var render = function () {
                                                       ? "22/07/2022"
                                                       : _vm.criterio == "code"
                                                       ? "0123"
-                                                      : "Benny Juarez",
+                                                      : _vm.criterio == "branch"
+                                                      ? "Nombre de sucursal o direccion"
+                                                      : "Nombre o apellidos del cliente",
                                                   type: "radio",
                                                 },
                                                 domProps: {
@@ -26087,12 +26102,16 @@ var render = function () {
                                                       ? "22/07/2022"
                                                       : _vm.criterio == "code"
                                                       ? "0123"
-                                                      : "Benny Juarez",
+                                                      : _vm.criterio == "branch"
+                                                      ? "Nombre de sucursal o direccion"
+                                                      : "Nombre o apellidos del cliente",
                                                   type:
                                                     _vm.criterio == "income"
                                                       ? "date"
                                                       : _vm.criterio == "code"
                                                       ? "number"
+                                                      : _vm.criterio == "branch"
+                                                      ? "text"
                                                       : "text",
                                                 },
                                                 domProps: { value: _vm.buscar },
@@ -27767,14 +27786,12 @@ var render = function () {
   var _c = _vm._self._c || _h
   return _c(
     "div",
-    { staticClass: "clock-body shadow-lg p-4 m-4 rounded  col-md-8 m-auto" },
+    { staticClass: "clock-body shadow-lg p-4 m-4 rounded col-md-8 m-auto" },
     [
       _c("div", { attrs: { id: "clock" } }, [
         _c("p", { staticClass: "date" }, [_vm._v(_vm._s(_vm.clock.date))]),
         _vm._v(" "),
         _c("p", { staticClass: "time" }, [_vm._v(_vm._s(_vm.clock.time))]),
-        _vm._v(" "),
-        _c("p", { staticClass: "text" }, [_vm._v("DIGITAL CLOCK with Vue.js")]),
       ]),
     ]
   )
@@ -28845,6 +28862,8 @@ var render = function () {
                                   ? "date"
                                   : _vm.criterio == "code"
                                   ? "number"
+                                  : _vm.criterio == "branch"
+                                  ? "text"
                                   : "text") === "checkbox"
                                   ? _c("input", {
                                       directives: [
@@ -28862,7 +28881,9 @@ var render = function () {
                                           _vm.criterio == "expires_at"
                                             ? "22/07/2022"
                                             : _vm.criterio == "customer"
-                                            ? "Benny Juarez"
+                                            ? "Nombre o apellidos del cliente"
+                                            : _vm.criterio == "branch"
+                                            ? "Nombre de sucursal o direccion"
                                             : "Monthly",
                                         type: "checkbox",
                                       },
@@ -28918,6 +28939,8 @@ var render = function () {
                                       ? "date"
                                       : _vm.criterio == "code"
                                       ? "number"
+                                      : _vm.criterio == "branch"
+                                      ? "text"
                                       : "text") === "radio"
                                   ? _c("input", {
                                       directives: [
@@ -28935,7 +28958,9 @@ var render = function () {
                                           _vm.criterio == "expires_at"
                                             ? "22/07/2022"
                                             : _vm.criterio == "customer"
-                                            ? "Benny Juarez"
+                                            ? "Nombre o apellidos del cliente"
+                                            : _vm.criterio == "branch"
+                                            ? "Nombre de sucursal o direccion"
                                             : "Monthly",
                                         type: "radio",
                                       },
@@ -28983,7 +29008,9 @@ var render = function () {
                                           _vm.criterio == "expires_at"
                                             ? "22/07/2022"
                                             : _vm.criterio == "customer"
-                                            ? "Benny Juarez"
+                                            ? "Nombre o apellidos del cliente"
+                                            : _vm.criterio == "branch"
+                                            ? "Nombre de sucursal o direccion"
                                             : "Monthly",
                                         type:
                                           _vm.criterio == "paid_at" ||
@@ -28991,6 +29018,8 @@ var render = function () {
                                             ? "date"
                                             : _vm.criterio == "code"
                                             ? "number"
+                                            : _vm.criterio == "branch"
+                                            ? "text"
                                             : "text",
                                       },
                                       domProps: { value: _vm.buscar },
@@ -42684,7 +42713,7 @@ var app = new Vue({
   //el: '#app',
   el: '#main-wrapper',
   data: {
-    menu: 2
+    menu: 0
   }
 });
 })();

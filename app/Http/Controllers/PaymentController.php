@@ -43,7 +43,14 @@ class PaymentController extends Controller
                         $q->Where('expires_at', 'like', "%$buscar%");
                     }
                 }
-            )
+            )->join('branches', function ($j) use ($criterio, $buscar) {
+                $j->on('branches.id', 'payments.registered_on_branch_id');
+                if ($criterio === 'branch') {
+                    $j->where('branches.division', 'LIKE', "%$buscar%")
+                        ->orWhere('branches.location', 'LIKE', "%$buscar%");
+                }
+                $j->latest('branches.id');
+            })
                 ->join('customers', function ($j) use ($criterio, $buscar) {
                     $j->on('customers.id', 'payments.customer_id');
                     if ($criterio === 'customer') {
@@ -64,18 +71,24 @@ class PaymentController extends Controller
                     'memberships.id as membershipId',
                     'payments.paid_at as paid_at',
                     'payments.expires_at as expires_at',
+                    'branches.division as branch',
                 )
-                ->paginate();   /*  $paymentsRes = [];
+                ->paginate();
+
+            // return $payments;
+
+            $paymentsRes = [];
             foreach ($payments as $pay) {
                 array_push($paymentsRes, [
                     'id' => $pay->id,
                     'customer' => $pay->customer,
                     'paid at' => date($pay->paid_at),
                     // 'amount' => $pay->amount,
-                    'membership' => $pay->membership->name,
+                    'membership' => $pay->membership,
                     'expires at' => date($pay->expires_at),
+                    'branch' => $pay->branch,
                 ]);
-            } */
+            }
             return [
                 'pagination' => [
                     'total'        => $payments->total(),
@@ -127,7 +140,6 @@ class PaymentController extends Controller
                 'membership_id' => $membership->id,
                 'customer_id' => $customer->id
             ];
-
             $payment = Payment::create($data);
             return response()->json(['membership' => $membership, 'payment' => $payment]);
         } catch (Exception $e) {

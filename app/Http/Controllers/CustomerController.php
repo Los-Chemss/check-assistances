@@ -39,21 +39,35 @@ class CustomerController extends Controller
             $user = Auth::user() ? Auth::user() : auth('sanctum')->user();
             if (!$user) return response(null, 404);
 
-            //
-            $customers = Customer::criterion($criterio, $buscar)->with(['membership' => function ($query) {
-                $query->with(['payments' => function ($q) {
-                    $q->with('membership');
-                    // $q->where('customer_id', 'customer.id')->orderBy('paid_at', 'desc')->first();
-                }]);
-            }])
+            $customers = Customer::when($criterio, function ($q) use ($criterio, $buscar) {
+                if ($criterio === 'name' || $criterio === 'lastname' || $criterio === 'code') {
+                    $q->criterion($criterio, $buscar);
+                }
+            })
+                ->with(['membership' => function ($query) {
+                    $query->with(['payments' => function ($q) {
+                        $q->with('membership');
+                    }]);
+                }])->join('branches', function ($j) use ($criterio, $buscar) {
+                    $j->on('branches.id', 'customers.registered_on_branch_id');
+                    if ($criterio === 'branch') {
+                        $j->where('branches.division', 'LIKE', "%$buscar%")
+                        ->orWhere('branches.location', 'LIKE', "%$buscar%");
+                    }
+                })
                 ->paginate(10); //add pagination
+
+            // return $customers;
+
             $customersRes = [];
             foreach ($customers as $cus) {
                 $payment = Payment::where('customer_id', $cus->id)->orderBy('paid_at', 'desc')->first();
                 array_push($customersRes, [
                     'id' => $cus->id,
                     'name' => $cus->name,
+                    'lastname' => $cus->name,
                     'code' => $cus->code,
+                    'branch' => $cus->division ?: null,
                     'income' => $cus->income,
                     'membership' => $cus->membership['name'],
                     'last paid' => $payment ? date($payment->paid_at) : '',
@@ -94,23 +108,27 @@ class CustomerController extends Controller
 
     public function getCustomersOfBranch()
     {
+        try {
+            //los users pertenecen ala compoany (<o>)
+            $user = User::where('id', 1)->firstOrFail();
+            // $user = User::where('id', Auth::user()->id)->firstOrFail();
+            // return $user;
 
-        //los users pertenecen ala compoany (<o>)
-        $user = User::where('id', 1)->firstOrFail();
-        // $user = User::where('id', Auth::user()->id)->firstOrFail();
-        // return $user;
+            return Company::with(['branches' => function ($q) use ($user) {
+                $q->where('branches.id', $user->branch_id);
+            }])->get();
+            // return Customer::all();
+            /*
+            select (*) from customers join company where id in branch.company_id
+            */
 
-        return Company::with(['branches' => function ($q) use ($user) {
-            $q->where('branches.id', $user->branch_id);
-        }])->get();
-        // return Customer::all();
-        /*
-        select (*) from customers join company where id in branch.company_id
-        */
-
-        $customers = Customer::with(['company', function ($q) {
-            $q->with('branches');
-        }])->get();
+            $customers = Customer::with(['company', function ($q) {
+                $q->with('branches');
+            }])->get();
+        } catch (Exception $e) {
+            $c = $this;
+            return $this->catchEx($e->getMessage(), $c,  __FUNCTION__ . ' | ' . $e->getLine());
+        }
     }
 
     /**
@@ -199,9 +217,11 @@ class CustomerController extends Controller
     public function update(UpdateCustomerRequest $request, Customer $customer)
     {
         try {
+
+            // return $request;
+            $customer = Customer::where('id', $request->id)->first();
             if (isset($request)) {
                 foreach ($request->all() as $key => $val) {
-                    return $customer->$key;
                     if ($customer->$key) {
                         $customer->$key = $val;
                     }
