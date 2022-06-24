@@ -132,6 +132,8 @@ class PaymentController extends Controller
             $customer =  Customer::where('id', $request->customer['id'])->first();
             if (!$membership) return response('membership not found', 404);
             if (!$customer) return response('customer not found', 404);
+            $customer->membership_id = $membership->id;
+            $customer->save();
             // return $membership;
             $data = [
                 'paid_at' => $request->paid_at,
@@ -192,6 +194,9 @@ class PaymentController extends Controller
             }
             if ($request->customer) {
                 $payment->customer_id = $request->customer['id'];
+                $customer =  Customer::where('id', $request->customer['id'])->first();
+                $customer->membership_id = $membership->id;
+                $customer->save();
             }
             $payment->save();
             return response('updated', 200);

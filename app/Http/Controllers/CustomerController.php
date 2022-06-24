@@ -217,8 +217,6 @@ class CustomerController extends Controller
     public function update(UpdateCustomerRequest $request, Customer $customer)
     {
         try {
-
-            // return $request;
             $customer = Customer::where('id', $request->id)->first();
             if (isset($request)) {
                 foreach ($request->all() as $key => $val) {
@@ -230,7 +228,6 @@ class CustomerController extends Controller
                 return response()->json(200);
             }
             return response('Updated', 200);
-            // return $customer;
         } catch (Exception $e) {
             $c = $this;
             return $this->catchEx($e->getMessage(), $c,  __FUNCTION__ . ' | ' . $e->getLine());

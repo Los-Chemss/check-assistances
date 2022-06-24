@@ -40,7 +40,7 @@
                 />
               </div> -->
             </div>
-            
+
             <div class="card-header" id="aca">
               <h1 v-if="branch" class="division">
                 <p class="division">Sucursal: {{ branch.division }}</p>
@@ -50,7 +50,7 @@
               <h1 v-else class="bg'danger">
                 <p>No branch selected. Please select one.</p>
               </h1>
-            
+
             </div>
             <div class="card-body ">
               <div class="col-md-12">

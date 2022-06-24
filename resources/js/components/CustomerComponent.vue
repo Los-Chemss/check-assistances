@@ -728,6 +728,12 @@ export default {
       axios
         .post("customers/store", request)
         .then((response) => {
+          Swal.fire({
+            type: "success",
+            title: "Cliente creado",
+            text: "Cliente creado exitosamente",
+            timer: 3000,
+          });
           console.log(response);
         })
         .catch((error) => {
@@ -753,6 +759,12 @@ export default {
       axios
         .put("customers/update/", request)
         .then((response) => {
+          Swal.fire({
+            type: "success",
+            title: "Cliente actualizado",
+            text: "Cliente actualizado con exito",
+            timer: 3000,
+          });
           console.log(response);
         })
         .catch((error) => {
