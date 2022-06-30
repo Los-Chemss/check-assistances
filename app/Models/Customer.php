@@ -17,7 +17,7 @@ class Customer extends Model
     }
     public function membership()
     {
-        return $this->belongsTo(Membership::class);
+        return $this->belongsTo(Membership::class, 'membership_id', 'id');
         // return $this->belongsTo(Membership::class)->select('id', 'name');
     }
     public function payments()
@@ -40,6 +40,11 @@ class Customer extends Model
     public function branch()
     {
         return $this->belongsTo(Branch::class, 'registered_on_branch_id');
+    }
+
+    public function latestPayment()
+    {
+        return $this->hasOne(Payment::class, 'customer_id', 'id')->latest();
     }
 
 

@@ -24,16 +24,14 @@ class NewUserRequest extends FormRequest
     public function rules()
     {
         return [
-            "user_name" => 'required|unique:users,branch_id',
-            "email" => 'required|unique',
+            "user_name" => 'required', //'required|unique:users,branch_id',
+            "email" => 'required',
             "name" => 'required',
             "last_name" => 'required',
             "avatar" => 'nullable',
-            "password" => 'required|min:8',
+            "password" => 'required|min:4',
             "themme_layout" => 'nullable',
-            "email_verified_at" => 'required',
-            "updated_at" => 'required',
-            "branch_id" => 'required',
+            "branch_id" => 'nullable',
         ];
     }
 }

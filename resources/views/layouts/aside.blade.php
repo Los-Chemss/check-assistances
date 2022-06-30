@@ -80,6 +80,12 @@
                             <i data-feather="user" class="feather-icon"></i>
                             <span class="hide-menu">Usuarios</span></a>
                     </li>
+                    <li @click="menu = 7" class="sidebar-item"> <a
+                            class="sidebar-link waves-effect waves-dark sidebar-link" href="#"
+                            aria-expanded="false">
+                            <i data-feather="user" class="feather-icon"></i>
+                            <span class="hide-menu">Ventas</span></a>
+                    </li>
                     <li class="sidebar-item">
                         <form method="POST" action="{{ route('logout') }}">
                             @csrf

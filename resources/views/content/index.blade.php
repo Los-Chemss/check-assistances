@@ -21,7 +21,8 @@
                 <user-component />
             </template>
             <template v-if="menu==6">
-                Users module
+                {{-- Users module --}}
+                <users-component/>
                 {{-- <user-component></user-component> --}}
             </template>
         @endif

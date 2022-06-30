@@ -27,11 +27,8 @@ class PaymentController extends Controller
             $buscar = $request->buscar;
             $criterio = $request->criterio;
 
-            // return $request;
-
             $user = Auth::user() ? Auth::user() : auth('sanctum')->user();
             if (!$user) return response(null, 404);
-
 
             $payments = Payment::when(
                 ($criterio == 'paid_at' || $criterio == 'expires_at') && $buscar,
@@ -50,13 +47,12 @@ class PaymentController extends Controller
                         ->orWhere('branches.location', 'LIKE', "%$buscar%");
                 }
                 $j->latest('branches.id');
+            })->join('customers', function ($j) use ($criterio, $buscar) {
+                $j->on('customers.id', 'payments.customer_id');
+                if ($criterio === 'customer') {
+                    $j->where('name', 'like', "%$buscar%")->orWhere('code', 'like', "%$buscar%");
+                }
             })
-                ->join('customers', function ($j) use ($criterio, $buscar) {
-                    $j->on('customers.id', 'payments.customer_id');
-                    if ($criterio === 'customer') {
-                        $j->where('name', 'like', "%$buscar%")->orWhere('code', 'like', "%$buscar%");
-                    }
-                })
                 ->join('memberships', function ($j) use ($criterio, $buscar) {
                     $j->on('memberships.id', 'payments.membership_id');
                     if ($criterio == 'membership' && $buscar) {

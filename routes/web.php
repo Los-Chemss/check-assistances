@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\AssistanceController;
+use App\Http\Controllers\BranchController;
 use App\Http\Controllers\CustomerController;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
@@ -56,7 +57,10 @@ Route::middleware(['auth'])->group(function () {
     //User themme
     Route::get('/user_themme',  [UserController::class, 'getThemme']);
     Route::post('/user_themme', [UserController::class, 'setThemme']);
-    // Route::get('/user_themme', [UserController::class, 'changeThemme']);
+    Route::get('users', [UserController::class, 'index']);
+    Route::post('users/store', [UserController::class, 'newUser']);
+    Route::post('users/{user}/update', [UserController::class, 'update']);
+    Route::post('users/{user}/delete', [UserController::class, 'destroy']);
 
     //Customers
     // Route::get('customers',  [CustomerController::class, 'view']);
@@ -75,11 +79,12 @@ Route::middleware(['auth'])->group(function () {
 
     /*   Route::resource('payments', PaymentController::class);
     Route::resource('memberships', MembershipController::class); */
+    Route::get('select-branches',  [BranchController::class, 'select']);
 
 
     Route::get('payments',  [PaymentController::class, 'index']);
     Route::post('payments',  [PaymentController::class, 'store']);
-    Route::post('payments/{payment}/update',  [PaymentController::class, 'update']);
+    Route::post('payments/{payment}/update',  [PaymentController::class, 'updateUser']);
     Route::post('payments/{id}/delete',  [PaymentController::class, 'destroy']);
 
     Route::get('assistances',  [AssistanceController::class, 'index']);

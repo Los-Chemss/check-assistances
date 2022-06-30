@@ -18,12 +18,13 @@ Vue.component('customers-component', require('./components/CustomerComponent.vue
 Vue.component('asistance-component', require('./components/AssistanceComponent.vue').default);
 Vue.component('membership-component', require('./components/MembershipComponent.vue').default);
 Vue.component('payment-component', require('./components/PaymentComponent.vue').default);
+Vue.component('users-component', require('./components/UsersComponent.vue').default);
 
 
 const app = new Vue({
     //el: '#app',
     el: '#main-wrapper',
     data: {
-        menu: 0
+        menu: 6 // default 0
     },
 });

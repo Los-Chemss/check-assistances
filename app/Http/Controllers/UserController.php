@@ -17,10 +17,55 @@ class UserController extends Controller
         return view('users.index');
     }
 
-    public function users()
+
+    public function index(Request $request)
     {
-        return response()->json(User::all());
+        try {
+            $buscar = $request->buscar;
+            $criterio = $request->criterio;
+            $users = User::when($criterio && $buscar, function ($q) use ($criterio, $buscar) {
+                if ($criterio === 'name' || $criterio === 'last_name' && $buscar != null) {
+                    $q->where($criterio, 'LIKE', "%$buscar%");
+                }
+            })
+                ->join('branches', function ($j) use ($criterio, $buscar) {
+                    $j->on('branches.id', 'users.branch_id')
+                        ->when($criterio && $buscar, function ($q) use ($criterio, $buscar) {
+                            if ($criterio === 'branch'  && $buscar != null) {
+                                $q->where('division', 'LIKE', "%$buscar%")
+                                    ->orWhere('location', 'LIKE', "%$buscar%");
+                            }
+                        });
+                })
+                ->select(
+                    // "users.avatar",
+                    "users.id",
+                    "users.user_name",
+                    "users.email",
+                    "users.name",
+                    "users.last_name",
+                    // "branches.id",
+                    "branches.division as branch"
+                )
+                ->paginate();
+
+            return [
+                'pagination' => [
+                    'total'        => $users->total(),
+                    'current_page' => $users->currentPage(),
+                    'per_page'     => $users->perPage(),
+                    'last_page'    => $users->lastPage(),
+                    'from'         => $users->firstItem(),
+                    'to'           => $users->lastItem(),
+                ],
+                'users' => $users
+            ];
+        } catch (Exception $e) {
+            $c = $this;
+            return $this->catchEx($e->getMessage(), $c,  __FUNCTION__ . ' | ' . $e->getLine());
+        }
     }
+
     public function account()
     {
         $user = Auth::user();
@@ -96,13 +141,54 @@ class UserController extends Controller
         }
     }
 
-    public function newUser(NewUserRequest $request)
+    public function newUser(Request $request)
     {
         try {
-            $newUser = $request->all();
+            // return $request;
+            $newUser = [];
+            foreach ($request->all() as $key => $val) {
+                if ($key === 'password') {
+                    $newUser[$key] = Hash::make($val);
+                } else {
+                    $newUser[$key] = $val;
+                }
+            }
+            User::create($newUser);
+            return response()->json('User created', 201);
         } catch (Exception $e) {
             $c = $this;
             return $this->catchEx($e->getMessage(), $c,  __FUNCTION__);
+        }
+    }
+
+    public function updateUser(Request $request, User $user)
+    {
+        try {
+            if (isset($request)) {
+                foreach ($request->all() as $key => $val) {
+                    if ($user->$key) {
+                        $newRole[$key] = $val;
+                        // $this->newUpdate('users', $user->id, $key, $user[$key], $val, Auth::user()->id);
+                    }
+                }
+                $user->save();
+                return response()->json('User updated', 200);
+            }
+        } catch (Exception $e) {
+            $c = $this;
+            return $this->catchEx($e->getMessage(), $c,  __FUNCTION__ . ' | ' . $e->getLine());
+        }
+    }
+    public function destroy($user)
+    {
+        try {
+            $user = User::where('id', $user)->first();
+            if (!$user) return response('user not found', 404);
+            $user->delete();
+            return response('user deleted', 200);
+        } catch (Exception $e) {
+            $c = $this;
+            return $this->catchEx($e->getMessage(), $c,  __FUNCTION__ . ' | ' . $e->getLine());
         }
     }
 }

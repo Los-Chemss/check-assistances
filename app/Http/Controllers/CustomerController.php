@@ -39,39 +39,50 @@ class CustomerController extends Controller
             $user = Auth::user() ? Auth::user() : auth('sanctum')->user();
             if (!$user) return response(null, 404);
 
-            $customers = Customer::when($criterio, function ($q) use ($criterio, $buscar) {
-                if ($criterio === 'name' || $criterio === 'lastname' || $criterio === 'code') {
-                    $q->criterion($criterio, $buscar);
-                }
-            })
-                ->with(['membership' => function ($query) {
-                    $query->with(['payments' => function ($q) {
-                        $q->with('membership');
-                    }]);
-                }])->join('branches', function ($j) use ($criterio, $buscar) {
-                    $j->on('branches.id', 'customers.registered_on_branch_id');
-                    if ($criterio === 'branch') {
-                        $j->where('branches.division', 'LIKE', "%$buscar%")
-                        ->orWhere('branches.location', 'LIKE', "%$buscar%");
+            $customers = Customer::when(
+                $criterio,
+                function ($q) use ($criterio, $buscar) {
+                    if ($criterio === 'name' || $criterio === 'lastname' || $criterio === 'code') {
+                        $q->criterion($criterio, $buscar);
                     }
-                })
+                }
+            )
+                ->Join(
+                    'branches',
+                    function ($j) use ($criterio, $buscar) {
+                        $j->on('branches.id', 'customers.registered_on_branch_id');
+                        if ($criterio === 'branch') {
+                            $j->where('branches.division', 'LIKE', "%$buscar%")
+                                ->orWhere('branches.location', 'LIKE', "%$buscar%");
+                        }
+                    }
+                )
+                ->select(
+                    'customers.membership_id',
+                    'customers.id as id',
+                    'customers.name',
+                    'customers.lastname',
+                    'customers.code',
+                    'customers.income',
+                    'branches.division',
+                )
+                ->orderBy('id', 'asc')
                 ->paginate(10); //add pagination
 
             // return $customers;
-
             $customersRes = [];
             foreach ($customers as $cus) {
-                $payment = Payment::where('customer_id', $cus->id)->orderBy('paid_at', 'desc')->first();
+                // $payment = Payment::where('customer_id', $cus->id)->orderBy('paid_at', 'desc')->first();
                 array_push($customersRes, [
                     'id' => $cus->id,
                     'name' => $cus->name,
-                    'lastname' => $cus->name,
+                    'lastname' => $cus->lastname,
                     'code' => $cus->code,
                     'branch' => $cus->division ?: null,
                     'income' => $cus->income,
                     'membership' => $cus->membership['name'],
-                    'last paid' => $payment ? date($payment->paid_at) : '',
-                    'expires at' => $payment ? date($payment->expires_at) : ''
+                    'last paid' => $cus->latestPayment ? date($cus->latestPayment->paid_at) : '',
+                    'expires at' => $cus->latestPayment ? date($cus->latestPayment->expires_at) : ''
                 ]);
             }
             return [
