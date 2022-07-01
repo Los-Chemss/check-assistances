@@ -25,7 +25,7 @@ class CustomerFactory extends Factory
         $unique = null;
         do {
             $unique = $this->faker->numberBetween(0001, 9999);
-        } while (!in_array($this->faker->numberBetween(0001, 9999), $codes));
+        } while (in_array($this->faker->numberBetween(0001, 9999), $codes));
 
         $companyId = function () {
             return Company::query()->inRandomOrder()->first()->id;
@@ -44,7 +44,7 @@ class CustomerFactory extends Factory
             'province' => $this->faker->state(),
             'postcode' => $this->faker->postcode(),
             'phone' => $this->faker->phoneNumber(),
-            'registered_on_branch_id'=> function () use ($companyId) {
+            'registered_on_branch_id' => function () use ($companyId) {
                 return  Branch::query()/* ->where('company_id', $companyId) */->inRandomOrder()->first()->id;
             },
         ];
