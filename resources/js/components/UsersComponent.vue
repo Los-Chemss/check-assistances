@@ -111,6 +111,7 @@
                           </td>
                           <td>
                             <button
+                              v-if="auth.email != user.email && user.id != 1"
                               type="button"
                               @click="openModal('users', 'update', user)"
                               class="btn btn-warning btn-sm"
@@ -119,6 +120,7 @@
                             </button>
                             &nbsp;
                             <button
+                              v-if="auth.email != user.email && user.id != 1"
                               type="button"
                               class="btn btn-danger btn-sm"
                               @click="deleteUser(user.id)"
@@ -303,7 +305,7 @@
                     >
                       <option></option>
                       <option v-for="branch in branches" :value="branch">
-                        {{ branch.division }} | ${{ branch.location }}
+                        {{ branch.division }} | {{ branch.location }}
                       </option>
                     </select>
                   </div>
@@ -382,9 +384,25 @@ export default {
       user_id: null,
       showUsers: 10,
       criterions: ["username", "email", "name", "last_name", "branch"],
+      authenticated: false,
+      auth: {
+        id: null,
+        email: null,
+      },
     };
   },
 
+  created() {
+    if (window.Laravel.user) {
+      this.auth.email = window.Laravel.user.email;
+      /*   this.name = window.Laravel.user.name;
+      this.last_name = window.Laravel.user.last_name; */
+      this.authenticated = true;
+      this.branch = window.Laravel.user.branch;
+    } else {
+      this.authenticated = false;
+    }
+  },
   computed: {
     isActived: function () {
       return this.pagination.current_page;
@@ -422,7 +440,7 @@ export default {
         .get(url)
         .then((response) => {
           var respuesta = response.data;
-          console.log(respuesta);
+          //   console.log(respuesta);
           me.users = respuesta.users.data;
 
           console.log(me.users);
@@ -462,9 +480,10 @@ export default {
         avatar: me.user.avatar,
       };
       axios
-        .post("users/store", request)
+        .post("users", request)
         .then((response) => {
           let respuesta = response.data;
+          console.log(response);
           let message = "Usuario creado con exito";
           Swal.fire({
             type: "success",
@@ -476,6 +495,7 @@ export default {
         .catch((error) => {
           console.table(error);
         });
+      return;
       this.closeModal();
     },
 
@@ -492,9 +512,10 @@ export default {
         id: me.user.id,
       };
       axios
-        .post("users/" + request.id + "/update", request)
+        .put("users/" + request.id, request)
         .then((response) => {
           let respuesta = response.data;
+          console.log(respuesta);
           Swal.fire({
             type: "success",
             title: "Usuario actualizado",
@@ -511,6 +532,7 @@ export default {
           });
           console.table(error);
         });
+      return;
       this.closeModal();
     },
 
@@ -595,7 +617,7 @@ export default {
         if (result.value) {
           let me = this;
           axios
-            .post("users/" + user + "/delete")
+            .delete("users/" + user)
             .then((response) => {
               console.log(response);
               Swal.fire({

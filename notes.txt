@@ -14,8 +14,6 @@ Gercanada_001
 
 +++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 
-
-
 Cambios
 
 1- En la version ya subida, no funciona para editar el costo de las membresias.                                           Y
@@ -25,7 +23,7 @@ email, Fecha de nacimiento. Y que en la parte de Customers puedas ver la informa
 lado de editar y eliminar                                                                                                 Y
 4- Que se pueda filtrar Clientes Activos, Clientes Expirados y Clientes apuntos de expirar                                P
 5- La parte de Inventario que habias dicho, que el usuario pueda registrar ventas como agua, etc. tambien que se
- lleve un registro de cuando se hizo                                                                                        P
+ lleve un registro de cuando se hizo                                                                                      P
 6- Seccion de Gastos Internos, va ser como el de inventario pero solo para gastos a nivel empresarial.
 7- Una seccion donde se registre todos los movimientos hechos por los usuarios de los sucursales
  y solo lo pueda ver un super usuario.
@@ -33,5 +31,3 @@ lado de editar y eliminar                                                       
 9- Cuando haces Check In te diga cuando va Expirar.
 
 ->footer
-
-

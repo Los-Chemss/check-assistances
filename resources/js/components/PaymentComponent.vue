@@ -493,7 +493,7 @@ export default {
         id: me.payment_id,
       };
       axios
-        .post("payments/" + request.id + "/update", request)
+        .put("payments/" + request.id, request)
         .then((response) => {
           let respuesta = response.data;
           Swal.fire({
@@ -601,7 +601,7 @@ export default {
         if (result.value) {
           let me = this;
           axios
-            .post("payments/" + payment + "/delete")
+            .delete("payments/" + payment)
             .then((response) => {
               Swal.fire({
                 type: "success",

@@ -726,7 +726,7 @@ export default {
         membership: me.customer.membership,
       };
       axios
-        .post("customers/store", request)
+        .post("customers", request)
         .then((response) => {
           Swal.fire({
             type: "success",
@@ -757,7 +757,7 @@ export default {
         id: me.customer.id,
       };
       axios
-        .put("customers/update/", request)
+        .put("customers/", request)
         .then((response) => {
           Swal.fire({
             type: "success",
@@ -887,7 +887,7 @@ export default {
         if (result.value) {
           let me = this;
           axios
-            .post("customers/" + customer + "/delete")
+            .delete("customers/" + customer)
             .then((response) => {
               console.log(response);
               me.getCustomers(me.page, me.buscar, me.criterio);

@@ -2565,7 +2565,7 @@ __webpack_require__.r(__webpack_exports__);
       }).then(function (result) {
         if (result.value) {
           var me = _this;
-          axios.post("assistances/" + assistance + "/delete").then(function (response) {
+          axios["delete"]("assistances/" + assistance).then(function (response) {
             console.log(response);
             me.getAssistances(me.page, me.buscar, me.criterio);
           })["catch"](function (error) {
@@ -3639,7 +3639,7 @@ __webpack_require__.r(__webpack_exports__);
         phone: me.customer.phone,
         membership: me.customer.membership
       };
-      axios.post("customers/store", request).then(function (response) {
+      axios.post("customers", request).then(function (response) {
         Swal.fire({
           type: "success",
           title: "Cliente creado",
@@ -3666,7 +3666,7 @@ __webpack_require__.r(__webpack_exports__);
         membership_id: me.customer.membership_id,
         id: me.customer.id
       };
-      axios.put("customers/update/", request).then(function (response) {
+      axios.put("customers/", request).then(function (response) {
         Swal.fire({
           type: "success",
           title: "Cliente actualizado",
@@ -3792,7 +3792,7 @@ __webpack_require__.r(__webpack_exports__);
       }).then(function (result) {
         if (result.value) {
           var me = _this;
-          axios.post("customers/" + customer + "/delete").then(function (response) {
+          axios["delete"]("customers/" + customer).then(function (response) {
             console.log(response);
             me.getCustomers(me.page, me.buscar, me.criterio);
           })["catch"](function (error) {
@@ -4388,7 +4388,7 @@ __webpack_require__.r(__webpack_exports__);
         period: me.membership.period,
         id: me.membership.id
       };
-      axios.put("memberships/update", request).then(function (response) {
+      axios.put("memberships", request).then(function (response) {
         console.log(response);
         var message = "Se ha actualizado un  plan de membresia";
         Swal.fire({
@@ -4479,7 +4479,7 @@ __webpack_require__.r(__webpack_exports__);
       }).then(function (result) {
         if (result.value) {
           var me = _this;
-          axios.post("memberships/" + membership + "/delete").then(function (response) {
+          axios["delete"]("memberships/" + membership).then(function (response) {
             console.log(response);
             Swal.fire({
               type: "success",
@@ -5018,7 +5018,7 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
         customer: me.selectedCustomer,
         id: me.payment_id
       };
-      axios.post("payments/" + request.id + "/update", request).then(function (response) {
+      axios.put("payments/" + request.id, request).then(function (response) {
         var respuesta = response.data;
         Swal.fire({
           type: "success",
@@ -5144,7 +5144,7 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
       }).then(function (result) {
         if (result.value) {
           var me = _this2;
-          axios.post("payments/" + payment + "/delete").then(function (response) {
+          axios["delete"]("payments/" + payment).then(function (response) {
             Swal.fire({
               type: "success",
               title: "Registro  eliminado con éxito",
@@ -6011,6 +6011,8 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
 //
 //
 //
+//
+//
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = ({
   data: function data() {
     return {
@@ -6044,8 +6046,25 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
       buscar: "",
       user_id: null,
       showUsers: 10,
-      criterions: ["username", "email", "name", "last_name", "branch"]
+      criterions: ["username", "email", "name", "last_name", "branch"],
+      authenticated: false,
+      auth: {
+        id: null,
+        email: null
+      }
     };
+  },
+  created: function created() {
+    if (window.Laravel.user) {
+      this.auth.email = window.Laravel.user.email;
+      /*   this.name = window.Laravel.user.name;
+      this.last_name = window.Laravel.user.last_name; */
+
+      this.authenticated = true;
+      this.branch = window.Laravel.user.branch;
+    } else {
+      this.authenticated = false;
+    }
   },
   computed: {
     isActived: function isActived() {
@@ -6086,8 +6105,8 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
       var me = this;
       var url = "users?page=" + page + "&buscar=" + buscar + "&criterio=" + criterio;
       axios.get(url).then(function (response) {
-        var respuesta = response.data;
-        console.log(respuesta);
+        var respuesta = response.data; //   console.log(respuesta);
+
         me.users = respuesta.users.data;
         console.log(me.users);
         me.pagination = respuesta.pagination;
@@ -6118,8 +6137,9 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
         branch_id: me.selectedBranch.id,
         avatar: me.user.avatar
       };
-      axios.post("users/store", request).then(function (response) {
+      axios.post("users", request).then(function (response) {
         var respuesta = response.data;
+        console.log(response);
         var message = "Usuario creado con exito";
         Swal.fire({
           type: "success",
@@ -6130,6 +6150,7 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
       })["catch"](function (error) {
         console.table(error);
       });
+      return;
       this.closeModal();
     },
     updateUser: function updateUser() {
@@ -6144,8 +6165,9 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
         avatar: me.user.avatar,
         id: me.user.id
       };
-      axios.post("users/" + request.id + "/update", request).then(function (response) {
+      axios.put("users/" + request.id, request).then(function (response) {
         var respuesta = response.data;
+        console.log(respuesta);
         Swal.fire({
           type: "success",
           title: "Usuario actualizado",
@@ -6161,6 +6183,7 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
         });
         console.table(error);
       });
+      return;
       this.closeModal();
     },
     selectMembership: function selectMembership(event) {
@@ -6263,7 +6286,7 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
       }).then(function (result) {
         if (result.value) {
           var me = _this2;
-          axios.post("users/" + user + "/delete").then(function (response) {
+          axios["delete"]("users/" + user).then(function (response) {
             console.log(response);
             Swal.fire({
               type: "success",
@@ -31194,51 +31217,63 @@ var render = function () {
                                             ),
                                             _vm._v(" "),
                                             _c("td", [
-                                              _c(
-                                                "button",
-                                                {
-                                                  staticClass:
-                                                    "btn btn-warning btn-sm",
-                                                  attrs: { type: "button" },
-                                                  on: {
-                                                    click: function ($event) {
-                                                      return _vm.openModal(
-                                                        "users",
-                                                        "update",
-                                                        user
-                                                      )
+                                              _vm.auth.email != user.email &&
+                                              user.id != 1
+                                                ? _c(
+                                                    "button",
+                                                    {
+                                                      staticClass:
+                                                        "btn btn-warning btn-sm",
+                                                      attrs: { type: "button" },
+                                                      on: {
+                                                        click: function (
+                                                          $event
+                                                        ) {
+                                                          return _vm.openModal(
+                                                            "users",
+                                                            "update",
+                                                            user
+                                                          )
+                                                        },
+                                                      },
                                                     },
-                                                  },
-                                                },
-                                                [
-                                                  _c("i", {
-                                                    staticClass: "icon-pencil",
-                                                  }),
-                                                ]
-                                              ),
+                                                    [
+                                                      _c("i", {
+                                                        staticClass:
+                                                          "icon-pencil",
+                                                      }),
+                                                    ]
+                                                  )
+                                                : _vm._e(),
                                               _vm._v(
                                                 "\n                           \n                          "
                                               ),
-                                              _c(
-                                                "button",
-                                                {
-                                                  staticClass:
-                                                    "btn btn-danger btn-sm",
-                                                  attrs: { type: "button" },
-                                                  on: {
-                                                    click: function ($event) {
-                                                      return _vm.deleteUser(
-                                                        user.id
-                                                      )
+                                              _vm.auth.email != user.email &&
+                                              user.id != 1
+                                                ? _c(
+                                                    "button",
+                                                    {
+                                                      staticClass:
+                                                        "btn btn-danger btn-sm",
+                                                      attrs: { type: "button" },
+                                                      on: {
+                                                        click: function (
+                                                          $event
+                                                        ) {
+                                                          return _vm.deleteUser(
+                                                            user.id
+                                                          )
+                                                        },
+                                                      },
                                                     },
-                                                  },
-                                                },
-                                                [
-                                                  _c("i", {
-                                                    staticClass: "icon-trash",
-                                                  }),
-                                                ]
-                                              ),
+                                                    [
+                                                      _c("i", {
+                                                        staticClass:
+                                                          "icon-trash",
+                                                      }),
+                                                    ]
+                                                  )
+                                                : _vm._e(),
                                             ]),
                                           ],
                                           2
@@ -31686,7 +31721,7 @@ var render = function () {
                                             _vm._v(
                                               "\n                      " +
                                                 _vm._s(branch.division) +
-                                                " | $" +
+                                                " | " +
                                                 _vm._s(branch.location) +
                                                 "\n                    "
                                             ),

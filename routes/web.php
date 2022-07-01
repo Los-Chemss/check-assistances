@@ -57,25 +57,27 @@ Route::middleware(['auth'])->group(function () {
     //User themme
     Route::get('/user_themme',  [UserController::class, 'getThemme']);
     Route::post('/user_themme', [UserController::class, 'setThemme']);
+
+
     Route::get('users', [UserController::class, 'index']);
-    Route::post('users/store', [UserController::class, 'newUser']);
-    Route::post('users/{user}/update', [UserController::class, 'update']);
-    Route::post('users/{user}/delete', [UserController::class, 'destroy']);
+    Route::post('users', [UserController::class, 'newUser']);
+    Route::put('users/{user}', [UserController::class, 'updateUser']);
+    Route::delete('users/{user}', [UserController::class, 'destroy']);
 
     //Customers
     // Route::get('customers',  [CustomerController::class, 'view']);
     Route::get('customers',  [CustomerController::class, 'index']);
     Route::get('customers/{customer}',  [CustomerController::class, 'show']);
     Route::get('customers-select',  [CustomerController::class, 'select']);
-    Route::post('customers/store',  [CustomerController::class, 'store']);
-    Route::put('customers/update',  [CustomerController::class, 'update']);
-    Route::post('customers/{id}/delete',  [CustomerController::class, 'destroy']);
+    Route::post('customers',  [CustomerController::class, 'store']);
+    Route::put('customers',  [CustomerController::class, 'update']);
+    Route::delete('customers/{id}',  [CustomerController::class, 'destroy']);
 
-    Route::get('memberships',  [MembershipController::class, 'index']);
     Route::get('select-memberships',  [MembershipController::class, 'select']);
+    Route::get('memberships',  [MembershipController::class, 'index']);
     Route::post('memberships',  [MembershipController::class, 'store']);
-    Route::put('memberships/update',  [MembershipController::class, 'update']);
-    Route::post('memberships/{id}/delete',  [MembershipController::class, 'destroy']);
+    Route::put('memberships',  [MembershipController::class, 'update']);
+    Route::delete('memberships/{id}',  [MembershipController::class, 'destroy']);
 
     /*   Route::resource('payments', PaymentController::class);
     Route::resource('memberships', MembershipController::class); */
@@ -84,12 +86,12 @@ Route::middleware(['auth'])->group(function () {
 
     Route::get('payments',  [PaymentController::class, 'index']);
     Route::post('payments',  [PaymentController::class, 'store']);
-    Route::post('payments/{payment}/update',  [PaymentController::class, 'updateUser']);
-    Route::post('payments/{id}/delete',  [PaymentController::class, 'destroy']);
+    Route::put('payments/{payment}',  [PaymentController::class, 'updateUser']);
+    Route::delete('payments/{id}',  [PaymentController::class, 'destroy']);
 
     Route::get('assistances',  [AssistanceController::class, 'index']);
     Route::post('assistances',  [AssistanceController::class, 'store']);
-    Route::post('assistances/{id}/delete',  [AssistanceController::class, 'destroy']);
+    Route::delete('assistances/{id}/delete',  [AssistanceController::class, 'destroy']);
 
     Route::any('{any}', function () {
         abort(404);

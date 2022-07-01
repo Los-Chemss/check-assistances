@@ -497,7 +497,7 @@ export default {
         id: me.membership.id,
       };
       axios
-        .put("memberships/update", request)
+        .put("memberships", request)
         .then((response) => {
           console.log(response);
           let message = "Se ha actualizado un  plan de membresia";
@@ -588,7 +588,7 @@ export default {
         if (result.value) {
           let me = this;
           axios
-            .post("memberships/" + membership + "/delete")
+            .delete("memberships/" + membership)
             .then((response) => {
               console.log(response);
               Swal.fire({

@@ -166,9 +166,10 @@ class UserController extends Controller
         try {
             if (isset($request)) {
                 foreach ($request->all() as $key => $val) {
-                    if ($user->$key) {
-                        $newRole[$key] = $val;
-                        // $this->newUpdate('users', $user->id, $key, $user[$key], $val, Auth::user()->id);
+                    if ($key === 'password') {
+                        $user[$key] = Hash::make($val);
+                    } else {
+                        $user[$key] = $val;
                     }
                 }
                 $user->save();
@@ -182,6 +183,7 @@ class UserController extends Controller
     public function destroy($user)
     {
         try {
+            if ($user->id === 1) return 403;
             $user = User::where('id', $user)->first();
             if (!$user) return response('user not found', 404);
             $user->delete();
