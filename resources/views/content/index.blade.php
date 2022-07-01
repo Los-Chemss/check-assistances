@@ -21,9 +21,21 @@
                 <user-component />
             </template>
             <template v-if="menu==6">
-                {{-- Users module --}}
-                <users-component/>
-                {{-- <user-component></user-component> --}}
+                <users-component />
+            </template>
+            <template v-if="menu==7">
+                <products-component />
+            </template>
+            <template v-if="menu==8">
+                <sales-component />
+            </template>
+            <template v-if="menu==9">
+                purchases
+                {{-- <purchases-component/> --}}
+            </template>
+            <template v-if="menu==10">
+                Stock
+                {{-- <purchases-component/> --}}
             </template>
         @endif
     </div>

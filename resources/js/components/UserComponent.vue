@@ -326,11 +326,8 @@ export default {
         .get("/account")
         .then(function (response) {
           me.userObj = response.data;
-
           console.log(response);
-
           console.log(me.userObj);
-          return;
           this.$emit("userBranch");
         })
         .catch(function (error) {
@@ -356,8 +353,7 @@ export default {
           branch: me.selectedBranch.id,
         })
         .then(function (response) {
-          console.log(response);
-          return;
+        //   console.log(response);
           Swal.fire({
             type: "success",
             title: "Account updated",

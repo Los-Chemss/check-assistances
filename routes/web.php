@@ -10,6 +10,9 @@ use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\FactorController;
 use App\Http\Controllers\MembershipController;
 use App\Http\Controllers\PaymentController;
+use App\Http\Controllers\ProductController;
+use App\Http\Controllers\PurchaseController;
+use App\Http\Controllers\SaleController;
 use App\Mail\TestingMail;
 use Illuminate\Support\Facades\Mail;
 
@@ -92,6 +95,22 @@ Route::middleware(['auth'])->group(function () {
     Route::get('assistances',  [AssistanceController::class, 'index']);
     Route::post('assistances',  [AssistanceController::class, 'store']);
     Route::delete('assistances/{id}/delete',  [AssistanceController::class, 'destroy']);
+
+    Route::get('sales', [SaleController::class, 'index']);
+    Route::post('sales', [SaleController::class, 'store']);
+    Route::put('sales/{id}', [SaleController::class, 'update']);
+    Route::delete('sales/{id}', [SaleController::class, 'delete']);
+
+    Route::get('purchases', [PurchaseController::class, 'index']);
+    Route::post('purchases', [PurchaseController::class, 'store']);
+    Route::put('purchases/{id}', [PurchaseController::class, 'update']);
+    Route::delete('purchases/{id}', [PurchaseController::class, 'delete']);
+    Route::delete('sales/{id}', [SaleController::class, 'delete']);
+
+    Route::get('products', [ProductController::class, 'index']);
+    Route::post('products', [ProductController::class, 'store']);
+    Route::put('products/{id}', [ProductController::class, 'update']);
+    Route::delete('products/{id}', [ProductController::class, 'destroy']);
 
     Route::any('{any}', function () {
         abort(404);

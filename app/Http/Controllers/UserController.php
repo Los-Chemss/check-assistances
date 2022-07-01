@@ -23,28 +23,28 @@ class UserController extends Controller
         try {
             $buscar = $request->buscar;
             $criterio = $request->criterio;
+
             $users = User::when($criterio && $buscar, function ($q) use ($criterio, $buscar) {
                 if ($criterio === 'name' || $criterio === 'last_name' && $buscar != null) {
                     $q->where($criterio, 'LIKE', "%$buscar%");
                 }
             })
-                ->join('branches', function ($j) use ($criterio, $buscar) {
-                    $j->on('branches.id', 'users.branch_id')
-                        ->when($criterio && $buscar, function ($q) use ($criterio, $buscar) {
-                            if ($criterio === 'branch'  && $buscar != null) {
-                                $q->where('division', 'LIKE', "%$buscar%")
-                                    ->orWhere('location', 'LIKE', "%$buscar%");
-                            }
-                        });
-                })
-                ->select(
+                // ->when('branch_id' != null, function ($q) use ($criterio, $buscar) {
+                   ->join('branches', function ($j) use ($criterio, $buscar) {
+                        $j->on('branches.id', 'users.branch_id')
+                            ->when($criterio && $buscar, function ($q) use ($criterio, $buscar) {
+                                if ($criterio === 'branch'  && $buscar != null) {
+                                    $q->where('division', 'LIKE', "%$buscar%"); //->orWhere('location', 'LIKE', "%$buscar%");
+                                }
+                            });
+                    })
+                 ->select(
                     // "users.avatar",
                     "users.id",
                     "users.user_name",
                     "users.email",
                     "users.name",
                     "users.last_name",
-                    // "branches.id",
                     "branches.division as branch"
                 )
                 ->paginate();

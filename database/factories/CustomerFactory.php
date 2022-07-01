@@ -25,7 +25,7 @@ class CustomerFactory extends Factory
         $unique = null;
         do {
             $unique = $this->faker->numberBetween(0001, 9999);
-        } while (in_array($this->faker->numberBetween(0001, 9999), $codes));
+        } while (!in_array($this->faker->numberBetween(0001, 9999), $codes));
 
         $companyId = function () {
             return Company::query()->inRandomOrder()->first()->id;

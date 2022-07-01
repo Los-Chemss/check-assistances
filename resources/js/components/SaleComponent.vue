@@ -16,13 +16,13 @@
             <button
               type="button"
               class="btn btn-primary btn-lg fas fa-edit"
-              @click="openModal('payments', 'store')"
+              @click="openModal('sales', 'store')"
             >
-              New Payment
+              New Sale
             </button>
           </div>
           <div class="card-body">
-            <h4 class="card-title">Payments</h4>
+            <h4 class="card-title">Sales</h4>
             <div class="table-responsive">
               <div
                 id="col_render_wrapper"
@@ -55,7 +55,7 @@
                             : 'text'
                         "
                         v-model="buscar"
-                        @keyup.enter="listPayments(1, buscar, criterio)"
+                        @keyup.enter="listSales(1, buscar, criterio)"
                         class="form-control"
                         :placeholder="
                           criterio == 'paid_at' || criterio == 'expires_at'
@@ -70,7 +70,7 @@
                       <div class="input-group-append">
                         <button
                           type="submit"
-                          @click="listPayments(1, buscar, criterio)"
+                          @click="listSales(1, buscar, criterio)"
                           class="btn-sm btn-primary input-group-text"
                         >
                           <i class="fa fa-search"></i>
@@ -89,9 +89,9 @@
                       aria-describedby="col_render_info"
                     >
                       <thead>
-                        <tr v-for="(payment, index) in payments" v-if="index < 1">
+                        <tr v-for="(sale, index) in sales" v-if="index < 1">
                           <th
-                            v-for="(value, key, cIndex) in payment"
+                            v-for="(value, key, cIndex) in sale"
                             v-if="key != 'customerId' || key != 'embershipId'"
                           >
                             {{ key }}
@@ -101,11 +101,11 @@
                       </thead>
                       <tbody>
                         <tr
-                          v-for="(payment, index) in payments"
+                          v-for="(sale, index) in sales"
                           v-if="index <= pagination.per_page"
                         >
                           <td
-                            v-for="(value, key, cIndex) in payment"
+                            v-for="(value, key, cIndex) in sale"
                             max-height="5px"
                             v-if="key != 'customerId' || key != 'embershipId'"
                           >
@@ -114,7 +114,7 @@
                           <td>
                             <button
                               type="button"
-                              @click="openModal('payments', 'update', payment)"
+                              @click="openModal('sales', 'update', sale)"
                               class="btn btn-warning btn-sm"
                             >
                               <i class="icon-pencil"></i>
@@ -123,7 +123,7 @@
                             <button
                               type="button"
                               class="btn btn-danger btn-sm"
-                              @click="deletePayment(payment.id)"
+                              @click="deleteSale(sale.id)"
                             >
                               <i class="icon-trash"></i>
                             </button>
@@ -132,9 +132,9 @@
                       </tbody>
                       <tfoot>
                         <tr></tr>
-                        <tr v-for="(payment, index) in payments" v-if="index < 1">
+                        <tr v-for="(sale, index) in sales" v-if="index < 1">
                           <th
-                            v-for="(value, key, cIndex) in payment"
+                            v-for="(value, key, cIndex) in sale"
                             v-if="key != 'customerId' || key != 'embershipId'"
                           >
                             {{ key }}
@@ -153,8 +153,8 @@
                       role="status"
                       aria-live="polite"
                     >
-                      Showing {{ pagination.current_page }} to {{pagination.per_page}} of
-                      {{ pagination.total }} entries
+                      Showing {{ pagination.current_page }} to
+                      {{ pagination.per_page }} of {{ pagination.total }} entries
                     </div>
                   </div>
                   <div class="col-sm-12 col-md-7">
@@ -299,7 +299,7 @@
                 v-if="actionType == 1"
                 type="button"
                 class="btn btn-primary fas fa-save"
-                @click="savePayment"
+                @click="saveSale"
               >
                 Save
               </button>
@@ -307,7 +307,7 @@
                 v-if="actionType == 2"
                 type="button"
                 class="btn btn-primary fas fa-save"
-                @click="updatePayment"
+                @click="updateSale"
               >
                 Update
               </button>
@@ -333,7 +333,7 @@ export default {
   data() {
     return {
       loading: false,
-      payments: [],
+      sales: [],
       user: {},
       memberships: [],
       customers: [],
@@ -359,8 +359,8 @@ export default {
       offset: 3,
       criterio: "paid_at",
       buscar: "",
-      payment_id: null,
-      showPayments: 10,
+      sale_id: null,
+      showSales: 10,
       criterions: ["paid_at", "expires_at", "customer", "membership", "branch"],
     };
   },
@@ -390,20 +390,20 @@ export default {
       }
       return pagesArray;
     },
-    // filter: this.listPayments(this.page, this.buscar, this.criterio),
+    // filter: this.listSales(this.page, this.buscar, this.criterio),
   },
 
   methods: {
-    listPayments(page, buscar, criterio) {
+    listSales(page, buscar, criterio) {
       console.log("getted");
       let me = this;
-      let url = "payments?page=" + page + "&buscar=" + buscar + "&criterio=" + criterio;
+      let url = "sales?page=" + page + "&buscar=" + buscar + "&criterio=" + criterio;
       axios
         .get(url)
         .then((response) => {
           var respuesta = response.data;
           //   console.log(respuesta);
-          me.payments = respuesta.payments.data;
+          me.sales = respuesta.sales.data;
           me.pagination = respuesta.pagination;
         })
         .catch((error) => {
@@ -451,10 +451,10 @@ export default {
           JSON.stringify(event.target.options[event.target.options.selectedIndex])
         )._value;
       }
-      this.showPayments = newVal;
+      this.showSales = newVal;
     },
 
-    savePayment() {
+    saveSale() {
       let me = this;
       let request = {
         paid_at: me.paid_at,
@@ -462,7 +462,7 @@ export default {
         customer: me.selectedCustomer,
       };
       axios
-        .post("payments", request)
+        .post("sales", request)
         .then((response) => {
           let respuesta = response.data;
           let message =
@@ -471,7 +471,7 @@ export default {
             " con una duracion de " +
             respuesta.membership.name +
             " dias. Y expira el " +
-            respuesta.payment.expires_at;
+            respuesta.sale.expires_at;
           Swal.fire({
             type: "success",
             title: "Registro  de pago satisfactorio",
@@ -485,16 +485,16 @@ export default {
       this.closeModal();
     },
 
-    updatePayment() {
+    updateSale() {
       let me = this;
       let request = {
         paid_at: me.paid_at,
         membership: me.selectedMembership,
         customer: me.selectedCustomer,
-        id: me.payment_id,
+        id: me.sale_id,
       };
       axios
-        .put("payments/" + request.id, request)
+        .put("sales/" + request.id, request)
         .then((response) => {
           let respuesta = response.data;
           Swal.fire({
@@ -544,16 +544,16 @@ export default {
       this.modal = 0;
       this.title = "";
       this.errors = {};
-      this.listPayments(this.pagination.current_page, this.buscar, this.criterio);
+      this.listSales(this.pagination.current_page, this.buscar, this.criterio);
     },
 
     async openModal(model, action, data = []) {
       switch (model) {
-        case "payments": {
+        case "sales": {
           switch (action) {
             case "store": {
               this.modal = 1;
-              this.modalTitle = "New payment";
+              this.modalTitle = "New sale";
               this.actionType = 1;
               this.paid_at = "";
               this.selectedMembership = "";
@@ -572,12 +572,12 @@ export default {
                 if (c.id === data.customerId) cus = c;
               });
               this.modal = 1;
-              this.modalTitle = "Update payment";
+              this.modalTitle = "Update sale";
               this.actionType = 2;
               this.paid_at = new Date(data["paid_at"]).toISOString().slice(0, 10);
               this.selectedMembership = mem;
               this.selectedCustomer = cus;
-              this.payment_id = data.id;
+              this.sale_id = data.id;
               break;
             }
           }
@@ -585,7 +585,7 @@ export default {
       }
     },
 
-    deletePayment(payment) {
+    deleteSale(sale) {
       Swal.fire({
         title: "Esta seguro que desea eliminar este objeto?",
         type: "warning",
@@ -602,7 +602,7 @@ export default {
         if (result.value) {
           let me = this;
           axios
-            .delete("payments/" + payment)
+            .delete("sales/" + sale)
             .then((response) => {
               Swal.fire({
                 type: "success",
@@ -611,7 +611,7 @@ export default {
                 timer: 5000,
               });
               //   console.log(response);
-              me.listPayments(me.page, me.buscar, me.criterio);
+              me.listSales(me.page, me.buscar, me.criterio);
             })
             .catch((error) => {
               Swal.fire({
@@ -648,12 +648,12 @@ export default {
       //Actualiza la página actual
       me.pagination.current_page = page;
       //Envia la petición para visualizar la data de esa página
-      me.listPayments(page, buscar, criterio);
+      me.listSales(page, buscar, criterio);
     },
   },
 
   mounted() {
-    this.listPayments(1, this.buscar, this.criterio);
+    this.listSales(1, this.buscar, this.criterio);
     this.getMemberships();
     this.getCustomers();
   },

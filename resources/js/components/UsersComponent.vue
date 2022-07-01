@@ -153,7 +153,8 @@
                       role="status"
                       aria-live="polite"
                     >
-                      Showing 1 to 10 of 57 entries
+                      Showing {{ pagination.current_page }} to {{pagination.per_page}} of
+                      {{ pagination.total }} entries
                     </div>
                   </div>
                   <div class="col-sm-12 col-md-7">
@@ -440,7 +441,7 @@ export default {
         .get(url)
         .then((response) => {
           var respuesta = response.data;
-          //   console.log(respuesta);
+          console.log(respuesta);
           me.users = respuesta.users.data;
 
           console.log(me.users);
@@ -495,7 +496,6 @@ export default {
         .catch((error) => {
           console.table(error);
         });
-      return;
       this.closeModal();
     },
 
@@ -532,7 +532,6 @@ export default {
           });
           console.table(error);
         });
-      return;
       this.closeModal();
     },
 

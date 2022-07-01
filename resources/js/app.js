@@ -20,11 +20,15 @@ Vue.component('membership-component', require('./components/MembershipComponent.
 Vue.component('payment-component', require('./components/PaymentComponent.vue').default);
 Vue.component('users-component', require('./components/UsersComponent.vue').default);
 
+Vue.component('products-component', require('./components/ProductComponent.vue').default);
+Vue.component('sales-component', require('./components/SaleComponent.vue').default);
+// Vue.component('purchases-component', require('./components/PurchaseComponent.vue').default);
+
 
 const app = new Vue({
     //el: '#app',
     el: '#main-wrapper',
     data: {
-        menu: 6 // default 0
+        menu: 7 // default 0
     },
 });
