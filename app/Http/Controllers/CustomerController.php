@@ -64,6 +64,10 @@ class CustomerController extends Controller
                     'customers.lastname',
                     'customers.code',
                     'customers.income',
+                    'customers.address',
+                    'customers.province',
+                    'customers.postcode',
+                    'customers.phone',
                     'branches.division',
                 )
                 ->orderBy('id', 'asc')
@@ -77,6 +81,12 @@ class CustomerController extends Controller
                     'id' => $cus->id,
                     'name' => $cus->name,
                     'lastname' => $cus->lastname,
+                    'address' => $cus->address,
+                    'province' => $cus->province,
+                    'postcode' => $cus->postcode,
+                    'phone' => $cus->phone,
+
+
                     'code' => $cus->code,
                     'branch' => $cus->division ?: null,
                     'income' => $cus->income,
@@ -162,6 +172,7 @@ class CustomerController extends Controller
     {
         $user = Auth::user();
         $branch = Branch::where('id', $user->branch_id)->first();
+        if (!$branch) return response('No branch', 404);
         $company = Company::where('user_id', $user->id)->where('id', $branch->company_id)->first();
         $data = [
             'name' => $request->name,
@@ -173,7 +184,8 @@ class CustomerController extends Controller
             'address' => $request->address,
             'province' => $request->province,
             'postcode' => $request->postcode,
-            'phone' => $request->phone
+            'phone' => $request->phone,
+            'registered_on_branch_id' => $branch->id
         ];
         return Customer::create($data);
         try {
