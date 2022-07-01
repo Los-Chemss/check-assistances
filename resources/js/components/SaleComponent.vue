@@ -46,25 +46,23 @@
                       </div>
                       <input
                         :type="
-                          criterio == 'paid_at' || criterio == 'expires_at'
-                            ? 'date'
-                            : criterio == 'code'
+                          criterio == 'quantity'
                             ? 'number'
-                            : criterio == 'branch'
-                            ? 'text'
+                            : criterio == 'created_at'
+                            ? 'date'
                             : 'text'
                         "
                         v-model="buscar"
                         @keyup.enter="listSales(1, buscar, criterio)"
                         class="form-control"
                         :placeholder="
-                          criterio == 'paid_at' || criterio == 'expires_at'
+                          criterio == 'created_at'
                             ? '22/07/2022'
-                            : criterio == 'customer'
-                            ? 'Nombre o apellidos del cliente'
-                            : criterio == 'branch'
-                            ? 'Nombre de sucursal o direccion'
-                            : 'Monthly'
+                            : criterio == 'product'
+                            ? 'Nombre del producto'
+                            : criterio == 'quantity'
+                            ? '0'
+                            : '0.00'
                         "
                       />
                       <div class="input-group-append">
@@ -90,10 +88,7 @@
                     >
                       <thead>
                         <tr v-for="(sale, index) in sales" v-if="index < 1">
-                          <th
-                            v-for="(value, key, cIndex) in sale"
-                            v-if="key != 'customerId' || key != 'embershipId'"
-                          >
+                          <th v-for="(value, key, cIndex) in sale">
                             {{ key }}
                           </th>
                           <th></th>
@@ -104,11 +99,7 @@
                           v-for="(sale, index) in sales"
                           v-if="index <= pagination.per_page"
                         >
-                          <td
-                            v-for="(value, key, cIndex) in sale"
-                            max-height="5px"
-                            v-if="key != 'customerId' || key != 'embershipId'"
-                          >
+                          <td v-for="(value, key, cIndex) in sale" max-height="5px">
                             {{ value }}
                           </td>
                           <td>
@@ -133,10 +124,7 @@
                       <tfoot>
                         <tr></tr>
                         <tr v-for="(sale, index) in sales" v-if="index < 1">
-                          <th
-                            v-for="(value, key, cIndex) in sale"
-                            v-if="key != 'customerId' || key != 'embershipId'"
-                          >
+                          <th v-for="(value, key, cIndex) in sale">
                             {{ key }}
                           </th>
                           <th></th>
@@ -251,40 +239,27 @@
               <div class="flex flex-wrap -m-2">
                 <form class="">
                   <div class="form-group mb-5">
-                    <label for="paid_at">Paid at</label>
+                    <label for="quantity">Cantidad</label>
                     <input
-                      type="date"
+                      type="number"
                       class="form-control"
-                      id="paid_at"
-                      v-model="paid_at"
+                      id="quantity"
+                      v-model="quantity"
                     />
                     <!--    <span class="bar"></span> -->
                   </div>
+
                   <div class="form-group mb-5">
-                    <label for="membership">Membership</label>
+                    <label for="membership">Product</label>
                     <select
                       class="form-control p-0"
                       id="membership"
-                      v-model="selectedMembership"
-                      @change="selectMembership"
+                      v-model="selectedProduct"
+                      @change="selectProduct"
                     >
                       <option></option>
-                      <option v-for="membership in memberships" :value="membership">
-                        {{ membership.name }} | ${{ membership.price }}
-                      </option>
-                    </select>
-                  </div>
-                  <div class="form-group mb-5">
-                    <label for="membership">Customer</label>
-                    <select
-                      class="form-control p-0"
-                      id="membership"
-                      v-model="selectedCustomer"
-                      @change="selectCustomer"
-                    >
-                      <option></option>
-                      <option v-for="customer in customers" :value="customer">
-                        {{ customer.name }}
+                      <option v-for="product in products" :value="product">
+                        {{ product.name }}
                       </option>
                     </select>
                   </div>
@@ -336,17 +311,16 @@ export default {
       sales: [],
       user: {},
       memberships: [],
-      customers: [],
+      products: [],
       modal: "",
       modalTitle: "",
       actionType: 0,
       errors: null,
-      paid_at: null,
       expires_at: null,
       amount: 0,
       membership: null,
       selectedMembership: null,
-      selectedCustomer: null,
+      selectedProduct: null,
 
       pagination: {
         total: 0,
@@ -357,11 +331,11 @@ export default {
         to: 0,
       },
       offset: 3,
-      criterio: "paid_at",
+      criterio: "product",
       buscar: "",
       sale_id: null,
       showSales: 10,
-      criterions: ["paid_at", "expires_at", "customer", "membership", "branch"],
+      criterions: ["quantity", "created_at", "product"],
     };
   },
 
@@ -411,27 +385,13 @@ export default {
         });
     },
 
-    getMemberships() {
+    getProducts() {
       let me = this;
       axios
-        .get("select-memberships")
+        .get("products-select")
         .then((response) => {
-          //   console.log(response);
           var respuesta = response.data;
-          me.memberships = respuesta;
-        })
-        .catch((error) => {
-          console.log(error);
-        });
-    },
-    getCustomers() {
-      let me = this;
-      axios
-        .get("customers-select")
-        .then((response) => {
-          //   console.log(response);
-          var respuesta = response.data;
-          me.customers = respuesta;
+          me.products = respuesta;
         })
         .catch((error) => {
           console.log(error);
@@ -457,9 +417,8 @@ export default {
     saveSale() {
       let me = this;
       let request = {
-        paid_at: me.paid_at,
-        membership: me.selectedMembership,
-        customer: me.selectedCustomer,
+        quantity: me.quantity,
+        product: me.selectedProduct,
       };
       axios
         .post("sales", request)
@@ -488,9 +447,8 @@ export default {
     updateSale() {
       let me = this;
       let request = {
-        paid_at: me.paid_at,
-        membership: me.selectedMembership,
-        customer: me.selectedCustomer,
+        quantity: me.quantity,
+        product: me.selectedProduct,
         id: me.sale_id,
       };
       axios
@@ -528,7 +486,7 @@ export default {
       this.selectedMembership = newVal;
     },
 
-    selectCustomer(event) {
+    selectProduct(event) {
       let newVal = null;
       if ("criterion" in event) {
         newVal = event;
@@ -537,7 +495,7 @@ export default {
           JSON.stringify(event.target.options[event.target.options.selectedIndex])
         )._value;
       }
-      this.selectedCustomer = newVal;
+      this.selectedProduct = newVal;
     },
 
     closeModal() {
@@ -557,26 +515,20 @@ export default {
               this.actionType = 1;
               this.paid_at = "";
               this.selectedMembership = "";
-              this.selectedCustomer = "";
+              this.selectedProduct = "";
               break;
             }
             case "update": {
-              let mem = null;
-              this.memberships.forEach((m) => {
-                if (m.id === data.membershipId) {
-                  mem = m;
-                }
-              });
-              let cus = null;
-              this.customers.forEach((c) => {
-                if (c.id === data.customerId) cus = c;
+              let prod = null;
+              this.products.forEach((c) => {
+                if (c.id === data.productId) prod = c;
               });
               this.modal = 1;
               this.modalTitle = "Update sale";
               this.actionType = 2;
-              this.paid_at = new Date(data["paid_at"]).toISOString().slice(0, 10);
-              this.selectedMembership = mem;
-              this.selectedCustomer = cus;
+            //   this.paid_at = new Date(data["paid_at"]).toISOString().slice(0, 10);
+            //   this.selectedMembership = mem;
+            //   this.selectedProduct = prod;
               this.sale_id = data.id;
               break;
             }
@@ -654,8 +606,7 @@ export default {
 
   mounted() {
     this.listSales(1, this.buscar, this.criterio);
-    this.getMemberships();
-    this.getCustomers();
+    this.getProducts();
   },
 };
 </script>

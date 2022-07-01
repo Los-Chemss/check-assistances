@@ -22,7 +22,7 @@ class ProductController extends Controller
             $criterio = $request->criterio;
 
             $products = Product::when($criterio && $buscar, function ($q) use ($criterio, $buscar) {
-                if ($criterio === 'name' || $criterio === 'description') {
+                if ($criterio === 'name' || $criterio === 'description' || $criterio === 'purchase_price' || $criterio === 'sale_price') {
                     $q->where($criterio, "LIKE", "%$buscar%");
                 }
             })->select('id', 'name', 'description', 'purchase_price', 'sale_price')
@@ -39,6 +39,16 @@ class ProductController extends Controller
                 ],
                 'products' => $products
             ];
+        } catch (Exception $e) {
+            $c = $this;
+            return $this->catchEx($e->getMessage(), $c,  __FUNCTION__ . ' | ' . $e->getLine());
+        }
+    }
+
+    public function select(Request $request)
+    {
+        try {
+            return Product::select('id', 'name')->take(20)->get();
         } catch (Exception $e) {
             $c = $this;
             return $this->catchEx($e->getMessage(), $c,  __FUNCTION__ . ' | ' . $e->getLine());

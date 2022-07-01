@@ -29,6 +29,6 @@ const app = new Vue({
     //el: '#app',
     el: '#main-wrapper',
     data: {
-        menu: 7 // default 0
+        menu: 8 // default 0
     },
 });
