@@ -44,7 +44,7 @@ class CustomerFactory extends Factory
             'province' => $this->faker->state(),
             'postcode' => $this->faker->postcode(),
             'phone' => $this->faker->phoneNumber(),
-            'registered_on_branch_id'=> function () use ($companyId) {
+            'registered_on_branch_id' => function () use ($companyId) {
                 return  Branch::query()/* ->where('company_id', $companyId) */->inRandomOrder()->first()->id;
             },
         ];

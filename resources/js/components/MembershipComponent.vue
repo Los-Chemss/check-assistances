@@ -174,7 +174,8 @@
                       role="status"
                       aria-live="polite"
                     >
-                      Showing 1 to 10 of 57 entries
+                      Showing {{ pagination.current_page }} to
+                      {{ pagination.per_page }} of {{ pagination.total }} entries
                     </div>
                   </div>
                   <div class="col-sm-12 col-md-7">
@@ -412,6 +413,7 @@ export default {
     listMemberships(page, buscar, criterio) {
       console.log("getted");
       let me = this;
+      this.loading = true;
       let url =
         "memberships?page=" + page + "&buscar=" + buscar + "&criterio=" + criterio;
       axios
@@ -424,7 +426,8 @@ export default {
         })
         .catch((error) => {
           console.table(error);
-        });
+        })
+        .finally(() => (this.loading = false));
     },
 
     /*     getMemberships() {
@@ -459,6 +462,7 @@ export default {
 
     saveMembership() {
       let me = this;
+      this.loading = true;
       let request = {
         name: me.name,
         price: me.price,
@@ -484,12 +488,14 @@ export default {
             timer: 3000,
           });
           console.table(error);
-        });
+        })
+        .finally(() => (this.loading = false));
       this.closeModal();
     },
 
     updateMembership() {
       let me = this;
+      this.loading = true;
       let request = {
         name: me.membership.name,
         price: me.membership.price,
@@ -497,7 +503,7 @@ export default {
         id: me.membership.id,
       };
       axios
-        .put("memberships/update", request)
+        .put("memberships", request)
         .then((response) => {
           console.log(response);
           let message = "Se ha actualizado un  plan de membresia";
@@ -516,7 +522,8 @@ export default {
             timer: 3000,
           });
           console.table(error);
-        });
+        })
+        .finally(() => (this.loading = false));
       this.closeModal();
     },
 
@@ -572,6 +579,7 @@ export default {
     },
 
     deleteMembership(membership) {
+      this.loading = true;
       Swal.fire({
         title: "Esta seguro que desea eliminar este objeto?",
         type: "warning",
@@ -588,7 +596,7 @@ export default {
         if (result.value) {
           let me = this;
           axios
-            .post("memberships/" + membership + "/delete")
+            .delete("memberships/" + membership)
             .then((response) => {
               console.log(response);
               Swal.fire({
@@ -607,7 +615,8 @@ export default {
                 timer: 8000,
               });
               console.log(error);
-            });
+            })
+            .finally(() => (this.loading = false));
           //
         } else if (
           // Read more about handling dismissals

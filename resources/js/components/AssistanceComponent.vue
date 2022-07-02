@@ -138,7 +138,8 @@
                       role="status"
                       aria-live="polite"
                     >
-                      Showing 1 to 10 of 57 entries
+                       Showing {{ pagination.current_page }} to {{pagination.per_page}} of
+                      {{ pagination.total }} entries
                     </div>
                   </div>
                   <div class="col-sm-12 col-md-7">
@@ -514,7 +515,7 @@ export default {
         if (result.value) {
           let me = this;
           axios
-            .post("assistances/" + assistance + "/delete")
+            .delete("assistances/" + assistance )
             .then((response) => {
               console.log(response);
               me.getAssistances(me.page, me.buscar, me.criterio);

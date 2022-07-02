@@ -96,4 +96,9 @@ class BranchController extends Controller
         $branch->delete();
         return response()->json();
     }
+
+    public function select()
+    {
+        return Branch::all();
+    }
 }

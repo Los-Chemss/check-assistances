@@ -16,13 +16,13 @@
             <button
               type="button"
               class="btn btn-primary btn-lg fas fa-edit"
-              @click="openModal('payments', 'store')"
+              @click="openModal('users', 'store')"
             >
-              New Payment
+              New User
             </button>
           </div>
           <div class="card-body">
-            <h4 class="card-title">Payments</h4>
+            <h4 class="card-title">Users</h4>
             <div class="table-responsive">
               <div
                 id="col_render_wrapper"
@@ -46,21 +46,19 @@
                       </div>
                       <input
                         :type="
-                          criterio == 'paid_at' || criterio == 'expires_at'
-                            ? 'date'
-                            : criterio == 'code'
-                            ? 'number'
+                          criterio == 'email'
+                            ? 'email'
                             : criterio == 'branch'
                             ? 'text'
                             : 'text'
                         "
                         v-model="buscar"
-                        @keyup.enter="listPayments(1, buscar, criterio)"
+                        @keyup.enter="listUsers(1, buscar, criterio)"
                         class="form-control"
                         :placeholder="
-                          criterio == 'paid_at' || criterio == 'expires_at'
-                            ? '22/07/2022'
-                            : criterio == 'customer'
+                          criterio == 'email'
+                            ? 'my@mail.com'
+                            : criterio == 'name' || criterio == 'last_name'
                             ? 'Nombre o apellidos del cliente'
                             : criterio == 'branch'
                             ? 'Nombre de sucursal o direccion'
@@ -70,7 +68,7 @@
                       <div class="input-group-append">
                         <button
                           type="submit"
-                          @click="listPayments(1, buscar, criterio)"
+                          @click="listUsers(1, buscar, criterio)"
                           class="btn-sm btn-primary input-group-text"
                         >
                           <i class="fa fa-search"></i>
@@ -89,9 +87,9 @@
                       aria-describedby="col_render_info"
                     >
                       <thead>
-                        <tr v-for="(payment, index) in payments" v-if="index < 1">
+                        <tr v-for="(user, index) in users" v-if="index < 1">
                           <th
-                            v-for="(value, key, cIndex) in payment"
+                            v-for="(value, key, cIndex) in user"
                             v-if="key != 'customerId' || key != 'embershipId'"
                           >
                             {{ key }}
@@ -101,11 +99,11 @@
                       </thead>
                       <tbody>
                         <tr
-                          v-for="(payment, index) in payments"
+                          v-for="(user, index) in users"
                           v-if="index <= pagination.per_page"
                         >
                           <td
-                            v-for="(value, key, cIndex) in payment"
+                            v-for="(value, key, cIndex) in user"
                             max-height="5px"
                             v-if="key != 'customerId' || key != 'embershipId'"
                           >
@@ -113,17 +111,19 @@
                           </td>
                           <td>
                             <button
+                              v-if="auth.email != user.email && user.id != 1"
                               type="button"
-                              @click="openModal('payments', 'update', payment)"
+                              @click="openModal('users', 'update', user)"
                               class="btn btn-warning btn-sm"
                             >
                               <i class="icon-pencil"></i>
                             </button>
                             &nbsp;
                             <button
+                              v-if="auth.email != user.email && user.id != 1"
                               type="button"
                               class="btn btn-danger btn-sm"
-                              @click="deletePayment(payment.id)"
+                              @click="deleteUser(user.id)"
                             >
                               <i class="icon-trash"></i>
                             </button>
@@ -132,9 +132,9 @@
                       </tbody>
                       <tfoot>
                         <tr></tr>
-                        <tr v-for="(payment, index) in payments" v-if="index < 1">
+                        <tr v-for="(user, index) in users" v-if="index < 1">
                           <th
-                            v-for="(value, key, cIndex) in payment"
+                            v-for="(value, key, cIndex) in user"
                             v-if="key != 'customerId' || key != 'embershipId'"
                           >
                             {{ key }}
@@ -153,8 +153,8 @@
                       role="status"
                       aria-live="polite"
                     >
-                      Showing {{ pagination.current_page }} to
-                      {{ pagination.per_page }} of {{ pagination.total }} entries
+                      Showing {{ pagination.current_page }} to {{pagination.per_page}} of
+                      {{ pagination.total }} entries
                     </div>
                   </div>
                   <div class="col-sm-12 col-md-7">
@@ -251,40 +251,62 @@
               <div class="flex flex-wrap -m-2">
                 <form class="">
                   <div class="form-group mb-5">
-                    <label for="paid_at">Paid at</label>
+                    <label for="user_name">Nombre de usuario</label>
                     <input
-                      type="date"
+                      type="text"
                       class="form-control"
-                      id="paid_at"
-                      v-model="paid_at"
+                      id="user_name"
+                      v-model="user.user_name"
                     />
-                    <!--    <span class="bar"></span> -->
                   </div>
                   <div class="form-group mb-5">
-                    <label for="membership">Membership</label>
-                    <select
-                      class="form-control p-0"
-                      id="membership"
-                      v-model="selectedMembership"
-                      @change="selectMembership"
-                    >
-                      <option></option>
-                      <option v-for="membership in memberships" :value="membership">
-                        {{ membership.name }} | ${{ membership.price }}
-                      </option>
-                    </select>
+                    <label for="email">Correo electronico</label>
+                    <input
+                      type="email"
+                      class="form-control"
+                      id="email"
+                      v-model="user.email"
+                    />
                   </div>
                   <div class="form-group mb-5">
-                    <label for="membership">Customer</label>
+                    <label for="name">Nombre</label>
+                    <input
+                      type="text"
+                      class="form-control"
+                      id="name"
+                      v-model="user.name"
+                    />
+                  </div>
+                  <div class="form-group mb-5">
+                    <label for="last_name">Apellidos</label>
+                    <input
+                      type="text"
+                      class="form-control"
+                      id="last_name"
+                      v-model="user.last_name"
+                    />
+                  </div>
+                  <div class="form-group mb-5">
+                    <label for="password">Contraseña</label>
+                    <input
+                      type="text"
+                      class="form-control"
+                      id="password"
+                      v-model="user.password"
+                    />
+                  </div>
+
+                  <div class="form-group mb-5">
+                    <label for="branch">Sucursal</label>
                     <select
                       class="form-control p-0"
-                      id="membership"
-                      v-model="selectedCustomer"
-                      @change="selectCustomer"
+                      id="branch"
+                      v-model="selectedBranch"
+                      @change="getBranch"
                     >
                       <option></option>
-                      <option v-for="customer in customers" :value="customer">
-                        {{ customer.name }}
+                      <option v-for="branch in branches" :value="branch">
+                        {{ branch.division }} | {{ branch.location }}
                       </option>
                     </select>
                   </div>
@@ -299,7 +321,7 @@
                 v-if="actionType == 1"
                 type="button"
                 class="btn btn-primary fas fa-save"
-                @click="savePayment"
+                @click="saveUser"
               >
                 Save
               </button>
@@ -307,7 +329,7 @@
                 v-if="actionType == 2"
                 type="button"
                 class="btn btn-primary fas fa-save"
-                @click="updatePayment"
+                @click="updateUser"
               >
                 Update
               </button>
@@ -333,21 +355,22 @@ export default {
   data() {
     return {
       loading: false,
-      payments: [],
-      user: {},
-      memberships: [],
-      customers: [],
+      users: [],
+      branches: [],
+      selectedBranch: null,
+      user: {
+        user_name: null,
+        email: null,
+        name: null,
+        last_name: null,
+        password: null,
+        id: null,
+        branch_id: null,
+      },
       modal: "",
       modalTitle: "",
       actionType: 0,
       errors: null,
-      paid_at: null,
-      expires_at: null,
-      amount: 0,
-      membership: null,
-      selectedMembership: null,
-      selectedCustomer: null,
-
       pagination: {
         total: 0,
         current_page: 0,
@@ -357,14 +380,30 @@ export default {
         to: 0,
       },
       offset: 3,
-      criterio: "paid_at",
+      criterio: "name",
       buscar: "",
-      payment_id: null,
-      showPayments: 10,
-      criterions: ["paid_at", "expires_at", "customer", "membership", "branch"],
+      user_id: null,
+      showUsers: 10,
+      criterions: ["username", "email", "name", "last_name", "branch"],
+      authenticated: false,
+      auth: {
+        id: null,
+        email: null,
+      },
     };
   },
 
+  created() {
+    if (window.Laravel.user) {
+      this.auth.email = window.Laravel.user.email;
+      /*   this.name = window.Laravel.user.name;
+      this.last_name = window.Laravel.user.last_name; */
+      this.authenticated = true;
+      this.branch = window.Laravel.user.branch;
+    } else {
+      this.authenticated = false;
+    }
+  },
   computed: {
     isActived: function () {
       return this.pagination.current_page;
@@ -390,124 +429,100 @@ export default {
       }
       return pagesArray;
     },
-    // filter: this.listPayments(this.page, this.buscar, this.criterio),
+    // filter: this.listUsers(this.page, this.buscar, this.criterio),
   },
 
   methods: {
-    listPayments(page, buscar, criterio) {
+    listUsers(page, buscar, criterio) {
+        let me = this;
+        this.loading=true
       console.log("getted");
-      let me = this;
-      this.loading = true;
-      let url = "payments?page=" + page + "&buscar=" + buscar + "&criterio=" + criterio;
+      let url = "users?page=" + page + "&buscar=" + buscar + "&criterio=" + criterio;
       axios
         .get(url)
         .then((response) => {
           var respuesta = response.data;
-          //   console.log(respuesta);
-          me.payments = respuesta.payments.data;
+          console.log(respuesta);
+          me.users = respuesta.users.data;
+
+          console.log(me.users);
           me.pagination = respuesta.pagination;
         })
         .catch((error) => {
           console.table(error);
-        })
-        .finally(() => (this.loading = false));
+        }) .finally(() => (this.loading = false));;
     },
 
-    getMemberships() {
+    getBranch() {
       let me = this;
-      this.loading = true;
       axios
-        .get("select-memberships")
+        .get("select-branches")
         .then((response) => {
-          //   console.log(response);
           var respuesta = response.data;
-          me.memberships = respuesta;
+          me.branches = respuesta;
         })
         .catch((error) => {
           console.log(error);
         });
-    },
-    getCustomers() {
-      let me = this;
-      axios
-        .get("customers-select")
-        .then((response) => {
-          //   console.log(response);
-          var respuesta = response.data;
-          me.customers = respuesta;
-        })
-        .catch((error) => {
-          console.log(error);
-        })
-        .finally(() => (this.loading = false));
     },
 
     selectCriteria() {
       this.buscar = "";
     },
 
-    getRows(event) {
-      let newVal = null;
-      if ("criterion" in event) {
-        newVal = event;
-      } else {
-        newVal = JSON.parse(
-          JSON.stringify(event.target.options[event.target.options.selectedIndex])
-        )._value;
-      }
-      this.showPayments = newVal;
-    },
-
-    savePayment() {
+    saveUser() {
       let me = this;
-      this.loading = true;
+      this.loading=true
       let request = {
-        paid_at: me.paid_at,
-        membership: me.selectedMembership,
-        customer: me.selectedCustomer,
+        user_name: me.user.user_name,
+        email: me.user.email,
+        name: me.user.name,
+        last_name: me.user.last_name,
+        password: me.user.password,
+        branch_id: me.selectedBranch.id,
+        avatar: me.user.avatar,
       };
       axios
-        .post("payments", request)
+        .post("users", request)
         .then((response) => {
           let respuesta = response.data;
-          let message =
-            "Ha pagado una membresia " +
-            respuesta.membership.name +
-            " con una duracion de " +
-            respuesta.membership.name +
-            " dias. Y expira el " +
-            respuesta.payment.expires_at;
+          console.log(response);
+          let message = "Usuario creado con exito";
           Swal.fire({
             type: "success",
-            title: "Registro  de pago satisfactorio",
+            title: "Registro  de usuario satisfactorio",
             text: message,
-            timer: 8000,
+            timer: 5000,
           });
         })
         .catch((error) => {
           console.table(error);
-        })
-        .finally(() => (this.loading = false));
+        }) .finally(() => (this.loading = false));;
       this.closeModal();
     },
 
-    updatePayment() {
+    updateUser() {
       let me = this;
-      this.loading = true;
+      this.loading=true
       let request = {
-        paid_at: me.paid_at,
-        membership: me.selectedMembership,
-        customer: me.selectedCustomer,
-        id: me.payment_id,
+        user_name: me.user.user_name,
+        email: me.user.email,
+        name: me.user.name,
+        last_name: me.user.last_name,
+        password: me.user.password,
+        branch_id: me.selectedBranch.id,
+        avatar: me.user.avatar,
+        id: me.user.id,
       };
       axios
-        .put("payments/" + request.id, request)
+        .put("users/" + request.id, request)
         .then((response) => {
           let respuesta = response.data;
+          console.log(respuesta);
           Swal.fire({
             type: "success",
-            title: "Pago actualizado",
-            text: "Pago actualizado exitosamente",
+            title: "Usuario actualizado",
+            text: "Usuario actualizado exitosamente",
             timer: 8000,
           });
         })
@@ -519,8 +534,7 @@ export default {
             timer: 8000,
           });
           console.table(error);
-        })
-        .finally(() => (this.loading = false));
+        }) .finally(() => (this.loading = false));;
       this.closeModal();
     },
 
@@ -532,60 +546,55 @@ export default {
         newVal = JSON.parse(
           JSON.stringify(event.target.options[event.target.options.selectedIndex])
         )._value;
+        this.selectedBranch = newVal;
       }
-      this.selectedMembership = newVal;
-    },
-
-    selectCustomer(event) {
-      let newVal = null;
-      if ("criterion" in event) {
-        newVal = event;
-      } else {
-        newVal = JSON.parse(
-          JSON.stringify(event.target.options[event.target.options.selectedIndex])
-        )._value;
-      }
-      this.selectedCustomer = newVal;
     },
 
     closeModal() {
       this.modal = 0;
       this.title = "";
       this.errors = {};
-      this.listPayments(this.pagination.current_page, this.buscar, this.criterio);
+      this.listUsers(this.pagination.current_page, this.buscar, this.criterio);
     },
 
     async openModal(model, action, data = []) {
       switch (model) {
-        case "payments": {
+        case "users": {
           switch (action) {
             case "store": {
               this.modal = 1;
-              this.modalTitle = "New payment";
+              this.modalTitle = "New user";
               this.actionType = 1;
-              this.paid_at = "";
-              this.selectedMembership = "";
-              this.selectedCustomer = "";
+              this.user.user_name;
+              this.user.email;
+              this.user.name;
+              this.user.last_name;
+              this.user.password;
+              this.user.avatar;
+              this.selectedBranch = "";
               break;
             }
             case "update": {
-              let mem = null;
-              this.memberships.forEach((m) => {
-                if (m.id === data.membershipId) {
-                  mem = m;
+              console.log(data);
+              let brn = null;
+              this.branches.forEach((b) => {
+                if (b.id === data.branch_id) {
+                  brn = b;
                 }
               });
-              let cus = null;
-              this.customers.forEach((c) => {
-                if (c.id === data.customerId) cus = c;
-              });
               this.modal = 1;
-              this.modalTitle = "Update payment";
+              this.modalTitle = "Update user";
               this.actionType = 2;
-              this.paid_at = new Date(data["paid_at"]).toISOString().slice(0, 10);
-              this.selectedMembership = mem;
-              this.selectedCustomer = cus;
-              this.payment_id = data.id;
+              this.user_name = data.username;
+              this.selectedBranch = brn;
+              this.user.user_name = data.user_name;
+              this.user.email = data.email;
+              this.user.name = data.name;
+              this.user.last_name = data.last_name;
+              this.user.password = "";
+              this.user.avatar = data.avatar;
+              this.user.id = data.id;
+              this.user_id = data.id;
               break;
             }
           }
@@ -593,8 +602,8 @@ export default {
       }
     },
 
-    deletePayment(payment) {
-      this.loading = true;
+    deleteUser(user) {
+        this.loading=true
       Swal.fire({
         title: "Esta seguro que desea eliminar este objeto?",
         type: "warning",
@@ -611,16 +620,16 @@ export default {
         if (result.value) {
           let me = this;
           axios
-            .delete("payments/" + payment)
+            .delete("users/" + user)
             .then((response) => {
+              console.log(response);
               Swal.fire({
                 type: "success",
                 title: "Registro  eliminado con éxito",
-                text: "El pago ha sido eliminado !",
+                text: "El usuario ha sido eliminado !",
                 timer: 5000,
               });
-              //   console.log(response);
-              me.listPayments(me.page, me.buscar, me.criterio);
+              me.listUsers(me.page, me.buscar, me.criterio);
             })
             .catch((error) => {
               Swal.fire({
@@ -630,8 +639,7 @@ export default {
                 timer: 5000,
               });
               console.log(error);
-            })
-            .finally(() => (this.loading = false));
+            }) .finally(() => (this.loading = false));;
         } else if (
           // Read more about handling dismissals
           result.dismiss === swal.DismissReason.cancel
@@ -640,32 +648,19 @@ export default {
       });
     },
 
-    formatDateToInput(date) {
-      var d = new Date(date),
-        month = "" + (d.getMonth() + 1),
-        day = "" + d.getDate(),
-        year = d.getFullYear();
-
-      if (month.length < 2) month = "0" + month;
-      if (day.length < 2) day = "0" + day;
-
-      return [day, month, year].join("/");
-    },
-
     //Paginator
     cambiarPagina(page, buscar, criterio) {
       let me = this;
       //Actualiza la página actual
       me.pagination.current_page = page;
       //Envia la petición para visualizar la data de esa página
-      me.listPayments(page, buscar, criterio);
+      me.listUsers(page, buscar, criterio);
     },
   },
 
   mounted() {
-    this.listPayments(1, this.buscar, this.criterio);
-    this.getMemberships();
-    this.getCustomers();
+    this.listUsers(1, this.buscar, this.criterio);
+    this.getBranch();
   },
 };
 </script>

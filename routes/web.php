@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\AssistanceController;
+use App\Http\Controllers\BranchController;
 use App\Http\Controllers\CustomerController;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
@@ -9,6 +10,9 @@ use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\FactorController;
 use App\Http\Controllers\MembershipController;
 use App\Http\Controllers\PaymentController;
+use App\Http\Controllers\ProductController;
+use App\Http\Controllers\PurchaseController;
+use App\Http\Controllers\SaleController;
 use App\Mail\TestingMail;
 use Illuminate\Support\Facades\Mail;
 
@@ -56,35 +60,58 @@ Route::middleware(['auth'])->group(function () {
     //User themme
     Route::get('/user_themme',  [UserController::class, 'getThemme']);
     Route::post('/user_themme', [UserController::class, 'setThemme']);
-    // Route::get('/user_themme', [UserController::class, 'changeThemme']);
+
+
+    Route::get('users', [UserController::class, 'index']);
+    Route::post('users', [UserController::class, 'newUser']);
+    Route::put('users/{user}', [UserController::class, 'updateUser']);
+    Route::delete('users/{user}', [UserController::class, 'destroy']);
 
     //Customers
     // Route::get('customers',  [CustomerController::class, 'view']);
     Route::get('customers',  [CustomerController::class, 'index']);
     Route::get('customers/{customer}',  [CustomerController::class, 'show']);
     Route::get('customers-select',  [CustomerController::class, 'select']);
-    Route::post('customers/store',  [CustomerController::class, 'store']);
-    Route::put('customers/update',  [CustomerController::class, 'update']);
-    Route::post('customers/{id}/delete',  [CustomerController::class, 'destroy']);
+    Route::post('customers',  [CustomerController::class, 'store']);
+    Route::put('customers',  [CustomerController::class, 'update']);
+    Route::delete('customers/{id}',  [CustomerController::class, 'destroy']);
 
-    Route::get('memberships',  [MembershipController::class, 'index']);
     Route::get('select-memberships',  [MembershipController::class, 'select']);
+    Route::get('memberships',  [MembershipController::class, 'index']);
     Route::post('memberships',  [MembershipController::class, 'store']);
-    Route::put('memberships/update',  [MembershipController::class, 'update']);
-    Route::post('memberships/{id}/delete',  [MembershipController::class, 'destroy']);
+    Route::put('memberships',  [MembershipController::class, 'update']);
+    Route::delete('memberships/{id}',  [MembershipController::class, 'destroy']);
 
     /*   Route::resource('payments', PaymentController::class);
     Route::resource('memberships', MembershipController::class); */
+    Route::get('select-branches',  [BranchController::class, 'select']);
 
 
     Route::get('payments',  [PaymentController::class, 'index']);
     Route::post('payments',  [PaymentController::class, 'store']);
-    Route::post('payments/{payment}/update',  [PaymentController::class, 'update']);
-    Route::post('payments/{id}/delete',  [PaymentController::class, 'destroy']);
+    Route::put('payments/{payment}',  [PaymentController::class, 'updateUser']);
+    Route::delete('payments/{id}',  [PaymentController::class, 'destroy']);
 
     Route::get('assistances',  [AssistanceController::class, 'index']);
     Route::post('assistances',  [AssistanceController::class, 'store']);
-    Route::post('assistances/{id}/delete',  [AssistanceController::class, 'destroy']);
+    Route::delete('assistances/{id}/delete',  [AssistanceController::class, 'destroy']);
+
+    Route::get('sales', [SaleController::class, 'index']);
+    Route::post('sales', [SaleController::class, 'store']);
+    Route::put('sales/{id}', [SaleController::class, 'update']);
+    Route::delete('sales/{id}', [SaleController::class, 'delete']);
+
+    Route::get('purchases', [PurchaseController::class, 'index']);
+    Route::post('purchases', [PurchaseController::class, 'store']);
+    Route::put('purchases/{id}', [PurchaseController::class, 'update']);
+    Route::delete('purchases/{id}', [PurchaseController::class, 'delete']);
+    Route::delete('sales/{id}', [SaleController::class, 'delete']);
+
+    Route::get('products', [ProductController::class, 'index']);
+    Route::post('products', [ProductController::class, 'store']);
+    Route::put('products/{id}', [ProductController::class, 'update']);
+    Route::delete('products/{id}', [ProductController::class, 'destroy']);
+    Route::get('products-select', [ProductController::class, 'select']);
 
     Route::any('{any}', function () {
         abort(404);

@@ -18,7 +18,7 @@
         <link rel="icon" type="image/png" sizes="16x16"
             href="/{{ env('ASSET_URL') }}images/urbanlogo-1024x1024.png">
     @endif
-    <title>{{ env('APP_NAME') ?: 'Urban fit' }}  @yield('title') </title>
+    <title>{{ env('APP_NAME') ?: 'Urban fit' }} @yield('title') </title>
     <link rel="canonical" href="https://www.wrappixel.com/{{ env('ASSET_URL') }}templates/adminpro/" />
 
     <link rel="stylesheet"
@@ -44,7 +44,7 @@
     @yield('styles')
 
     <style>
-       /*  .container-fluid{
+        /*  .container-fluid{
              background: url(/{{ env('ASSET_URL') }}images/fondogym.jpg) no-repeat center center;
         } */
         .preloader {
@@ -80,12 +80,6 @@
         <!-- ============================================================== -->
         <!-- Main wrapper - style you can find in pages.scss -->
         <!-- ============================================================== -->
-        @if (Auth::user())
-            <header class="topbar">
-                @include('layouts.navbar')
-            </header>
-        @endif
-
         @if (!Auth::user())
             @yield('content'){{-- login view --}}
             @php
@@ -94,6 +88,13 @@
                 ];
             @endphp
         @endif
+
+        @if (Auth::user())
+            <header class="topbar">
+                @include('layouts.navbar')
+            </header>
+        @endif
+
         {{-- @else --}}
         @if (Auth::user())
             @include('layouts.aside')
@@ -117,12 +118,17 @@
             {{-- @yield('content') --}}
             @if (Auth::user())
                 @yield('content')
+                <footer class="footer">
+                    © 2022 Urban fit GYM
+                </footer>
             @endif
             {{-- </div> --}}
-            <footer class="footer">
-                © 2020 Admin Pro Admin by wrappixel.com
-            </footer>
         </div>
+        @if (!Auth::user())
+            <footer class="footer">
+                © 2022 Urban fit GYM
+            </footer>
+        @endif
         {{-- @endif --}}
 
 

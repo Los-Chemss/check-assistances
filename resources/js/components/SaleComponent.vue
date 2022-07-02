@@ -16,13 +16,13 @@
             <button
               type="button"
               class="btn btn-primary btn-lg fas fa-edit"
-              @click="openModal('payments', 'store')"
+              @click="openModal('sales', 'store')"
             >
-              New Payment
+              New Sale
             </button>
           </div>
           <div class="card-body">
-            <h4 class="card-title">Payments</h4>
+            <h4 class="card-title">Sales</h4>
             <div class="table-responsive">
               <div
                 id="col_render_wrapper"
@@ -46,31 +46,29 @@
                       </div>
                       <input
                         :type="
-                          criterio == 'paid_at' || criterio == 'expires_at'
-                            ? 'date'
-                            : criterio == 'code'
+                          criterio == 'quantity'
                             ? 'number'
-                            : criterio == 'branch'
-                            ? 'text'
+                            : criterio == 'created_at'
+                            ? 'date'
                             : 'text'
                         "
                         v-model="buscar"
-                        @keyup.enter="listPayments(1, buscar, criterio)"
+                        @keyup.enter="listSales(1, buscar, criterio)"
                         class="form-control"
                         :placeholder="
-                          criterio == 'paid_at' || criterio == 'expires_at'
+                          criterio == 'created_at'
                             ? '22/07/2022'
-                            : criterio == 'customer'
-                            ? 'Nombre o apellidos del cliente'
-                            : criterio == 'branch'
-                            ? 'Nombre de sucursal o direccion'
-                            : 'Monthly'
+                            : criterio == 'product'
+                            ? 'Nombre del producto'
+                            : criterio == 'quantity'
+                            ? '0'
+                            : '0.00'
                         "
                       />
                       <div class="input-group-append">
                         <button
                           type="submit"
-                          @click="listPayments(1, buscar, criterio)"
+                          @click="listSales(1, buscar, criterio)"
                           class="btn-sm btn-primary input-group-text"
                         >
                           <i class="fa fa-search"></i>
@@ -89,11 +87,8 @@
                       aria-describedby="col_render_info"
                     >
                       <thead>
-                        <tr v-for="(payment, index) in payments" v-if="index < 1">
-                          <th
-                            v-for="(value, key, cIndex) in payment"
-                            v-if="key != 'customerId' || key != 'embershipId'"
-                          >
+                        <tr v-for="(sale, index) in sales" v-if="index < 1">
+                          <th v-for="(value, key, cIndex) in sale">
                             {{ key }}
                           </th>
                           <th></th>
@@ -101,20 +96,16 @@
                       </thead>
                       <tbody>
                         <tr
-                          v-for="(payment, index) in payments"
+                          v-for="(sale, index) in sales"
                           v-if="index <= pagination.per_page"
                         >
-                          <td
-                            v-for="(value, key, cIndex) in payment"
-                            max-height="5px"
-                            v-if="key != 'customerId' || key != 'embershipId'"
-                          >
+                          <td v-for="(value, key, cIndex) in sale" max-height="5px">
                             {{ value }}
                           </td>
                           <td>
                             <button
                               type="button"
-                              @click="openModal('payments', 'update', payment)"
+                              @click="openModal('sales', 'update', sale)"
                               class="btn btn-warning btn-sm"
                             >
                               <i class="icon-pencil"></i>
@@ -123,7 +114,7 @@
                             <button
                               type="button"
                               class="btn btn-danger btn-sm"
-                              @click="deletePayment(payment.id)"
+                              @click="deleteSale(sale.id)"
                             >
                               <i class="icon-trash"></i>
                             </button>
@@ -132,11 +123,8 @@
                       </tbody>
                       <tfoot>
                         <tr></tr>
-                        <tr v-for="(payment, index) in payments" v-if="index < 1">
-                          <th
-                            v-for="(value, key, cIndex) in payment"
-                            v-if="key != 'customerId' || key != 'embershipId'"
-                          >
+                        <tr v-for="(sale, index) in sales" v-if="index < 1">
+                          <th v-for="(value, key, cIndex) in sale">
                             {{ key }}
                           </th>
                           <th></th>
@@ -251,40 +239,27 @@
               <div class="flex flex-wrap -m-2">
                 <form class="">
                   <div class="form-group mb-5">
-                    <label for="paid_at">Paid at</label>
+                    <label for="quantity">Cantidad</label>
                     <input
-                      type="date"
+                      type="number"
                       class="form-control"
-                      id="paid_at"
-                      v-model="paid_at"
+                      id="quantity"
+                      v-model="quantity"
                     />
                     <!--    <span class="bar"></span> -->
                   </div>
+
                   <div class="form-group mb-5">
-                    <label for="membership">Membership</label>
+                    <label for="membership">Product</label>
                     <select
                       class="form-control p-0"
                       id="membership"
-                      v-model="selectedMembership"
-                      @change="selectMembership"
+                      v-model="selectedProduct"
+                      @change="selectProduct"
                     >
                       <option></option>
-                      <option v-for="membership in memberships" :value="membership">
-                        {{ membership.name }} | ${{ membership.price }}
-                      </option>
-                    </select>
-                  </div>
-                  <div class="form-group mb-5">
-                    <label for="membership">Customer</label>
-                    <select
-                      class="form-control p-0"
-                      id="membership"
-                      v-model="selectedCustomer"
-                      @change="selectCustomer"
-                    >
-                      <option></option>
-                      <option v-for="customer in customers" :value="customer">
-                        {{ customer.name }}
+                      <option v-for="product in products" :value="product">
+                        {{ product.name }}
                       </option>
                     </select>
                   </div>
@@ -299,7 +274,7 @@
                 v-if="actionType == 1"
                 type="button"
                 class="btn btn-primary fas fa-save"
-                @click="savePayment"
+                @click="saveSale"
               >
                 Save
               </button>
@@ -307,7 +282,7 @@
                 v-if="actionType == 2"
                 type="button"
                 class="btn btn-primary fas fa-save"
-                @click="updatePayment"
+                @click="updateSale"
               >
                 Update
               </button>
@@ -333,20 +308,19 @@ export default {
   data() {
     return {
       loading: false,
-      payments: [],
+      sales: [],
       user: {},
       memberships: [],
-      customers: [],
+      products: [],
       modal: "",
       modalTitle: "",
       actionType: 0,
       errors: null,
-      paid_at: null,
       expires_at: null,
       amount: 0,
       membership: null,
       selectedMembership: null,
-      selectedCustomer: null,
+      selectedProduct: null,
 
       pagination: {
         total: 0,
@@ -357,11 +331,11 @@ export default {
         to: 0,
       },
       offset: 3,
-      criterio: "paid_at",
+      criterio: "product",
       buscar: "",
-      payment_id: null,
-      showPayments: 10,
-      criterions: ["paid_at", "expires_at", "customer", "membership", "branch"],
+      sale_id: null,
+      showSales: 10,
+      criterions: ["quantity", "created_at", "product"],
     };
   },
 
@@ -390,56 +364,39 @@ export default {
       }
       return pagesArray;
     },
-    // filter: this.listPayments(this.page, this.buscar, this.criterio),
+    // filter: this.listSales(this.page, this.buscar, this.criterio),
   },
 
   methods: {
-    listPayments(page, buscar, criterio) {
+    listSales(page, buscar, criterio) {
+        let me = this;
+        this.loading=true
       console.log("getted");
-      let me = this;
-      this.loading = true;
-      let url = "payments?page=" + page + "&buscar=" + buscar + "&criterio=" + criterio;
+      let url = "sales?page=" + page + "&buscar=" + buscar + "&criterio=" + criterio;
       axios
         .get(url)
         .then((response) => {
           var respuesta = response.data;
           //   console.log(respuesta);
-          me.payments = respuesta.payments.data;
+          me.sales = respuesta.sales.data;
           me.pagination = respuesta.pagination;
         })
         .catch((error) => {
           console.table(error);
-        })
-        .finally(() => (this.loading = false));
+        }) .finally(() => (this.loading = false));;
     },
 
-    getMemberships() {
+    getProducts() {
       let me = this;
-      this.loading = true;
       axios
-        .get("select-memberships")
+        .get("products-select")
         .then((response) => {
-          //   console.log(response);
           var respuesta = response.data;
-          me.memberships = respuesta;
+          me.products = respuesta;
         })
         .catch((error) => {
           console.log(error);
         });
-    },
-    getCustomers() {
-      let me = this;
-      axios
-        .get("customers-select")
-        .then((response) => {
-          //   console.log(response);
-          var respuesta = response.data;
-          me.customers = respuesta;
-        })
-        .catch((error) => {
-          console.log(error);
-        })
-        .finally(() => (this.loading = false));
     },
 
     selectCriteria() {
@@ -455,19 +412,18 @@ export default {
           JSON.stringify(event.target.options[event.target.options.selectedIndex])
         )._value;
       }
-      this.showPayments = newVal;
+      this.showSales = newVal;
     },
 
-    savePayment() {
+    saveSale() {
       let me = this;
-      this.loading = true;
+      this.loading=true
       let request = {
-        paid_at: me.paid_at,
-        membership: me.selectedMembership,
-        customer: me.selectedCustomer,
+        quantity: me.quantity,
+        product: me.selectedProduct,
       };
       axios
-        .post("payments", request)
+        .post("sales", request)
         .then((response) => {
           let respuesta = response.data;
           let message =
@@ -476,7 +432,7 @@ export default {
             " con una duracion de " +
             respuesta.membership.name +
             " dias. Y expira el " +
-            respuesta.payment.expires_at;
+            respuesta.sale.expires_at;
           Swal.fire({
             type: "success",
             title: "Registro  de pago satisfactorio",
@@ -486,22 +442,20 @@ export default {
         })
         .catch((error) => {
           console.table(error);
-        })
-        .finally(() => (this.loading = false));
+        }) .finally(() => (this.loading = false));;
       this.closeModal();
     },
 
-    updatePayment() {
+    updateSale() {
       let me = this;
-      this.loading = true;
+      this.loading=true
       let request = {
-        paid_at: me.paid_at,
-        membership: me.selectedMembership,
-        customer: me.selectedCustomer,
-        id: me.payment_id,
+        quantity: me.quantity,
+        product: me.selectedProduct,
+        id: me.sale_id,
       };
       axios
-        .put("payments/" + request.id, request)
+        .put("sales/" + request.id, request)
         .then((response) => {
           let respuesta = response.data;
           Swal.fire({
@@ -519,8 +473,7 @@ export default {
             timer: 8000,
           });
           console.table(error);
-        })
-        .finally(() => (this.loading = false));
+        }) .finally(() => (this.loading = false));;
       this.closeModal();
     },
 
@@ -536,7 +489,7 @@ export default {
       this.selectedMembership = newVal;
     },
 
-    selectCustomer(event) {
+    selectProduct(event) {
       let newVal = null;
       if ("criterion" in event) {
         newVal = event;
@@ -545,47 +498,41 @@ export default {
           JSON.stringify(event.target.options[event.target.options.selectedIndex])
         )._value;
       }
-      this.selectedCustomer = newVal;
+      this.selectedProduct = newVal;
     },
 
     closeModal() {
       this.modal = 0;
       this.title = "";
       this.errors = {};
-      this.listPayments(this.pagination.current_page, this.buscar, this.criterio);
+      this.listSales(this.pagination.current_page, this.buscar, this.criterio);
     },
 
     async openModal(model, action, data = []) {
       switch (model) {
-        case "payments": {
+        case "sales": {
           switch (action) {
             case "store": {
               this.modal = 1;
-              this.modalTitle = "New payment";
+              this.modalTitle = "New sale";
               this.actionType = 1;
               this.paid_at = "";
               this.selectedMembership = "";
-              this.selectedCustomer = "";
+              this.selectedProduct = "";
               break;
             }
             case "update": {
-              let mem = null;
-              this.memberships.forEach((m) => {
-                if (m.id === data.membershipId) {
-                  mem = m;
-                }
-              });
-              let cus = null;
-              this.customers.forEach((c) => {
-                if (c.id === data.customerId) cus = c;
+              let prod = null;
+              this.products.forEach((c) => {
+                if (c.id === data.productId) prod = c;
               });
               this.modal = 1;
-              this.modalTitle = "Update payment";
+              this.modalTitle = "Update sale";
               this.actionType = 2;
-              this.paid_at = new Date(data["paid_at"]).toISOString().slice(0, 10);
-              this.selectedMembership = mem;
-              this.selectedCustomer = cus;
-              this.payment_id = data.id;
+            //   this.paid_at = new Date(data["paid_at"]).toISOString().slice(0, 10);
+            //   this.selectedMembership = mem;
+            //   this.selectedProduct = prod;
+              this.sale_id = data.id;
               break;
             }
           }
@@ -593,8 +540,8 @@ export default {
       }
     },
 
-    deletePayment(payment) {
-      this.loading = true;
+    deleteSale(sale) {
+        let me = thisthis.loading=true
       Swal.fire({
         title: "Esta seguro que desea eliminar este objeto?",
         type: "warning",
@@ -611,7 +558,7 @@ export default {
         if (result.value) {
           let me = this;
           axios
-            .delete("payments/" + payment)
+            .delete("sales/" + sale)
             .then((response) => {
               Swal.fire({
                 type: "success",
@@ -620,7 +567,7 @@ export default {
                 timer: 5000,
               });
               //   console.log(response);
-              me.listPayments(me.page, me.buscar, me.criterio);
+              me.listSales(me.page, me.buscar, me.criterio);
             })
             .catch((error) => {
               Swal.fire({
@@ -630,8 +577,7 @@ export default {
                 timer: 5000,
               });
               console.log(error);
-            })
-            .finally(() => (this.loading = false));
+            }) .finally(() => (this.loading = false));;
         } else if (
           // Read more about handling dismissals
           result.dismiss === swal.DismissReason.cancel
@@ -658,14 +604,13 @@ export default {
       //Actualiza la página actual
       me.pagination.current_page = page;
       //Envia la petición para visualizar la data de esa página
-      me.listPayments(page, buscar, criterio);
+      mes.listSales(page, buscar, criterio);
     },
   },
 
   mounted() {
-    this.listPayments(1, this.buscar, this.criterio);
-    this.getMemberships();
-    this.getCustomers();
+    this.listSales(1, this.buscar, this.criterio);
+    this.getProducts();
   },
 };
 </script>

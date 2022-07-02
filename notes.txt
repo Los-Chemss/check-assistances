@@ -2,7 +2,7 @@
 git config git-ftp.url "ftp://155.138.140.57"
 git config git-ftp.user "heriberto@gervimex.com"
 git config git-ftp.password "urbanfit_01"
-git ftp init
+git ftp init\
 
 #Get docker  db address
 docker inspect -f '{{range.NetworkSettings.Networks}}{{.IPAddress}}{{end}}' check-assistance-mysql-1
@@ -12,4 +12,34 @@ docker inspect -f '{{range.NetworkSettings.Networks}}{{.IPAddress}}{{end}}' chec
 frontimm
 Gercanada_001
 
++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+
+Cambios
+
+1- En la version ya subida, no funciona para editar el costo de las membresias.                                           Y
+2- Que se lleve un registro de pagos y que se pueda filtrar por mes y sucursal.                                           Y
+3- Cuando des de alta un nuevo cliente que te pida Nombre, Apellidos, Domicilios, Estado, Codigo Postal, Telefono
+email, Fecha de nacimiento. Y que en la parte de Customers puedas ver la informacion o el perfil de cliente, un boton a
+lado de editar y eliminar                                                                                                 Y
+4- Que se pueda filtrar Clientes Activos, Clientes Expirados y Clientes apuntos de expirar                                P
+5- La parte de Inventario que habias dicho, que el usuario pueda registrar ventas como agua, etc. tambien que se
+ lleve un registro de cuando se hizo                                                                                      P
+6- Seccion de Gastos Internos, va ser como el de inventario pero solo para gastos a nivel empresarial.
+7- Una seccion donde se registre todos los movimientos hechos por los usuarios de los sucursales
+ y solo lo pueda ver un super usuario.
+8- Que al registrar un usuario puedas tomar una foto y se registre.
+9- Cuando haces Check In te diga cuando va Expirar.
+
+10-gastos internos
+11-Suma se valor del cliente
+========================================
+foto
+valor del cliente
+reporte ingresos
+
+!! checar memberships
+
+================
+->footer
+->Users
 

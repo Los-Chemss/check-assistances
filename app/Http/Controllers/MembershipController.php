@@ -58,8 +58,9 @@ class MembershipController extends Controller
         $user = Auth::user();
         if (!$user) return response(null, 404);
         $branch = Branch::where('id', $user->branch_id)->first();
-        $companies = Company::where('user_id', $user->id)
-            ->where('id', $branch->company_id)->get();
+        if(!$branch)return response('Branch not found, Maybe not selected', 404);
+        $companies = Company::/* where('user_id', $user->id)
+            -> */orWhere('id', $branch->company_id)->get();
         $companyIds = [];
         foreach ($companies as $c) {
             array_push($companyIds, $c->id);

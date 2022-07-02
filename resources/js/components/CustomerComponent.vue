@@ -80,6 +80,27 @@
                         </div>
                       </div>
                     </div>
+
+                    <div class="col-md-12">
+                      <table>
+                        <tr>
+                          <td>
+                            <span class="badge badge-danger rounded-pill"
+                              ><i class="fas fa-arrow-right"></i
+                            ></span>
+                          </td>
+                          <td>Expirado</td>
+                        </tr>
+                        <tr>
+                          <td>
+                            <span class="badge badge-warning rounded-pill"
+                              ><i class="fas fa-arrow-right"></i
+                            ></span>
+                          </td>
+                          <td>Expira pronto (15 dias o menos)</td>
+                        </tr>
+                      </table>
+                    </div>
                   </div>
                   <div class="row">
                     <div class="col-sm-12">
@@ -92,7 +113,17 @@
                       >
                         <thead>
                           <tr v-for="(customer, index) in customers" v-if="index < 1">
-                            <th v-for="(value, key, cIndex) in customer">
+                            <th
+                              v-for="(value, key, cIndex) in customer"
+                              v-if="
+                                !(
+                                  key === 'address' ||
+                                  key === 'province' ||
+                                  key === 'post_code' ||
+                                  key === 'phone'
+                                )
+                              "
+                            >
                               {{ key }}
                             </th>
                             <th></th>
@@ -103,9 +134,30 @@
                             v-for="(customer, index) in customers"
                             v-if="index <= pagination.per_page"
                           >
-                            <td v-for="(value, key, cIndex) in customer" max-height="5px">
+                            <td
+                              v-for="(value, key, cIndex) in customer"
+                              max-height="5px"
+                              v-if="
+                                !(
+                                  key === 'address' ||
+                                  key === 'province' ||
+                                  key === 'post_code' ||
+                                  key === 'phone'
+                                )
+                              "
+                              :class="
+                                Date.now() > cusDate(customer['expires at']) ||
+                                !customer['expires at']
+                                  ? 'bg-danger'
+                                  : Date.now() > cusCloseDate(customer['expires at'])
+                                  ? 'bg-warning'
+                                  : ''
+                              "
+                            >
                               {{ value }}
                             </td>
+                            <!--  cusDate
+cusCloseDate -->
                             <td>
                               <button
                                 type="button"
@@ -129,31 +181,25 @@
                               >
                                 <i class="icon-eye"></i>
                               </button>
-                              <!--   <template v-if="categoria.condicion">
-                              <button
-                                type="button"
-                                class="btn btn-danger btn-sm"
-                                @click="desactivarCategoria(categoria.id)"
-                              >
-                                <i class="icon-trash"></i>
-                              </button>
-                            </template>
-                            <template v-else>
-                              <button
-                                type="button"
-                                class="btn btn-info btn-sm"
-                                @click="activarCategoria(categoria.id)"
-                              >
-                                <i class="icon-check"></i>
-                              </button>
-                            </template> -->
                             </td>
                           </tr>
                         </tbody>
                         <tfoot>
                           <tr></tr>
                           <tr v-for="(customer, index) in customers" v-if="index < 1">
-                            <th v-for="(value, key, cIndex) in customer">{{ key }}</th>
+                            <th
+                              v-for="(value, key, cIndex) in customer"
+                              v-if="
+                                !(
+                                  key === 'address' ||
+                                  key === 'province' ||
+                                  key === 'post_code' ||
+                                  key === 'phone'
+                                )
+                              "
+                            >
+                              {{ key }}
+                            </th>
                             <th></th>
                           </tr>
                         </tfoot>
@@ -168,7 +214,8 @@
                         role="status"
                         aria-live="polite"
                       >
-                        Showing 1 to 10 of 57 entries
+                        Showing {{ pagination.current_page }} to
+                        {{ pagination.per_page }} of {{ pagination.total }} entries
                       </div>
                     </div>
                     <div class="col-sm-12 col-md-7">
@@ -666,7 +713,8 @@ export default {
   methods: {
     getCustomers(page, buscar, criterio) {
       console.log("getted");
-      let me = this;
+      this.loading = true;
+      let me =this;
       me.template = 0;
       let url = "customers?page=" + page + "&buscar=" + buscar + "&criterio=" + criterio;
       axios
@@ -679,7 +727,24 @@ export default {
         })
         .catch((error) => {
           console.table(error);
-        });
+        })
+        .finally(() => (this.loading = false));
+    },
+
+    cusDate(value) {
+      console.log(value);
+      if (value) {
+        return new Date(value);
+      }
+    },
+    cusCloseDate(value) {
+      console.log(value);
+      if (value != null) {
+        var date = new Date();
+        if (date != null) {
+          return date.setDate(date.getDate() + 15);
+        }
+      }
     },
 
     getMemberships() {
@@ -714,6 +779,7 @@ export default {
 
     saveCustomer() {
       let me = this;
+      this.loading = 1;
       let request = {
         name: me.customer.name,
         lastname: me.customer.lastname,
@@ -726,7 +792,7 @@ export default {
         membership: me.customer.membership,
       };
       axios
-        .post("customers/store", request)
+        .post("customers", request)
         .then((response) => {
           Swal.fire({
             type: "success",
@@ -738,12 +804,14 @@ export default {
         })
         .catch((error) => {
           console.table(error);
-        });
+        })
+        .finally(() => (this.loading = false));
       this.closeModal();
     },
 
     updateCustomer() {
       let me = this;
+      this.loading = 1;
       let request = {
         name: me.customer.name,
         lastname: me.customer.lastname,
@@ -757,7 +825,7 @@ export default {
         id: me.customer.id,
       };
       axios
-        .put("customers/update/", request)
+        .put("customers/", request)
         .then((response) => {
           Swal.fire({
             type: "success",
@@ -769,7 +837,8 @@ export default {
         })
         .catch((error) => {
           console.table(error);
-        });
+        })
+        .finally(() => (this.loading = false));
       this.closeModal();
     },
 
@@ -841,6 +910,7 @@ export default {
 
     showCustomer(customer) {
       console.log(customer);
+      this.loading = 1;
       let me = this;
       me.template = 1;
       axios
@@ -867,10 +937,12 @@ export default {
         })
         .catch((error) => {
           console.log(error);
-        });
+        })
+        .finally(() => (this.loading = false));
     },
 
     deleteCustomer(customer) {
+      this.loading = 1;
       Swal.fire({
         title: "Esta seguro que desea eliminar este objeto?",
         type: "warning",
@@ -883,25 +955,30 @@ export default {
         cancelButtonClass: "btn btn-danger",
         buttonsStyling: false,
         reverseButtons: true,
-      }).then((result) => {
-        if (result.value) {
-          let me = this;
-          axios
-            .post("customers/" + customer + "/delete")
-            .then((response) => {
-              console.log(response);
-              me.getCustomers(me.page, me.buscar, me.criterio);
-            })
-            .catch((error) => {
-              console.log(error);
-            });
-          //
-        } else if (
-          // Read more about handling dismissals
-          result.dismiss === swal.DismissReason.cancel
-        ) {
-        }
-      });
+      })
+        .then((result) => {
+          if (result.value) {
+            let me = this;
+            axios
+              .delete("customers/" + customer)
+              .then((response) => {
+                console.log(response);
+                me.getCustomers(me.page, me.buscar, me.criterio);
+              })
+              .catch((error) => {
+                console.log(error);
+              });
+            //
+          } else if (
+            // Read more about handling dismissals
+            result.dismiss === swal.DismissReason.cancel
+          ) {
+          }
+        })
+        .catch(function (error) {
+          console.log(error);
+        })
+        .finally(() => (this.loading = false));
     },
     formatDateToInput(date) {
       var d = new Date(date),

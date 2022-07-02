@@ -80,6 +80,30 @@
                             <i data-feather="user" class="feather-icon"></i>
                             <span class="hide-menu">Usuarios</span></a>
                     </li>
+                    <li @click="menu = 7" class="sidebar-item"> <a
+                            class="sidebar-link waves-effect waves-dark sidebar-link" href="#"
+                            aria-expanded="false">
+                            <i data-feather="box" class="feather-icon"></i>
+                            <span class="hide-menu">Productos</span></a>
+                    </li>
+                    <li @click="menu = 8" class="sidebar-item"> <a
+                            class="sidebar-link waves-effect waves-dark sidebar-link" href="#"
+                            aria-expanded="false">
+                            <i data-feather="shopping-cart" class="feather-icon"></i>
+                            <span class="hide-menu">Ventas</span></a>
+                    </li>
+                    <li @click="menu = 9" class="sidebar-item"> <a
+                            class="sidebar-link waves-effect waves-dark sidebar-link" href="#"
+                            aria-expanded="false">
+                            <i data-feather="shopping-bag" class="feather-icon"></i>
+                            <span class="hide-menu">Compras</span></a>
+                    </li>
+                    <li @click="menu = 10" class="sidebar-item"> <a
+                            class="sidebar-link waves-effect waves-dark sidebar-link" href="#"
+                            aria-expanded="false">
+                            <i data-feather="package" class="feather-icon"></i>
+                            <span class="hide-menu">Almacen</span></a>
+                    </li>
                     <li class="sidebar-item">
                         <form method="POST" action="{{ route('logout') }}">
                             @csrf
