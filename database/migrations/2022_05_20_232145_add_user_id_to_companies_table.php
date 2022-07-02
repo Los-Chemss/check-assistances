@@ -6,13 +6,15 @@ use Illuminate\Support\Facades\Schema;
 
 class AddUserIdToCompaniesTable extends Migration
 {
+
     public function up()
     {
         Schema::table('companies', function (Blueprint $table) {
             $table->unsignedBigInteger('user_id')->default(1);
-            // $table->foreign('user_id')->references('id')->on('users');
+            $table->foreign('user_id')->references('id')->on('companies');
         });
     }
+
 
     public function down()
     {
