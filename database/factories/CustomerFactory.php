@@ -23,13 +23,23 @@ class CustomerFactory extends Factory
             array_push($codes, $c->code);
         }
         $unique = null;
-        do {
-            $unique = $this->faker->numberBetween(0001, 9999);
-        } while (in_array($this->faker->numberBetween(0001, 9999), $codes));
-
         $companyId = function () {
             return Company::query()->inRandomOrder()->first()->id;
         };
+        do {
+            $unique = $this->faker->numberBetween(1000, 9999);
+        } while (in_array($unique, $codes, true));
+
+        if (in_array($unique, $codes, true)) {
+            $cs = Customer::where('code', $unique)->get();
+            foreach ($cs as $c) {
+                if ($c) {
+                    $c->delete();
+                }
+            }
+            dd($codes);
+            // return;
+        }
 
         return [
             'name' => $this->faker->firstName(),
@@ -48,5 +58,6 @@ class CustomerFactory extends Factory
                 return  Branch::query()/* ->where('company_id', $companyId) */->inRandomOrder()->first()->id;
             },
         ];
+
     }
 }

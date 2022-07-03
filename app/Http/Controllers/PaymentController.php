@@ -133,7 +133,7 @@ class PaymentController extends Controller
             // return $membership;
             $data = [
                 'paid_at' => $request->paid_at,
-                'expires_at' => date('Y-m-d', strtotime($request->paid_at . "+ $membership->period days")),
+                'expires_at' => date('Y-m-d', ($request->paid_at . "+ $membership->period days")),
                 'amount' => $request->amount,
                 'membership_id' => $membership->id,
                 'customer_id' => $customer->id

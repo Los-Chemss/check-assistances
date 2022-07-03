@@ -11,11 +11,11 @@ class AddCompanyIdToCustomersTable extends Migration
     {
         Schema::table('customers', function (Blueprint $table) {
 
-            $company = new Company();
+            /*   $company = new Company();
             $company->name = 'Otras';
-            $company->save();
+            $company->save(); */
 
-            $table->unsignedBigInteger('company_id')->default($company->id);
+            $table->unsignedBigInteger('company_id')->nullable();
             $table->foreign('company_id')->references('id')->on('companies');
         });
     }
