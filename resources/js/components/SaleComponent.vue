@@ -417,7 +417,6 @@ export default {
 
     saveSale() {
       let me = this;
-      this.loading=true
       let request = {
         quantity: me.quantity,
         product: me.selectedProduct,
@@ -439,16 +438,16 @@ export default {
             text: message,
             timer: 8000,
           });
+           me.listSales(me.page, me.buscar, me.criterio);
         })
         .catch((error) => {
           console.table(error);
-        }) .finally(() => (this.loading = false));;
+        })
       this.closeModal();
     },
 
     updateSale() {
       let me = this;
-      this.loading=true
       let request = {
         quantity: me.quantity,
         product: me.selectedProduct,
@@ -464,6 +463,7 @@ export default {
             text: "Pago actualizado exitosamente",
             timer: 8000,
           });
+           me.listSales(me.page, me.buscar, me.criterio);
         })
         .catch((error) => {
           Swal.fire({
@@ -473,7 +473,7 @@ export default {
             timer: 8000,
           });
           console.table(error);
-        }) .finally(() => (this.loading = false));;
+        })
       this.closeModal();
     },
 
@@ -541,7 +541,6 @@ export default {
     },
 
     deleteSale(sale) {
-        let me = thisthis.loading=true
       Swal.fire({
         title: "Esta seguro que desea eliminar este objeto?",
         type: "warning",
@@ -577,7 +576,7 @@ export default {
                 timer: 5000,
               });
               console.log(error);
-            }) .finally(() => (this.loading = false));;
+            })
         } else if (
           // Read more about handling dismissals
           result.dismiss === swal.DismissReason.cancel

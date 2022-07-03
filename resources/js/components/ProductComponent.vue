@@ -386,7 +386,7 @@ export default {
     listProducts(page, buscar, criterio) {
       console.log("getted");
       let me = this;
-      this.loading=true
+      me.loading=true
       let url = "products?page=" + page + "&buscar=" + buscar + "&criterio=" + criterio;
       axios
         .get(url)
@@ -398,7 +398,7 @@ export default {
         })
         .catch((error) => {
           console.table(error);
-        }) .finally(() => (this.loading = false));;
+        }) .finally(() => (me.loading = false));;
     },
 
     getMemberships() {
@@ -446,7 +446,6 @@ export default {
 
     saveProduct() {
       let me = this;
-      this.loading=true
       let request = {
         name: me.product.name,
         description: me.product.description,
@@ -465,6 +464,7 @@ export default {
             text: message,
             timer: 3000,
           });
+           me.listProducts(me.page, me.buscar, me.criterio);
         })
         .catch((error) => {
           console.table({ error });
@@ -483,13 +483,12 @@ export default {
             timer: 3000,
           });
           console.log({ error });
-        }) .finally(() => (this.loading = false));;
+        })
       this.closeModal();
     },
 
     updateProduct() {
       let me = this;
-      this.loading=true
       let request = {
         name: me.product.name,
         description: me.product.description,
@@ -515,8 +514,9 @@ export default {
             text: "No se pudo guardar cambios :(",
             timer: 8000,
           });
-          console.table(error);
-        }) .finally(() => (this.loading = false));;
+           me.listProducts(me.page, me.buscar, me.criterio);
+          console.log(error);
+        }) ;
       this.closeModal();
     },
 
@@ -561,7 +561,7 @@ export default {
       }
     },
 
-    deleteProduct(product) {this.loading=true
+    deleteProduct(product) {
       Swal.fire({
         title: "Esta seguro que desea eliminar este objeto?",
         type: "warning",
@@ -598,7 +598,7 @@ export default {
                 timer: 5000,
               });
               console.log(error);
-            }) .finally(() => (this.loading = false));;
+            }) ;
         } else if (
           // Read more about handling dismissals
           result.dismiss === swal.DismissReason.cancel

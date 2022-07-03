@@ -265,10 +265,14 @@ class CustomerController extends Controller
      */
     public function destroy($id)
     {
-        return Customer::where('id', $id)->delete();
-        // return $customer;
-
-        // $customer->delete();
-        // return response()->json();
+        try {
+            $customer = Customer::where('id', $id)->first();
+            if (!$customer) return response('Customer not found', 404);
+            $customer->delete();
+            return response('Cliente eliminado', 200);
+        } catch (Exception $e) {
+            $c = $this;
+            return $this->catchEx($e->getMessage(), $c,  __FUNCTION__ . ' | ' . $e->getLine());
+        }
     }
 }

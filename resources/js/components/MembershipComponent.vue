@@ -413,7 +413,7 @@ export default {
     listMemberships(page, buscar, criterio) {
       console.log("getted");
       let me = this;
-      this.loading = true;
+      me.loading = true;
       let url =
         "memberships?page=" + page + "&buscar=" + buscar + "&criterio=" + criterio;
       axios
@@ -427,7 +427,7 @@ export default {
         .catch((error) => {
           console.table(error);
         })
-        .finally(() => (this.loading = false));
+        .finally(() => (me.loading = false));
     },
 
     /*     getMemberships() {
@@ -462,7 +462,6 @@ export default {
 
     saveMembership() {
       let me = this;
-      this.loading = true;
       let request = {
         name: me.name,
         price: me.price,
@@ -479,6 +478,7 @@ export default {
             text: message,
             timer: 8000,
           });
+          me.listMemberships(me.page, me.buscar, me.criterio);
         })
         .catch((error) => {
           Swal.fire({
@@ -488,14 +488,12 @@ export default {
             timer: 3000,
           });
           console.table(error);
-        })
-        .finally(() => (this.loading = false));
+        });
       this.closeModal();
     },
 
     updateMembership() {
       let me = this;
-      this.loading = true;
       let request = {
         name: me.membership.name,
         price: me.membership.price,
@@ -513,6 +511,7 @@ export default {
             text: message,
             timer: 8000,
           });
+          me.listMemberships(me.page, me.buscar, me.criterio);
         })
         .catch((error) => {
           Swal.fire({
@@ -522,8 +521,7 @@ export default {
             timer: 3000,
           });
           console.table(error);
-        })
-        .finally(() => (this.loading = false));
+        });
       this.closeModal();
     },
 
@@ -579,7 +577,6 @@ export default {
     },
 
     deleteMembership(membership) {
-      this.loading = true;
       Swal.fire({
         title: "Esta seguro que desea eliminar este objeto?",
         type: "warning",
@@ -615,8 +612,7 @@ export default {
                 timer: 8000,
               });
               console.log(error);
-            })
-            .finally(() => (this.loading = false));
+            });
           //
         } else if (
           // Read more about handling dismissals

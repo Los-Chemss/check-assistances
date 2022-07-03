@@ -18,7 +18,7 @@
                 <membership-component />
             </template>
             <template v-if="menu==5">
-                <user-component />
+                <profile-component />
             </template>
             <template v-if="menu==6">
                 <users-component />

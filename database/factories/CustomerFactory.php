@@ -46,9 +46,9 @@ class CustomerFactory extends Factory
             'lastname' => $this->faker->lastName(),
             'code' => $unique,
             'income' => $this->faker->dateTime(),
-            'membership_id' =>  function () use ($companyId) {
-                return  Membership::query()/* ->where('company_id', $companyId) */->inRandomOrder()->first()->id;
-            },
+           /*  'membership_id' =>  function () use ($companyId) {
+                return  Membership::query()->inRandomOrder()->first()->id;
+            }, */
             'company_id' => $companyId,
             'address' => $this->faker->address(),
             'province' => $this->faker->state(),

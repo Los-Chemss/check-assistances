@@ -318,7 +318,6 @@ export default {
     },
 
     userAccount() {
-      console.log("any");
       this.getBranches();
       let me = this;
       this.loading = true;
@@ -353,7 +352,7 @@ export default {
           branch: me.selectedBranch.id,
         })
         .then(function (response) {
-        //   console.log(response);
+          //   console.log(response);
           Swal.fire({
             type: "success",
             title: "Account updated",
@@ -371,6 +370,7 @@ export default {
           });
           console.log(error);
         });
+      window.location.reload();
     },
 
     updatePassword() {

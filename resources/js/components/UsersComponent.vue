@@ -153,8 +153,8 @@
                       role="status"
                       aria-live="polite"
                     >
-                      Showing {{ pagination.current_page }} to {{pagination.per_page}} of
-                      {{ pagination.total }} entries
+                      Showing {{ pagination.current_page }} to
+                      {{ pagination.per_page }} of {{ pagination.total }} entries
                     </div>
                   </div>
                   <div class="col-sm-12 col-md-7">
@@ -434,8 +434,8 @@ export default {
 
   methods: {
     listUsers(page, buscar, criterio) {
-        let me = this;
-        this.loading=true
+      let me = this;
+      this.loading = true;
       console.log("getted");
       let url = "users?page=" + page + "&buscar=" + buscar + "&criterio=" + criterio;
       axios
@@ -450,7 +450,8 @@ export default {
         })
         .catch((error) => {
           console.table(error);
-        }) .finally(() => (this.loading = false));;
+        })
+        .finally(() => (this.loading = false));
     },
 
     getBranch() {
@@ -472,7 +473,6 @@ export default {
 
     saveUser() {
       let me = this;
-      this.loading=true
       let request = {
         user_name: me.user.user_name,
         email: me.user.email,
@@ -494,16 +494,16 @@ export default {
             text: message,
             timer: 5000,
           });
+          me.listUsers(me.page, me.buscar, me.criterio);
         })
         .catch((error) => {
           console.table(error);
-        }) .finally(() => (this.loading = false));;
+        });
       this.closeModal();
     },
 
     updateUser() {
       let me = this;
-      this.loading=true
       let request = {
         user_name: me.user.user_name,
         email: me.user.email,
@@ -525,6 +525,7 @@ export default {
             text: "Usuario actualizado exitosamente",
             timer: 8000,
           });
+          me.listUsers(me.page, me.buscar, me.criterio);
         })
         .catch((error) => {
           Swal.fire({
@@ -534,7 +535,7 @@ export default {
             timer: 8000,
           });
           console.table(error);
-        }) .finally(() => (this.loading = false));;
+        });
       this.closeModal();
     },
 
@@ -603,7 +604,6 @@ export default {
     },
 
     deleteUser(user) {
-        this.loading=true
       Swal.fire({
         title: "Esta seguro que desea eliminar este objeto?",
         type: "warning",
@@ -639,7 +639,7 @@ export default {
                 timer: 5000,
               });
               console.log(error);
-            }) .finally(() => (this.loading = false));;
+            });
         } else if (
           // Read more about handling dismissals
           result.dismiss === swal.DismissReason.cancel

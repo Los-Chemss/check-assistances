@@ -397,7 +397,7 @@ export default {
     listPayments(page, buscar, criterio) {
       console.log("getted");
       let me = this;
-      this.loading = true;
+      me.loading = true;
       let url = "payments?page=" + page + "&buscar=" + buscar + "&criterio=" + criterio;
       axios
         .get(url)
@@ -410,12 +410,11 @@ export default {
         .catch((error) => {
           console.table(error);
         })
-        .finally(() => (this.loading = false));
+        .finally(() => (me.loading = false));
     },
 
     getMemberships() {
       let me = this;
-      this.loading = true;
       axios
         .get("select-memberships")
         .then((response) => {
@@ -439,7 +438,6 @@ export default {
         .catch((error) => {
           console.log(error);
         })
-        .finally(() => (this.loading = false));
     },
 
     selectCriteria() {
@@ -460,7 +458,6 @@ export default {
 
     savePayment() {
       let me = this;
-      this.loading = true;
       let request = {
         paid_at: me.paid_at,
         membership: me.selectedMembership,
@@ -483,17 +480,16 @@ export default {
             text: message,
             timer: 8000,
           });
+           me.listPayments(me.page, me.buscar, me.criterio);
         })
         .catch((error) => {
           console.table(error);
         })
-        .finally(() => (this.loading = false));
       this.closeModal();
     },
 
     updatePayment() {
       let me = this;
-      this.loading = true;
       let request = {
         paid_at: me.paid_at,
         membership: me.selectedMembership,
@@ -510,6 +506,7 @@ export default {
             text: "Pago actualizado exitosamente",
             timer: 8000,
           });
+           me.listPayments(me.page, me.buscar, me.criterio);
         })
         .catch((error) => {
           Swal.fire({
@@ -520,7 +517,6 @@ export default {
           });
           console.table(error);
         })
-        .finally(() => (this.loading = false));
       this.closeModal();
     },
 
@@ -594,7 +590,6 @@ export default {
     },
 
     deletePayment(payment) {
-      this.loading = true;
       Swal.fire({
         title: "Esta seguro que desea eliminar este objeto?",
         type: "warning",
@@ -619,7 +614,6 @@ export default {
                 text: "El pago ha sido eliminado !",
                 timer: 5000,
               });
-              //   console.log(response);
               me.listPayments(me.page, me.buscar, me.criterio);
             })
             .catch((error) => {
@@ -631,7 +625,6 @@ export default {
               });
               console.log(error);
             })
-            .finally(() => (this.loading = false));
         } else if (
           // Read more about handling dismissals
           result.dismiss === swal.DismissReason.cancel

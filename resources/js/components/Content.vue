@@ -105,7 +105,7 @@ export default {
       name: "",
       last_name: "",
       requiredBeAuth: false,
-      loading: true,
+      loading: false,
       user: {},
       summary: [],
       Factors: [],

@@ -18,19 +18,20 @@ class PaymentFactory extends Factory
      */
     public function definition()
     {
-        $customer = Customer::query()->where('company_id', 1)->inRandomOrder()->first()->id;
+        $customer = Customer::query()->where('company_id', 1)->inRandomOrder()->first();
+        $membership =   Membership::query()->inRandomOrder()->first();
+        $customer->membership_id = $membership->id;
         $companyId = function () {
             return Company::query()->inRandomOrder()->first()->id;
         };
         $date = $this->faker->dateTimeBetween('-3 years', 'now');
         $output = $date->format('Y-m-d');
         // dd($output);
-        $membership =   Membership::query()->inRandomOrder()->first();
         return [
-            'paid_at' => $date,
-            'expires_at' =>  date('Y-m-d', strtotime($output . "+" . $membership['period'] . " days")),
-            'amount' => 300,
-            'customer_id' => $customer,
+            'paid_at' => $output,
+            'expires_at' =>  date('Y-m-d', strtotime($output . "+" . $membership['period'] . "days")),
+            // 'amount' => 300,
+            'customer_id' => $customer->id,
             'membership_id' => $membership->id,
             'registered_on_branch_id' => function () use ($companyId) {
                 return  Branch::query()/* ->where('company_id', $companyId) */->inRandomOrder()->first()->id;

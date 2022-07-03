@@ -712,33 +712,29 @@ export default {
 
   methods: {
     getCustomers(page, buscar, criterio) {
-      console.log("getted");
-      this.loading = true;
-      let me =this;
+      let me = this;
+      me.loading = true;
       me.template = 0;
       let url = "customers?page=" + page + "&buscar=" + buscar + "&criterio=" + criterio;
       axios
         .get(url)
         .then((response) => {
           var respuesta = response.data;
-          console.log(respuesta);
           me.customers = respuesta.customers;
           me.pagination = respuesta.pagination;
         })
         .catch((error) => {
           console.table(error);
         })
-        .finally(() => (this.loading = false));
+        .finally(() => (me.loading = false));
     },
 
     cusDate(value) {
-      console.log(value);
       if (value) {
         return new Date(value);
       }
     },
     cusCloseDate(value) {
-      console.log(value);
       if (value != null) {
         var date = new Date();
         if (date != null) {
@@ -752,7 +748,7 @@ export default {
       axios
         .get("select-memberships")
         .then((response) => {
-          console.log(response);
+          //   console.log(response);
           var respuesta = response.data;
           me.memberships = respuesta;
         })
@@ -779,7 +775,6 @@ export default {
 
     saveCustomer() {
       let me = this;
-      this.loading = 1;
       let request = {
         name: me.customer.name,
         lastname: me.customer.lastname,
@@ -800,18 +795,17 @@ export default {
             text: "Cliente creado exitosamente",
             timer: 3000,
           });
+          me.getCustomers(me.page, me.buscar, me.criterio);
           console.log(response);
         })
         .catch((error) => {
           console.table(error);
-        })
-        .finally(() => (this.loading = false));
+        });
       this.closeModal();
     },
 
     updateCustomer() {
       let me = this;
-      this.loading = 1;
       let request = {
         name: me.customer.name,
         lastname: me.customer.lastname,
@@ -833,12 +827,12 @@ export default {
             text: "Cliente actualizado con exito",
             timer: 3000,
           });
+          me.getCustomers(me.page, me.buscar, me.criterio);
           console.log(response);
         })
         .catch((error) => {
           console.table(error);
-        })
-        .finally(() => (this.loading = false));
+        });
       this.closeModal();
     },
 
@@ -851,7 +845,6 @@ export default {
           JSON.stringify(event.target.options[event.target.options.selectedIndex])
         )._value;
       }
-      console.log(newVal);
       this.selectedMembership = newVal;
     },
 
@@ -881,11 +874,11 @@ export default {
               break;
             }
             case "update": {
-              console.log(data);
+              //   console.log(data);
               let mem = null;
               this.memberships.forEach((m) => {
                 if (m.name === data.membership) mem = m;
-                console.log(mem);
+                // console.log(mem);
               });
               this.modal = 1;
               this.modalTitle = "Actualizar cliente";
@@ -909,9 +902,9 @@ export default {
     },
 
     showCustomer(customer) {
-      console.log(customer);
-      this.loading = 1;
+      //   console.log(customer);
       let me = this;
+      me.loading = 1;
       me.template = 1;
       axios
         .get("customers/" + customer)
@@ -938,11 +931,11 @@ export default {
         .catch((error) => {
           console.log(error);
         })
-        .finally(() => (this.loading = false));
+        .finally(() => (me.loading = false));
     },
 
     deleteCustomer(customer) {
-      this.loading = 1;
+      let me = this;
       Swal.fire({
         title: "Esta seguro que desea eliminar este objeto?",
         type: "warning",
@@ -958,15 +951,26 @@ export default {
       })
         .then((result) => {
           if (result.value) {
-            let me = this;
             axios
               .delete("customers/" + customer)
               .then((response) => {
-                console.log(response);
+                // console.log(response);
+                Swal.fire({
+                  type: "success",
+                  title: "Cliente eliminado",
+                  text: "eliminado correcta mente",
+                  timer: 3000,
+                });
                 me.getCustomers(me.page, me.buscar, me.criterio);
               })
               .catch((error) => {
                 console.log(error);
+                Swal.fire({
+                  type: "error",
+                  title: "Cliente no eliminado",
+                  text: "Tal vez hay datos que dependen de este, y se perderian",
+                  timer: 3000,
+                });
               });
             //
           } else if (
@@ -977,8 +981,7 @@ export default {
         })
         .catch(function (error) {
           console.log(error);
-        })
-        .finally(() => (this.loading = false));
+        });
     },
     formatDateToInput(date) {
       var d = new Date(date),
