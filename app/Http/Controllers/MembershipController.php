@@ -58,7 +58,7 @@ class MembershipController extends Controller
         $user = Auth::user();
         if (!$user) return response(null, 404);
         $branch = Branch::where('id', $user->branch_id)->first();
-        if(!$branch)return response('Branch not found, Maybe not selected', 404);
+        if (!$branch) return response('Branch not found, Maybe not selected', 404);
         $companies = Company::/* where('user_id', $user->id)
             -> */orWhere('id', $branch->company_id)->get();
         $companyIds = [];
@@ -88,7 +88,18 @@ class MembershipController extends Controller
     public function store(StoreMembershipRequest $request)
     {
         try {
-            return Membership::create($request->all());
+            $newMembership = [];
+            $branch = Branch::where('id', Auth::user()->branch_id)->first();
+            if (!$branch) return response("Branch not found", 404);
+            // $company =Company::Where()
+            foreach ($request->all() as $key => $val) {
+                $newMembership[$key] = $val;
+            }
+            if (!isset($newMembership['company_id'])) {
+                $newMembership['company_id'] = $branch['company_id'];
+            }
+            Membership::create($newMembership);
+            return response('Membership created', 201);
         } catch (Exception $e) {
             $c = $this;
             return $this->catchEx($e->getMessage(), $c,  __FUNCTION__);

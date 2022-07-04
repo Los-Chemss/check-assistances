@@ -129,15 +129,14 @@ class PaymentController extends Controller
             if (!$membership) return response('membership not found', 404);
             if (!$customer) return response('customer not found', 404);
             $customer->membership_id = $membership->id;
-            $customer->save();
-            // return $membership;
             $data = [
                 'paid_at' => $request->paid_at,
-                'expires_at' => date('Y-m-d', ($request->paid_at . "+ $membership->period days")),
-                'amount' => $request->amount,
+                'expires_at' => date('Y-m-d', strtotime($request->paid_at . "+ $membership->period days")),
+                // 'amount' => $request->amount,
                 'membership_id' => $membership->id,
                 'customer_id' => $customer->id
             ];
+            $customer->save();
             $payment = Payment::create($data);
             return response()->json(['membership' => $membership, 'payment' => $payment]);
         } catch (Exception $e) {

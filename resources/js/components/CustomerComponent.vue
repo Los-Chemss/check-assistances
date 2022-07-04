@@ -774,6 +774,7 @@ export default {
     },
 
     saveCustomer() {
+        alert('here');
       let me = this;
       let request = {
         name: me.customer.name,
@@ -784,11 +785,12 @@ export default {
         province: me.customer.province,
         postcode: me.customer.postcode,
         phone: me.customer.phone,
-        membership: me.customer.membership,
+        membership: me.selectedMembership.id,
       };
       axios
         .post("customers", request)
         .then((response) => {
+            console.log(response);
           Swal.fire({
             type: "success",
             title: "Cliente creado",
@@ -796,7 +798,6 @@ export default {
             timer: 3000,
           });
           me.getCustomers(me.page, me.buscar, me.criterio);
-          console.log(response);
         })
         .catch((error) => {
           console.table(error);
@@ -815,7 +816,7 @@ export default {
         province: me.customer.province,
         postcode: me.customer.postcode,
         phone: me.customer.phone,
-        membership_id: me.customer.membership_id,
+        membership_id: me.selectedMembership.id,
         id: me.customer.id,
       };
       axios
@@ -829,11 +830,11 @@ export default {
           });
           me.getCustomers(me.page, me.buscar, me.criterio);
           console.log(response);
+          me.closeModal();
         })
         .catch((error) => {
           console.table(error);
         });
-      this.closeModal();
     },
 
     selectMembership(event) {

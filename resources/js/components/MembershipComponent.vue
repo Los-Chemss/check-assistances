@@ -463,9 +463,9 @@ export default {
     saveMembership() {
       let me = this;
       let request = {
-        name: me.name,
-        price: me.price,
-        period: me.period,
+        name: me.membership.name,
+        price: me.membership.price,
+        period: me.membership.period,
       };
       axios
         .post("memberships", request)
@@ -484,7 +484,7 @@ export default {
           Swal.fire({
             type: "error",
             title: "No se pudo crear el registro",
-            text: message,
+            text: "Registro no creado",
             timer: 3000,
           });
           console.table(error);
@@ -517,7 +517,7 @@ export default {
           Swal.fire({
             type: "error",
             title: "No se pudo actualizar el registro",
-            text: "Malio merga",
+            text: "No se actualizo",
             timer: 3000,
           });
           console.table(error);

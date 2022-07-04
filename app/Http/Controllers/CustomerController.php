@@ -112,12 +112,13 @@ class CustomerController extends Controller
     }
     public function select()
     {
-        $customers = Customer::where('company_id', 2)->with(['membership' => function ($query) {
-            $query->with(['payments' => function ($q) {
-                $q->with('membership');
-                // $q->where('customer_id', 'customer.id')->orderBy('paid_at', 'desc')->first();
-            }]);
-        }])->get();
+        $customers = Customer::where('company_id', 1)
+            ->with(['membership' => function ($query) {
+                $query->with(['payments' => function ($q) {
+                    $q->with('membership');
+                    // $q->where('customer_id', 'customer.id')->orderBy('paid_at', 'desc')->first();
+                }]);
+            }])->get();
         return $customers;
     }
 
@@ -170,25 +171,37 @@ class CustomerController extends Controller
      */
     public function store(Request $request)
     {
-        $user = Auth::user();
-        $branch = Branch::where('id', $user->branch_id)->first();
-        if (!$branch) return response('No branch', 404);
-        $company = Company::where('user_id', $user->id)->where('id', $branch->company_id)->first();
-        $data = [
-            'name' => $request->name,
-            'lastname' => $request->lastname,
-            'code' => $request->code,
-            'income' => $request->income,
-            'company_id' => $company->id,
-            'lastname' => $request->lastname,
-            'address' => $request->address,
-            'province' => $request->province,
-            'postcode' => $request->postcode,
-            'phone' => $request->phone,
-            'registered_on_branch_id' => $branch->id
-        ];
-        return Customer::create($data);
         try {
+            $user = Auth::user();
+            $branch = Branch::where('id', $user->branch_id)->first();
+            if (!$branch) return response('No branch', 404);
+            $company = Company::where('user_id', $user->id)->where('id', $branch->company_id)->first();
+            $membership =  Membership::where('id', $request->membership)->first();
+            if (!$membership) return response('Membership not found', 404);
+
+            $data = [
+                'name' => $request->name,
+                'lastname' => $request->lastname,
+                'code' => $request->code,
+                'income' => $request->income,
+                'company_id' => $company->id,
+                'lastname' => $request->lastname,
+                'address' => $request->address,
+                'province' => $request->province,
+                'postcode' => $request->postcode,
+                'phone' => $request->phone,
+                'registered_on_branch_id' => $branch->id
+            ];
+
+            $customer = Customer::create($data);
+            $paid = [
+                'paid_at' => $request->income,
+                'expires_at' => date('Y-m-d', strtotime($request->paid_at . "+ $membership->period days")),
+                'membership_id' => $membership->id,
+                'customer_id' => $customer->id
+            ];
+            $payment = Payment::create($paid);
+            return response(201);
         } catch (Exception $e) {
             return response($e->getMessage(), 500);
         }

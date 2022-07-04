@@ -437,7 +437,7 @@ export default {
         })
         .catch((error) => {
           console.log(error);
-        })
+        });
     },
 
     selectCriteria() {
@@ -457,6 +457,7 @@ export default {
     },
 
     savePayment() {
+      alert("wth");
       let me = this;
       let request = {
         paid_at: me.paid_at,
@@ -466,25 +467,28 @@ export default {
       axios
         .post("payments", request)
         .then((response) => {
+          console.log(response);
+          //   return;
           let respuesta = response.data;
-          let message =
-            "Ha pagado una membresia " +
+          let message = "";
+          /*   "Ha pagado una membresia " +
             respuesta.membership.name +
             " con una duracion de " +
             respuesta.membership.name +
             " dias. Y expira el " +
-            respuesta.payment.expires_at;
+            respuesta.payment.expires_at; */
           Swal.fire({
             type: "success",
             title: "Registro  de pago satisfactorio",
             text: message,
             timer: 8000,
           });
-           me.listPayments(me.page, me.buscar, me.criterio);
+          me.listPayments(me.page, me.buscar, me.criterio);
         })
         .catch((error) => {
+          alert("");
           console.table(error);
-        })
+        });
       this.closeModal();
     },
 
@@ -506,7 +510,7 @@ export default {
             text: "Pago actualizado exitosamente",
             timer: 8000,
           });
-           me.listPayments(me.page, me.buscar, me.criterio);
+          me.listPayments(me.page, me.buscar, me.criterio);
         })
         .catch((error) => {
           Swal.fire({
@@ -516,7 +520,7 @@ export default {
             timer: 8000,
           });
           console.table(error);
-        })
+        });
       this.closeModal();
     },
 
@@ -624,7 +628,7 @@ export default {
                 timer: 5000,
               });
               console.log(error);
-            })
+            });
         } else if (
           // Read more about handling dismissals
           result.dismiss === swal.DismissReason.cancel
