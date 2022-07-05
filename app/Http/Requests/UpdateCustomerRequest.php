@@ -24,12 +24,15 @@ class UpdateCustomerRequest extends FormRequest
     public function rules()
     {
         return [
-            /*
-             "name",
-            "code",
-            "income",
-            "company_id",
-            "membership_id",
-            */];
+            "name" => 'required',
+            "lastname" => 'required',
+            "address" => 'nullable',
+            "province" => 'nullable',
+            "postcode" => 'nullable',
+            "phone" => 'nullable',
+            "code" => 'required',
+            "income" => 'required',
+            "membership_id" => 'required',
+        ];
     }
 }

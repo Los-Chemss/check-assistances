@@ -12,45 +12,16 @@
     <div class="row">
       <div class="col-12">
         <div class="card">
-          <div class="card-header border-bottom shadow-sm pt-4 mt-4 pb-2 mb-22">
-            <button
-              type="button"
-              class="btn btn-primary btn-lg fas fa-edit"
-              @click="openModal('memberships', 'store')"
-            >
-              New Membership
-            </button>
-          </div>
           <div class="card-body">
-            <h4 class="card-title">Memberships</h4>
             <div class="table-responsive">
               <div
                 id="col_render_wrapper"
                 class="dataTables_wrapper container-fluid dt-bootstrap4"
               >
                 <div class="row">
-                  <!--   <div class="col-sm-12 col-md-6">
-                  <div class="input-group-prepend" id="col_render_length">
-                      <label class="mr-2">Show</label>
-                      <select
-                        name="col_render_length  "
-                        aria-controls="col_render"
-                        class="form-control-sm input-group-text"
-                        v-model="showMemberships"
-                        @change="getRows()"
-                      >
-                        <option value="10">10</option>
-                        <option value="25">25</option>
-                        <option value="50">50</option>
-                        <option value="100">100</option>
-                      </select>
-                      <label class="ml-2">entries</label>
-                    </div>
-                  </div> -->
                   <div class="col-sm-12 col-md-6">
                     <div class="input-group mb-3 dataTables_filter">
                       <div class="input-group-prepend">
-                        <!--  <span class="input-group-text">$</span> -->
                         <select
                           class="input-group-text"
                           v-model="criterio"
@@ -65,33 +36,46 @@
                       </div>
                       <input
                         :type="
-                          criterio == 'period'
+                          criterio == 'paid_at' || criterio == 'expires_at'
                             ? 'date'
-                            : criterio == 'price'
+                            : criterio == 'code'
                             ? 'number'
+                            : criterio == 'branch'
+                            ? 'text'
                             : 'text'
                         "
                         v-model="buscar"
-                        @keyup.enter="listMemberships(1, buscar, criterio)"
+                        @keyup.enter="listPayments(1, buscar, criterio)"
                         class="form-control"
                         :placeholder="
-                          criterio == 'period'
+                          criterio == 'paid_at' || criterio == 'expires_at'
                             ? '22/07/2022'
-                            : criterio == 'price'
-                            ? '0123'
-                            : 'Benny Juarez'
+                            : criterio == 'customer'
+                            ? 'Nombre o apellidos del cliente'
+                            : criterio == 'branch'
+                            ? 'Nombre de sucursal o direccion'
+                            : 'Monthly'
                         "
                       />
                       <div class="input-group-append">
                         <button
                           type="submit"
-                          @click="listMemberships(1, buscar, criterio)"
+                          @click="listPayments(1, buscar, criterio)"
                           class="btn-sm btn-primary input-group-text"
                         >
                           <i class="fa fa-search"></i>
                         </button>
                       </div>
                     </div>
+                  </div>
+                  <div class="col-md-6 text-right">
+                    <button
+                      type="button"
+                      class="btn btn-primary btn-lg fas fa-edit"
+                      @click="openModal('payments', 'store')"
+                    >
+                      New Payment
+                    </button>
                   </div>
                 </div>
                 <div class="row">
@@ -104,8 +88,17 @@
                       aria-describedby="col_render_info"
                     >
                       <thead>
-                        <tr v-for="(membership, index) in memberships" v-if="index < 1">
-                          <th v-for="(value, key, cIndex) in membership">
+                        <tr v-for="(payment, index) in payments" v-if="index < 1">
+                          <th
+                            v-for="(value, key, cIndex) in payment"
+                            v-if="
+                              !(
+                                key === 'customer' ||
+                                key === 'customerId' ||
+                                key === 'membershipId'
+                              )
+                            "
+                          >
                             {{ key }}
                           </th>
                           <th></th>
@@ -113,16 +106,26 @@
                       </thead>
                       <tbody>
                         <tr
-                          v-for="(membership, index) in memberships"
+                          v-for="(payment, index) in payments"
                           v-if="index <= pagination.per_page"
                         >
-                          <td v-for="(value, key, cIndex) in membership" max-height="5px">
+                          <td
+                            v-for="(value, key, cIndex) in payment"
+                            max-height="5px"
+                            v-if="
+                              !(
+                                key === 'customer' ||
+                                key === 'customerId' ||
+                                key === 'membershipId'
+                              )
+                            "
+                          >
                             {{ value }}
                           </td>
                           <td>
                             <button
                               type="button"
-                              @click="openModal('memberships', 'update', membership)"
+                              @click="openModal('payments', 'update', payment)"
                               class="btn btn-warning btn-sm"
                             >
                               <i class="icon-pencil"></i>
@@ -131,35 +134,28 @@
                             <button
                               type="button"
                               class="btn btn-danger btn-sm"
-                              @click="deleteMembership(membership.id)"
+                              @click="deletePayment(payment.id)"
                             >
                               <i class="icon-trash"></i>
                             </button>
-                            <!--   <template v-if="categoria.condicion">
-                              <button
-                                type="button"
-                                class="btn btn-danger btn-sm"
-                                @click="desactivarCategoria(categoria.id)"
-                              >
-                                <i class="icon-trash"></i>
-                              </button>
-                            </template>
-                            <template v-else>
-                              <button
-                                type="button"
-                                class="btn btn-info btn-sm"
-                                @click="activarCategoria(categoria.id)"
-                              >
-                                <i class="icon-check"></i>
-                              </button>
-                            </template> -->
                           </td>
                         </tr>
                       </tbody>
                       <tfoot>
                         <tr></tr>
-                        <tr v-for="(membership, index) in memberships" v-if="index < 1">
-                          <th v-for="(value, key, cIndex) in membership">{{ key }}</th>
+                        <tr v-for="(payment, index) in payments" v-if="index < 1">
+                          <th
+                            v-for="(value, key, cIndex) in payment"
+                            v-if="
+                              !(
+                                key === 'customer' ||
+                                key === 'customerId' ||
+                                key === 'membershipId'
+                              )
+                            "
+                          >
+                            {{ key }}
+                          </th>
                           <th></th>
                         </tr>
                       </tfoot>
@@ -272,36 +268,28 @@
               <div class="flex flex-wrap -m-2">
                 <form class="">
                   <div class="form-group mb-5">
-                    <label for="name">Nombre</label>
+                    <label for="paid_at">Paid at</label>
                     <input
-                      type="text"
+                      type="date"
                       class="form-control"
-                      id="name"
-                      placeholder="trimestral"
-                      v-model="membership.name"
+                      id="paid_at"
+                      v-model="paid_at"
                     />
                     <!--    <span class="bar"></span> -->
                   </div>
                   <div class="form-group mb-5">
-                    <label for="price">Precio</label>
-                    <input
-                      type="number"
-                      class="form-control"
-                      id="price"
-                      v-model="membership.price"
-                    />
-                    <!-- <span class="bar"></span> -->
-                  </div>
-                  <div class="form-group mb-5">
-                    <label for="period">Periodo (Duracion en dias)</label>
-                    <input
-                      type="number"
-                      class="form-control"
-                      id="period"
-                      placeholder="90"
-                      v-model="membership.period"
-                    />
-                    <!-- <span class="bar"></span> -->
+                    <label for="membership">Membership</label>
+                    <select
+                      class="form-control p-0"
+                      id="membership"
+                      v-model="selectedMembership"
+                      @change="selectMembership"
+                    >
+                      <option></option>
+                      <option v-for="membership in memberships" :value="membership">
+                        {{ membership.name }} | ${{ membership.price }}
+                      </option>
+                    </select>
                   </div>
                 </form>
                 <!--   </div>
@@ -311,18 +299,18 @@
             <!-- form -->
             <div class="modal-footer">
               <button
-                v-if="actionType === 1"
+                v-if="actionType == 1"
                 type="button"
                 class="btn btn-primary fas fa-save"
-                @click="saveMembership"
+                @click="savePayment"
               >
                 Save
               </button>
               <button
-                v-if="actionType === 2"
+                v-if="actionType == 2"
                 type="button"
                 class="btn btn-primary fas fa-save"
-                @click="updateMembership"
+                @click="updatePayment"
               >
                 Update
               </button>
@@ -345,23 +333,24 @@
 </template>
 <script>
 export default {
+  props: ["customerInfo"],
   data() {
     return {
       loading: false,
-      memberships: [],
+      payments: [],
       user: {},
+      memberships: [],
+      customers: [],
       modal: "",
       modalTitle: "",
       actionType: 0,
       errors: null,
-      membership: {
-        name: null,
-        period: null,
-        price: null,
-        id: null,
-      },
-      //   membership: null,
+      paid_at: null,
+      expires_at: null,
+      amount: 0,
+      membership: null,
       selectedMembership: null,
+
       pagination: {
         total: 0,
         current_page: 0,
@@ -371,10 +360,11 @@ export default {
         to: 0,
       },
       offset: 3,
-      criterio: "name",
+      criterio: "paid_at",
       buscar: "",
-      showMemberships: 10,
-      criterions: ["name", "price", "period"],
+      payment_id: null,
+      showPayments: 10,
+      criterions: ["paid_at", "expires_at", "membership", "branch"],
     };
   },
 
@@ -387,7 +377,6 @@ export default {
       if (!this.pagination.to) {
         return [];
       }
-
       var from = this.pagination.current_page - this.offset;
       if (from < 1) {
         from = 1;
@@ -397,7 +386,6 @@ export default {
       if (to >= this.pagination.last_page) {
         to = this.pagination.last_page;
       }
-
       var pagesArray = [];
       while (from <= to) {
         pagesArray.push(from);
@@ -405,28 +393,62 @@ export default {
       }
       return pagesArray;
     },
-
-    // filter: this.getMemberships(this.page, this.buscar, this.criterio),
+    // filter: this.listPayments(this.page, this.buscar, this.criterio),
   },
 
   methods: {
-    listMemberships(page, buscar, criterio) {
+    listPayments(page, buscar, criterio) {
       let me = this;
+      console.log({ info: me.customerInfo.id });
       me.loading = true;
       let url =
-        "memberships?page=" + page + "&buscar=" + buscar + "&criterio=" + criterio;
+        "customers/" +
+        me.customerInfo.id +
+        "/payments?page=" +
+        page +
+        "&buscar=" +
+        buscar +
+        "&criterio=" +
+        criterio;
       axios
         .get(url)
         .then((response) => {
           var respuesta = response.data;
-          console.log(respuesta);
-          me.memberships = respuesta.memberships;
+          //   console.log(respuesta);
+          me.payments = respuesta.payments.data;
           me.pagination = respuesta.pagination;
         })
         .catch((error) => {
-          console.log(error);
+          console.table(error);
         })
         .finally(() => (me.loading = false));
+    },
+
+    getMemberships() {
+      let me = this;
+      axios
+        .get("select-memberships")
+        .then((response) => {
+          //   console.log(response);
+          var respuesta = response.data;
+          me.memberships = respuesta;
+        })
+        .catch((error) => {
+          console.log(error);
+        });
+    },
+    getCustomers() {
+      let me = this;
+      axios
+        .get("customers-select")
+        .then((response) => {
+          //   console.log(response);
+          var respuesta = response.data;
+          me.customers = respuesta;
+        })
+        .catch((error) => {
+          console.log(error);
+        });
     },
 
     selectCriteria() {
@@ -442,76 +464,78 @@ export default {
           JSON.stringify(event.target.options[event.target.options.selectedIndex])
         )._value;
       }
-      this.showMemberships = newVal;
+      this.showPayments = newVal;
     },
 
-    saveMembership() {
+    savePayment() {
       let me = this;
       let request = {
-        name: me.membership.name,
-        price: me.membership.price,
-        period: me.membership.period,
+        paid_at: me.paid_at,
+        membership: me.selectedMembership.id,
+        customer: me.customerInfo.id,
       };
       axios
-        .post("memberships", request)
+        .post("payments", request)
         .then((response) => {
-          /*  console.log(response);
-          return; */
-          let message =
-            response.data != undefined
-              ? response.data
-              : "Se ha agregado un nuevo plan de membresia";
+          console.log(response);
+          //   return;
+          let respuesta = response.data;
+          let message = "";
+          /*   "Ha pagado una membresia " +
+            respuesta.membership.name +
+            " con una duracion de " +
+            respuesta.membership.name +
+            " dias. Y expira el " +
+            respuesta.payment.expires_at; */
           Swal.fire({
             type: "success",
-            title: "Registro  de membresia satisfactorio",
+            title: "Registro  de pago satisfactorio",
             text: message,
-            timer: 5000,
+            timer: 3000,
           });
-          me.listMemberships(me.page, me.buscar, me.criterio);
+          me.listPayments(me.page, me.buscar, me.criterio);
         })
         .catch((error) => {
-          console.log(error);
           let message = me.swalErrorMessage(error.response.data.errors);
           Swal.fire({
             type: "error",
-            title: "No se pudo crear el registro",
-            html: message,
+            title: "No se pudo registrar el pago",
+            text: message,
             timer: 8000,
           });
+          console.table(error);
         });
       this.closeModal();
     },
 
-    updateMembership() {
+    updatePayment() {
       let me = this;
       let request = {
-        name: me.membership.name,
-        price: me.membership.price,
-        period: me.membership.period,
-        id: me.membership.id,
+        paid_at: me.paid_at,
+        membership: me.selectedMembership.id,
+        customer: me.customerInfo.id,
+        id: me.payment_id,
       };
       axios
-        .put("memberships", request)
+        .put("payments/" + request.id, request)
         .then((response) => {
-          console.log(response);
-          let message = "Se ha actualizado un  plan de membresia";
+          let respuesta = response.data;
           Swal.fire({
             type: "success",
-            title: "Actualizacion  de membresia satisfactorio",
-            text: message,
-            timer: 5000,
-          });
-          me.listMemberships(me.page, me.buscar, me.criterio);
-        })
-        .catch((error) => {
-          let message = me.swalErrorMessage(error.response.data.errors);
-          Swal.fire({
-            type: "error",
-            title: "No se pudo actualizar el registro",
-            html: message,
+            title: "Pago actualizado",
+            text: "Pago actualizado exitosamente",
             timer: 8000,
           });
-          console.log(error);
+          me.listPayments(me.page, me.buscar, me.criterio);
+        })
+        .catch((error) => {
+          Swal.fire({
+            type: "error",
+            title: "No actualizado",
+            text: "No se pudo guardar cambios :(",
+            timer: 8000,
+          });
+          console.table(error);
         });
       this.closeModal();
     },
@@ -525,7 +549,6 @@ export default {
           JSON.stringify(event.target.options[event.target.options.selectedIndex])
         )._value;
       }
-      console.log(newVal);
       this.selectedMembership = newVal;
     },
 
@@ -533,33 +556,34 @@ export default {
       this.modal = 0;
       this.title = "";
       this.errors = {};
-      this.listMemberships(1, this.buscar, this.criterio);
-      //   this.userFiles();//reload component
+      this.listPayments(this.pagination.current_page, this.buscar, this.criterio);
     },
 
-    openModal(model, action, data = []) {
+    async openModal(model, action, data = []) {
       switch (model) {
-        case "memberships": {
+        case "payments": {
           switch (action) {
             case "store": {
               this.modal = 1;
-              this.modalTitle = "New membership";
+              this.modalTitle = "New payment";
               this.actionType = 1;
-              this.name = "";
-              this.price = "";
-              this.period = "";
+              this.paid_at = "";
+              this.selectedMembership = "";
               break;
             }
             case "update": {
-              console.log(data);
-              console.log(this.membership);
+              let mem = null;
+              this.memberships.forEach((m) => {
+                if (m.id === data.membershipId) {
+                  mem = m;
+                }
+              });
               this.modal = 1;
-              this.modalTitle = "Update membership";
+              this.modalTitle = "Update payment";
               this.actionType = 2;
-              this.membership.name = data.name;
-              this.membership.price = data.price;
-              this.membership.period = data.period;
-              this.membership.id = data.id;
+              this.paid_at = new Date(data["paid_at"]).toISOString().slice(0, 10);
+              this.selectedMembership = mem;
+              this.payment_id = data.id;
               break;
             }
           }
@@ -567,7 +591,7 @@ export default {
       }
     },
 
-    deleteMembership(membership) {
+    deletePayment(payment) {
       Swal.fire({
         title: "Esta seguro que desea eliminar este objeto?",
         type: "warning",
@@ -584,27 +608,25 @@ export default {
         if (result.value) {
           let me = this;
           axios
-            .delete("memberships/" + membership)
+            .delete("payments/" + payment)
             .then((response) => {
-              console.log(response);
               Swal.fire({
                 type: "success",
-                title: "Registro eliminado",
-                text: "Eliminado satisfactoria mente",
-                timer: 8000,
+                title: "Registro  eliminado con éxito",
+                text: "El pago ha sido eliminado !",
+                timer: 5000,
               });
-              me.listMemberships(me.page, me.buscar, me.criterio);
+              me.listPayments(me.page, me.buscar, me.criterio);
             })
             .catch((error) => {
               Swal.fire({
                 type: "error",
-                title: "No se pudo eliminar el registro",
-                text: "El registro no pudo ser eliminado",
-                timer: 8000,
+                title: "No pudo ser eliminado",
+                text: "Verifique si hay datos que dependan de éste",
+                timer: 5000,
               });
               console.log(error);
             });
-          //
         } else if (
           // Read more about handling dismissals
           result.dismiss === swal.DismissReason.cancel
@@ -631,7 +653,7 @@ export default {
       //Actualiza la página actual
       me.pagination.current_page = page;
       //Envia la petición para visualizar la data de esa página
-      me.listMemberships(page, buscar, criterio);
+      me.listPayments(page, buscar, criterio);
     },
 
     swalErrorMessage(errors) {
@@ -647,7 +669,9 @@ export default {
   },
 
   mounted() {
-    this.listMemberships(1, this.buscar, this.criterio);
+    this.listPayments(1, this.buscar, this.criterio);
+    this.getMemberships();
+    this.getCustomers();
   },
 };
 </script>

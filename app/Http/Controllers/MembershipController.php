@@ -135,19 +135,24 @@ class MembershipController extends Controller
      * @param  \App\Models\Membership  $membership
      * @return \Illuminate\Http\Response
      */
-    public function update(UpdateMembershipRequest $request/* , Membership $membership */)
+    public function update(UpdateMembershipRequest $request, Membership $membership)
     {
-        if (isset($request)) {
-            $membership = Membership::where('id', $request->id)->first();
-            foreach ($request->all() as $key => $val) {
-                if ($membership->$key) {
-                    $membership->$key = $val;
+        try {
+            if (isset($request)) {
+                $membership = Membership::where('id', $request->id)->first();
+                if (!$membership) return response('Membership not found', 404);
+                foreach ($request->all() as $key => $val) {
+                    if ($membership->$key) {
+                        $membership->$key = $val;
+                    }
                 }
+                $membership->save();
+                return response()->json(200);
             }
-            $membership->save();
-            return response()->json(200);
+        } catch (Exception $e) {
+            $c = $this;
+            return $this->catchEx($e->getMessage(), $c,  __FUNCTION__ . ' | ' . $e->getLine());
         }
-        return 200;
     }
 
     /**
@@ -158,8 +163,13 @@ class MembershipController extends Controller
      */
     public function destroy($id)
     {
-        $membership = Membership::where('id', $id)->first();
-        $membership->delete();
-        return 200;
+        try {
+            $membership = Membership::where('id', $id)->first();
+            $membership->delete();
+            return response('Membership deleted', 200);
+        } catch (Exception $e) {
+            $c = $this;
+            return $this->catchEx($e->getMessage(), $c,  __FUNCTION__ . ' | ' . $e->getLine());
+        }
     }
 }

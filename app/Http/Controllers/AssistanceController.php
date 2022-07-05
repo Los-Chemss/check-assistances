@@ -58,6 +58,47 @@ class AssistanceController extends Controller
             return response($e->getMessage(),   __FUNCTION__);
         }
     }
+    public function customerAsistances(Request $request, $customer)
+    {
+        try {
+            $buscar = $request->buscar;
+            $criterio = $request->criterio;
+
+            $asistances = Assistance::where('customer_id', $customer)
+                ->with('customer')
+                ->with('branch')
+                ->when($buscar && $criterio, function ($q) use ($criterio, $buscar) {
+                    $q->criterion($criterio, $buscar);
+                })
+                // ->criterion($criterio, $buscar)
+                ->paginate(10);
+            $asistancesRes = [];
+            foreach ($asistances as $as) {
+                array_push($asistancesRes, [
+                    'id' => $as->id,
+                    'nombre' => $as->customer->name,
+                    'entrada' => $as->input,
+                    // 'salida' => $as->output,
+                    'sucursal' => $as->branch->division,
+                ]);
+            }
+
+            return [
+                'pagination' => [
+                    'total'        => $asistances->total(),
+                    'current_page' => $asistances->currentPage(),
+                    'per_page'     => $asistances->perPage(),
+                    'last_page'    => $asistances->lastPage(),
+                    'from'         => $asistances->firstItem(),
+                    'to'           => $asistances->lastItem(),
+                ],
+                'asistances' =>  $asistancesRes
+            ];
+        } catch (Exception $e) {
+            $c = $this;
+            return response($e->getMessage(),   __FUNCTION__);
+        }
+    }
 
     /**
      * Show the form for creating a new resource.

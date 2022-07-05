@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\Customer;
 use App\Http\Requests\StoreCustomerRequest;
 use App\Http\Requests\UpdateCustomerRequest;
+use App\Models\Assistance;
 use App\Models\Branch;
 use App\Models\Company;
 use App\Models\Membership;
@@ -169,7 +170,7 @@ class CustomerController extends Controller
      * @param  \App\Http\Requests\StoreCustomerRequest  $request
      * @return \Illuminate\Http\Response
      */
-    public function store(Request $request)
+    public function store(StoreCustomerRequest $request)
     {
         try {
             $user = Auth::user();
@@ -198,7 +199,8 @@ class CustomerController extends Controller
                 'paid_at' => $request->income,
                 'expires_at' => date('Y-m-d', strtotime($request->paid_at . "+ $membership->period days")),
                 'membership_id' => $membership->id,
-                'customer_id' => $customer->id
+                'customer_id' => $customer->id,
+                'amount' => $membership->price
             ];
             $payment = Payment::create($paid);
             return response(201);
@@ -216,21 +218,26 @@ class CustomerController extends Controller
     public function show(Customer $customer)
     {
         try {
-            $return = Customer::where('id', $customer->id)
+            $customer = Customer::where('id', $customer->id)
                 ->with('membership')
-                ->with('payments', function ($q) {
-                    $q->with('membership');
-                })
-                ->with('asistances', function ($q) {
-                    $q->with('branch');
-                })
                 ->first();
-            return response()->json($return);
+
+            $payments = Payment::where('customer_id', $customer->id)
+                ->select('amount')
+                ->get();
+
+            $sum = 0;
+            foreach ($payments as $key => $pay) {
+                $sum += $pay->amount;
+            }
+
+            return response()->json([$customer, $sum]);
         } catch (Exception $e) {
             $c = $this;
             return $this->catchEx($e->getMessage(), $c,  __FUNCTION__);
         }
     }
+
 
     /**
      * Show the form for editing the specified resource.

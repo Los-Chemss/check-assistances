@@ -70,7 +70,13 @@ Route::middleware(['auth'])->group(function () {
     //Customers
     // Route::get('customers',  [CustomerController::class, 'view']);
     Route::get('customers',  [CustomerController::class, 'index']);
-    Route::get('customers/{customer}',  [CustomerController::class, 'show']);
+    Route::prefix('customers/{customer}')->group(function () {
+        Route::get('/',  [CustomerController::class, 'show']);
+        Route::get('payments',  [PaymentController::class, 'customerPayments']);
+        Route::get('assistances',  [AssistanceController::class, 'customerAsistances']);
+    });
+
+    Route::get('customers/{customer}/asistances',  [CustomerController::class, 'getAsistances']);
     Route::get('customers-select',  [CustomerController::class, 'select']);
     Route::post('customers',  [CustomerController::class, 'store']);
     Route::put('customers',  [CustomerController::class, 'update']);
@@ -88,6 +94,8 @@ Route::middleware(['auth'])->group(function () {
 
 
     Route::get('payments',  [PaymentController::class, 'index']);
+
+
     Route::post('payments',  [PaymentController::class, 'store']);
     Route::put('payments/{payment}',  [PaymentController::class, 'updateUser']);
     Route::delete('payments/{id}',  [PaymentController::class, 'destroy']);

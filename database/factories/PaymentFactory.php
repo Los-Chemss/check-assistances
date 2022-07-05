@@ -30,7 +30,7 @@ class PaymentFactory extends Factory
         return [
             'paid_at' => $output,
             'expires_at' =>  date('Y-m-d', strtotime($output . "+" . $membership['period'] . "days")),
-            // 'amount' => 300,
+            'amount' => $membership->price,
             'customer_id' => $customer->id,
             'membership_id' => $membership->id,
             'registered_on_branch_id' => function () use ($companyId) {

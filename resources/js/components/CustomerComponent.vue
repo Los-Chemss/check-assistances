@@ -156,8 +156,7 @@
                             >
                               {{ value }}
                             </td>
-                            <!--  cusDate
-cusCloseDate -->
+
                             <td>
                               <button
                                 type="button"
@@ -516,17 +515,19 @@ cusCloseDate -->
                             {{ customerInfo.membership.price }}
                           </td>
                         </tr>
+                        <tr>
+                          <th width="390">Valor del cliente</th>
+                          <td>
+                            <b> $ {{ customerInfo.value }} </b>
+                          </td>
+                        </tr>
                       </tbody>
                     </table>
                   </div>
                 </div>
                 <div class="col-lg-12 col-md-12 col-sm-12">
-                  <!-- <h3 class="box-title mt-5">General Info</h3> -->
-
-                  <!-- Here we go -->
                   <div class="card">
                     <div class="card-body">
-                      <!-- <h4 class="card-title mb-3">Default Tabs</h4> -->
                       <ul class="nav nav-tabs mb-3">
                         <li class="nav-item">
                           <a
@@ -550,62 +551,14 @@ cusCloseDate -->
                             <span class="d-none d-lg-block">Asistencias</span>
                           </a>
                         </li>
-                        <!--  <li class="nav-item">
-                                        <a href="#settings" data-toggle="tab" aria-expanded="false" class="nav-link">
-                                            <i class="mdi mdi-settings-outline d-lg-none d-block mr-1"></i>
-                                            <span class="d-none d-lg-block">Settings</span>
-                                        </a>
-                                    </li> -->
                       </ul>
 
                       <div class="tab-content">
                         <div class="tab-pane active" id="home">
-                          <div class="table-responsive">
-                            <table class="table">
-                              <thead>
-                                <tr>
-                                  <th>Dia de pago</th>
-                                  <!-- <th>Monto</th> -->
-                                  <th>Membresia</th>
-                                  <th>Expira el :</th>
-                                </tr>
-                              </thead>
-                              <tbody>
-                                <tr v-for="payment in customerInfo.payments">
-                                  <td>{{ payment.paid_at }}</td>
-                                  <!-- <td>{{ payment.amount }}</td> -->
-                                  <td>
-                                    {{ payment.membership.name }}|
-                                    {{ payment.membership.price }}|
-                                    {{ payment.membership.period }}
-                                    dias
-                                  </td>
-                                  <td>{{ payment.expires_at }}</td>
-                                </tr>
-                              </tbody>
-                            </table>
-                          </div>
+                          <PaymentsComponent :customerInfo="customerInfo" />
                         </div>
                         <div class="tab-pane" id="profile">
-                          <div class="table-responsive">
-                            <table class="table">
-                              <thead>
-                                <tr>
-                                  <th>Fecha</th>
-                                  <th>Sucursal</th>
-                                </tr>
-                              </thead>
-                              <tbody>
-                                <tr v-for="asistance in customerInfo.asistances">
-                                  <td>{{ asistance.input }}</td>
-                                  <td>
-                                    {{ asistance.branch.division }} |
-                                    {{ asistance.branch.location }}
-                                  </td>
-                                </tr>
-                              </tbody>
-                            </table>
-                          </div>
+                          <AsistancesComponent :customerInfo="customerInfo" />
                         </div>
                       </div>
                     </div>
@@ -623,7 +576,13 @@ cusCloseDate -->
   </div>
 </template>
 <script>
+import PaymentsComponent from "./ofCustomer/PaymentsComponent.vue";
+import AsistancesComponent from "./ofCustomer/AssistancesComponent.vue";
 export default {
+  components: {
+    PaymentsComponent,
+    AsistancesComponent,
+  },
   data() {
     return {
       loading: false,
@@ -658,6 +617,7 @@ export default {
         from: 0,
         to: 0,
       },
+
       offset: 3,
       criterio: "name",
       buscar: "",
@@ -724,7 +684,7 @@ export default {
           me.pagination = respuesta.pagination;
         })
         .catch((error) => {
-          console.table(error);
+          console.log(error);
         })
         .finally(() => (me.loading = false));
     },
@@ -774,7 +734,6 @@ export default {
     },
 
     saveCustomer() {
-        alert('here');
       let me = this;
       let request = {
         name: me.customer.name,
@@ -790,7 +749,7 @@ export default {
       axios
         .post("customers", request)
         .then((response) => {
-            console.log(response);
+          console.log(response);
           Swal.fire({
             type: "success",
             title: "Cliente creado",
@@ -800,7 +759,14 @@ export default {
           me.getCustomers(me.page, me.buscar, me.criterio);
         })
         .catch((error) => {
-          console.table(error);
+          console.log(error);
+          let message = me.swalErrorMessage(error.response.data.errors);
+          Swal.fire({
+            type: "error",
+            title: "No se pudo crear",
+            html: message,
+            timer: 3000,
+          });
         });
       this.closeModal();
     },
@@ -833,7 +799,14 @@ export default {
           me.closeModal();
         })
         .catch((error) => {
-          console.table(error);
+          console.log(error);
+          let message = me.swalErrorMessage(error.response.data.errors);
+          Swal.fire({
+            type: "error",
+            title: "No se pudo actualizar",
+            html: message,
+            timer: 3000,
+          });
         });
     },
 
@@ -911,7 +884,7 @@ export default {
         .get("customers/" + customer)
         .then((response) => {
           console.log(response);
-          let cus = response.data;
+          let cus = response.data[0];
           console.log(cus);
           me.customerInfo.name = cus.name;
           me.customerInfo.lastname = cus.lastname;
@@ -922,15 +895,15 @@ export default {
           me.customerInfo.postcode = cus.postcode;
           me.customerInfo.phone = cus.phone;
           me.customerInfo.membership = cus.membership;
-          me.customerInfo.payments = cus.payments;
-          me.customerInfo.asistances = cus.asistances;
+          me.customerInfo.value = response.data[1];
           me.customerInfo.id = cus.id;
+          console.log(me.customerInfo);
 
           /*  return;
           me.customerInfo = response; */
         })
         .catch((error) => {
-          console.log(error);
+          console.table(error);
         })
         .finally(() => (me.loading = false));
     },
@@ -966,10 +939,12 @@ export default {
               })
               .catch((error) => {
                 console.log(error);
+                let message = me.swalErrorMessage(error.response.data.errors);
                 Swal.fire({
                   type: "error",
                   title: "Cliente no eliminado",
                   text: "Tal vez hay datos que dependen de este, y se perderian",
+                  html: message,
                   timer: 3000,
                 });
               });
@@ -1009,6 +984,17 @@ export default {
       let me = this;
       me.template = 0;
       me.getCustomers(1, this.buscar, this.criterio);
+    },
+
+    swalErrorMessage(errors) {
+      let message = "";
+      if (errors != null) {
+        Object.entries(errors).forEach((err) => {
+          let e = "<li>" + err[1] + "</li>" + "<br>";
+          message = message + e;
+        });
+      }
+      return message;
     },
   },
 

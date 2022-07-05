@@ -25,10 +25,12 @@ Vue.component('sales-component', require('./components/SaleComponent.vue').defau
 // Vue.component('purchases-component', require('./components/PurchaseComponent.vue').default);
 
 
+
 const app = new Vue({
     //el: '#app',
     el: '#main-wrapper',
     data: {
-        menu: 8 // default 0
+        menu: 1 // default 0
+
     },
 });

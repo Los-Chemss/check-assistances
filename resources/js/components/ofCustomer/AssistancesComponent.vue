@@ -12,41 +12,23 @@
     <div class="row">
       <div class="col-12">
         <div class="card">
-          <div class="card-header border-bottom shadow-sm pt-4 mt-4 pb-2 mb-22">
+          <!--  <div class="card-header border-bottom shadow-sm pt-4 mt-4 pb-2 mb-22">
             <button
               type="button"
               class="btn btn-primary btn-lg fas fa-edit"
-              @click="openModal('memberships', 'store')"
+              @click="openModal('assistances', 'store')"
             >
-              New Membership
+              New Assistance
             </button>
-          </div>
+          </div> -->
           <div class="card-body">
-            <h4 class="card-title">Memberships</h4>
+            <!-- <h4 class="card-title">Assistances</h4> -->
             <div class="table-responsive">
               <div
                 id="col_render_wrapper"
                 class="dataTables_wrapper container-fluid dt-bootstrap4"
               >
                 <div class="row">
-                  <!--   <div class="col-sm-12 col-md-6">
-                  <div class="input-group-prepend" id="col_render_length">
-                      <label class="mr-2">Show</label>
-                      <select
-                        name="col_render_length  "
-                        aria-controls="col_render"
-                        class="form-control-sm input-group-text"
-                        v-model="showMemberships"
-                        @change="getRows()"
-                      >
-                        <option value="10">10</option>
-                        <option value="25">25</option>
-                        <option value="50">50</option>
-                        <option value="100">100</option>
-                      </select>
-                      <label class="ml-2">entries</label>
-                    </div>
-                  </div> -->
                   <div class="col-sm-12 col-md-6">
                     <div class="input-group mb-3 dataTables_filter">
                       <div class="input-group-prepend">
@@ -65,19 +47,19 @@
                       </div>
                       <input
                         :type="
-                          criterio == 'period'
+                          criterio == 'income'
                             ? 'date'
-                            : criterio == 'price'
+                            : criterio == 'code'
                             ? 'number'
                             : 'text'
                         "
                         v-model="buscar"
-                        @keyup.enter="listMemberships(1, buscar, criterio)"
+                        @keyup.enter="getAssistances(1, buscar, criterio)"
                         class="form-control"
                         :placeholder="
-                          criterio == 'period'
+                          criterio == 'income'
                             ? '22/07/2022'
-                            : criterio == 'price'
+                            : criterio == 'code'
                             ? '0123'
                             : 'Benny Juarez'
                         "
@@ -85,7 +67,7 @@
                       <div class="input-group-append">
                         <button
                           type="submit"
-                          @click="listMemberships(1, buscar, criterio)"
+                          @click="getAssistances(1, buscar, criterio)"
                           class="btn-sm btn-primary input-group-text"
                         >
                           <i class="fa fa-search"></i>
@@ -104,25 +86,32 @@
                       aria-describedby="col_render_info"
                     >
                       <thead>
-                        <tr v-for="(membership, index) in memberships" v-if="index < 1">
-                          <th v-for="(value, key, cIndex) in membership">
+                        <tr v-for="(assistance, index) in assistances" v-if="index < 1">
+                          <th
+                            v-for="(value, key, cIndex) in assistance"
+                            v-if="!(key === 'nombre')"
+                          >
                             {{ key }}
                           </th>
-                          <th></th>
+                          <!--  <th></th> -->
                         </tr>
                       </thead>
                       <tbody>
                         <tr
-                          v-for="(membership, index) in memberships"
+                          v-for="(assistance, index) in assistances"
                           v-if="index <= pagination.per_page"
                         >
-                          <td v-for="(value, key, cIndex) in membership" max-height="5px">
+                          <td
+                            v-for="(value, key, cIndex) in assistance"
+                            max-height="5px"
+                            v-if="!(key === 'nombre')"
+                          >
                             {{ value }}
                           </td>
-                          <td>
+                          <!-- <td>
                             <button
                               type="button"
-                              @click="openModal('memberships', 'update', membership)"
+                              @click="openModal('assistances', 'update', assistance)"
                               class="btn btn-warning btn-sm"
                             >
                               <i class="icon-pencil"></i>
@@ -131,36 +120,23 @@
                             <button
                               type="button"
                               class="btn btn-danger btn-sm"
-                              @click="deleteMembership(membership.id)"
+                              @click="deleteAssistance(assistance.id)"
                             >
                               <i class="icon-trash"></i>
                             </button>
-                            <!--   <template v-if="categoria.condicion">
-                              <button
-                                type="button"
-                                class="btn btn-danger btn-sm"
-                                @click="desactivarCategoria(categoria.id)"
-                              >
-                                <i class="icon-trash"></i>
-                              </button>
-                            </template>
-                            <template v-else>
-                              <button
-                                type="button"
-                                class="btn btn-info btn-sm"
-                                @click="activarCategoria(categoria.id)"
-                              >
-                                <i class="icon-check"></i>
-                              </button>
-                            </template> -->
-                          </td>
+                          </td> -->
                         </tr>
                       </tbody>
                       <tfoot>
                         <tr></tr>
-                        <tr v-for="(membership, index) in memberships" v-if="index < 1">
-                          <th v-for="(value, key, cIndex) in membership">{{ key }}</th>
-                          <th></th>
+                        <tr v-for="(assistance, index) in assistances" v-if="index < 1">
+                          <th
+                            v-for="(value, key, cIndex) in assistance"
+                            v-if="!(key === 'nombre')"
+                          >
+                            {{ key }}
+                          </th>
+                          <!--  <th></th> -->
                         </tr>
                       </tfoot>
                     </table>
@@ -272,35 +248,44 @@
               <div class="flex flex-wrap -m-2">
                 <form class="">
                   <div class="form-group mb-5">
-                    <label for="name">Nombre</label>
-                    <input
-                      type="text"
-                      class="form-control"
-                      id="name"
-                      placeholder="trimestral"
-                      v-model="membership.name"
-                    />
+                    <label for="name">name</label>
+                    <input type="text" class="form-control" id="name" v-model="name" />
                     <!--    <span class="bar"></span> -->
                   </div>
                   <div class="form-group mb-5">
-                    <label for="price">Precio</label>
+                    <label for="code">code</label>
+                    <input type="text" class="form-control" id="code" v-model="code" />
+                    <!-- <span class="bar"></span> -->
+                  </div>
+                  <div class="form-group mb-5">
+                    <label for="income">income</label>
                     <input
-                      type="number"
-                      class="form-control"
-                      id="price"
-                      v-model="membership.price"
+                      type="date"
+                      class="form-control text-right"
+                      id="income"
+                      v-model="income"
                     />
                     <!-- <span class="bar"></span> -->
                   </div>
                   <div class="form-group mb-5">
-                    <label for="period">Periodo (Duracion en dias)</label>
-                    <input
-                      type="number"
-                      class="form-control"
-                      id="period"
-                      placeholder="90"
-                      v-model="membership.period"
-                    />
+                    <label for="membership">Membership</label>
+                    <select
+                      class="form-control p-0"
+                      id="membership"
+                      v-model="selectedMembership"
+                      @change="selectMembership"
+                    >
+                      <option></option>
+                      <option v-for="membership in memberships" :value="membership">
+                        {{ membership.name }}
+                      </option>
+                    </select>
+                    <!--  <label
+                      for=""
+                      class="border border-danger rounded"
+                      v-if="actionType === 2"
+                      >{{ selectedMembership }}</label
+                    > -->
                     <!-- <span class="bar"></span> -->
                   </div>
                 </form>
@@ -311,20 +296,11 @@
             <!-- form -->
             <div class="modal-footer">
               <button
-                v-if="actionType === 1"
                 type="button"
                 class="btn btn-primary fas fa-save"
-                @click="saveMembership"
+                @click="saveAssistance"
               >
                 Save
-              </button>
-              <button
-                v-if="actionType === 2"
-                type="button"
-                class="btn btn-primary fas fa-save"
-                @click="updateMembership"
-              >
-                Update
               </button>
               <button
                 @click="closeModal()"
@@ -345,23 +321,23 @@
 </template>
 <script>
 export default {
+  props: ["customerInfo"],
   data() {
     return {
       loading: false,
-      memberships: [],
+      assistances: [],
       user: {},
+      memberships: [],
       modal: "",
       modalTitle: "",
       actionType: 0,
       errors: null,
-      membership: {
-        name: null,
-        period: null,
-        price: null,
-        id: null,
-      },
-      //   membership: null,
+      name: null,
+      code: null,
+      income: null,
+      membership: null,
       selectedMembership: null,
+
       pagination: {
         total: 0,
         current_page: 0,
@@ -371,10 +347,11 @@ export default {
         to: 0,
       },
       offset: 3,
-      criterio: "name",
+      criterio: "income",
       buscar: "",
-      showMemberships: 10,
-      criterions: ["name", "price", "period"],
+
+      showAssistances: 10,
+      criterions: ["branch", "income"],
     };
   },
 
@@ -405,28 +382,48 @@ export default {
       }
       return pagesArray;
     },
-
-    // filter: this.getMemberships(this.page, this.buscar, this.criterio),
+    // filter: this.getAssistances(this.page, this.buscar, this.criterio),
   },
 
   methods: {
-    listMemberships(page, buscar, criterio) {
+    getAssistances(page, buscar, criterio) {
+      console.log("getted");
       let me = this;
-      me.loading = true;
       let url =
-        "memberships?page=" + page + "&buscar=" + buscar + "&criterio=" + criterio;
+        "customers/" +
+        me.customerInfo.id +
+        "/assistances?page=" +
+        page +
+        "&buscar=" +
+        buscar +
+        "&criterio=" +
+        criterio;
       axios
         .get(url)
         .then((response) => {
+          console.log(response.data);
+
           var respuesta = response.data;
-          console.log(respuesta);
-          me.memberships = respuesta.memberships;
+          me.assistances = respuesta.asistances;
           me.pagination = respuesta.pagination;
         })
         .catch((error) => {
-          console.log(error);
+          console.table(error);
+        });
+    },
+
+    getMemberships() {
+      let me = this;
+      axios
+        .get("memberships")
+        .then((response) => {
+          console.log(response);
+          var respuesta = response.data;
+          me.memberships = respuesta;
         })
-        .finally(() => (me.loading = false));
+        .catch((error) => {
+          console.log(error);
+        });
     },
 
     selectCriteria() {
@@ -442,78 +439,25 @@ export default {
           JSON.stringify(event.target.options[event.target.options.selectedIndex])
         )._value;
       }
-      this.showMemberships = newVal;
+      this.showAssistances = newVal;
     },
 
-    saveMembership() {
+    saveAssistance() {
       let me = this;
       let request = {
-        name: me.membership.name,
-        price: me.membership.price,
-        period: me.membership.period,
+        name: me.name,
+        code: me.name,
+        income: me.income,
+        membership: me.membership,
       };
       axios
-        .post("memberships", request)
-        .then((response) => {
-          /*  console.log(response);
-          return; */
-          let message =
-            response.data != undefined
-              ? response.data
-              : "Se ha agregado un nuevo plan de membresia";
-          Swal.fire({
-            type: "success",
-            title: "Registro  de membresia satisfactorio",
-            text: message,
-            timer: 5000,
-          });
-          me.listMemberships(me.page, me.buscar, me.criterio);
-        })
-        .catch((error) => {
-          console.log(error);
-          let message = me.swalErrorMessage(error.response.data.errors);
-          Swal.fire({
-            type: "error",
-            title: "No se pudo crear el registro",
-            html: message,
-            timer: 8000,
-          });
-        });
-      this.closeModal();
-    },
-
-    updateMembership() {
-      let me = this;
-      let request = {
-        name: me.membership.name,
-        price: me.membership.price,
-        period: me.membership.period,
-        id: me.membership.id,
-      };
-      axios
-        .put("memberships", request)
+        .post("assistances/store", request)
         .then((response) => {
           console.log(response);
-          let message = "Se ha actualizado un  plan de membresia";
-          Swal.fire({
-            type: "success",
-            title: "Actualizacion  de membresia satisfactorio",
-            text: message,
-            timer: 5000,
-          });
-          me.listMemberships(me.page, me.buscar, me.criterio);
         })
         .catch((error) => {
-          let message = me.swalErrorMessage(error.response.data.errors);
-          Swal.fire({
-            type: "error",
-            title: "No se pudo actualizar el registro",
-            html: message,
-            timer: 8000,
-          });
-          console.log(error);
+          console.table(error);
         });
-      this.closeModal();
     },
 
     selectMembership(event) {
@@ -533,33 +477,39 @@ export default {
       this.modal = 0;
       this.title = "";
       this.errors = {};
-      this.listMemberships(1, this.buscar, this.criterio);
       //   this.userFiles();//reload component
     },
 
     openModal(model, action, data = []) {
       switch (model) {
-        case "memberships": {
+        case "assistances": {
           switch (action) {
             case "store": {
               this.modal = 1;
-              this.modalTitle = "New membership";
+              this.modalTitle = "New assistance";
               this.actionType = 1;
               this.name = "";
-              this.price = "";
-              this.period = "";
+              this.code = "";
+              this.income = "";
+              this.selectedMembership = "";
               break;
             }
             case "update": {
               console.log(data);
-              console.log(this.membership);
+              let mem = null;
+              this.memberships.forEach((m) => {
+                if (m.name === data.membership) mem = m;
+              });
+
+              // console.log(this.formatDateToInput(new Date(data.income)));
+              //   console.log(new Date(data.income).toISOString().slice(0, 10));
               this.modal = 1;
-              this.modalTitle = "Update membership";
+              this.modalTitle = "Update assistance";
               this.actionType = 2;
-              this.membership.name = data.name;
-              this.membership.price = data.price;
-              this.membership.period = data.period;
-              this.membership.id = data.id;
+              this.name = data.name;
+              this.code = data.code;
+              this.income = new Date(data.income).toISOString().slice(0, 10);
+              this.selectedMembership = mem;
               break;
             }
           }
@@ -567,7 +517,7 @@ export default {
       }
     },
 
-    deleteMembership(membership) {
+    deleteAssistance(assistance) {
       Swal.fire({
         title: "Esta seguro que desea eliminar este objeto?",
         type: "warning",
@@ -584,24 +534,12 @@ export default {
         if (result.value) {
           let me = this;
           axios
-            .delete("memberships/" + membership)
+            .delete("assistances/" + assistance)
             .then((response) => {
               console.log(response);
-              Swal.fire({
-                type: "success",
-                title: "Registro eliminado",
-                text: "Eliminado satisfactoria mente",
-                timer: 8000,
-              });
-              me.listMemberships(me.page, me.buscar, me.criterio);
+              me.getAssistances(me.page, me.buscar, me.criterio);
             })
             .catch((error) => {
-              Swal.fire({
-                type: "error",
-                title: "No se pudo eliminar el registro",
-                text: "El registro no pudo ser eliminado",
-                timer: 8000,
-              });
               console.log(error);
             });
           //
@@ -612,7 +550,6 @@ export default {
         }
       });
     },
-
     formatDateToInput(date) {
       var d = new Date(date),
         month = "" + (d.getMonth() + 1),
@@ -631,23 +568,13 @@ export default {
       //Actualiza la página actual
       me.pagination.current_page = page;
       //Envia la petición para visualizar la data de esa página
-      me.listMemberships(page, buscar, criterio);
-    },
-
-    swalErrorMessage(errors) {
-      let message = "";
-      if (errors != null) {
-        Object.entries(errors).forEach((err) => {
-          let e = "<li>" + err[1] + "</li>" + "<br>";
-          message = message + e;
-        });
-      }
-      return message;
+      me.getAssistances(page, buscar, criterio);
     },
   },
 
   mounted() {
-    this.listMemberships(1, this.buscar, this.criterio);
+    this.getMemberships();
+    this.getAssistances(1, this.buscar, this.criterio);
   },
 };
 </script>

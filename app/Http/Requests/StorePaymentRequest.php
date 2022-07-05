@@ -24,7 +24,8 @@ class StorePaymentRequest extends FormRequest
     public function rules()
     {
         return [
-            //
+            'paid_at' => 'required',
+            'membership_id' => 'required',
         ];
     }
 }

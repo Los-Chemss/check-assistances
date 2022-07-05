@@ -24,10 +24,9 @@ class StoreMembershipRequest extends FormRequest
     public function rules()
     {
         return [
-            "name"=>'required',
-            "price"=>'required',
-            "period"=>'required',
-            // "company_id"=>'required',
+            "name" => 'required|unique:memberships',
+            "price" => 'required|numeric',
+            "period" => 'required|numeric',
         ];
     }
 }

@@ -469,6 +469,7 @@ export default {
         .catch((error) => {
           console.table({ error });
           let errors = error.response.data.errors;
+          //Validation errors
           let message = "";
           if (errors) {
             Object.entries(errors).forEach((err) => {

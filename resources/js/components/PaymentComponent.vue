@@ -330,6 +330,7 @@
 </template>
 <script>
 export default {
+  props: ["customerInfo"],
   data() {
     return {
       loading: false,
@@ -457,12 +458,11 @@ export default {
     },
 
     savePayment() {
-      alert("wth");
       let me = this;
       let request = {
         paid_at: me.paid_at,
-        membership: me.selectedMembership,
-        customer: me.selectedCustomer,
+        membership: me.selectedMembership.id,
+        customer: me.selectedCustomer.id,
       };
       axios
         .post("payments", request)
@@ -486,7 +486,13 @@ export default {
           me.listPayments(me.page, me.buscar, me.criterio);
         })
         .catch((error) => {
-          alert("");
+          let message = me.swalErrorMessage(error.response.data.errors);
+          Swal.fire({
+            type: "error",
+            title: "No se pudo crear",
+            text: message,
+            timer: 8000,
+          });
           console.table(error);
         });
       this.closeModal();
@@ -496,8 +502,8 @@ export default {
       let me = this;
       let request = {
         paid_at: me.paid_at,
-        membership: me.selectedMembership,
-        customer: me.selectedCustomer,
+        membership: me.selectedMembership.id,
+        customer: me.selectedCustomer.id,
         id: me.payment_id,
       };
       axios
@@ -513,10 +519,11 @@ export default {
           me.listPayments(me.page, me.buscar, me.criterio);
         })
         .catch((error) => {
+          let message = me.swalErrorMessage(error.response.data.errors);
           Swal.fire({
             type: "error",
             title: "No actualizado",
-            text: "No se pudo guardar cambios :(",
+            text: message,
             timer: 8000,
           });
           console.table(error);
@@ -656,6 +663,17 @@ export default {
       me.pagination.current_page = page;
       //Envia la petición para visualizar la data de esa página
       me.listPayments(page, buscar, criterio);
+    },
+
+    swalErrorMessage(errors) {
+      let message = "";
+      if (errors != null) {
+        Object.entries(errors).forEach((err) => {
+          let e = "<li>" + err[1] + "</li>" + "<br>";
+          message = message + e;
+        });
+      }
+      return message;
     },
   },
 
