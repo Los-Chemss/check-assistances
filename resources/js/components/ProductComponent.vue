@@ -498,7 +498,7 @@ export default {
         id: me.product.id,
       };
       axios
-        .put("products/" + request.id, request)
+        .post("products/" + request.id, request)
         .then((response) => {
           let respuesta = response.data;
           Swal.fire({

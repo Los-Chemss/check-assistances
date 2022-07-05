@@ -517,7 +517,7 @@ export default {
         id: me.payment_id,
       };
       axios
-        .put("payments/" + request.id, request)
+        .post("payments/" + request.id, request)
         .then((response) => {
           let respuesta = response.data;
           Swal.fire({

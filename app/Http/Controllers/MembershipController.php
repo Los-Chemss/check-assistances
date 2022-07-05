@@ -135,19 +135,25 @@ class MembershipController extends Controller
      * @param  \App\Models\Membership  $membership
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request)
+    public function update(UpdateMembershipRequest $request, $id)
     {
         try {
+            // return $request;
             if (isset($request)) {
                 $membership = Membership::where('id', $request->id)->first();
                 if (!$membership) return response('Membership not found', 404);
-                foreach ($request->all() as $key => $val) {
-                    if ($membership->$key) {
-                        $membership->$key = $val;
+                $membership->price=$request->price;
+                $membership->name=$request->name;
+                $membership->period=$request->period;
+               /*  foreach ($request as $key => $val) {
+                    if ($membership[$key]) {
+                        $membership[$key] = $val;
                     }
-                }
+                } */
                 $membership->save();
-                return response()->json(200);
+                return response($membership, 200); //->json(200);
+            } else {
+                return response("Not request", 422);
             }
         } catch (Exception $e) {
             $c = $this;

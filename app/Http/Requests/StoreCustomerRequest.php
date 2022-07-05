@@ -32,7 +32,7 @@ class StoreCustomerRequest extends FormRequest
             "phone"=>'nullable',
             "code"=>'required',
             "income"=>'required',
-            "membership"=>'required',
+            "membership"=>'nullable',
             // "company_id"=>'required',
             // "registered_on_branch_id"=>'required',
         ];

@@ -786,7 +786,7 @@ export default {
         id: me.customer.id,
       };
       axios
-        .put("customers/", request)
+        .post("customers/", request)
         .then((response) => {
           Swal.fire({
             type: "success",

@@ -64,7 +64,7 @@ Route::middleware(['auth'])->group(function () {
     Route::prefix('users')->group(function () {
         Route::get('/', [UserController::class, 'index']);
         Route::post('/', [UserController::class, 'newUser']);
-        Route::put('/{user}', [UserController::class, 'updateUser']);
+        Route::post('/{user}', [UserController::class, 'updateUser']);
         Route::delete('/{user}', [UserController::class, 'destroy']);
     });
 
@@ -72,7 +72,7 @@ Route::middleware(['auth'])->group(function () {
     Route::prefix('customers')->group(function () {
         Route::get('select',  [CustomerController::class, 'select']);
         Route::post('/',  [CustomerController::class, 'store']);
-        Route::put('/',  [CustomerController::class, 'update']);
+        Route::post('/',  [CustomerController::class, 'update']);
         Route::get('/',  [CustomerController::class, 'index']);
         Route::prefix('/{customer}')->group(function () {
             Route::delete('/',  [CustomerController::class, 'destroy']);
@@ -86,7 +86,7 @@ Route::middleware(['auth'])->group(function () {
         Route::get('select',  [MembershipController::class, 'select']);
         Route::get('/',  [MembershipController::class, 'index']);
         Route::post('/',  [MembershipController::class, 'store']);
-        Route::put('/',  [MembershipController::class, 'update']);
+        Route::post('/{id}',  [MembershipController::class, 'update']);
         Route::delete('/{id}',  [MembershipController::class, 'destroy']);
     });
 
@@ -95,7 +95,7 @@ Route::middleware(['auth'])->group(function () {
     Route::prefix('payments')->group(function () {
         Route::get('/',  [PaymentController::class, 'index']);
         Route::post('/',  [PaymentController::class, 'store']);
-        Route::put('/{payment}',  [PaymentController::class, 'updateUser']);
+        Route::post('/{payment}',  [PaymentController::class, 'updateUser']);
         Route::delete('/{id}',  [PaymentController::class, 'destroy']);
     });
 
@@ -108,20 +108,20 @@ Route::middleware(['auth'])->group(function () {
     Route::prefix('sales')->group(function () {
         Route::get('/', [SaleController::class, 'index']);
         Route::post('/', [SaleController::class, 'store']);
-        Route::put('/{id}', [SaleController::class, 'update']);
+        Route::post('/{id}', [SaleController::class, 'update']);
         Route::delete('/{id}', [SaleController::class, 'delete']);
     });
     Route::prefix('purchases')->group(function () {
         Route::get('/', [PurchaseController::class, 'index']);
         Route::post('/', [PurchaseController::class, 'store']);
-        Route::put('/{id}', [PurchaseController::class, 'update']);
+        Route::post('/{id}', [PurchaseController::class, 'update']);
         Route::delete('/{id}', [PurchaseController::class, 'delete']);
     });
 
     Route::prefix('products')->group(function () {
         Route::get('/', [ProductController::class, 'index']);
         Route::post('/', [ProductController::class, 'store']);
-        Route::put('/{id}', [ProductController::class, 'update']);
+        Route::post('/{id}', [ProductController::class, 'update']);
         Route::get('/select', [ProductController::class, 'select']);
         Route::delete('/{id}', [ProductController::class, 'destroy']);
     });

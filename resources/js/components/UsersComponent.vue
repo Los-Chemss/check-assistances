@@ -515,7 +515,7 @@ export default {
         id: me.user.id,
       };
       axios
-        .put("users/" + request.id, request)
+        .post("users/" + request.id, request)
         .then((response) => {
           let respuesta = response.data;
           console.log(respuesta);

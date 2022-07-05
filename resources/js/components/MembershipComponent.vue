@@ -491,7 +491,7 @@ export default {
         id: me.membership.id,
       };
       axios
-        .put("memberships", request)
+        .post("memberships/" + me.membership.id, request)
         .then((response) => {
           console.log(response);
           let message = "Se ha actualizado un  plan de membresia";
