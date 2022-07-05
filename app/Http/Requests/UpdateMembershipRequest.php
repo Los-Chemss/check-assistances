@@ -24,7 +24,7 @@ class UpdateMembershipRequest extends FormRequest
     public function rules()
     {
         return [
-            "name" => 'required|unique:memberships',
+            "name" => 'required',
             "price" => 'required|numeric',
             "period" => 'required|numeric',
         ];
