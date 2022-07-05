@@ -511,7 +511,7 @@ export default {
             html: message,
             timer: 8000,
           });
-          console.log(error);
+          console.table(error);
         });
       this.closeModal();
     },
