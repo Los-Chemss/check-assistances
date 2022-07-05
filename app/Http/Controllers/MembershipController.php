@@ -135,7 +135,7 @@ class MembershipController extends Controller
      * @param  \App\Models\Membership  $membership
      * @return \Illuminate\Http\Response
      */
-    public function update(UpdateMembershipRequest $request, Membership $membership)
+    public function update(UpdateMembershipRequest $request)
     {
         try {
             if (isset($request)) {
