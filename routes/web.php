@@ -61,65 +61,71 @@ Route::middleware(['auth'])->group(function () {
     Route::get('/user_themme',  [UserController::class, 'getThemme']);
     Route::post('/user_themme', [UserController::class, 'setThemme']);
 
-
-    Route::get('users', [UserController::class, 'index']);
-    Route::post('users', [UserController::class, 'newUser']);
-    Route::put('users/{user}', [UserController::class, 'updateUser']);
-    Route::delete('users/{user}', [UserController::class, 'destroy']);
-
-    //Customers
-    // Route::get('customers',  [CustomerController::class, 'view']);
-    Route::get('customers',  [CustomerController::class, 'index']);
-    Route::prefix('customers/{customer}')->group(function () {
-        Route::get('/',  [CustomerController::class, 'show']);
-        Route::get('payments',  [PaymentController::class, 'customerPayments']);
-        Route::get('assistances',  [AssistanceController::class, 'customerAsistances']);
+    Route::prefix('users')->group(function () {
+        Route::get('/', [UserController::class, 'index']);
+        Route::post('/', [UserController::class, 'newUser']);
+        Route::put('/{user}', [UserController::class, 'updateUser']);
+        Route::delete('/{user}', [UserController::class, 'destroy']);
     });
 
-    Route::get('customers/{customer}/asistances',  [CustomerController::class, 'getAsistances']);
-    Route::get('customers-select',  [CustomerController::class, 'select']);
-    Route::post('customers',  [CustomerController::class, 'store']);
-    Route::put('customers',  [CustomerController::class, 'update']);
-    Route::delete('customers/{id}',  [CustomerController::class, 'destroy']);
+    //Customers
+    Route::prefix('customers')->group(function () {
+        Route::get('select',  [CustomerController::class, 'select']);
+        Route::post('/',  [CustomerController::class, 'store']);
+        Route::put('/',  [CustomerController::class, 'update']);
+        Route::get('/',  [CustomerController::class, 'index']);
+        Route::prefix('/{customer}')->group(function () {
+            Route::delete('/',  [CustomerController::class, 'destroy']);
+            Route::get('/',  [CustomerController::class, 'show']);
+            Route::get('payments',  [PaymentController::class, 'customerPayments']);
+            Route::get('assistances',  [AssistanceController::class, 'customerAsistances']);
+        });
+    });
 
-    Route::get('select-memberships',  [MembershipController::class, 'select']);
-    Route::get('memberships',  [MembershipController::class, 'index']);
-    Route::post('memberships',  [MembershipController::class, 'store']);
-    Route::put('memberships',  [MembershipController::class, 'update']);
-    Route::delete('memberships/{id}',  [MembershipController::class, 'destroy']);
+    Route::prefix('memberships')->group(function () {
+        Route::get('select',  [MembershipController::class, 'select']);
+        Route::get('/',  [MembershipController::class, 'index']);
+        Route::post('/',  [MembershipController::class, 'store']);
+        Route::put('/',  [MembershipController::class, 'update']);
+        Route::delete('/{id}',  [MembershipController::class, 'destroy']);
+    });
 
-    /*   Route::resource('payments', PaymentController::class);
-    Route::resource('memberships', MembershipController::class); */
     Route::get('select-branches',  [BranchController::class, 'select']);
 
+    Route::prefix('payments')->group(function () {
+        Route::get('/',  [PaymentController::class, 'index']);
+        Route::post('/',  [PaymentController::class, 'store']);
+        Route::put('/{payment}',  [PaymentController::class, 'updateUser']);
+        Route::delete('/{id}',  [PaymentController::class, 'destroy']);
+    });
 
-    Route::get('payments',  [PaymentController::class, 'index']);
 
+    Route::prefix('assistances')->group(function () {
+        Route::get('/',  [AssistanceController::class, 'index']);
+        Route::post('/',  [AssistanceController::class, 'store']);
+        Route::delete('/{id}/delete',  [AssistanceController::class, 'destroy']);
+    });
+    Route::prefix('sales')->group(function () {
+        Route::get('/', [SaleController::class, 'index']);
+        Route::post('/', [SaleController::class, 'store']);
+        Route::put('/{id}', [SaleController::class, 'update']);
+        Route::delete('/{id}', [SaleController::class, 'delete']);
+    });
+    Route::prefix('purchases')->group(function () {
+        Route::get('/', [PurchaseController::class, 'index']);
+        Route::post('/', [PurchaseController::class, 'store']);
+        Route::put('/{id}', [PurchaseController::class, 'update']);
+        Route::delete('/{id}', [PurchaseController::class, 'delete']);
+    });
 
-    Route::post('payments',  [PaymentController::class, 'store']);
-    Route::put('payments/{payment}',  [PaymentController::class, 'updateUser']);
-    Route::delete('payments/{id}',  [PaymentController::class, 'destroy']);
+    Route::prefix('products')->group(function () {
+        Route::get('/', [ProductController::class, 'index']);
+        Route::post('/', [ProductController::class, 'store']);
+        Route::put('/{id}', [ProductController::class, 'update']);
+        Route::get('/select', [ProductController::class, 'select']);
+        Route::delete('/{id}', [ProductController::class, 'destroy']);
+    });
 
-    Route::get('assistances',  [AssistanceController::class, 'index']);
-    Route::post('assistances',  [AssistanceController::class, 'store']);
-    Route::delete('assistances/{id}/delete',  [AssistanceController::class, 'destroy']);
-
-    Route::get('sales', [SaleController::class, 'index']);
-    Route::post('sales', [SaleController::class, 'store']);
-    Route::put('sales/{id}', [SaleController::class, 'update']);
-    Route::delete('sales/{id}', [SaleController::class, 'delete']);
-
-    Route::get('purchases', [PurchaseController::class, 'index']);
-    Route::post('purchases', [PurchaseController::class, 'store']);
-    Route::put('purchases/{id}', [PurchaseController::class, 'update']);
-    Route::delete('purchases/{id}', [PurchaseController::class, 'delete']);
-    Route::delete('sales/{id}', [SaleController::class, 'delete']);
-
-    Route::get('products', [ProductController::class, 'index']);
-    Route::post('products', [ProductController::class, 'store']);
-    Route::put('products/{id}', [ProductController::class, 'update']);
-    Route::delete('products/{id}', [ProductController::class, 'destroy']);
-    Route::get('products-select', [ProductController::class, 'select']);
 
     Route::any('{any}', function () {
         abort(404);

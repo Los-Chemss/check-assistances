@@ -351,7 +351,7 @@ export default {
       buscar: "",
 
       showAssistances: 10,
-      criterions: ["branch", "income"],
+      criterions: ["income"],
     };
   },
 

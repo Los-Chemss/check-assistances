@@ -706,7 +706,7 @@ export default {
     getMemberships() {
       let me = this;
       axios
-        .get("select-memberships")
+        .get("memberships/select")
         .then((response) => {
           //   console.log(response);
           var respuesta = response.data;

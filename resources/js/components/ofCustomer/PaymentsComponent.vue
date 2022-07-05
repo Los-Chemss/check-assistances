@@ -427,7 +427,7 @@ export default {
     getMemberships() {
       let me = this;
       axios
-        .get("select-memberships")
+        .get("memberships/select")
         .then((response) => {
           //   console.log(response);
           var respuesta = response.data;
@@ -440,7 +440,7 @@ export default {
     getCustomers() {
       let me = this;
       axios
-        .get("customers-select")
+        .get("customers/select")
         .then((response) => {
           //   console.log(response);
           var respuesta = response.data;

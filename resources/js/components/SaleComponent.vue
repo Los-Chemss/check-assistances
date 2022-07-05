@@ -389,7 +389,7 @@ export default {
     getProducts() {
       let me = this;
       axios
-        .get("products-select")
+        .get("products/select")
         .then((response) => {
           var respuesta = response.data;
           me.products = respuesta;

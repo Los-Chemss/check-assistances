@@ -283,10 +283,10 @@ class CustomerController extends Controller
      * @param  \App\Models\Customer  $customer
      * @return \Illuminate\Http\Response
      */
-    public function destroy($id)
+    public function destroy($customer)
     {
         try {
-            $customer = Customer::where('id', $id)->first();
+            $customer = Customer::where('id', $customer)->first();
             if (!$customer) return response('Customer not found', 404);
             $customer->delete();
             return response('Cliente eliminado', 200);
