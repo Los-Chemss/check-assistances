@@ -584,7 +584,7 @@ export default {
         if (result.value) {
           let me = this;
           axios
-            .delete("memberships/" + membership)
+            .post("memberships/" + membership + "/delete")
             .then((response) => {
               console.log(response);
               Swal.fire({

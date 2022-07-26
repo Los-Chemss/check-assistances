@@ -673,7 +673,7 @@ export default {
   methods: {
     getCustomers(page, buscar, criterio) {
       let me = this;
-      me.loading = true;
+      //   me.loading = true;
       me.template = 0;
       let url = "customers?page=" + page + "&buscar=" + buscar + "&criterio=" + criterio;
       axios
@@ -747,7 +747,7 @@ export default {
         membership: me.selectedMembership.id,
       };
       axios
-        .post("customers", request)
+        .post("customers/create", request)
         .then((response) => {
           console.log(response);
           Swal.fire({
@@ -756,10 +756,11 @@ export default {
             text: "Cliente creado exitosamente",
             timer: 3000,
           });
+          me.closeModal();
           me.getCustomers(me.page, me.buscar, me.criterio);
         })
         .catch((error) => {
-          console.log(error);
+          console.table(error);
           let message = me.swalErrorMessage(error.response.data.errors);
           Swal.fire({
             type: "error",
@@ -768,7 +769,6 @@ export default {
             timer: 3000,
           });
         });
-      this.closeModal();
     },
 
     updateCustomer() {
@@ -786,7 +786,7 @@ export default {
         id: me.customer.id,
       };
       axios
-        .post("customers/", request)
+        .post("customers/update/" + me.customer.id, request)
         .then((response) => {
           Swal.fire({
             type: "success",
@@ -878,7 +878,7 @@ export default {
     showCustomer(customer) {
       //   console.log(customer);
       let me = this;
-      me.loading = 1;
+      me.loading = true;
       me.template = 1;
       axios
         .get("customers/" + customer)
@@ -926,7 +926,7 @@ export default {
         .then((result) => {
           if (result.value) {
             axios
-              .delete("customers/" + customer)
+              .post("customers/" + customer + "/delete")
               .then((response) => {
                 // console.log(response);
                 Swal.fire({

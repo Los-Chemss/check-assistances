@@ -9,8 +9,8 @@ class AddMembershipIdToCustomersTable extends Migration
     public function up()
     {
         Schema::table('customers', function (Blueprint $table) {
-            $table->unsignedBigInteger('membership_id')->default(1);
-            // $table->foreign('membership_id')->references('id')->on('memberships');
+            $table->unsignedBigInteger('membership_id')->nullable();
+            $table->foreign('membership_id')->references('id')->on('memberships')->onDelete('cascade');
         });
     }
 

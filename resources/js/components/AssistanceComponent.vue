@@ -12,7 +12,7 @@
     <div class="row">
       <div class="col-12">
         <div class="card">
-         <!--  <div class="card-header border-bottom shadow-sm pt-4 mt-4 pb-2 mb-22">
+          <!--  <div class="card-header border-bottom shadow-sm pt-4 mt-4 pb-2 mb-22">
             <button
               type="button"
               class="btn btn-primary btn-lg fas fa-edit"
@@ -90,7 +90,7 @@
                           <th v-for="(value, key, cIndex) in assistance">
                             {{ key }}
                           </th>
-                         <!--  <th></th> -->
+                          <!--  <th></th> -->
                         </tr>
                       </thead>
                       <tbody>
@@ -124,7 +124,7 @@
                         <tr></tr>
                         <tr v-for="(assistance, index) in assistances" v-if="index < 1">
                           <th v-for="(value, key, cIndex) in assistance">{{ key }}</th>
-                         <!--  <th></th> -->
+                          <!--  <th></th> -->
                         </tr>
                       </tfoot>
                     </table>
@@ -138,8 +138,8 @@
                       role="status"
                       aria-live="polite"
                     >
-                       Showing {{ pagination.current_page }} to {{pagination.per_page}} of
-                      {{ pagination.total }} entries
+                      Showing {{ pagination.current_page }} to
+                      {{ pagination.per_page }} of {{ pagination.total }} entries
                     </div>
                   </div>
                   <div class="col-sm-12 col-md-7">
@@ -515,7 +515,7 @@ export default {
         if (result.value) {
           let me = this;
           axios
-            .delete("assistances/" + assistance )
+            .post("assistances/" + assistance + "/delete")
             .then((response) => {
               console.log(response);
               me.getAssistances(me.page, me.buscar, me.criterio);

@@ -534,7 +534,7 @@ export default {
         if (result.value) {
           let me = this;
           axios
-            .delete("assistances/" + assistance)
+            .post("assistances/" + assistance)
             .then((response) => {
               console.log(response);
               me.getAssistances(me.page, me.buscar, me.criterio);

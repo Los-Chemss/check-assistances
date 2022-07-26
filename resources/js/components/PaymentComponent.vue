@@ -465,11 +465,13 @@ export default {
         customer: me.selectedCustomer.id,
       };
       axios
-        .post("payments", request)
+        .post("payments/create", request)
         .then((response) => {
           console.log(response);
           //   return;
           let respuesta = response.data;
+          console.log(respuesta);
+          return;
           let message = "";
           /*   "Ha pagado una membresia " +
             respuesta.membership.name +
@@ -507,9 +509,11 @@ export default {
         id: me.payment_id,
       };
       axios
-        .post("payments/" + request.id, request)
+        .post("payments/update/" + me.payment_id, request)
         .then((response) => {
           let respuesta = response.data;
+          console.log(respuesta);
+          return;
           Swal.fire({
             type: "success",
             title: "Pago actualizado",
@@ -617,7 +621,7 @@ export default {
         if (result.value) {
           let me = this;
           axios
-            .delete("payments/" + payment)
+            .post("payments/delete/" + payment)
             .then((response) => {
               Swal.fire({
                 type: "success",

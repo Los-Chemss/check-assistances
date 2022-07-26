@@ -369,8 +369,8 @@ export default {
 
   methods: {
     listSales(page, buscar, criterio) {
-        let me = this;
-        this.loading=true
+      let me = this;
+      this.loading = true;
       console.log("getted");
       let url = "sales?page=" + page + "&buscar=" + buscar + "&criterio=" + criterio;
       axios
@@ -383,7 +383,8 @@ export default {
         })
         .catch((error) => {
           console.table(error);
-        }) .finally(() => (this.loading = false));;
+        })
+        .finally(() => (this.loading = false));
     },
 
     getProducts() {
@@ -438,11 +439,11 @@ export default {
             text: message,
             timer: 8000,
           });
-           me.listSales(me.page, me.buscar, me.criterio);
+          me.listSales(me.page, me.buscar, me.criterio);
         })
         .catch((error) => {
           console.table(error);
-        })
+        });
       this.closeModal();
     },
 
@@ -463,7 +464,7 @@ export default {
             text: "Pago actualizado exitosamente",
             timer: 8000,
           });
-           me.listSales(me.page, me.buscar, me.criterio);
+          me.listSales(me.page, me.buscar, me.criterio);
         })
         .catch((error) => {
           Swal.fire({
@@ -473,7 +474,7 @@ export default {
             timer: 8000,
           });
           console.table(error);
-        })
+        });
       this.closeModal();
     },
 
@@ -529,9 +530,9 @@ export default {
               this.modal = 1;
               this.modalTitle = "Update sale";
               this.actionType = 2;
-            //   this.paid_at = new Date(data["paid_at"]).toISOString().slice(0, 10);
-            //   this.selectedMembership = mem;
-            //   this.selectedProduct = prod;
+              //   this.paid_at = new Date(data["paid_at"]).toISOString().slice(0, 10);
+              //   this.selectedMembership = mem;
+              //   this.selectedProduct = prod;
               this.sale_id = data.id;
               break;
             }
@@ -557,7 +558,7 @@ export default {
         if (result.value) {
           let me = this;
           axios
-            .delete("sales/" + sale)
+            .post("sales/" + sale + "/delete")
             .then((response) => {
               Swal.fire({
                 type: "success",
@@ -576,7 +577,7 @@ export default {
                 timer: 5000,
               });
               console.log(error);
-            })
+            });
         } else if (
           // Read more about handling dismissals
           result.dismiss === swal.DismissReason.cancel

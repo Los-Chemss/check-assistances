@@ -15,7 +15,7 @@ class AddMembershipIdToPaymentsTable extends Migration
     {
         Schema::table('payments', function (Blueprint $table) {
             $table->unsignedBigInteger('membership_id')->default(1);
-            $table->foreign('membership_id')->references('id')->on('memberships');
+            $table->foreign('membership_id')->references('id')->on('memberships')->onDelete('cascade');
         });
     }
 

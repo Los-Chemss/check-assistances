@@ -48,7 +48,7 @@ class ProductController extends Controller
     public function select(Request $request)
     {
         try {
-            return Product::select('id', 'name')->take(20)->get();
+            return Product::select('id', 'name')->get();
         } catch (Exception $e) {
             $c = $this;
             return $this->catchEx($e->getMessage(), $c,  __FUNCTION__ . ' | ' . $e->getLine());

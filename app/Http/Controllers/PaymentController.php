@@ -12,6 +12,7 @@ use App\Models\Membership;
 use Exception;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\DB;
 
 class PaymentController extends Controller
 {
@@ -61,20 +62,21 @@ class PaymentController extends Controller
                 })
                 ->select(
                     'payments.id as id',
-                    'customers.name as customer',
-                    'customers.id as customerId',
+                    DB::raw("CONCAT(customers.name,' ',customers.lastname) as customer"),
                     'memberships.name as membership',
-
-                    'memberships.id as membershipId',
                     'payments.paid_at as paid_at',
                     'payments.expires_at as expires_at',
                     'branches.division as branch',
+                    // 'customers.name as customer',
+                    // 'customers.id as customerId',
+
+                    // 'memberships.id as membershipId',
                 )
                 ->paginate();
 
             // return $payments;
 
-            $paymentsRes = [];
+            /* $paymentsRes = [];
             foreach ($payments as $pay) {
                 array_push($paymentsRes, [
                     'id' => $pay->id,
@@ -85,7 +87,7 @@ class PaymentController extends Controller
                     'expires at' => date($pay->expires_at),
                     'branch' => $pay->branch,
                 ]);
-            }
+            } */
             return [
                 'pagination' => [
                     'total'        => $payments->total(),
@@ -203,12 +205,19 @@ class PaymentController extends Controller
     public function store(Request $request)
     {
         try {
-            return $request;
             $user = Auth::user();
+            $branch = Branch::where('id', $user->branch_id)->first();
+            if (!isset($branch->id)) {
+                return response('No branch', 404);
+            }
             $membership =  Membership::where('id', $request->membership)->first();
-            if (!$membership) return response('membership not found', 404);
+            if (!isset($membership->id)) {
+                return response('membership not found', 404);
+            }
             $customer =  Customer::where('id', $request->customer)->first();
-            if (!$customer) return response('customer not found', 404);
+            if (!isset($customer->id)) {
+                return response('customer not found', 404);
+            }
 
             $customer->membership_id = $membership->id;
             $data = [
@@ -217,10 +226,8 @@ class PaymentController extends Controller
                 'amount' => $membership->price,
                 'membership_id' => $membership->id,
                 'customer_id' => $customer->id,
-                'registered_on_branch_id' => $user->branch_id
+                'registered_on_branch_id' => $branch->id
             ];
-
-            return $data;
             $customer->save();
             $payment = Payment::create($data);
             return response()->json(['membership' => $membership, 'payment' => $payment]);
@@ -258,26 +265,33 @@ class PaymentController extends Controller
      * @param  \App\Models\Payment  $payment
      * @return \Illuminate\Http\Response
      */
-    public function update(UpdatePaymentRequest $request, Payment $payment)
+    public function update(UpdatePaymentRequest $request, $id)
     {
         try {
             $user = Auth::user();
-            $membership = Membership::Where('id', $payment->membership_id)->first();
-            if ($request->membership) {
-                $membership = Membership::where('id', $request->membership['id'])->first();
-                $payment->membership_id = $request->membership['id'];
+            $payment = Payment::where('id', $id)->first();
+            if (!isset($payment->id)) {
+                return response("Payment Not found", 404);
             }
-            if ($request->payd_at) {
+            $membership = Membership::Where('id', $payment->membership_id)->first();
+            if (isset($request->membership)) {
+                $membership = Membership::where('id', $request->membership)->first();
+                $payment->membership_id = $request->membership;
+            }
+            if (!isset($membership->id)) {
+                return response("Membership Not found", 404);
+            }
+            if (isset($request->payd_at)) {
                 $payment->payd_at = $request->payd_at;
             }
-            if ($request->membership || $request->payd_at) {
+            if (isset($request->membership) || isset($request->payd_at)) {
                 $payment->expires_at = date('Y-m-d', strtotime($request->paid_at . "+ $membership->period days"));
                 $payment->amount = $membership->price;
                 $payment->registered_on_branch_id = $user->branch_id;
             }
-            if ($request->customer) {
-                $payment->customer_id = $request->customer['id'];
-                $customer =  Customer::where('id', $request->customer['id'])->first();
+            if (isset($request->customer)) {
+                $payment->customer_id = $request->customer;
+                $customer =  Customer::where('id', $request->customer)->first();
                 $customer->membership_id = $membership->id;
                 $customer->save();
             }
@@ -298,7 +312,13 @@ class PaymentController extends Controller
     public function destroy($id)
     {
         try {
-            return Payment::where('id', $id)->first()->delete();
+            // return $id;
+            $payment = Payment::where('id', $id)->first();
+            if (!isset($payment->id)) {
+                return response('Not found', 404);
+            }
+            $payment->delete();
+            return  response('Deleted', 200);
         } catch (Exception $e) {
             $c = $this;
             return $this->catchEx($e->getMessage(), $c,  __FUNCTION__ . ' | ' . $e->getLine());

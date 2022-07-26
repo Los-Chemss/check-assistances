@@ -30,7 +30,7 @@ const app = new Vue({
     //el: '#app',
     el: '#main-wrapper',
     data: {
-        menu: 1 // default 0
+        menu: 0 // default 0
 
     },
 });

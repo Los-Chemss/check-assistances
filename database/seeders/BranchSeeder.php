@@ -3,6 +3,7 @@
 namespace Database\Seeders;
 
 use App\Models\Branch;
+use App\Models\User;
 use Illuminate\Database\Seeder;
 
 class BranchSeeder extends Seeder
@@ -37,5 +38,8 @@ class BranchSeeder extends Seeder
                 'company_id' => 1
             ]
         );
+
+        $user = User::where('id', 1)->first();
+        $user['branch_id'] = 1;
     }
 }

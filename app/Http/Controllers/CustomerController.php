@@ -34,6 +34,7 @@ class CustomerController extends Controller
     public function index(Request $request)
     {
         try {
+            // return $request;
             $buscar = $request->buscar;
             $criterio = $request->criterio;
 
@@ -47,17 +48,7 @@ class CustomerController extends Controller
                         $q->criterion($criterio, $buscar);
                     }
                 }
-            )
-                ->Join(
-                    'branches',
-                    function ($j) use ($criterio, $buscar) {
-                        $j->on('branches.id', 'customers.registered_on_branch_id');
-                        if ($criterio === 'branch') {
-                            $j->where('branches.division', 'LIKE', "%$buscar%")
-                                ->orWhere('branches.location', 'LIKE', "%$buscar%");
-                        }
-                    }
-                )
+            )->with('membership')
                 ->select(
                     'customers.membership_id',
                     'customers.id as id',
@@ -69,15 +60,22 @@ class CustomerController extends Controller
                     'customers.province',
                     'customers.postcode',
                     'customers.phone',
-                    'branches.division',
                 )
+                ->Join(
+                    'branches',
+                    function ($j) use ($criterio, $buscar) {
+                        $j->on('branches.id', 'customers.registered_on_branch_id');
+                        if ($criterio === 'branch') {
+                            $j->where('branches.division', 'LIKE', "%$buscar%")
+                                ->orWhere('branches.location', 'LIKE', "%$buscar%");
+                        }
+                    }
+                )->addSelect('branches.division')
                 ->orderBy('id', 'asc')
                 ->paginate(10); //add pagination
-
             // return $customers;
             $customersRes = [];
             foreach ($customers as $cus) {
-                // $payment = Payment::where('customer_id', $cus->id)->orderBy('paid_at', 'desc')->first();
                 array_push($customersRes, [
                     'id' => $cus->id,
                     'name' => $cus->name,
@@ -86,12 +84,10 @@ class CustomerController extends Controller
                     'province' => $cus->province,
                     'postcode' => $cus->postcode,
                     'phone' => $cus->phone,
-
-
                     'code' => $cus->code,
                     'branch' => $cus->division ?: null,
                     'income' => $cus->income,
-                    'membership' => $cus->membership['name'],
+                    'membership' => isset($cus->membership) ? $cus->membership['name'] . ' | ' . $cus->membership['price'] : null,
                     'last paid' => $cus->latestPayment ? date($cus->latestPayment->paid_at) : '',
                     'expires at' => $cus->latestPayment ? date($cus->latestPayment->expires_at) : ''
                 ]);
@@ -175,10 +171,10 @@ class CustomerController extends Controller
         try {
             $user = Auth::user();
             $branch = Branch::where('id', $user->branch_id)->first();
-            if (!$branch) return response('No branch', 404);
+            if (!isset($branch->id)) return response('No branch', 404);
             $company = Company::where('user_id', $user->id)->where('id', $branch->company_id)->first();
             $membership =  Membership::where('id', $request->membership)->first();
-            if (!$membership) return response('Membership not found', 404);
+            if (!isset($membership->id)) return response('Membership not found', 404);
 
             $data = [
                 'name' => $request->name,
@@ -186,11 +182,11 @@ class CustomerController extends Controller
                 'code' => $request->code,
                 'income' => $request->income,
                 'company_id' => $company->id,
-                'lastname' => $request->lastname,
                 'address' => $request->address,
                 'province' => $request->province,
                 'postcode' => $request->postcode,
                 'phone' => $request->phone,
+                'membership_id' => $membership->id,
                 'registered_on_branch_id' => $branch->id
             ];
 
@@ -199,6 +195,7 @@ class CustomerController extends Controller
                 'paid_at' => $request->income,
                 'expires_at' => date('Y-m-d', strtotime($request->paid_at . "+ $membership->period days")),
                 'membership_id' => $membership->id,
+                'registered_on_branch_id' => $branch->id,
                 'customer_id' => $customer->id,
                 'amount' => $membership->price
             ];

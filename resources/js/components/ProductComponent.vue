@@ -386,7 +386,7 @@ export default {
     listProducts(page, buscar, criterio) {
       console.log("getted");
       let me = this;
-      me.loading=true
+      me.loading = true;
       let url = "products?page=" + page + "&buscar=" + buscar + "&criterio=" + criterio;
       axios
         .get(url)
@@ -398,7 +398,8 @@ export default {
         })
         .catch((error) => {
           console.table(error);
-        }) .finally(() => (me.loading = false));;
+        })
+        .finally(() => (me.loading = false));
     },
 
     getMemberships() {
@@ -464,7 +465,7 @@ export default {
             text: message,
             timer: 3000,
           });
-           me.listProducts(me.page, me.buscar, me.criterio);
+          me.listProducts(me.page, me.buscar, me.criterio);
         })
         .catch((error) => {
           console.table({ error });
@@ -484,7 +485,7 @@ export default {
             timer: 3000,
           });
           console.log({ error });
-        })
+        });
       this.closeModal();
     },
 
@@ -515,9 +516,9 @@ export default {
             text: "No se pudo guardar cambios :(",
             timer: 8000,
           });
-           me.listProducts(me.page, me.buscar, me.criterio);
+          me.listProducts(me.page, me.buscar, me.criterio);
           console.log(error);
-        }) ;
+        });
       this.closeModal();
     },
 
@@ -579,7 +580,7 @@ export default {
         if (result.value) {
           let me = this;
           axios
-            .delete("products/" + product)
+            .post("products/" + product + "/delete")
             .then((response) => {
               console.log(response);
               Swal.fire({
@@ -599,7 +600,7 @@ export default {
                 timer: 5000,
               });
               console.log(error);
-            }) ;
+            });
         } else if (
           // Read more about handling dismissals
           result.dismiss === swal.DismissReason.cancel

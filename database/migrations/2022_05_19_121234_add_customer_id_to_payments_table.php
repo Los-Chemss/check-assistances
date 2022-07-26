@@ -10,7 +10,7 @@ class AddCustomerIdToPaymentsTable extends Migration
     {
         Schema::table('payments', function (Blueprint $table) {
             $table->unsignedBigInteger('customer_id')->nullable();
-            $table->foreign('customer_id')->references('id')->on('customers');
+            $table->foreign('customer_id')->references('id')->on('customers')->onDelete('cascade');
         });
     }
 

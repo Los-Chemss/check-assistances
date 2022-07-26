@@ -620,7 +620,7 @@ export default {
         if (result.value) {
           let me = this;
           axios
-            .delete("users/" + user)
+            .post("users/" + user + "/delete")
             .then((response) => {
               console.log(response);
               Swal.fire({

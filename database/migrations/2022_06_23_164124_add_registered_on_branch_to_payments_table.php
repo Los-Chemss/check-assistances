@@ -11,7 +11,7 @@ class AddRegisteredOnBranchToPaymentsTable extends Migration
     {
         Schema::table('payments', function (Blueprint $table) {
             $table->unsignedBigInteger('registered_on_branch_id')->nullable();
-            $table->foreign('registered_on_branch_id')->references('id')->on('branches');
+            $table->foreign('registered_on_branch_id')->references('id')->on('branches')->onDelete('cascade');
         });
     }
 
