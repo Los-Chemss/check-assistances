@@ -3505,6 +3505,9 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
+//
+//
+//
 
 
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = ({
@@ -3761,10 +3764,14 @@ __webpack_require__.r(__webpack_exports__);
 
               case "update":
                 {
-                  //   console.log(data);
+                  console.log(data);
                   var mem = null;
                   this.memberships.forEach(function (m) {
-                    if (m.name === data.membership) mem = m; // console.log(mem);
+                    console.log(m);
+
+                    if (m.id === data.membershipId) {
+                      mem = m;
+                    }
                   });
                   this.modal = 1;
                   this.modalTitle = "Actualizar cliente";
@@ -3831,7 +3838,7 @@ __webpack_require__.r(__webpack_exports__);
         reverseButtons: true
       }).then(function (result) {
         if (result.value) {
-          axios.post("customers/" + customer + "/delete").then(function (response) {
+          axios.post("customers/delete/" + customer).then(function (response) {
             // console.log(response);
             Swal.fire({
               type: "success",
@@ -29509,7 +29516,9 @@ var render = function () {
                                                               "province" ||
                                                             key ===
                                                               "post_code" ||
-                                                            key === "phone"
+                                                            key === "phone" ||
+                                                            key ===
+                                                              "membershipId"
                                                           )
                                                             ? _c("th", [
                                                                 _vm._v(
@@ -29557,7 +29566,9 @@ var render = function () {
                                                               "province" ||
                                                             key ===
                                                               "post_code" ||
-                                                            key === "phone"
+                                                            key === "phone" ||
+                                                            key ===
+                                                              "membershipId"
                                                           )
                                                             ? _c(
                                                                 "td",
@@ -29718,7 +29729,9 @@ var render = function () {
                                                                 "province" ||
                                                               key ===
                                                                 "post_code" ||
-                                                              key === "phone"
+                                                              key === "phone" ||
+                                                              key ===
+                                                                "membershipId"
                                                             )
                                                               ? _c("th", [
                                                                   _vm._v(

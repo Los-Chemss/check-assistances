@@ -50,15 +50,15 @@ Route::middleware(['auth'])->group(function () {
     //Customers
     Route::prefix('customers')->group(function () {
         Route::get('/',  [CustomerController::class, 'index']);
+        Route::get('/{customer}',  [CustomerController::class, 'show']);
         Route::get('select',  [CustomerController::class, 'select']);
         Route::post('/create',  [CustomerController::class, 'store']);
-        Route::post('/',  [CustomerController::class, 'update']);
-        Route::prefix('/{customer}')->group(function () {
-            Route::post('delete',  [CustomerController::class, 'destroy']);
-            Route::get('/',  [CustomerController::class, 'show']);
-            Route::get('payments',  [PaymentController::class, 'customerPayments']);
-            Route::get('assistances',  [AssistanceController::class, 'customerAsistances']);
-        });
+        Route::post('/update/{customer}',  [CustomerController::class, 'update']);
+        Route::post('/delete/{customer}',  [CustomerController::class, 'destroy']);
+        Route::get('/{customer}/payments',  [PaymentController::class, 'customerPayments']);
+        Route::get('/{customer}/assistances',  [AssistanceController::class, 'customerAsistances']);
+        // Route::prefix('/{customer}')->group(function () {
+        // });
     });
 
     Route::prefix('memberships')->group(function () {

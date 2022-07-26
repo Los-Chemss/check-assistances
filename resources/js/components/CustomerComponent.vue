@@ -120,7 +120,8 @@
                                   key === 'address' ||
                                   key === 'province' ||
                                   key === 'post_code' ||
-                                  key === 'phone'
+                                  key === 'phone' ||
+                                  key === 'membershipId'
                                 )
                               "
                             >
@@ -142,7 +143,8 @@
                                   key === 'address' ||
                                   key === 'province' ||
                                   key === 'post_code' ||
-                                  key === 'phone'
+                                  key === 'phone' ||
+                                  key === 'membershipId'
                                 )
                               "
                               :class="
@@ -193,7 +195,8 @@
                                   key === 'address' ||
                                   key === 'province' ||
                                   key === 'post_code' ||
-                                  key === 'phone'
+                                  key === 'phone' ||
+                                  key === 'membershipId'
                                 )
                               "
                             >
@@ -848,11 +851,13 @@ export default {
               break;
             }
             case "update": {
-              //   console.log(data);
+              console.log(data);
               let mem = null;
               this.memberships.forEach((m) => {
-                if (m.name === data.membership) mem = m;
-                // console.log(mem);
+                console.log(m);
+                if (m.id === data.membershipId) {
+                  mem = m;
+                }
               });
               this.modal = 1;
               this.modalTitle = "Actualizar cliente";
@@ -926,7 +931,7 @@ export default {
         .then((result) => {
           if (result.value) {
             axios
-              .post("customers/" + customer + "/delete")
+              .post("customers/delete/" + customer)
               .then((response) => {
                 // console.log(response);
                 Swal.fire({

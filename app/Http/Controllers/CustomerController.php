@@ -48,7 +48,7 @@ class CustomerController extends Controller
                         $q->criterion($criterio, $buscar);
                     }
                 }
-            )->with('membership')
+            )
                 ->select(
                     'customers.membership_id',
                     'customers.id as id',
@@ -61,6 +61,8 @@ class CustomerController extends Controller
                     'customers.postcode',
                     'customers.phone',
                 )
+                ->with('membership')
+                // ->addSelect()
                 ->Join(
                     'branches',
                     function ($j) use ($criterio, $buscar) {
@@ -70,7 +72,8 @@ class CustomerController extends Controller
                                 ->orWhere('branches.location', 'LIKE', "%$buscar%");
                         }
                     }
-                )->addSelect('branches.division')
+                )
+                ->addSelect('branches.division')
                 ->orderBy('id', 'asc')
                 ->paginate(10); //add pagination
             // return $customers;
@@ -88,6 +91,7 @@ class CustomerController extends Controller
                     'branch' => $cus->division ?: null,
                     'income' => $cus->income,
                     'membership' => isset($cus->membership) ? $cus->membership['name'] . ' | ' . $cus->membership['price'] : null,
+                    'membershipId' => isset($cus->membership) ? $cus->membership['id'] : null,
                     'last paid' => $cus->latestPayment ? date($cus->latestPayment->paid_at) : '',
                     'expires at' => $cus->latestPayment ? date($cus->latestPayment->expires_at) : ''
                 ]);

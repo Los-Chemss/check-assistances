@@ -11,7 +11,7 @@ class AddBranchIdToAssistancesTable extends Migration
     {
         Schema::table('assistances', function (Blueprint $table) {
             $table->unsignedBigInteger('branch_id')->nullable();
-            $table->foreign('branch_id')->references('id')->on('branches');
+            $table->foreign('branch_id')->references('id')->on('branches')->onDelete('cascade');
         });
     }
     public function down()
