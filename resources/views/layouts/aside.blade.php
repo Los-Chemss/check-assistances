@@ -53,7 +53,7 @@
                     </li>
                     <li class="sidebar-item"> <a class="sidebar-link has-arrow waves-effect waves-dark"
                             href="javascript:void(0)" aria-expanded="false"><i data-feather="users"
-                                class="feather-icon"></i><span class="hide-menu">Clientes</span></a>
+                                class="feather-icon"></i><span class="hide-menu">Clientes | Suscripciones</span></a>
                         <ul aria-expanded="false" class="collapse  first-level">
                             <li @click="menu = 1" class="sidebar-item"> <a href="#"
                                     class="sidebar-link waves-effect waves-dark sidebar-link" aria-expanded="false">
@@ -83,7 +83,7 @@
 
                     <li class="sidebar-item"> <a class="sidebar-link has-arrow waves-effect waves-dark"
                             href="javascript:void(0)" aria-expanded="false"><i data-feather="shopping-cart"
-                                class="feather-icon"></i><span class="hide-menu">Ventas</span></a>
+                                class="feather-icon"></i><span class="hide-menu">Ventas | Productos</span></a>
                         <ul aria-expanded="false" class="collapse  first-level">
                             <li @click="menu = 7" class="sidebar-item"> <a
                                     class="sidebar-link waves-effect waves-dark sidebar-link" href="#"
@@ -103,12 +103,12 @@
                                     <i data-feather="shopping-bag" class="feather-icon"></i>
                                     <span class="hide-menu">Compras</span></a>
                             </li>
-                            <li @click="menu = 10" class="sidebar-item"> <a
+                           {{--  <li @click="menu = 10" class="sidebar-item"> <a
                                     class="sidebar-link waves-effect waves-dark sidebar-link" href="#"
                                     aria-expanded="false">
                                     <i data-feather="package" class="feather-icon"></i>
                                     <span class="hide-menu">Almacen</span></a>
-                            </li>
+                            </li> --}}
                         </ul>
                     </li>
 

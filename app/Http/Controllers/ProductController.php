@@ -26,7 +26,26 @@ class ProductController extends Controller
                     $q->where($criterio, "LIKE", "%$buscar%");
                 }
             })->select('id', 'name', 'description', 'purchase_price', 'sale_price')
+                ->withCount('purchased')
+                ->withCount('sold')
                 ->paginate();
+
+            $index = 0;
+            foreach ($products as $product) {
+                $product = $product;
+                // return $product;
+                $arr = [];
+                $result = ($product['purchased_count'] - $product['sold_count']);
+                foreach (json_decode($product) as $key => $val) {
+                    if (!($key === 'purchased_count' || $key === 'sold_count')) {
+                        $arr[$key] = $val;
+                    } else {
+                        $arr['stock'] = $result;
+                    }
+                }
+                $products[$index] = $arr;
+                $index = $index + 1;
+            }
 
             return [
                 'pagination' => [
@@ -48,7 +67,29 @@ class ProductController extends Controller
     public function select(Request $request)
     {
         try {
-            return Product::select('id', 'name')->get();
+            $products = Product::select('id', 'name', 'description', 'sale_price', 'purchase_price')
+                ->withCount('purchased')
+                ->withCount('sold')
+                ->get();
+
+            $index = 0;
+            foreach ($products as $product) {
+                $product = $product;
+                // return $product;
+                $arr = [];
+                $result = ($product['purchased_count'] - $product['sold_count']);
+                foreach (json_decode($product) as $key => $val) {
+                    if (!($key === 'purchased_count' || $key === 'sold_count')) {
+                        $arr[$key] = $val;
+                    } else {
+                        $arr['stock'] = $result;
+                    }
+                }
+                $products[$index] = $arr;
+                $index = $index + 1;
+            }
+
+            return $products;
         } catch (Exception $e) {
             $c = $this;
             return $this->catchEx($e->getMessage(), $c,  __FUNCTION__ . ' | ' . $e->getLine());

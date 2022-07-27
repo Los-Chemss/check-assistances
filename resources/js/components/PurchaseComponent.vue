@@ -13,22 +13,16 @@
       <div class="col-12">
         <div class="card">
           <div class="card-header border-bottom shadow-sm pt-4 mt-4 pb-2 mb-22">
-            <div class="row">
-              <div class="col-md-9">
-                <h4 class="card-title">Ventas</h4>
-              </div>
-              <div class="col-md-3">
-                <button
-                  type="button"
-                  class="btn btn-primary btn-lg fas fa-edit"
-                  @click="openModal('sales', 'store')"
-                >
-                  Registrar venta
-                </button>
-              </div>
-            </div>
+            <button
+              type="button"
+              class="btn btn-primary btn-lg fas fa-edit"
+              @click="openModal('purchases', 'store')"
+            >
+              New Purchase
+            </button>
           </div>
           <div class="card-body">
+            <h4 class="card-title">Purchases</h4>
             <div class="table-responsive">
               <div
                 id="col_render_wrapper"
@@ -59,7 +53,7 @@
                             : 'text'
                         "
                         v-model="buscar"
-                        @keyup.enter="listSales(1, buscar, criterio)"
+                        @keyup.enter="listPurchases(1, buscar, criterio)"
                         class="form-control"
                         :placeholder="
                           criterio == 'created_at'
@@ -74,7 +68,7 @@
                       <div class="input-group-append">
                         <button
                           type="submit"
-                          @click="listSales(1, buscar, criterio)"
+                          @click="listPurchases(1, buscar, criterio)"
                           class="btn-sm btn-primary input-group-text"
                         >
                           <i class="fa fa-search"></i>
@@ -93,8 +87,8 @@
                       aria-describedby="col_render_info"
                     >
                       <thead>
-                        <tr v-for="(sale, index) in sales" v-if="index < 1">
-                          <th v-for="(value, key, cIndex) in sale">
+                        <tr v-for="(purchase, index) in purchases" v-if="index < 1">
+                          <th v-for="(value, key, cIndex) in purchase">
                             {{ key }}
                           </th>
                           <th></th>
@@ -102,16 +96,16 @@
                       </thead>
                       <tbody>
                         <tr
-                          v-for="(sale, index) in sales"
+                          v-for="(purchase, index) in purchases"
                           v-if="index <= pagination.per_page"
                         >
-                          <td v-for="(value, key, cIndex) in sale" max-height="5px">
+                          <td v-for="(value, key, cIndex) in purchase" max-height="5px">
                             {{ value }}
                           </td>
                           <td>
                             <button
                               type="button"
-                              @click="openModal('sales', 'update', sale)"
+                              @click="openModal('purchases', 'update', purchase)"
                               class="btn btn-warning btn-sm"
                             >
                               <i class="icon-pencil"></i>
@@ -120,7 +114,7 @@
                             <button
                               type="button"
                               class="btn btn-danger btn-sm"
-                              @click="deleteSale(sale.id)"
+                              @click="deletePurchase(purchase.id)"
                             >
                               <i class="icon-trash"></i>
                             </button>
@@ -129,8 +123,8 @@
                       </tbody>
                       <tfoot>
                         <tr></tr>
-                        <tr v-for="(sale, index) in sales" v-if="index < 1">
-                          <th v-for="(value, key, cIndex) in sale">
+                        <tr v-for="(purchase, index) in purchases" v-if="index < 1">
+                          <th v-for="(value, key, cIndex) in purchase">
                             {{ key }}
                           </th>
                           <th></th>
@@ -247,7 +241,7 @@
                   <div class="form-group mb-5">
                     <label class="typo__label">Simple select / dropdown</label>
                     <multiselect
-                      v-model="sellProducts"
+                      v-model="purchasedProducts"
                       tag-placeholder="Add this as new tag"
                       placeholder="Search or add a tag"
                       label="name"
@@ -262,7 +256,8 @@
                         <thead>
                           <tr>
                             <th>Producto</th>
-                            <th>Precio</th>
+                            <th>Precio - Compra</th>
+                            <th>Precio - Venta</th>
                             <th>Descripcion</th>
                             <th>Cantidad</th>
                             <th>Existencia</th>
@@ -270,9 +265,12 @@
                           </tr>
                         </thead>
                         <tbody>
-                          <tr v-for="product in sellProducts">
+                          <tr v-for="product in purchasedProducts">
                             <td>
                               {{ product.name }}
+                            </td>
+                            <td>
+                              {{ product.purchase_price }}
                             </td>
                             <td>
                               {{ product.sale_price }}
@@ -290,7 +288,6 @@
                                 v-model="product['quantity']"
                                 value="1"
                                 placeholder="1"
-                                :max="product.stock"
                               />
                             </td>
                             <td>
@@ -313,7 +310,7 @@
                 v-if="actionType == 1"
                 type="button"
                 class="btn btn-primary fas fa-save"
-                @click="saveSale"
+                @click="savePurchase"
               >
                 Save
               </button>
@@ -321,7 +318,7 @@
                 v-if="actionType == 2"
                 type="button"
                 class="btn btn-primary fas fa-save"
-                @click="updateSale"
+                @click="updatePurchase"
               >
                 Update
               </button>
@@ -348,10 +345,10 @@ export default {
   components: { Multiselect },
   data() {
     return {
-      sellProducts: [],
+      purchasedProducts: [],
       options: [],
       loading: false,
-      sales: [],
+      purchases: [],
       user: {},
       memberships: [],
       products: [],
@@ -377,8 +374,8 @@ export default {
       offset: 3,
       criterio: "product",
       buscar: "",
-      sale_id: null,
-      showSales: 10,
+      purchase_id: null,
+      showPurchases: 10,
       criterions: ["quantity", "created_at", "product"],
     };
   },
@@ -408,21 +405,21 @@ export default {
       }
       return pagesArray;
     },
-    // filter: this.listSales(this.page, this.buscar, this.criterio),
+    // filter: this.listPurchases(this.page, this.buscar, this.criterio),
   },
 
   methods: {
-    listSales(page, buscar, criterio) {
+    listPurchases(page, buscar, criterio) {
       let me = this;
       this.loading = true;
       console.log("getted");
-      let url = "sales?page=" + page + "&buscar=" + buscar + "&criterio=" + criterio;
+      let url = "purchases?page=" + page + "&buscar=" + buscar + "&criterio=" + criterio;
       axios
         .get(url)
         .then((response) => {
           var respuesta = response.data;
           console.log(respuesta);
-          me.sales = respuesta.sales.data;
+          me.purchases = respuesta.purchases.data;
           me.pagination = respuesta.pagination;
         })
         .catch((error) => {
@@ -439,13 +436,13 @@ export default {
           var respuesta = response.data;
           console.log(respuesta);
 
-          respuesta.forEach((product) => {
+          /*  respuesta.forEach((product) => {
             if (product.stock > 0) {
               me.options.push(product);
             }
-          });
+          }); */
 
-          //   me.options = respuesta;
+          me.options = respuesta;
         })
         .catch((error) => {
           console.log(error);
@@ -472,49 +469,51 @@ export default {
           JSON.stringify(event.target.options[event.target.options.selectedIndex])
         )._value;
       }
-      this.showSales = newVal;
+      this.showPurchases = newVal;
     },
 
-    saveSale() {
+    savePurchase() {
       let me = this;
-      me.sellProducts.forEach((value, index) => {
+      me.purchasedProducts.forEach((value, index) => {
         if (!value.hasOwnProperty("quantity")) {
           value.quantity = "1";
         }
       });
 
       let request = {
-        products: me.sellProducts,
+        products: me.purchasedProducts,
       };
 
+      console.log(request.products);
+
       axios
-        .post("sales/create", request)
+        .post("purchases/create", request)
         .then((response) => {
           console.log(response);
           let respuesta = response.data;
-          let message = "Venta registrada ";
+          let message = "Compra registrada ";
           Swal.fire({
             type: "success",
-            title: "Registro  de venta satisfactorio",
+            title: "Registro  de compra satisfactorio",
             text: message,
             timer: 8000,
           });
           me.closeModal();
-          me.listSales(me.page, me.buscar, me.criterio);
+          me.listPurchases(me.page, me.buscar, me.criterio);
         })
         .catch((error) => {
           console.table(error);
         });
     },
-    updateSale() {
+    updatePurchase() {
       let me = this;
       let request = {
         quantity: me.quantity,
         product: me.selectedProduct,
-        id: me.sale_id,
+        id: me.purchase_id,
       };
       axios
-        .post("sales/" + request.id, request)
+        .post("purchases/" + request.id, request)
         .then((response) => {
           let respuesta = response.data;
           Swal.fire({
@@ -524,7 +523,7 @@ export default {
             timer: 8000,
           });
           me.closeModal();
-          me.listSales(me.page, me.buscar, me.criterio);
+          me.listPurchases(me.page, me.buscar, me.criterio);
         })
         .catch((error) => {
           Swal.fire({
@@ -537,7 +536,7 @@ export default {
         });
     },
     closeModal() {
-      this.sellProducts = [];
+      this.purchasedProducts = [];
       this.modal = 0;
       this.title = "";
       this.errors = {};
@@ -545,11 +544,11 @@ export default {
 
     async openModal(model, action, data = []) {
       switch (model) {
-        case "sales": {
+        case "purchases": {
           switch (action) {
             case "store": {
               this.modal = 1;
-              this.modalTitle = "Registrar venta";
+              this.modalTitle = "New purchase";
               this.actionType = 1;
               this.paid_at = "";
               this.selectedMembership = "";
@@ -562,12 +561,12 @@ export default {
                 if (c.id === data.productId) prod = c;
               });
               this.modal = 1;
-              this.modalTitle = "Update sale";
+              this.modalTitle = "Update purchase";
               this.actionType = 2;
               //   this.paid_at = new Date(data["paid_at"]).toISOString().slice(0, 10);
               //   this.selectedMembership = mem;
               //   this.selectedProduct = prod;
-              this.sale_id = data.id;
+              this.purchase_id = data.id;
               break;
             }
           }
@@ -575,7 +574,7 @@ export default {
       }
     },
 
-    deleteSale(sale) {
+    deletePurchase(purchase) {
       Swal.fire({
         title: "Esta seguro que desea eliminar este objeto?",
         type: "warning",
@@ -592,7 +591,7 @@ export default {
         if (result.value) {
           let me = this;
           axios
-            .post("sales/" + sale + "/delete")
+            .post("purchases/" + purchase + "/delete")
             .then((response) => {
               Swal.fire({
                 type: "success",
@@ -601,7 +600,7 @@ export default {
                 timer: 5000,
               });
               //   console.log(response);
-              me.listSales(me.page, me.buscar, me.criterio);
+              me.listPurchases(me.page, me.buscar, me.criterio);
             })
             .catch((error) => {
               Swal.fire({
@@ -638,12 +637,12 @@ export default {
       //Actualiza la página actual
       me.pagination.current_page = page;
       //Envia la petición para visualizar la data de esa página
-      me.listSales(page, buscar, criterio);
+      me.listPurchases(page, buscar, criterio);
     },
   },
 
   mounted() {
-    this.listSales(1, this.buscar, this.criterio);
+    this.listPurchases(1, this.buscar, this.criterio);
     this.getProducts();
   },
 };

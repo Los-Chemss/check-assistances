@@ -392,7 +392,7 @@ export default {
         .get(url)
         .then((response) => {
           var respuesta = response.data;
-          //   console.log(respuesta);
+          console.log(respuesta);
           me.products = respuesta.products.data;
           me.pagination = respuesta.pagination;
         })

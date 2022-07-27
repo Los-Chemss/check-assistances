@@ -86,15 +86,15 @@ Route::middleware(['auth'])->group(function () {
     });
     Route::prefix('sales')->group(function () {
         Route::get('/', [SaleController::class, 'index']);
-        Route::post('/', [SaleController::class, 'store']);
-        Route::post('/{id}', [SaleController::class, 'update']);
-        Route::post('/{id}/delete', [SaleController::class, 'delete']);
+        Route::post('/create', [SaleController::class, 'store']);
+        Route::post('update/{id}', [SaleController::class, 'update']);
+        Route::post('delete/{id}', [SaleController::class, 'delete']);
     });
     Route::prefix('purchases')->group(function () {
         Route::get('/', [PurchaseController::class, 'index']);
-        Route::post('/', [PurchaseController::class, 'store']);
-        Route::post('/{id}', [PurchaseController::class, 'update']);
-        Route::post('/{id}/delete', [PurchaseController::class, 'delete']);
+        Route::post('create', [PurchaseController::class, 'store']);
+        Route::post('update/{id}', [PurchaseController::class, 'update']);
+        Route::post('delete/{id}', [PurchaseController::class, 'delete']);
     });
 
     Route::prefix('products')->group(function () {

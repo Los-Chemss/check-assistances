@@ -158,7 +158,7 @@ class PaymentController extends Controller
 
             // return $payments;
 
-            $paymentsRes = [];
+         /*    $paymentsRes = [];
             foreach ($payments as $pay) {
                 array_push($paymentsRes, [
                     'id' => $pay->id,
@@ -169,7 +169,7 @@ class PaymentController extends Controller
                     'expires at' => date($pay->expires_at),
                     'branch' => $pay->branch,
                 ]);
-            }
+            } */
             return [
                 'pagination' => [
                     'total'        => $payments->total(),

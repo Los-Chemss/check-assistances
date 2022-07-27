@@ -4,7 +4,12 @@ namespace App\Http\Controllers;
 
 use App\Http\Requests\StorePurchaseRequest;
 use App\Http\Requests\UpdatePurchaseRequest;
+use App\Models\Branch;
 use App\Models\Purchase;
+use App\Models\PurchasedProduct;
+use Exception;
+use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 
 class PurchaseController extends Controller
 {
@@ -13,9 +18,47 @@ class PurchaseController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function index()
+    public function index(Request $request)
     {
-        //
+        try {
+            $buscar = $request->buscar;
+            $criterio = $request->criterio;
+
+            $sales = Purchase::when($criterio && $buscar, function ($q) use ($criterio, $buscar) {
+                if ($criterio === 'quantity') {
+                    $q->where($criterio, "LIKE", "%$buscar%");
+                }
+            })->join('products', function ($j) use ($criterio, $buscar) {
+                $j->on('products.id', 'sales.product_id')
+                    ->when(
+                        $criterio === 'product' && $buscar != null,
+                        function ($q) use ($criterio, $buscar) {
+                            $q->where('name', 'like', "%$buscar%");
+                        }
+                    );
+            })
+                ->select('purchases.id', 'purchases.quantity', 'products.name', 'products.sale_price', 'purchases.created_at')
+                ->paginate();
+
+            return [
+                'pagination' => [
+                    'total'        => $sales->total(),
+                    'current_page' => $sales->currentPage(),
+                    'per_page'     => $sales->perPage(),
+                    'last_page'    => $sales->lastPage(),
+                    'from'         => $sales->firstItem(),
+                    'to'           => $sales->lastItem(),
+                ],
+                'sales' => $sales
+            ];
+
+
+            $buscar = $request->buscar;
+            $criterio = $request->criterio;
+        } catch (Exception $e) {
+            $c = $this;
+            return $this->catchEx($e->getMessage(), $c,  __FUNCTION__ . ' | ' . $e->getLine());
+        }
     }
 
     /**
@@ -34,9 +77,39 @@ class PurchaseController extends Controller
      * @param  \App\Http\Requests\StorePurchaseRequest  $request
      * @return \Illuminate\Http\Response
      */
-    public function store(StorePurchaseRequest $request)
+    public function store(Request $request)
     {
-        //
+        try {
+            $user = Auth::user();
+            $branch = Branch::where('id', $user->branch_id)->first();
+            if (!isset($branch->id)) {
+                return response("Branch not found", 404);
+            }
+            if (!isset($request->products)) {
+                return response("No products selected", 422);
+            }
+            $products = $request->products;
+            $customer = null;
+            $newPurchase['user_id'] = $user->id;
+            $newPurchase['branch_id'] = $branch->id;
+            // if (isset($customer->id)) {
+            //     $newPurchase['customer_id'] = $customer->id;
+            // }
+            $purchase = Purchase::create($newPurchase);
+            foreach ($products as $product) {
+                if ($product['quantity'] > 0) {
+                    $purc['product_id'] = $product['id'];
+                    $purc['quantity'] = $product['quantity'];
+                    $purc['price'] = $product['purchase_price'];
+                    $purc['purchase_id'] = $purchase->id;
+                    PurchasedProduct::create($purc);
+                }
+            }
+            return response('Purchase created', 201);
+        } catch (Exception $e) {
+            $c = $this;
+            return $this->catchEx($e->getMessage(), $c,  __FUNCTION__);
+        }
     }
 
     /**

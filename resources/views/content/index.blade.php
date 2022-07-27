@@ -30,13 +30,11 @@
                 <sales-component />
             </template>
             <template v-if="menu==9">
-                purchases
-                {{-- <purchases-component/> --}}
+                <purchases-component />
             </template>
-            <template v-if="menu==10">
+            {{-- <template v-if="menu==10">
                 Stock
-                {{-- <purchases-component/> --}}
-            </template>
+            </template> --}}
         @endif
     </div>
 @endsection

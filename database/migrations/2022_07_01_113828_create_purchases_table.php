@@ -15,7 +15,8 @@ class CreatePurchasesTable extends Migration
     {
         Schema::create('purchases', function (Blueprint $table) {
             $table->id();
-            $table->integer('quantity')->default(1);
+            $table->decimal('total', 15, 2)->default('0.00');
+            $table->decimal('paid_amount', 15, 2)->default('0.00');
             $table->timestamps();
         });
     }

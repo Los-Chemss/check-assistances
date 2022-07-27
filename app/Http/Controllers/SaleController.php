@@ -4,9 +4,12 @@ namespace App\Http\Controllers;
 
 use App\Http\Requests\StoreSaleRequest;
 use App\Http\Requests\UpdateSaleRequest;
+use App\Models\Branch;
 use App\Models\Sale;
+use App\Models\SelledProduct;
 use Exception;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 
 class SaleController extends Controller
 {
@@ -74,9 +77,40 @@ class SaleController extends Controller
      * @param  \App\Http\Requests\StoreSaleRequest  $request
      * @return \Illuminate\Http\Response
      */
-    public function store(StoreSaleRequest $request)
+    public function store(Request $request)
     {
-        //
+        try {
+            // return $request;
+            $user = Auth::user();
+            $branch = Branch::where('id', $user->branch_id)->first();
+            if (!isset($branch->id)) {
+                return response("Branch not found", 404);
+            }
+            if (!isset($request->products)) {
+                return response("No products selected", 422);
+            }
+            $products = $request->products;
+            $customer = null;
+            $newSale['user_id'] = $user->id;
+            $newSale['branch_id'] = $branch->id;
+            /*  if (isset($customer->id)) {
+                $newSale['customer_id'] = $customer->id;
+            } */
+            $sale = Sale::create($newSale);
+            foreach ($products as $product) {
+                if ($product['quantity'] > 0) {
+                    $sell['product_id'] = $product['id'];
+                    $sell['quantity'] = $product['quantity'];
+                    $sell['price'] = $product['sale_price'];
+                    $sell['sale_id'] = $sale->id;
+                    SelledProduct::create($sell);
+                }
+            }
+            return response('Sale created', 201);
+        } catch (Exception $e) {
+            $c = $this;
+            return $this->catchEx($e->getMessage(), $c,  __FUNCTION__);
+        }
     }
 
     /**
