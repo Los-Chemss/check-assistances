@@ -106,7 +106,17 @@
                       <thead>
                         <tr v-for="(membership, index) in memberships" v-if="index < 1">
                           <th v-for="(value, key, cIndex) in membership">
-                            {{ key }}
+                            {{
+                              key == "name"
+                                ? "Nombre"
+                                : key === "price"
+                                ? "Precio"
+                                : key === "period"
+                                ? "Duracion (dias)"
+                                : key === "id"
+                                ? "Id"
+                                : ""
+                            }}
                           </th>
                           <th></th>
                         </tr>
@@ -316,7 +326,7 @@
                 class="btn btn-primary fas fa-save"
                 @click="saveMembership"
               >
-                Save
+                Guardar
               </button>
               <button
                 v-if="actionType === 2"
@@ -324,7 +334,7 @@
                 class="btn btn-primary fas fa-save"
                 @click="updateMembership"
               >
-                Update
+                Actualizar
               </button>
               <button
                 @click="closeModal()"
@@ -543,7 +553,7 @@ export default {
           switch (action) {
             case "store": {
               this.modal = 1;
-              this.modalTitle = "New membership";
+              this.modalTitle = "Crear membresia";
               this.actionType = 1;
               this.name = "";
               this.price = "";
@@ -554,7 +564,7 @@ export default {
               console.log(data);
               console.log(this.membership);
               this.modal = 1;
-              this.modalTitle = "Update membership";
+              this.modalTitle = "Actualizar membresia";
               this.actionType = 2;
               this.membership.name = data.name;
               this.membership.price = data.price;

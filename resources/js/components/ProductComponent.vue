@@ -85,7 +85,21 @@
                       <thead>
                         <tr v-for="(product, index) in products" v-if="index < 1">
                           <th v-for="(value, key, cIndex) in product">
-                            {{ key }}
+                            {{
+                              key === "name"
+                                ? "Nombre"
+                                : key === "description"
+                                ? "Descripcion"
+                                : key === "purchase_price"
+                                ? "Precio de compra"
+                                : key === "sale_price"
+                                ? "Precio de venta"
+                                : key === "stock"
+                                ? "En inventario"
+                                : key === "id"
+                                ? "ID"
+                                : ""
+                            }}
                           </th>
                           <th></th>
                         </tr>
@@ -395,6 +409,7 @@ export default {
           console.log(respuesta);
           me.products = respuesta.products.data;
           me.pagination = respuesta.pagination;
+          me.loading = false;
         })
         .catch((error) => {
           console.table(error);

@@ -125,7 +125,29 @@
                                 )
                               "
                             >
-                              {{ key }}
+                              {{
+                                key === "name"
+                                  ? "Nombre"
+                                  : key === "lastname"
+                                  ? "Apellidos"
+                                  : key === "code"
+                                  ? "Codigo"
+                                  : key === "income"
+                                  ? "Ingreso"
+                                  : key === "membership"
+                                  ? "Membresia"
+                                  : key === "last paid"
+                                  ? "Ultimo pago"
+                                  : key === "expires at"
+                                  ? "Expira en"
+                                  : key === "branch"
+                                  ? "Sucursal"
+                                  : key === "postcode"
+                                  ? "Codigo postal"
+                                  : key === "id"
+                                  ? "ID"
+                                  : ""
+                              }}
                             </th>
                             <th></th>
                           </tr>
@@ -200,7 +222,29 @@
                                 )
                               "
                             >
-                              {{ key }}
+                              {{
+                                key === "name"
+                                  ? "Nombre"
+                                  : key === "lastname"
+                                  ? "Apellidos"
+                                  : key === "code"
+                                  ? "Codigo"
+                                  : key === "income"
+                                  ? "Ingreso"
+                                  : key === "membership"
+                                  ? "Membresia"
+                                  : key === "last paid"
+                                  ? "Ultimo pago"
+                                  : key === "expires at"
+                                  ? "Expira en"
+                                  : key === "branch"
+                                  ? "Sucursal"
+                                  : key === "postcode"
+                                  ? "Codigo postal"
+                                  : key === "id"
+                                  ? "ID"
+                                  : ""
+                              }}
                             </th>
                             <th></th>
                           </tr>

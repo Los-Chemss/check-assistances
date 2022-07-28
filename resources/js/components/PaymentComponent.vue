@@ -18,7 +18,7 @@
               class="btn btn-primary btn-lg fas fa-edit"
               @click="openModal('payments', 'store')"
             >
-              New Payment
+             <i class="fas fa-dollar"></i> Nuevo pago
             </button>
           </div>
           <div class="card-body">
@@ -94,7 +94,21 @@
                             v-for="(value, key, cIndex) in payment"
                             v-if="key != 'customerId' || key != 'embershipId'"
                           >
-                            {{ key }}
+                            {{
+                              key === "customer"
+                                ? "Cliente"
+                                : key === "membership"
+                                ? "Membresia"
+                                : key === "paid_at"
+                                ? "Fecha de pago:"
+                                : key === "expires_at"
+                                ? "Expira El:"
+                                : key === "branch"
+                                ? "Sucursal"
+                                : key === "id"
+                                ? "ID"
+                                : ""
+                            }}
                           </th>
                           <th></th>
                         </tr>
@@ -137,7 +151,21 @@
                             v-for="(value, key, cIndex) in payment"
                             v-if="key != 'customerId' || key != 'embershipId'"
                           >
-                            {{ key }}
+                             {{
+                              key === "customer"
+                                ? "Cliente"
+                                : key === "membership"
+                                ? "Membresia"
+                                : key === "paid_at"
+                                ? "Pagado el:"
+                                : key === "expires_at"
+                                ? "Expira El:"
+                                : key === "branch"
+                                ? "Sucursal"
+                                : key === "id"
+                                ? "ID"
+                                : ""
+                            }}
                           </th>
                           <th></th>
                         </tr>
@@ -251,7 +279,7 @@
               <div class="flex flex-wrap -m-2">
                 <form class="">
                   <div class="form-group mb-5">
-                    <label for="paid_at">Paid at</label>
+                    <label for="paid_at">Fecha de pago</label>
                     <input
                       type="date"
                       class="form-control"
@@ -261,7 +289,7 @@
                     <!--    <span class="bar"></span> -->
                   </div>
                   <div class="form-group mb-5">
-                    <label for="membership">Membership</label>
+                    <label for="membership">Membresia</label>
                     <select
                       class="form-control p-0"
                       id="membership"
@@ -275,7 +303,7 @@
                     </select>
                   </div>
                   <div class="form-group mb-5">
-                    <label for="membership">Customer</label>
+                    <label for="membership">Cliente</label>
                     <select
                       class="form-control p-0"
                       id="membership"
@@ -301,7 +329,7 @@
                 class="btn btn-primary fas fa-save"
                 @click="savePayment"
               >
-                Save
+                Guardar
               </button>
               <button
                 v-if="actionType == 2"
@@ -309,7 +337,7 @@
                 class="btn btn-primary fas fa-save"
                 @click="updatePayment"
               >
-                Update
+                Acrualizar
               </button>
               <button
                 @click="closeModal()"
@@ -471,7 +499,7 @@ export default {
           //   return;
           let respuesta = response.data;
           console.log(respuesta);
-          return;
+        //   return;
           let message = "";
           /*   "Ha pagado una membresia " +
             respuesta.membership.name +
@@ -572,7 +600,7 @@ export default {
           switch (action) {
             case "store": {
               this.modal = 1;
-              this.modalTitle = "New payment";
+              this.modalTitle = "Nuevo pago";
               this.actionType = 1;
               this.paid_at = "";
               this.selectedMembership = "";
@@ -591,7 +619,7 @@ export default {
                 if (c.id === data.customerId) cus = c;
               });
               this.modal = 1;
-              this.modalTitle = "Update payment";
+              this.modalTitle = "Actualizar pago";
               this.actionType = 2;
               this.paid_at = new Date(data["paid_at"]).toISOString().slice(0, 10);
               this.selectedMembership = mem;
