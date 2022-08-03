@@ -538,9 +538,11 @@
                 <div class="col-lg-3 col-md-3 col-sm-6">
                   <div class="white-box text-center">
                     <img
-                      src="https://placekitten.com/300/300"
+                      :src="'/storage/app/public/' + customerInfo.image"
                       class="img-fluid rounded-circle shadow-lg p-2"
+                      alt="customer-image"
                     />
+                    <label for="">{{ customerInfo.image }}</label>
                   </div>
                 </div>
                 <div class="col-lg-9 col-md-9 col-sm-6">
@@ -722,6 +724,7 @@ export default {
       criterions: ["name", "code", "income", "branch"],
       customerInfo: {
         name: null,
+        image: null,
         lastname: null,
         code: null,
         income: null,
@@ -1018,6 +1021,7 @@ export default {
           me.customerInfo.membership = cus.membership;
           me.customerInfo.value = response.data[1];
           me.customerInfo.id = cus.id;
+          me.customerInfo.image = cus.image;
           console.log(me.customerInfo);
         })
         .catch((error) => {
