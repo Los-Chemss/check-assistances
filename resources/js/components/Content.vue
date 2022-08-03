@@ -32,7 +32,7 @@
                   <i class="mdi mdi-fullscreen-exit"></i>
                 </button>
               </div>
-             <!--    <div class="col-md-12 text-center m-auto border border-danger">
+              <!--    <div class="col-md-12 text-center m-auto border border-danger">
                 <img
                   src="images/urbanlogo-1024x1024.png"
                   height="100px"
@@ -50,9 +50,8 @@
               <h1 v-else class="bg'danger">
                 <p>No branch selected. Please select one.</p>
               </h1>
-
             </div>
-            <div class="card-body ">
+            <div class="card-body">
               <div class="col-md-12">
                 <DigitalClock />
                 <div class="col-md-8 m-auto mb-4 pb-4 mt-3 pt-4">
@@ -162,7 +161,6 @@ export default {
               ? "\n Expires at: " + customer.membership.payments[0].expires_at
               : "");
 
-          me.code = "";
           if ("entrada" in response.data) {
             movement = "entrada";
             messagge = "Bienvenido " + customer.name + "\n" + info;
@@ -190,7 +188,8 @@ export default {
               target: document.getElementById("checkCard"),
             });
           }
-        });
+        })
+        .finally(() => (me.code = ""));
     },
 
     openFullscreen() {

@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Customer;
+use Illuminate\Http\Request;
 use App\Http\Requests\StoreCustomerRequest;
 use App\Http\Requests\UpdateCustomerRequest;
 use App\Models\Assistance;
@@ -10,10 +11,10 @@ use App\Models\Branch;
 use App\Models\Company;
 use App\Models\Membership;
 use App\Models\Payment;
-use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use App\Models\User;
 use Exception;
+use Illuminate\Support\Facades\Storage;
 
 class CustomerController extends Controller
 {
@@ -204,7 +205,8 @@ class CustomerController extends Controller
                 'amount' => $membership->price
             ];
             $payment = Payment::create($paid);
-            return response(201);
+
+            return response($customer, 201);
         } catch (Exception $e) {
             return response($e->getMessage(), 500);
         }
@@ -289,11 +291,74 @@ class CustomerController extends Controller
         try {
             $customer = Customer::where('id', $customer)->first();
             if (!$customer) return response('Customer not found', 404);
+            if ($customer->image) {
+                $this->consoleWrite()->writeln("+++++++++ File +++++++++++++");
+                $this->consoleWrite()->writeln("$customer->image");
+                foreach (explode(', ', $customer->image) as $image) {
+                    $this->consoleWrite()->writeln($image);
+                    if (Storage::exists($image)) {
+                        Storage::delete($image);
+                        $this->consoleWrite()->writeln("Deleted");
+                    }
+                }
+                Storage::deleteDirectory("images/customers/" . $customer->id /* . '/avatar' */);
+            }
+
             $customer->delete();
             return response('Cliente eliminado', 200);
         } catch (Exception $e) {
             $c = $this;
             return $this->catchEx($e->getMessage(), $c,  __FUNCTION__ . ' | ' . $e->getLine());
+        }
+    }
+
+    public function uploadFile(Request $request)
+    {
+        try {
+            // $user    = Auth::user();
+            /* $this->consoleWrite()->writeln("++++++++++++++++++++  here file ++++++++++++++++++++++");
+            $this->consoleWrite()->writeln($request->id); */
+
+            if ($request->file('file') && $request->id) {
+                $files = $request->file('file');
+                if (!is_array($files)) {
+                    $files = [$files];
+                }
+                $fileList = [];
+
+                $customer = Customer::where('id', $request->id)->first();
+                $cusPath = $request->id != null ? $customer->id : 'crash';
+                $destination = "images/customers/" . $cusPath . '/avatar';
+                $destination = str_replace(' ', '_', $destination);
+
+                foreach ($files as $file) {
+                    $filename = $file->getClientOriginalName();
+                    $filename = str_replace(' ', '', $filename);
+                    $filename = str_replace('-', '_', $filename);
+                    $file->storeAs("$destination", $filename);
+                    $fileUrl = "$destination/$filename";
+                    $request->request->add(['file' => $file]);
+                    array_push($fileList, $fileUrl);
+                }
+                // $this->consoleWrite()->writeln("++++++++++++++++++++ Files ++++++++++++++++++++++");
+                // $this->consoleWrite()->writeln(implode(', ', $fileList));
+                if ($customer['image'] != null) {
+                    foreach (explode(', ', $customer->image) as $image) {
+                        $this->consoleWrite()->writeln($image);
+                        if (Storage::exists($image)) {
+                            Storage::delete($image);
+                            $this->consoleWrite()->writeln("Deleted");
+                        }
+                    }
+                }
+                $customer['image'] = implode(', ', $fileList);
+                $customer->save();
+                return response()->json('File uploaded', 200);
+            } else {
+                return response()->json(['message' => 'error uploading file'], 503);
+            }
+        } catch (Exception $e) {
+            return $this->returnJsonError($e, ['CLItemController' => 'uploadFile']);
         }
     }
 }

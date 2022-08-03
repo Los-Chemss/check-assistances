@@ -356,111 +356,130 @@
                 </div>
                 <div class="modal-body">
                   <div class="flex flex-wrap -m-2">
-                    <form class="p-2 m-2">
-                      <div class="row">
-                        <div class="form-group col-md-4">
-                          <label for="name">Nombre</label>
-                          <input
-                            type="text"
-                            class="form-control"
-                            id="name"
-                            placeholder="Homero J."
-                            v-model="customer.name"
-                          />
-                          <!--    <span class="bar"></span> -->
-                        </div>
-                        <div class="form-group col-md-4">
-                          <label for="lastname">Apellidos</label>
-                          <input
-                            placeholder="Simpson"
-                            type="text"
-                            class="form-control"
-                            id="lastname"
-                            v-model="customer.lastname"
-                          />
-                        </div>
-                        <div class="form-group col-md-4">
-                          <label for="code">code</label>
-                          <input
-                            type="text"
-                            class="form-control"
-                            id="code"
-                            v-model="customer.code"
-                          />
-                          <!-- <span class="bar"></span> -->
+                    <!--  <form class="p-2 m-2"> -->
+                    <div class="row">
+                      <div class="form-group col-md-12">
+                        <div class="p-2 w-full">
+                          <div class="relative">
+                            <label
+                              for="attachment"
+                              class="leading-7 text-sm text-gray-600"
+                              >Archivos</label
+                            ><br />
+                            <vue-dropzone
+                              ref="myVueDropzone"
+                              id="dropzone"
+                              :options="dropzoneOptions"
+                              @vdropzone-complete="afterUploadComplete"
+                              @vdropzone-sending-multiple="sendMessage"
+                              class="text-center"
+                            ></vue-dropzone>
+                          </div>
                         </div>
                       </div>
-                      <div class="row">
-                        <div class="form-group col-md-4">
-                          <label for="address">Direccion</label>
-                          <input
-                            type="text"
-                            class="form-control"
-                            placeholder="Grove St #800 ST Fierro CA"
-                            id="address"
-                            v-model="customer.address"
-                          />
-                        </div>
-                        <div class="form-group col-md-4">
-                          <label for="province">Estado</label>
-                          <input
-                            type="text"
-                            placeholder="California"
-                            class="form-control"
-                            id="province"
-                            v-model="customer.province"
-                          />
-                        </div>
-                        <div class="form-group col-md-4">
-                          <label for="postcode">Código postal</label>
-                          <input
-                            type="text"
-                            class="form-control"
-                            placeholder="99900"
-                            id="postcode"
-                            v-model="customer.postcode"
-                          />
-                        </div>
+                      <div class="form-group col-md-4">
+                        <label for="name">Nombre</label>
+                        <input
+                          type="text"
+                          class="form-control"
+                          id="name"
+                          placeholder="Homero J."
+                          v-model="customer.name"
+                        />
+                        <!--    <span class="bar"></span> -->
+                      </div>
+                      <div class="form-group col-md-4">
+                        <label for="lastname">Apellidos</label>
+                        <input
+                          placeholder="Simpson"
+                          type="text"
+                          class="form-control"
+                          id="lastname"
+                          v-model="customer.lastname"
+                        />
+                      </div>
+                      <div class="form-group col-md-4">
+                        <label for="code">code</label>
+                        <input
+                          type="text"
+                          class="form-control"
+                          id="code"
+                          v-model="customer.code"
+                        />
+                        <!-- <span class="bar"></span> -->
+                      </div>
+                    </div>
+                    <div class="row">
+                      <div class="form-group col-md-4">
+                        <label for="address">Direccion</label>
+                        <input
+                          type="text"
+                          class="form-control"
+                          placeholder="Grove St #800 ST Fierro CA"
+                          id="address"
+                          v-model="customer.address"
+                        />
+                      </div>
+                      <div class="form-group col-md-4">
+                        <label for="province">Estado</label>
+                        <input
+                          type="text"
+                          placeholder="California"
+                          class="form-control"
+                          id="province"
+                          v-model="customer.province"
+                        />
+                      </div>
+                      <div class="form-group col-md-4">
+                        <label for="postcode">Código postal</label>
+                        <input
+                          type="text"
+                          class="form-control"
+                          placeholder="99900"
+                          id="postcode"
+                          v-model="customer.postcode"
+                        />
+                      </div>
+                    </div>
+
+                    <div class="row">
+                      <div class="form-group col-md-4">
+                        <label for="phone">Numero de telefono</label>
+                        <input
+                          type="text"
+                          placeholder="+5233445555"
+                          class="form-control"
+                          id="phone"
+                          v-model="customer.phone"
+                        />
+                      </div>
+                      <div class="form-group col-md-4">
+                        <label for="membership">Membership</label>
+                        <select
+                          class="form-control p-0"
+                          id="membership"
+                          v-model="selectedMembership"
+                          @change="selectMembership"
+                        >
+                          <option></option>
+                          <option v-for="membership in memberships" :value="membership">
+                            {{ membership.name }}
+                          </option>
+                        </select>
                       </div>
 
-                      <div class="row">
-                        <div class="form-group col-md-4">
-                          <label for="phone">Numero de telefono</label>
-                          <input
-                            type="text"
-                            placeholder="+5233445555"
-                            class="form-control"
-                            id="phone"
-                            v-model="customer.phone"
-                          />
-                        </div>
-                        <div class="form-group col-md-4">
-                          <label for="membership">Membership</label>
-                          <select
-                            class="form-control p-0"
-                            id="membership"
-                            v-model="selectedMembership"
-                            @change="selectMembership"
-                          >
-                            <option></option>
-                            <option v-for="membership in memberships" :value="membership">
-                              {{ membership.name }}
-                            </option>
-                          </select>
-                        </div>
-
-                        <div class="form-group col-md-4">
-                          <label for="income">income</label>
-                          <input
-                            type="date"
-                            class="form-control text-right"
-                            id="income"
-                            v-model="customer.income"
-                          />
-                          <!-- <span class="bar"></span> -->
-                        </div>
+                      <div class="form-group col-md-4">
+                        <label for="income">income</label>
+                        <input
+                          type="date"
+                          class="form-control text-right"
+                          id="income"
+                          v-model="customer.income"
+                        />
+                        <!-- <span class="bar"></span> -->
                       </div>
-                    </form>
+                    </div>
+                    <!--  </form> -->
                     <!--   </div>
                 </div> -->
                   </div>
@@ -474,6 +493,8 @@
                     @click="saveCustomer"
                     class="btn btn-primary fas fa-save"
                   >
+                    <!-- @click="shootMessage" -->
+                    <!--   @click="saveCustomer" -->
                     Guardar
                   </button>
                   <button
@@ -623,16 +644,44 @@
   </div>
 </template>
 <script>
+import vue2Dropzone from "vue2-dropzone";
+import "vue2-dropzone/dist/vue2Dropzone.min.css";
+
 import PaymentsComponent from "./ofCustomer/PaymentsComponent.vue";
 import AsistancesComponent from "./ofCustomer/AssistancesComponent.vue";
 export default {
-  components: {
-    PaymentsComponent,
-    AsistancesComponent,
-  },
   data() {
     return {
       loading: false,
+      dropzoneOptions: {
+        url: "/customers/upload-file",
+        /*  accept: function (file, done) {
+          console.log("uploaded");
+          done();
+        },
+        init: function () {
+          this.on("addedfile", function () {
+            if (this.files[1] != null) {
+              this.removeFile(this.files[0]);
+            }
+          });
+        }, */
+
+        thumbnailWidth: 150,
+        parallelUploads: 1,
+        maxFiles: 1,
+
+        uploadMultiple: true,
+        autoProcessQueue: false,
+        /* resizeWidth: 300,
+        resizeHeight: 300, */
+        acceptedFiles: ".png,.jpg,.gif,.bmp,.jpeg,.pdf,.doc,.docx",
+        addRemoveLinks: true,
+        dictRemoveFile: "Remover archivo",
+        headers: {
+          "X-CSRF-TOKEN": document.querySelector("meta[name=csrf-token]").content,
+        },
+      },
       customers: [],
       user: {},
       template: 0,
@@ -683,41 +732,51 @@ export default {
         membership: null,
         id: null,
       },
+      customerId: 0,
+      submitted: false,
+      recordMethod: "store",
     };
   },
-
-  computed: {
-    isActived: function () {
-      return this.pagination.current_page;
-    },
-    //Calcula los elementos de la paginación
-    pagesNumber: function () {
-      if (!this.pagination.to) {
-        return [];
-      }
-
-      var from = this.pagination.current_page - this.offset;
-      if (from < 1) {
-        from = 1;
-      }
-
-      var to = from + this.offset * 2;
-      if (to >= this.pagination.last_page) {
-        to = this.pagination.last_page;
-      }
-
-      var pagesArray = [];
-      while (from <= to) {
-        pagesArray.push(from);
-        from++;
-      }
-      return pagesArray;
-    },
-
-    // filter: this.getCustomers(this.page, this.buscar, this.criterio),
+  components: {
+    PaymentsComponent,
+    AsistancesComponent,
+    vueDropzone: vue2Dropzone,
   },
 
   methods: {
+    afterUploadComplete: async function (response) {
+      console.log({ response });
+      if (response.status == "success") {
+        this.sendSuccess = true;
+        this.$refs.myVueDropzone.removeAllFiles();
+        console.log("upload successful");
+      } else {
+        console.log("upload failed");
+        Swal.fire({
+          type: "error",
+          title: "❌ El archivo no se subió correctamente  ❌",
+          timer: 2000,
+          showConfirmButton: false,
+        });
+      }
+    },
+
+    shootMessage: async function () {
+      this.submitted = true;
+      this.errors = {};
+      console.log(Object.keys(this.errors));
+      if (Object.keys(this.errors).length) {
+        console.log(this.errors);
+        return;
+      }
+      this.$refs.myVueDropzone.processQueue();
+    },
+
+    sendMessage: async function (files, xhr, formData) {
+      formData.append("id", this.customerId);
+      formData.append("record_method", this.recordMethod);
+    },
+
     getCustomers(page, buscar, criterio) {
       let me = this;
       //   me.loading = true;
@@ -767,7 +826,7 @@ export default {
     selectCriteria() {
       this.buscar = "";
     },
-
+    /*  */
     getRows(event) {
       let newVal = null;
       if ("criterion" in event) {
@@ -793,10 +852,16 @@ export default {
         phone: me.customer.phone,
         membership: me.selectedMembership.id,
       };
+
       axios
         .post("customers/create", request)
         .then((response) => {
           console.log(response);
+          this.customerId = response.data.id;
+          this.recordMethod = "store";
+          console.log({ cusId: me.customerId });
+          me.shootMessage();
+
           Swal.fire({
             type: "success",
             title: "Cliente creado",
@@ -835,6 +900,11 @@ export default {
       axios
         .post("customers/update/" + me.customer.id, request)
         .then((response) => {
+          this.customerId = me.customer.id;
+          this.recordMethod = "update";
+          console.log({ cusId: me.customerId });
+          me.shootMessage();
+
           Swal.fire({
             type: "success",
             title: "Cliente actualizado",
@@ -873,6 +943,8 @@ export default {
       this.modal = 0;
       this.title = "";
       this.errors = {};
+      this.dropzone = null;
+      this.submitted = false;
     },
 
     openModal(model, action, data = []) {
@@ -947,9 +1019,6 @@ export default {
           me.customerInfo.value = response.data[1];
           me.customerInfo.id = cus.id;
           console.log(me.customerInfo);
-
-          /*  return;
-          me.customerInfo = response; */
         })
         .catch((error) => {
           console.table(error);
@@ -1047,9 +1116,44 @@ export default {
     },
   },
 
+  computed: {
+    isActived: function () {
+      return this.pagination.current_page;
+    },
+    //Calcula los elementos de la paginación
+    pagesNumber: function () {
+      if (!this.pagination.to) {
+        return [];
+      }
+
+      var from = this.pagination.current_page - this.offset;
+      if (from < 1) {
+        from = 1;
+      }
+
+      var to = from + this.offset * 2;
+      if (to >= this.pagination.last_page) {
+        to = this.pagination.last_page;
+      }
+
+      var pagesArray = [];
+      while (from <= to) {
+        pagesArray.push(from);
+        from++;
+      }
+      return pagesArray;
+    },
+    // filter: this.getCustomers(this.page, this.buscar, this.criterio),
+  },
+
   mounted() {
     this.getCustomers(1, this.buscar, this.criterio);
     this.getMemberships();
   },
 };
 </script>
+<style scoped>
+.dz-max-files-reached {
+  background-color: red;
+}
+</style>
