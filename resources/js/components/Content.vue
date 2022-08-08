@@ -152,29 +152,45 @@ export default {
         .then((response) => {
           console.log(response);
           let movement = null;
-          let messagge = null;
+          let message = null;
           let customer = response.data.customer;
           console.log(customer);
           let info =
-            (customer.membership ? "Membership: " + customer.membership.name : "") +
+            (customer.membership
+              ? "Membresia: " + "<b>" + customer.membership.name + "</b>"
+              : "") +
             (customer.membership.payments && customer.membership.payments[0]
-              ? "\n Expires at: " + customer.membership.payments[0].expires_at
+              ? "<br> Expira el : " +
+                "<b>" +
+                me.formatDate(customer.membership.payments[0].expires_at) +
+                "</b>"
               : "");
 
           if ("entrada" in response.data) {
             movement = "entrada";
-            messagge = "Bienvenido " + customer.name + "\n" + info;
+            message = "Bienvenido  " + customer.name + "<br>" + info;
           }
           if ("salida" in response.data) {
             movement = "salida";
-            messagge = "Gracias por asistir :) " + customer.name + info;
+            message = "Gracias por asistir :) " + customer.name + info;
           }
+          let imgSrc =
+            customer.image != null
+              ? "/storage/" + customer.image
+              : "https://placekitten.com/150/150";
+          console.log(imgSrc);
           Swal.fire({
             type: "success",
             title: "Registro  de " + movement + " satisfactorio",
-            text: messagge,
-            timer: 4000,
+            // text: message,
             target: document.getElementById("checkCard"),
+            html:
+              '<img src="' +
+              imgSrc +
+              '" class="img-fluid rounded-circle shadow-sm" style="width:100px; height:100px;" alt="customer-image"/> <br>  <p>' +
+              message +
+              " </p>",
+            timer: 5000,
           });
         })
         .catch((error) => {
@@ -223,6 +239,20 @@ export default {
         document.msExitFullscreen();
       }
     },
+
+    formatDate(date) {
+      let d = new Date(date);
+      let month = (d.getMonth() + 1).toString();
+      let day = d.getDate().toString();
+      let year = d.getFullYear();
+      if (month.length < 2) {
+        month = "0" + month;
+      }
+      if (day.length < 2) {
+        day = "0" + day;
+      }
+      return [year, month, day].join("-");
+    },
   },
 };
 </script>
@@ -243,6 +273,10 @@ export default {
 
 .card-body {
   //  opacity: 35%;
+}
+.swal-modal {
+  background-color: rgba(4, 23, 8, 0.62);
+  border: 3px solid white;
 }
 
 .card-header {

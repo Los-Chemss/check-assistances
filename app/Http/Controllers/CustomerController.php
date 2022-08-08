@@ -225,6 +225,8 @@ class CustomerController extends Controller
                 ->with('membership')
                 ->first();
 
+            // $customer->image = Storage::disk('public')->get($customer->image);
+
             $payments = Payment::where('customer_id', $customer->id)
                 ->select('amount')
                 ->get();
@@ -335,7 +337,7 @@ class CustomerController extends Controller
                     $filename = $file->getClientOriginalName();
                     $filename = str_replace(' ', '', $filename);
                     $filename = str_replace('-', '_', $filename);
-                    $file->storeAs("$destination", $filename);
+                    $file->storeAs("public/$destination", $filename);
                     $fileUrl = "$destination/$filename";
                     $request->request->add(['file' => $file]);
                     array_push($fileList, $fileUrl);

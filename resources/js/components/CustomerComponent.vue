@@ -538,11 +538,16 @@
                 <div class="col-lg-3 col-md-3 col-sm-6">
                   <div class="white-box text-center">
                     <img
-                      :src="'/storage/app/public/' + customerInfo.image"
+                      :src="
+                        customerInfo.image != null
+                          ? '/storage/' + customerInfo.image
+                          : 'https://placekitten.com/150/150'
+                      "
                       class="img-fluid rounded-circle shadow-lg p-2"
+                      width="150"
                       alt="customer-image"
                     />
-                    <label for="">{{ customerInfo.image }}</label>
+                    <!-- <label for="">{{ customerInfo.image }}</label> -->
                   </div>
                 </div>
                 <div class="col-lg-9 col-md-9 col-sm-6">
