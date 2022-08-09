@@ -169,7 +169,7 @@ export default {
 
           if ("entrada" in response.data) {
             movement = "entrada";
-            message = "Bienvenido  " + customer.name + "<br>" + info;
+            message = "Bienvenido <b> " + customer.name + "</b><br>" + info;
           }
           if ("salida" in response.data) {
             movement = "salida";

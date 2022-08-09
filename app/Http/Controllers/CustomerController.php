@@ -205,7 +205,6 @@ class CustomerController extends Controller
                 'amount' => $membership->price
             ];
             $payment = Payment::create($paid);
-
             return response($customer, 201);
         } catch (Exception $e) {
             return response($e->getMessage(), 500);
@@ -273,8 +272,8 @@ class CustomerController extends Controller
                     }
                 }
                 $customer->save();
-                return response()->json(200);
             }
+            // return response()->json(200);
             return response('Updated', 200);
         } catch (Exception $e) {
             $c = $this;
@@ -296,16 +295,21 @@ class CustomerController extends Controller
             if ($customer->image) {
                 $this->consoleWrite()->writeln("+++++++++ File +++++++++++++");
                 $this->consoleWrite()->writeln("$customer->image");
+
                 foreach (explode(', ', $customer->image) as $image) {
                     $this->consoleWrite()->writeln($image);
-                    if (Storage::exists($image)) {
-                        Storage::delete($image);
-                        $this->consoleWrite()->writeln("Deleted");
+                    foreach (explode(', ',  $customer->image) as $image) {
+                        $image = env('APP_ENV') === 'local' ? $image : substr($image, 0);
+                        if (Storage::exists($image) ?: Storage::disk('public')->exists($image)) {
+                            Storage::delete($image) ?: Storage::disk('public')->delete($image);
+                        }
                     }
                 }
-                Storage::deleteDirectory("images/customers/" . $customer->id /* . '/avatar' */);
+                $dir = "images/customers/" . $customer->id;
+                if (Storage::exists($dir) ?: Storage::disk('public')->exists($dir)) {
+                    Storage::deleteDirectory($dir) ?: Storage::disk('public')->deleteDirectory($dir);
+                }
             }
-
             $customer->delete();
             return response('Cliente eliminado', 200);
         } catch (Exception $e) {
@@ -325,6 +329,16 @@ class CustomerController extends Controller
                 $fileList = [];
 
                 $customer = Customer::where('id', $request->id)->first();
+
+                if ($customer->image) {
+                    foreach (explode(', ',  $customer->image) as $image) {
+                        $image = env('APP_ENV') === 'local' ? $image : substr($image, 0);
+                        if (Storage::exists($image) ?: Storage::disk('public')->exists($image)) {
+                            Storage::delete($image) ?: Storage::disk('public')->delete($image);
+                        }
+                    }
+                    // Storage::deleteDirectory("images/customers/" . $customer->id);
+                }
                 $cusPath = $request->id != null ? $customer->id : 'crash';
                 $destination = "images/customers/" . $cusPath . '/avatar';
                 $destination = str_replace(' ', '_', $destination);
@@ -342,8 +356,7 @@ class CustomerController extends Controller
                     $request->request->add(['file' => $file]);
                     array_push($fileList, $fileUrl);
                 }
-                // $this->consoleWrite()->writeln("++++++++++++++++++++ Files ++++++++++++++++++++++");
-                // $this->consoleWrite()->writeln(implode(', ', $fileList));
+
                 if ($customer['image'] != null) {
                     foreach (explode(', ', $customer->image) as $image) {
                         $this->consoleWrite()->writeln($image);

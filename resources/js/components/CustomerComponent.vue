@@ -782,7 +782,7 @@ export default {
 
     sendMessage: async function (files, xhr, formData) {
       formData.append("id", this.customerId);
-      formData.append("record_method", this.recordMethod);
+    //   formData.append("record_method", this.recordMethod);
     },
 
     getCustomers(page, buscar, criterio) {
