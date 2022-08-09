@@ -317,10 +317,6 @@ class CustomerController extends Controller
     public function uploadFile(Request $request)
     {
         try {
-            // $user    = Auth::user();
-            /* $this->consoleWrite()->writeln("++++++++++++++++++++  here file ++++++++++++++++++++++");
-            $this->consoleWrite()->writeln($request->id); */
-
             if ($request->file('file') && $request->id) {
                 $files = $request->file('file');
                 if (!is_array($files)) {
@@ -337,7 +333,11 @@ class CustomerController extends Controller
                     $filename = $file->getClientOriginalName();
                     $filename = str_replace(' ', '', $filename);
                     $filename = str_replace('-', '_', $filename);
-                    $file->storeAs("public/$destination", $filename);
+                    if (env('APP_ENV') == 'local') {
+                        $file->storeAs("public/$destination", $filename);
+                    } else {
+                        $file->storeAs("$destination", $filename);
+                    }
                     $fileUrl = "$destination/$filename";
                     $request->request->add(['file' => $file]);
                     array_push($fileList, $fileUrl);

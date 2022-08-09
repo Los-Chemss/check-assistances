@@ -100,6 +100,7 @@ export default {
   },
   data() {
     return {
+      appEnv: process.env.MIX_APP_ENV,
       email: "",
       name: "",
       last_name: "",
@@ -174,10 +175,12 @@ export default {
             movement = "salida";
             message = "Gracias por asistir :) " + customer.name + info;
           }
-          let imgSrc =
-            customer.image != null
+          let imgPath =
+            me.appEnv === "local"
               ? "/storage/" + customer.image
-              : "https://placekitten.com/150/150";
+              : "/storage/app/public/" + customer.image;
+
+          let imgSrc = imgPath != null ? imgPath : "https://placekitten.com/150/150";
           console.log(imgSrc);
           Swal.fire({
             type: "success",
