@@ -50,6 +50,7 @@ Route::middleware(['auth'])->group(function () {
     //Customers
     Route::prefix('customers')->group(function () {
         Route::get('/',  [CustomerController::class, 'index']);
+        Route::post('upload-file',  [CustomerController::class, 'uploadFile']);
         Route::get('/{customer}',  [CustomerController::class, 'show']);
         Route::get('select',  [CustomerController::class, 'select']);
         Route::post('/create',  [CustomerController::class, 'store']);
