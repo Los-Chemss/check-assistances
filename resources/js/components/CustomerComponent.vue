@@ -197,6 +197,7 @@
                               >
                                 <i class="icon-trash"></i>
                               </button>
+                               &nbsp;
                               <button
                                 type="button"
                                 class="btn btn-info btn-sm"
@@ -565,7 +566,7 @@
                         <tr>
                           <th width="390">Valor del cliente</th>
                           <td>
-                            <b> $ {{ customerInfo.value }} </b>
+                            <b> $ {{ customerInfo.value.toLocaleString("es-MX") }} </b>
                           </td>
                         </tr>
                       </tbody>
