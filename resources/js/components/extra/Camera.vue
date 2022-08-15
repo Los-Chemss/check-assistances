@@ -3,12 +3,12 @@
     <div class="camera-button">
       <button
         type="button"
-        class="button is-rounded"
-        :class="{ 'is-primary': !isCameraOpen, 'is-danger': isCameraOpen }"
+        class="button btn-rounded"
+        :class="{ 'btn-success': !isCameraOpen, 'btn-danger': isCameraOpen }"
         @click="toggleCamera"
       >
-        <span v-if="!isCameraOpen">Open Camera</span>
-        <span v-else>Close Camera</span>
+        <span v-if="!isCameraOpen"> <i class="fas fa-camera"></i> Abrir camara </span>
+        <span v-else> <i class="fas fa-times"></i> Cerrar camara </span>
       </button>
     </div>
 
@@ -46,7 +46,12 @@
     </div>
 
     <div v-if="isCameraOpen && !isLoading" class="camera-shoot">
-      <button type="button" class="button" @click="takePhoto">
+      <button
+        type="button btn-info"
+        class="button"
+        :class="isPhotoTaken ? 'btn-danger' : 'btn-success'"
+        @click="takePhoto"
+      >
         <img src="https://img.icons8.com/material-outlined/50/000000/camera--v2.png" />
       </button>
     </div>
@@ -55,11 +60,11 @@
       <a
         id="downloadPhoto"
         download="my-photo.jpg"
-        class="button"
+        class="button btn-success btn-rounded"
         role="button"
         @click="downloadImage"
       >
-        Download
+        Usar foto
       </a>
     </div>
   </div>
@@ -73,6 +78,7 @@ export default {
       isShotPhoto: false,
       isLoading: false,
       link: "#",
+      photo: null,
     };
   },
 
@@ -120,19 +126,33 @@ export default {
     takePhoto() {
       if (!this.isPhotoTaken) {
         this.isShotPhoto = true;
-
         const FLASH_TIMEOUT = 50;
-
         setTimeout(() => {
           this.isShotPhoto = false;
         }, FLASH_TIMEOUT);
       }
-
       this.isPhotoTaken = !this.isPhotoTaken;
-
       const context = this.$refs.canvas.getContext("2d");
       context.drawImage(this.$refs.camera, 0, 0, 450, 337.5);
+
+      const canvas = document.getElementById("photoTaken").toDataURL("image/jpeg");
+      this.photo = canvas;
+
+      this.$emit("takedPhoto", this.photo);
+      console.log({ context });
+      console.log({ canvas });
     },
+    /*
+    usePhoto() {
+      const download = document.getElementById("downloadPhoto");
+      const canvas = document
+        .getElementById("photoTaken")
+        .toDataURL("image/jpeg")
+        .replace("image/jpeg", "image/octet-stream");
+      this.photo = canvas;
+
+      //   download.setAttribute("href", canvas);
+    }, */
 
     downloadImage() {
       const download = document.getElementById("downloadPhoto");
@@ -146,11 +166,11 @@ export default {
 };
 </script>
 
-<style scoped>
-body {
+<style scoped lang="scss">
+/* body {
   display: flex;
   justify-content: center;
-}
+} */
 
 .web-camera-container {
   margin-top: 2rem;
@@ -162,7 +182,6 @@ body {
   align-items: center;
   border: 1px solid #ccc;
   border-radius: 4px;
-  /* width: 500px; */
 
   .camera-button {
     margin-bottom: 2rem;

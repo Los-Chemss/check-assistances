@@ -171,9 +171,28 @@ class CustomerController extends Controller
      * @param  \App\Http\Requests\StoreCustomerRequest  $request
      * @return \Illuminate\Http\Response
      */
-    public function store(StoreCustomerRequest $request)
+    public function store(Request $request)
     {
         try {
+            /*  if ($request->file('image')) {
+                $asset = $request->file('image')->getClientOriginalName();
+                return $asset;
+            }
+            return $request; */
+
+            if ($request->image) {
+                $img = $request->image;
+                $img = str_replace('data:image/jpeg;base64,', '', $img);
+                $img = str_replace(' ', '+', $img);
+                $data = base64_decode($img);
+                Storage::put('picture.jpg', $data);
+
+                return 'stored';
+                // return response(Response::HTTP_OK);
+            }
+
+            return 'crash';
+
             $user = Auth::user();
             $branch = Branch::where('id', $user->branch_id)->first();
             if (!isset($branch->id)) return response('No branch', 404);

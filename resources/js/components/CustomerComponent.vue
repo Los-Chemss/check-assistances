@@ -403,7 +403,7 @@
                                 ></vue-dropzone>
                               </div>
                               <div class="tab-pane" id="camera">
-                                <camera />
+                                <camera @takedPhoto="takedPhoto" />
                               </div>
                             </div>
                             <!--  -->
@@ -526,8 +526,6 @@
                     @click="saveCustomer"
                     class="btn btn-primary fas fa-save"
                   >
-                    <!-- @click="shootMessage" -->
-                    <!--   @click="saveCustomer" -->
                     Guardar
                   </button>
                   <button
@@ -691,6 +689,13 @@ import Camera from "./extra/Camera.vue";
 import PaymentsComponent from "./ofCustomer/PaymentsComponent.vue";
 import AsistancesComponent from "./ofCustomer/AssistancesComponent.vue";
 export default {
+  //   props: ["photo"],
+  /*   watch: {
+    photo: function () {
+      this.currentPhoto = this.photo;
+      // this.$emit("MaritialStatusChanged", this.mutableMaritialStatus); // send the sum
+    },
+  }, */
   data() {
     return {
       loading: false,
@@ -777,6 +782,7 @@ export default {
       customerId: 0,
       submitted: false,
       recordMethod: "store",
+      currentPhoto: null,
     };
   },
   components: {
@@ -882,8 +888,14 @@ export default {
       this.showCustomers = newVal;
     },
 
+    takedPhoto(value) {
+      this.currentPhoto = value;
+    },
+
     saveCustomer() {
       let me = this;
+      /*  console.log(me.currentPhoto ? "i has" : "on no");
+      return; */
       let request = {
         name: me.customer.name,
         lastname: me.customer.lastname,
@@ -894,7 +906,12 @@ export default {
         postcode: me.customer.postcode,
         phone: me.customer.phone,
         membership: me.selectedMembership.id,
+        image: me.currentPhoto,
       };
+      /*  request["file"] = this.photo;
+      if (this.photo) {
+        alert("some photo");
+      } */
 
       axios
         .post("customers/create", request)
@@ -903,7 +920,10 @@ export default {
           this.customerId = response.data.id;
           this.recordMethod = "store";
           console.log({ cusId: me.customerId });
-          me.shootMessage();
+          if (!document.getElementById("downloadPhoto")) {
+            me.shootMessage();
+            // request.file = document.getElementById("downloadPhoto");
+          }
 
           Swal.fire({
             type: "success",
@@ -940,14 +960,23 @@ export default {
         membership_id: me.selectedMembership.id,
         id: me.customer.id,
       };
+      if (this.photo) {
+        alert("some photo");
+        request["file"] = this.photo;
+      }
+
       axios
         .post("customers/update/" + me.customer.id, request)
         .then((response) => {
           this.customerId = me.customer.id;
           this.recordMethod = "update";
           console.log({ cusId: me.customerId });
-          me.shootMessage();
-
+          //   me.shootMessage();
+          if (document.getElementById("downloadPhoto")) {
+            request.file = document.getElementById("downloadPhoto");
+          } else {
+            me.shootMessage();
+          }
           Swal.fire({
             type: "success",
             title: "Cliente actualizado",
@@ -1187,26 +1216,6 @@ export default {
       }
       return pagesArray;
     },
-
-    /*  async openCamera() {
-      const webcamElement = await document.getElementById("webcam");
-      const canvasElement = await document.getElementById("canvas");
-      const snapSoundElement = await document.getElementById("snapSound");
-      const webcam = await new Webcam(
-        webcamElement,
-        "user",
-        canvasElement,
-        snapSoundElement
-      );
-      await webcam
-        .start()
-        .then((result) => {
-          console.log("webcam started");
-        })
-        .catch((err) => {
-          console.log(err);
-        });
-    }, */
     // filter: this.getCustomers(this.page, this.buscar, this.criterio),
   },
 

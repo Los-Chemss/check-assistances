@@ -2555,6 +2555,14 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
 
 
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = ({
+  //   props: ["photo"],
+
+  /*   watch: {
+    photo: function () {
+      this.currentPhoto = this.photo;
+      // this.$emit("MaritialStatusChanged", this.mutableMaritialStatus); // send the sum
+    },
+  }, */
   data: function data() {
     return {
       loading: false,
@@ -2636,7 +2644,8 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
       },
       customerId: 0,
       submitted: false,
-      recordMethod: "store"
+      recordMethod: "store",
+      currentPhoto: null
     };
   },
   components: {
@@ -2796,10 +2805,16 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
 
       this.showCustomers = newVal;
     },
+    takedPhoto: function takedPhoto(value) {
+      this.currentPhoto = value;
+    },
     saveCustomer: function saveCustomer() {
       var _this = this;
 
       var me = this;
+      /*  console.log(me.currentPhoto ? "i has" : "on no");
+      return; */
+
       var request = {
         name: me.customer.name,
         lastname: me.customer.lastname,
@@ -2809,8 +2824,14 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
         province: me.customer.province,
         postcode: me.customer.postcode,
         phone: me.customer.phone,
-        membership: me.selectedMembership.id
+        membership: me.selectedMembership.id,
+        image: me.currentPhoto
       };
+      /*  request["file"] = this.photo;
+      if (this.photo) {
+        alert("some photo");
+      } */
+
       axios.post("customers/create", request).then(function (response) {
         console.log(response);
         _this.customerId = response.data.id;
@@ -2818,7 +2839,11 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
         console.log({
           cusId: me.customerId
         });
-        me.shootMessage();
+
+        if (!document.getElementById("downloadPhoto")) {
+          me.shootMessage(); // request.file = document.getElementById("downloadPhoto");
+        }
+
         Swal.fire({
           type: "success",
           title: "Cliente creado",
@@ -2854,13 +2879,25 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
         membership_id: me.selectedMembership.id,
         id: me.customer.id
       };
+
+      if (this.photo) {
+        alert("some photo");
+        request["file"] = this.photo;
+      }
+
       axios.post("customers/update/" + me.customer.id, request).then(function (response) {
         _this2.customerId = me.customer.id;
         _this2.recordMethod = "update";
         console.log({
           cusId: me.customerId
-        });
-        me.shootMessage();
+        }); //   me.shootMessage();
+
+        if (document.getElementById("downloadPhoto")) {
+          request.file = document.getElementById("downloadPhoto");
+        } else {
+          me.shootMessage();
+        }
+
         Swal.fire({
           type: "success",
           title: "Cliente actualizado",
@@ -3089,27 +3126,7 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
       }
 
       return pagesArray;
-    }
-    /*  async openCamera() {
-      const webcamElement = await document.getElementById("webcam");
-      const canvasElement = await document.getElementById("canvas");
-      const snapSoundElement = await document.getElementById("snapSound");
-      const webcam = await new Webcam(
-        webcamElement,
-        "user",
-        canvasElement,
-        snapSoundElement
-      );
-      await webcam
-        .start()
-        .then((result) => {
-          console.log("webcam started");
-        })
-        .catch((err) => {
-          console.log(err);
-        });
-    }, */
-    // filter: this.getCustomers(this.page, this.buscar, this.criterio),
+    } // filter: this.getCustomers(this.page, this.buscar, this.criterio),
 
   },
   mounted: function mounted() {
@@ -5370,7 +5387,8 @@ __webpack_require__.r(__webpack_exports__);
       isPhotoTaken: false,
       isShotPhoto: false,
       isLoading: false,
-      link: "#"
+      link: "#",
+      photo: null
     };
   },
   methods: {
@@ -5421,7 +5439,27 @@ __webpack_require__.r(__webpack_exports__);
       this.isPhotoTaken = !this.isPhotoTaken;
       var context = this.$refs.canvas.getContext("2d");
       context.drawImage(this.$refs.camera, 0, 0, 450, 337.5);
+      var canvas = document.getElementById("photoTaken").toDataURL("image/jpeg");
+      this.photo = canvas;
+      this.$emit("takedPhoto", this.photo);
+      console.log({
+        context: context
+      });
+      console.log({
+        canvas: canvas
+      });
     },
+
+    /*
+    usePhoto() {
+      const download = document.getElementById("downloadPhoto");
+      const canvas = document
+        .getElementById("photoTaken")
+        .toDataURL("image/jpeg")
+        .replace("image/jpeg", "image/octet-stream");
+      this.photo = canvas;
+       //   download.setAttribute("href", canvas);
+    }, */
     downloadImage: function downloadImage() {
       var download = document.getElementById("downloadPhoto");
       var canvas = document.getElementById("photoTaken").toDataURL("image/jpeg").replace("image/jpeg", "image/octet-stream");
@@ -7154,7 +7192,11 @@ var render = function render() {
     attrs: {
       id: "camera"
     }
-  }, [_c("camera")], 1)])])])]), _vm._v(" "), _c("div", {
+  }, [_c("camera", {
+    on: {
+      takedPhoto: _vm.takedPhoto
+    }
+  })], 1)])])])]), _vm._v(" "), _c("div", {
     staticClass: "form-group col-md-4"
   }, [_c("label", {
     attrs: {
@@ -11242,10 +11284,10 @@ var render = function render() {
   }, [_c("div", {
     staticClass: "camera-button"
   }, [_c("button", {
-    staticClass: "button is-rounded",
+    staticClass: "button btn-rounded",
     "class": {
-      "is-primary": !_vm.isCameraOpen,
-      "is-danger": _vm.isCameraOpen
+      "btn-success": !_vm.isCameraOpen,
+      "btn-danger": _vm.isCameraOpen
     },
     attrs: {
       type: "button"
@@ -11253,7 +11295,11 @@ var render = function render() {
     on: {
       click: _vm.toggleCamera
     }
-  }, [!_vm.isCameraOpen ? _c("span", [_vm._v("Open Camera")]) : _c("span", [_vm._v("Close Camera")])])]), _vm._v(" "), _c("div", {
+  }, [!_vm.isCameraOpen ? _c("span", [_c("i", {
+    staticClass: "fas fa-camera"
+  }), _vm._v(" Abrir camara ")]) : _c("span", [_c("i", {
+    staticClass: "fas fa-times"
+  }), _vm._v(" Cerrar camara ")])])]), _vm._v(" "), _c("div", {
     directives: [{
       name: "show",
       rawName: "v-show",
@@ -11307,8 +11353,9 @@ var render = function render() {
     staticClass: "camera-shoot"
   }, [_c("button", {
     staticClass: "button",
+    "class": _vm.isPhotoTaken ? "btn-danger" : "btn-success",
     attrs: {
-      type: "button"
+      type: "button btn-info"
     },
     on: {
       click: _vm.takePhoto
@@ -11320,7 +11367,7 @@ var render = function render() {
   })])]) : _vm._e(), _vm._v(" "), _vm.isPhotoTaken && _vm.isCameraOpen ? _c("div", {
     staticClass: "camera-download"
   }, [_c("a", {
-    staticClass: "button",
+    staticClass: "button btn-success btn-rounded",
     attrs: {
       id: "downloadPhoto",
       download: "my-photo.jpg",
@@ -11329,7 +11376,7 @@ var render = function render() {
     on: {
       click: _vm.downloadImage
     }
-  }, [_vm._v("\n      Download\n    ")])]) : _vm._e()]);
+  }, [_vm._v("\n      Usar foto\n    ")])]) : _vm._e()]);
 };
 
 var staticRenderFns = [function () {
@@ -12359,6 +12406,30 @@ ___CSS_LOADER_EXPORT___.push([module.id, "html[data-v-4c9825c1],\n.clock-body[da
 
 /***/ }),
 
+/***/ "./node_modules/laravel-mix/node_modules/css-loader/dist/cjs.js??clonedRuleSet-11.use[1]!./node_modules/vue-loader/lib/loaders/stylePostLoader.js!./node_modules/postcss-loader/dist/cjs.js??clonedRuleSet-11.use[2]!./node_modules/sass-loader/dist/cjs.js??clonedRuleSet-11.use[3]!./node_modules/vue-loader/lib/index.js??vue-loader-options!./resources/js/components/extra/Camera.vue?vue&type=style&index=0&id=ef147022&scoped=true&lang=scss&":
+/*!***********************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************!*\
+  !*** ./node_modules/laravel-mix/node_modules/css-loader/dist/cjs.js??clonedRuleSet-11.use[1]!./node_modules/vue-loader/lib/loaders/stylePostLoader.js!./node_modules/postcss-loader/dist/cjs.js??clonedRuleSet-11.use[2]!./node_modules/sass-loader/dist/cjs.js??clonedRuleSet-11.use[3]!./node_modules/vue-loader/lib/index.js??vue-loader-options!./resources/js/components/extra/Camera.vue?vue&type=style&index=0&id=ef147022&scoped=true&lang=scss& ***!
+  \***********************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************/
+/***/ ((module, __webpack_exports__, __webpack_require__) => {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   "default": () => (__WEBPACK_DEFAULT_EXPORT__)
+/* harmony export */ });
+/* harmony import */ var _node_modules_laravel_mix_node_modules_css_loader_dist_runtime_api_js__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ../../../../node_modules/laravel-mix/node_modules/css-loader/dist/runtime/api.js */ "./node_modules/laravel-mix/node_modules/css-loader/dist/runtime/api.js");
+/* harmony import */ var _node_modules_laravel_mix_node_modules_css_loader_dist_runtime_api_js__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(_node_modules_laravel_mix_node_modules_css_loader_dist_runtime_api_js__WEBPACK_IMPORTED_MODULE_0__);
+// Imports
+
+var ___CSS_LOADER_EXPORT___ = _node_modules_laravel_mix_node_modules_css_loader_dist_runtime_api_js__WEBPACK_IMPORTED_MODULE_0___default()(function(i){return i[1]});
+// Module
+___CSS_LOADER_EXPORT___.push([module.id, "/* body {\n  display: flex;\n  justify-content: center;\n} */\n.web-camera-container[data-v-ef147022] {\n  margin-top: 2rem;\n  margin-bottom: 2rem;\n  padding: 2rem;\n  display: flex;\n  flex-direction: column;\n  justify-content: center;\n  align-items: center;\n  border: 1px solid #ccc;\n  border-radius: 4px;\n}\n.web-camera-container .camera-button[data-v-ef147022] {\n  margin-bottom: 2rem;\n}\n.web-camera-container .camera-box .camera-shutter[data-v-ef147022] {\n  opacity: 0;\n  width: 450px;\n  height: 337.5px;\n  background-color: #fff;\n  position: absolute;\n}\n.web-camera-container .camera-box .camera-shutter.flash[data-v-ef147022] {\n  opacity: 1;\n}\n.web-camera-container .camera-shoot[data-v-ef147022] {\n  margin: 1rem 0;\n}\n.web-camera-container .camera-shoot button[data-v-ef147022] {\n  height: 60px;\n  width: 60px;\n  display: flex;\n  align-items: center;\n  justify-content: center;\n  border-radius: 100%;\n}\n.web-camera-container .camera-shoot button img[data-v-ef147022] {\n  height: 35px;\n  -o-object-fit: cover;\n     object-fit: cover;\n}\n.web-camera-container .camera-loading[data-v-ef147022] {\n  overflow: hidden;\n  height: 100%;\n  position: absolute;\n  width: 100%;\n  min-height: 150px;\n  margin: 3rem 0 0 -1.2rem;\n}\n.web-camera-container .camera-loading ul[data-v-ef147022] {\n  height: 100%;\n  position: absolute;\n  width: 100%;\n  z-index: 999999;\n  margin: 0;\n}\n.web-camera-container .camera-loading .loader-circle[data-v-ef147022] {\n  display: block;\n  height: 14px;\n  margin: 0 auto;\n  top: 50%;\n  left: 100%;\n  transform: translateY(-50%);\n  transform: translateX(-50%);\n  position: absolute;\n  width: 100%;\n  padding: 0;\n}\n.web-camera-container .camera-loading .loader-circle li[data-v-ef147022] {\n  display: block;\n  float: left;\n  width: 10px;\n  height: 10px;\n  line-height: 10px;\n  padding: 0;\n  position: relative;\n  margin: 0 0 0 4px;\n  background: #999;\n  -webkit-animation: preload-ef147022 1s infinite;\n          animation: preload-ef147022 1s infinite;\n  top: -50%;\n  border-radius: 100%;\n}\n.web-camera-container .camera-loading .loader-circle li[data-v-ef147022]:nth-child(2) {\n  -webkit-animation-delay: 0.2s;\n          animation-delay: 0.2s;\n}\n.web-camera-container .camera-loading .loader-circle li[data-v-ef147022]:nth-child(3) {\n  -webkit-animation-delay: 0.4s;\n          animation-delay: 0.4s;\n}\n@-webkit-keyframes preload-ef147022 {\n0% {\n    opacity: 1;\n}\n50% {\n    opacity: 0.4;\n}\n100% {\n    opacity: 1;\n}\n}\n@keyframes preload-ef147022 {\n0% {\n    opacity: 1;\n}\n50% {\n    opacity: 0.4;\n}\n100% {\n    opacity: 1;\n}\n}", ""]);
+// Exports
+/* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (___CSS_LOADER_EXPORT___);
+
+
+/***/ }),
+
 /***/ "./node_modules/laravel-mix/node_modules/css-loader/dist/cjs.js??clonedRuleSet-8.use[1]!./node_modules/postcss-loader/dist/cjs.js??clonedRuleSet-8.use[2]!./node_modules/vue2-dropzone/dist/vue2Dropzone.min.css":
 /*!***********************************************************************************************************************************************************************************************************************!*\
   !*** ./node_modules/laravel-mix/node_modules/css-loader/dist/cjs.js??clonedRuleSet-8.use[1]!./node_modules/postcss-loader/dist/cjs.js??clonedRuleSet-8.use[2]!./node_modules/vue2-dropzone/dist/vue2Dropzone.min.css ***!
@@ -12449,30 +12520,6 @@ __webpack_require__.r(__webpack_exports__);
 var ___CSS_LOADER_EXPORT___ = _node_modules_laravel_mix_node_modules_css_loader_dist_runtime_api_js__WEBPACK_IMPORTED_MODULE_0___default()(function(i){return i[1]});
 // Module
 ___CSS_LOADER_EXPORT___.push([module.id, "\n.dz-max-files-reached[data-v-9097e738] {\n  background-color: red;\n}\n", ""]);
-// Exports
-/* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (___CSS_LOADER_EXPORT___);
-
-
-/***/ }),
-
-/***/ "./node_modules/laravel-mix/node_modules/css-loader/dist/cjs.js??clonedRuleSet-8.use[1]!./node_modules/vue-loader/lib/loaders/stylePostLoader.js!./node_modules/postcss-loader/dist/cjs.js??clonedRuleSet-8.use[2]!./node_modules/vue-loader/lib/index.js??vue-loader-options!./resources/js/components/extra/Camera.vue?vue&type=style&index=0&id=ef147022&scoped=true&lang=css&":
-/*!****************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************!*\
-  !*** ./node_modules/laravel-mix/node_modules/css-loader/dist/cjs.js??clonedRuleSet-8.use[1]!./node_modules/vue-loader/lib/loaders/stylePostLoader.js!./node_modules/postcss-loader/dist/cjs.js??clonedRuleSet-8.use[2]!./node_modules/vue-loader/lib/index.js??vue-loader-options!./resources/js/components/extra/Camera.vue?vue&type=style&index=0&id=ef147022&scoped=true&lang=css& ***!
-  \****************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************/
-/***/ ((module, __webpack_exports__, __webpack_require__) => {
-
-"use strict";
-__webpack_require__.r(__webpack_exports__);
-/* harmony export */ __webpack_require__.d(__webpack_exports__, {
-/* harmony export */   "default": () => (__WEBPACK_DEFAULT_EXPORT__)
-/* harmony export */ });
-/* harmony import */ var _node_modules_laravel_mix_node_modules_css_loader_dist_runtime_api_js__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ../../../../node_modules/laravel-mix/node_modules/css-loader/dist/runtime/api.js */ "./node_modules/laravel-mix/node_modules/css-loader/dist/runtime/api.js");
-/* harmony import */ var _node_modules_laravel_mix_node_modules_css_loader_dist_runtime_api_js__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(_node_modules_laravel_mix_node_modules_css_loader_dist_runtime_api_js__WEBPACK_IMPORTED_MODULE_0__);
-// Imports
-
-var ___CSS_LOADER_EXPORT___ = _node_modules_laravel_mix_node_modules_css_loader_dist_runtime_api_js__WEBPACK_IMPORTED_MODULE_0___default()(function(i){return i[1]});
-// Module
-___CSS_LOADER_EXPORT___.push([module.id, "\nbody[data-v-ef147022] {\n  display: flex;\n  justify-content: center;\n}\n.web-camera-container[data-v-ef147022] {\n  margin-top: 2rem;\n  margin-bottom: 2rem;\n  padding: 2rem;\n  display: flex;\n  flex-direction: column;\n  justify-content: center;\n  align-items: center;\n  border: 1px solid #ccc;\n  border-radius: 4px;\n  /* width: 500px; */\n.camera-button[data-v-ef147022] {\n    margin-bottom: 2rem;\n}\n.camera-box[data-v-ef147022] {\n.camera-shutter[data-v-ef147022] {\n      opacity: 0;\n      width: 450px;\n      height: 337.5px;\n      background-color: #fff;\n      position: absolute;\n&.flash[data-v-ef147022] {\n        opacity: 1;\n}\n}\n}\n.camera-shoot[data-v-ef147022] {\n    margin: 1rem 0;\nbutton[data-v-ef147022] {\n      height: 60px;\n      width: 60px;\n      display: flex;\n      align-items: center;\n      justify-content: center;\n      border-radius: 100%;\nimg[data-v-ef147022] {\n        height: 35px;\n        -o-object-fit: cover;\n           object-fit: cover;\n}\n}\n}\n.camera-loading[data-v-ef147022] {\n    overflow: hidden;\n    height: 100%;\n    position: absolute;\n    width: 100%;\n    min-height: 150px;\n    margin: 3rem 0 0 -1.2rem;\nul[data-v-ef147022] {\n      height: 100%;\n      position: absolute;\n      width: 100%;\n      z-index: 999999;\n      margin: 0;\n}\n.loader-circle[data-v-ef147022] {\n      display: block;\n      height: 14px;\n      margin: 0 auto;\n      top: 50%;\n      left: 100%;\n      transform: translateY(-50%);\n      transform: translateX(-50%);\n      position: absolute;\n      width: 100%;\n      padding: 0;\nli[data-v-ef147022] {\n        display: block;\n        float: left;\n        width: 10px;\n        height: 10px;\n        line-height: 10px;\n        padding: 0;\n        position: relative;\n        margin: 0 0 0 4px;\n        background: #999;\n        -webkit-animation: preload-ef147022 1s infinite;\n                animation: preload-ef147022 1s infinite;\n        top: -50%;\n        border-radius: 100%;\n&[data-v-ef147022]:nth-child(2) {\n          -webkit-animation-delay: 0.2s;\n                  animation-delay: 0.2s;\n}\n&[data-v-ef147022]:nth-child(3) {\n          -webkit-animation-delay: 0.4s;\n                  animation-delay: 0.4s;\n}\n}\n}\n}\n@-webkit-keyframes preload-ef147022 {\n0% {\n      opacity: 1;\n}\n50% {\n      opacity: 0.4;\n}\n100% {\n      opacity: 1;\n}\n}\n@keyframes preload-ef147022 {\n0% {\n      opacity: 1;\n}\n50% {\n      opacity: 0.4;\n}\n100% {\n      opacity: 1;\n}\n}\n}\n", ""]);
 // Exports
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (___CSS_LOADER_EXPORT___);
 
@@ -30045,6 +30092,36 @@ var update = _node_modules_style_loader_dist_runtime_injectStylesIntoStyleTag_js
 
 /***/ }),
 
+/***/ "./node_modules/style-loader/dist/cjs.js!./node_modules/laravel-mix/node_modules/css-loader/dist/cjs.js??clonedRuleSet-11.use[1]!./node_modules/vue-loader/lib/loaders/stylePostLoader.js!./node_modules/postcss-loader/dist/cjs.js??clonedRuleSet-11.use[2]!./node_modules/sass-loader/dist/cjs.js??clonedRuleSet-11.use[3]!./node_modules/vue-loader/lib/index.js??vue-loader-options!./resources/js/components/extra/Camera.vue?vue&type=style&index=0&id=ef147022&scoped=true&lang=scss&":
+/*!***************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************!*\
+  !*** ./node_modules/style-loader/dist/cjs.js!./node_modules/laravel-mix/node_modules/css-loader/dist/cjs.js??clonedRuleSet-11.use[1]!./node_modules/vue-loader/lib/loaders/stylePostLoader.js!./node_modules/postcss-loader/dist/cjs.js??clonedRuleSet-11.use[2]!./node_modules/sass-loader/dist/cjs.js??clonedRuleSet-11.use[3]!./node_modules/vue-loader/lib/index.js??vue-loader-options!./resources/js/components/extra/Camera.vue?vue&type=style&index=0&id=ef147022&scoped=true&lang=scss& ***!
+  \***************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   "default": () => (__WEBPACK_DEFAULT_EXPORT__)
+/* harmony export */ });
+/* harmony import */ var _node_modules_style_loader_dist_runtime_injectStylesIntoStyleTag_js__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! !../../../../node_modules/style-loader/dist/runtime/injectStylesIntoStyleTag.js */ "./node_modules/style-loader/dist/runtime/injectStylesIntoStyleTag.js");
+/* harmony import */ var _node_modules_style_loader_dist_runtime_injectStylesIntoStyleTag_js__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(_node_modules_style_loader_dist_runtime_injectStylesIntoStyleTag_js__WEBPACK_IMPORTED_MODULE_0__);
+/* harmony import */ var _node_modules_laravel_mix_node_modules_css_loader_dist_cjs_js_clonedRuleSet_11_use_1_node_modules_vue_loader_lib_loaders_stylePostLoader_js_node_modules_postcss_loader_dist_cjs_js_clonedRuleSet_11_use_2_node_modules_sass_loader_dist_cjs_js_clonedRuleSet_11_use_3_node_modules_vue_loader_lib_index_js_vue_loader_options_Camera_vue_vue_type_style_index_0_id_ef147022_scoped_true_lang_scss___WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! !!../../../../node_modules/laravel-mix/node_modules/css-loader/dist/cjs.js??clonedRuleSet-11.use[1]!../../../../node_modules/vue-loader/lib/loaders/stylePostLoader.js!../../../../node_modules/postcss-loader/dist/cjs.js??clonedRuleSet-11.use[2]!../../../../node_modules/sass-loader/dist/cjs.js??clonedRuleSet-11.use[3]!../../../../node_modules/vue-loader/lib/index.js??vue-loader-options!./Camera.vue?vue&type=style&index=0&id=ef147022&scoped=true&lang=scss& */ "./node_modules/laravel-mix/node_modules/css-loader/dist/cjs.js??clonedRuleSet-11.use[1]!./node_modules/vue-loader/lib/loaders/stylePostLoader.js!./node_modules/postcss-loader/dist/cjs.js??clonedRuleSet-11.use[2]!./node_modules/sass-loader/dist/cjs.js??clonedRuleSet-11.use[3]!./node_modules/vue-loader/lib/index.js??vue-loader-options!./resources/js/components/extra/Camera.vue?vue&type=style&index=0&id=ef147022&scoped=true&lang=scss&");
+
+            
+
+var options = {};
+
+options.insert = "head";
+options.singleton = false;
+
+var update = _node_modules_style_loader_dist_runtime_injectStylesIntoStyleTag_js__WEBPACK_IMPORTED_MODULE_0___default()(_node_modules_laravel_mix_node_modules_css_loader_dist_cjs_js_clonedRuleSet_11_use_1_node_modules_vue_loader_lib_loaders_stylePostLoader_js_node_modules_postcss_loader_dist_cjs_js_clonedRuleSet_11_use_2_node_modules_sass_loader_dist_cjs_js_clonedRuleSet_11_use_3_node_modules_vue_loader_lib_index_js_vue_loader_options_Camera_vue_vue_type_style_index_0_id_ef147022_scoped_true_lang_scss___WEBPACK_IMPORTED_MODULE_1__["default"], options);
+
+
+
+/* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (_node_modules_laravel_mix_node_modules_css_loader_dist_cjs_js_clonedRuleSet_11_use_1_node_modules_vue_loader_lib_loaders_stylePostLoader_js_node_modules_postcss_loader_dist_cjs_js_clonedRuleSet_11_use_2_node_modules_sass_loader_dist_cjs_js_clonedRuleSet_11_use_3_node_modules_vue_loader_lib_index_js_vue_loader_options_Camera_vue_vue_type_style_index_0_id_ef147022_scoped_true_lang_scss___WEBPACK_IMPORTED_MODULE_1__["default"].locals || {});
+
+/***/ }),
+
 /***/ "./node_modules/vue2-dropzone/dist/vue2Dropzone.min.css":
 /*!**************************************************************!*\
   !*** ./node_modules/vue2-dropzone/dist/vue2Dropzone.min.css ***!
@@ -30162,36 +30239,6 @@ var update = _node_modules_style_loader_dist_runtime_injectStylesIntoStyleTag_js
 
 
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (_node_modules_laravel_mix_node_modules_css_loader_dist_cjs_js_clonedRuleSet_8_use_1_node_modules_vue_loader_lib_loaders_stylePostLoader_js_node_modules_postcss_loader_dist_cjs_js_clonedRuleSet_8_use_2_node_modules_vue_loader_lib_index_js_vue_loader_options_CustomerComponent_vue_vue_type_style_index_0_id_9097e738_scoped_true_lang_css___WEBPACK_IMPORTED_MODULE_1__["default"].locals || {});
-
-/***/ }),
-
-/***/ "./node_modules/style-loader/dist/cjs.js!./node_modules/laravel-mix/node_modules/css-loader/dist/cjs.js??clonedRuleSet-8.use[1]!./node_modules/vue-loader/lib/loaders/stylePostLoader.js!./node_modules/postcss-loader/dist/cjs.js??clonedRuleSet-8.use[2]!./node_modules/vue-loader/lib/index.js??vue-loader-options!./resources/js/components/extra/Camera.vue?vue&type=style&index=0&id=ef147022&scoped=true&lang=css&":
-/*!********************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************!*\
-  !*** ./node_modules/style-loader/dist/cjs.js!./node_modules/laravel-mix/node_modules/css-loader/dist/cjs.js??clonedRuleSet-8.use[1]!./node_modules/vue-loader/lib/loaders/stylePostLoader.js!./node_modules/postcss-loader/dist/cjs.js??clonedRuleSet-8.use[2]!./node_modules/vue-loader/lib/index.js??vue-loader-options!./resources/js/components/extra/Camera.vue?vue&type=style&index=0&id=ef147022&scoped=true&lang=css& ***!
-  \********************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************/
-/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
-
-"use strict";
-__webpack_require__.r(__webpack_exports__);
-/* harmony export */ __webpack_require__.d(__webpack_exports__, {
-/* harmony export */   "default": () => (__WEBPACK_DEFAULT_EXPORT__)
-/* harmony export */ });
-/* harmony import */ var _node_modules_style_loader_dist_runtime_injectStylesIntoStyleTag_js__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! !../../../../node_modules/style-loader/dist/runtime/injectStylesIntoStyleTag.js */ "./node_modules/style-loader/dist/runtime/injectStylesIntoStyleTag.js");
-/* harmony import */ var _node_modules_style_loader_dist_runtime_injectStylesIntoStyleTag_js__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(_node_modules_style_loader_dist_runtime_injectStylesIntoStyleTag_js__WEBPACK_IMPORTED_MODULE_0__);
-/* harmony import */ var _node_modules_laravel_mix_node_modules_css_loader_dist_cjs_js_clonedRuleSet_8_use_1_node_modules_vue_loader_lib_loaders_stylePostLoader_js_node_modules_postcss_loader_dist_cjs_js_clonedRuleSet_8_use_2_node_modules_vue_loader_lib_index_js_vue_loader_options_Camera_vue_vue_type_style_index_0_id_ef147022_scoped_true_lang_css___WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! !!../../../../node_modules/laravel-mix/node_modules/css-loader/dist/cjs.js??clonedRuleSet-8.use[1]!../../../../node_modules/vue-loader/lib/loaders/stylePostLoader.js!../../../../node_modules/postcss-loader/dist/cjs.js??clonedRuleSet-8.use[2]!../../../../node_modules/vue-loader/lib/index.js??vue-loader-options!./Camera.vue?vue&type=style&index=0&id=ef147022&scoped=true&lang=css& */ "./node_modules/laravel-mix/node_modules/css-loader/dist/cjs.js??clonedRuleSet-8.use[1]!./node_modules/vue-loader/lib/loaders/stylePostLoader.js!./node_modules/postcss-loader/dist/cjs.js??clonedRuleSet-8.use[2]!./node_modules/vue-loader/lib/index.js??vue-loader-options!./resources/js/components/extra/Camera.vue?vue&type=style&index=0&id=ef147022&scoped=true&lang=css&");
-
-            
-
-var options = {};
-
-options.insert = "head";
-options.singleton = false;
-
-var update = _node_modules_style_loader_dist_runtime_injectStylesIntoStyleTag_js__WEBPACK_IMPORTED_MODULE_0___default()(_node_modules_laravel_mix_node_modules_css_loader_dist_cjs_js_clonedRuleSet_8_use_1_node_modules_vue_loader_lib_loaders_stylePostLoader_js_node_modules_postcss_loader_dist_cjs_js_clonedRuleSet_8_use_2_node_modules_vue_loader_lib_index_js_vue_loader_options_Camera_vue_vue_type_style_index_0_id_ef147022_scoped_true_lang_css___WEBPACK_IMPORTED_MODULE_1__["default"], options);
-
-
-
-/* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (_node_modules_laravel_mix_node_modules_css_loader_dist_cjs_js_clonedRuleSet_8_use_1_node_modules_vue_loader_lib_loaders_stylePostLoader_js_node_modules_postcss_loader_dist_cjs_js_clonedRuleSet_8_use_2_node_modules_vue_loader_lib_index_js_vue_loader_options_Camera_vue_vue_type_style_index_0_id_ef147022_scoped_true_lang_css___WEBPACK_IMPORTED_MODULE_1__["default"].locals || {});
 
 /***/ }),
 
@@ -31043,7 +31090,7 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */ });
 /* harmony import */ var _Camera_vue_vue_type_template_id_ef147022_scoped_true___WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./Camera.vue?vue&type=template&id=ef147022&scoped=true& */ "./resources/js/components/extra/Camera.vue?vue&type=template&id=ef147022&scoped=true&");
 /* harmony import */ var _Camera_vue_vue_type_script_lang_js___WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./Camera.vue?vue&type=script&lang=js& */ "./resources/js/components/extra/Camera.vue?vue&type=script&lang=js&");
-/* harmony import */ var _Camera_vue_vue_type_style_index_0_id_ef147022_scoped_true_lang_css___WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./Camera.vue?vue&type=style&index=0&id=ef147022&scoped=true&lang=css& */ "./resources/js/components/extra/Camera.vue?vue&type=style&index=0&id=ef147022&scoped=true&lang=css&");
+/* harmony import */ var _Camera_vue_vue_type_style_index_0_id_ef147022_scoped_true_lang_scss___WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./Camera.vue?vue&type=style&index=0&id=ef147022&scoped=true&lang=scss& */ "./resources/js/components/extra/Camera.vue?vue&type=style&index=0&id=ef147022&scoped=true&lang=scss&");
 /* harmony import */ var _node_modules_vue_loader_lib_runtime_componentNormalizer_js__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! !../../../../node_modules/vue-loader/lib/runtime/componentNormalizer.js */ "./node_modules/vue-loader/lib/runtime/componentNormalizer.js");
 
 
@@ -31670,6 +31717,19 @@ __webpack_require__.r(__webpack_exports__);
 
 /***/ }),
 
+/***/ "./resources/js/components/extra/Camera.vue?vue&type=style&index=0&id=ef147022&scoped=true&lang=scss&":
+/*!************************************************************************************************************!*\
+  !*** ./resources/js/components/extra/Camera.vue?vue&type=style&index=0&id=ef147022&scoped=true&lang=scss& ***!
+  \************************************************************************************************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony import */ var _node_modules_style_loader_dist_cjs_js_node_modules_laravel_mix_node_modules_css_loader_dist_cjs_js_clonedRuleSet_11_use_1_node_modules_vue_loader_lib_loaders_stylePostLoader_js_node_modules_postcss_loader_dist_cjs_js_clonedRuleSet_11_use_2_node_modules_sass_loader_dist_cjs_js_clonedRuleSet_11_use_3_node_modules_vue_loader_lib_index_js_vue_loader_options_Camera_vue_vue_type_style_index_0_id_ef147022_scoped_true_lang_scss___WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! -!../../../../node_modules/style-loader/dist/cjs.js!../../../../node_modules/laravel-mix/node_modules/css-loader/dist/cjs.js??clonedRuleSet-11.use[1]!../../../../node_modules/vue-loader/lib/loaders/stylePostLoader.js!../../../../node_modules/postcss-loader/dist/cjs.js??clonedRuleSet-11.use[2]!../../../../node_modules/sass-loader/dist/cjs.js??clonedRuleSet-11.use[3]!../../../../node_modules/vue-loader/lib/index.js??vue-loader-options!./Camera.vue?vue&type=style&index=0&id=ef147022&scoped=true&lang=scss& */ "./node_modules/style-loader/dist/cjs.js!./node_modules/laravel-mix/node_modules/css-loader/dist/cjs.js??clonedRuleSet-11.use[1]!./node_modules/vue-loader/lib/loaders/stylePostLoader.js!./node_modules/postcss-loader/dist/cjs.js??clonedRuleSet-11.use[2]!./node_modules/sass-loader/dist/cjs.js??clonedRuleSet-11.use[3]!./node_modules/vue-loader/lib/index.js??vue-loader-options!./resources/js/components/extra/Camera.vue?vue&type=style&index=0&id=ef147022&scoped=true&lang=scss&");
+
+
+/***/ }),
+
 /***/ "./node_modules/vue-multiselect/dist/vue-multiselect.min.css?vue&type=style&index=0&lang=css&":
 /*!****************************************************************************************************!*\
   !*** ./node_modules/vue-multiselect/dist/vue-multiselect.min.css?vue&type=style&index=0&lang=css& ***!
@@ -31705,19 +31765,6 @@ __webpack_require__.r(__webpack_exports__);
 "use strict";
 __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _node_modules_style_loader_dist_cjs_js_node_modules_laravel_mix_node_modules_css_loader_dist_cjs_js_clonedRuleSet_8_use_1_node_modules_vue_loader_lib_loaders_stylePostLoader_js_node_modules_postcss_loader_dist_cjs_js_clonedRuleSet_8_use_2_node_modules_vue_loader_lib_index_js_vue_loader_options_CustomerComponent_vue_vue_type_style_index_0_id_9097e738_scoped_true_lang_css___WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! -!../../../node_modules/style-loader/dist/cjs.js!../../../node_modules/laravel-mix/node_modules/css-loader/dist/cjs.js??clonedRuleSet-8.use[1]!../../../node_modules/vue-loader/lib/loaders/stylePostLoader.js!../../../node_modules/postcss-loader/dist/cjs.js??clonedRuleSet-8.use[2]!../../../node_modules/vue-loader/lib/index.js??vue-loader-options!./CustomerComponent.vue?vue&type=style&index=0&id=9097e738&scoped=true&lang=css& */ "./node_modules/style-loader/dist/cjs.js!./node_modules/laravel-mix/node_modules/css-loader/dist/cjs.js??clonedRuleSet-8.use[1]!./node_modules/vue-loader/lib/loaders/stylePostLoader.js!./node_modules/postcss-loader/dist/cjs.js??clonedRuleSet-8.use[2]!./node_modules/vue-loader/lib/index.js??vue-loader-options!./resources/js/components/CustomerComponent.vue?vue&type=style&index=0&id=9097e738&scoped=true&lang=css&");
-
-
-/***/ }),
-
-/***/ "./resources/js/components/extra/Camera.vue?vue&type=style&index=0&id=ef147022&scoped=true&lang=css&":
-/*!***********************************************************************************************************!*\
-  !*** ./resources/js/components/extra/Camera.vue?vue&type=style&index=0&id=ef147022&scoped=true&lang=css& ***!
-  \***********************************************************************************************************/
-/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
-
-"use strict";
-__webpack_require__.r(__webpack_exports__);
-/* harmony import */ var _node_modules_style_loader_dist_cjs_js_node_modules_laravel_mix_node_modules_css_loader_dist_cjs_js_clonedRuleSet_8_use_1_node_modules_vue_loader_lib_loaders_stylePostLoader_js_node_modules_postcss_loader_dist_cjs_js_clonedRuleSet_8_use_2_node_modules_vue_loader_lib_index_js_vue_loader_options_Camera_vue_vue_type_style_index_0_id_ef147022_scoped_true_lang_css___WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! -!../../../../node_modules/style-loader/dist/cjs.js!../../../../node_modules/laravel-mix/node_modules/css-loader/dist/cjs.js??clonedRuleSet-8.use[1]!../../../../node_modules/vue-loader/lib/loaders/stylePostLoader.js!../../../../node_modules/postcss-loader/dist/cjs.js??clonedRuleSet-8.use[2]!../../../../node_modules/vue-loader/lib/index.js??vue-loader-options!./Camera.vue?vue&type=style&index=0&id=ef147022&scoped=true&lang=css& */ "./node_modules/style-loader/dist/cjs.js!./node_modules/laravel-mix/node_modules/css-loader/dist/cjs.js??clonedRuleSet-8.use[1]!./node_modules/vue-loader/lib/loaders/stylePostLoader.js!./node_modules/postcss-loader/dist/cjs.js??clonedRuleSet-8.use[2]!./node_modules/vue-loader/lib/index.js??vue-loader-options!./resources/js/components/extra/Camera.vue?vue&type=style&index=0&id=ef147022&scoped=true&lang=css&");
 
 
 /***/ }),
