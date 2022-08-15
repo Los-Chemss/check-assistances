@@ -197,7 +197,7 @@
                               >
                                 <i class="icon-trash"></i>
                               </button>
-                               &nbsp;
+                              &nbsp;
                               <button
                                 type="button"
                                 class="btn btn-info btn-sm"
@@ -365,16 +365,48 @@
                             <label
                               for="attachment"
                               class="leading-7 text-sm text-gray-600"
-                              >Archivos</label
+                              >Imagen del cliente </label
                             ><br />
-                            <vue-dropzone
-                              ref="myVueDropzone"
-                              id="dropzone"
-                              :options="dropzoneOptions"
-                              @vdropzone-complete="afterUploadComplete"
-                              @vdropzone-sending-multiple="sendMessage"
-                              class="text-center"
-                            ></vue-dropzone>
+                            <ul class="nav nav-tabs mb-3">
+                              <li class="nav-item">
+                                <a
+                                  href="#dropZone"
+                                  data-toggle="tab"
+                                  aria-expanded="false"
+                                  class="nav-link active"
+                                >
+                                  <i class="mdi mdi-upload d-lg-none d-block mr-1"></i>
+                                  <span class="d-none d-lg-block">Cargar archivo</span>
+                                </a>
+                              </li>
+                              <li class="nav-item">
+                                <a
+                                  href="#camera"
+                                  data-toggle="tab"
+                                  aria-expanded="true"
+                                  class="nav-link"
+                                >
+                                  <i class="mdi mdi-camera d-lg-none d-block mr-1"></i>
+                                  <span class="d-none d-lg-block">Abrir camara</span>
+                                </a>
+                              </li>
+                            </ul>
+                            <div class="tab-content">
+                              <div class="tab-pane active" id="dropZone">
+                                <vue-dropzone
+                                  ref="myVueDropzone"
+                                  id="dropzone"
+                                  :options="dropzoneOptions"
+                                  @vdropzone-complete="afterUploadComplete"
+                                  @vdropzone-sending-multiple="sendMessage"
+                                  class="text-center"
+                                ></vue-dropzone>
+                              </div>
+                              <div class="tab-pane" id="camera">
+                                <camera />
+                              </div>
+                            </div>
+                            <!--  -->
                           </div>
                         </div>
                       </div>
@@ -654,6 +686,7 @@
 <script>
 import vue2Dropzone from "vue2-dropzone";
 import "vue2-dropzone/dist/vue2Dropzone.min.css";
+import Camera from "./extra/Camera.vue";
 
 import PaymentsComponent from "./ofCustomer/PaymentsComponent.vue";
 import AsistancesComponent from "./ofCustomer/AssistancesComponent.vue";
@@ -750,6 +783,7 @@ export default {
     PaymentsComponent,
     AsistancesComponent,
     vueDropzone: vue2Dropzone,
+    camera: Camera,
   },
 
   methods: {
@@ -783,7 +817,7 @@ export default {
 
     sendMessage: async function (files, xhr, formData) {
       formData.append("id", this.customerId);
-    //   formData.append("record_method", this.recordMethod);
+      //   formData.append("record_method", this.recordMethod);
     },
 
     getCustomers(page, buscar, criterio) {
@@ -1153,6 +1187,26 @@ export default {
       }
       return pagesArray;
     },
+
+    /*  async openCamera() {
+      const webcamElement = await document.getElementById("webcam");
+      const canvasElement = await document.getElementById("canvas");
+      const snapSoundElement = await document.getElementById("snapSound");
+      const webcam = await new Webcam(
+        webcamElement,
+        "user",
+        canvasElement,
+        snapSoundElement
+      );
+      await webcam
+        .start()
+        .then((result) => {
+          console.log("webcam started");
+        })
+        .catch((err) => {
+          console.log(err);
+        });
+    }, */
     // filter: this.getCustomers(this.page, this.buscar, this.criterio),
   },
 

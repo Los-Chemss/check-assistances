@@ -39,6 +39,7 @@
         "vue-laravel-csrf": "^1.0.0",
         "vue-multiselect": "^2.1.6",
         "vue-tables-2": "^2.3.4",
-        "vue2-dropzone": "^3.6.0"
+        "vue2-dropzone": "^3.6.0",
+        "webcam-easy": "^1.0.5"
     }
 }

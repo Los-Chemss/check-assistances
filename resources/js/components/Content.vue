@@ -158,11 +158,14 @@ export default {
           console.log(customer);
           let info =
             (customer.membership
-              ? "Membresia: " + "<b>" + customer.membership.name + "</b>"
+              ? "Membresia: " +
+                "<b class='text-success'>" +
+                customer.membership.name +
+                "</b>"
               : "") +
             (customer.membership.payments && customer.membership.payments[0]
               ? "<br> Expira el : " +
-                "<b>" +
+                "<b class='text-success'>" +
                 me.formatDate(customer.membership.payments[0].expires_at) +
                 "</b>"
               : "");
@@ -170,7 +173,8 @@ export default {
           me.code = "";
           if ("entrada" in response.data) {
             movement = "entrada";
-            message = "Bienvenido <b> " + customer.name + "</b><br>" + info;
+            message =
+              "Bienvenido <b class='text-success'> " + customer.name + "</b><br>" + info;
           }
           if ("salida" in response.data) {
             movement = "salida";
@@ -184,16 +188,25 @@ export default {
           let imgSrc = imgPath != null ? imgPath : "https://placekitten.com/150/150";
           console.log(imgSrc);
           Swal.fire({
-            type: "success",
-            title: "Registro  de " + movement + " satisfactorio",
+            // type: "success",
+            /*   imageUrl: "/images/iconogym2.png",
+            imageWidth: 200,
+            imageHeight: 200,
+            imageAlt: "Custom image", */
+            customClass: { popup: "swal-bg" },
             // text: message,
             target: document.getElementById("checkCard"),
+            // title: "Registro  de " + movement + " satisfactorio",
             html:
-              '<img src="' +
+              '<div> <img src="/images/iconogym2.png"/ style="box-shadow:0 1rem 3rem rgba(68, 122, 17, 0.967), 0 1rem 3rem rgba(0, 0, 0, 0.19); border-radius:50%; rgba(10, 175, 230, 1), 0 0 20px rgba(10, 175, 230, 0);"> </div>' +
+              '<h1 style="color:white;"><b> Registro  de ' +
+              movement +
+              " satisfactorio</b></h1>" +
+              ' <div class="text-center pt-2"> <img src="' +
               imgSrc +
-              '" class="img-fluid rounded-circle shadow-sm" style="width:100px; height:100px;" alt="customer-image"/> <br>  <p>' +
+              '"class="img-fluid" style="width:150px; height:150px; box-shadow:0 1rem 3rem rgba(68, 122, 17, 0.967), 0 1rem 3rem rgba(0, 0, 0, 0.19); border-radius:50%" alt="customer-image"/> <br>  <h1 style="margin-top:10px;">' +
               message +
-              " </p>",
+              " </h1></div>",
             timer: 5000,
           });
         })
@@ -260,7 +273,31 @@ export default {
   },
 };
 </script>
+
+<style lang="css">
+.swal-bg {
+  color: #000000;
+  background: #1d2228;
+  /* background: radial-gradient(ellipse at center, #18380a 0%, #000000 120%); */
+  background-size: 100%;
+  width: 80%;
+  height: 80%;
+}
+.swal-bg .swal2-content {
+  color: white;
+  /* text-shadow: 2px 2px 5px white; */
+}
+</style>
 <style lang="scss" scoped>
+/* .custon-s-popup .swal2-content {
+  color: #fbfbfb;
+}
+ */
+/* .custon-s-popup {
+  border-radius: 8.3125em;
+  background: #162222;
+} */
+
 .card {
   width: 100%;
 }
@@ -269,6 +306,8 @@ export default {
   background: #0f3854;
   background: radial-gradient(ellipse at center, #0a2e38 0%, #000000 70%);
   background-size: 100%;
+
+  //@at-root
 }
 
 .card .dark {
@@ -309,4 +348,7 @@ export default {
     padding: 20px 0 0;
   }
 }
+/*   .customClass {
+    color: #973955;
+  } */
 </style>
