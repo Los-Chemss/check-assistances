@@ -2425,7 +2425,12 @@ __webpack_require__.r(__webpack_exports__);
         var message = null;
         var customer = response.data.customer;
         console.log(customer);
+<<<<<<< HEAD
         var info = (customer.membership ? "Membresia: " + "<b>" + customer.membership.name + "</b>" : "") + (customer.membership.payments && customer.membership.payments[0] ? "<br> Expira el : " + "<b>" + me.formatDate(customer.membership.payments[0].expires_at) + "</b>" : ""); //   me.code = "";
+=======
+        var info = (customer.membership ? "Membresia: " + "<b>" + customer.membership.name + "</b>" : "") + (customer.membership.payments && customer.membership.payments[0] ? "<br> Expira el : " + "<b>" + me.formatDate(customer.membership.payments[0].expires_at) + "</b>" : "");
+        me.code = "";
+>>>>>>> a2293a4a67558beb46cf476061b69ad2c49bcb59
 
         if ("entrada" in response.data) {
           movement = "entrada";

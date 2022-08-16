@@ -167,7 +167,11 @@ export default {
                 "</b>"
               : "");
 
+<<<<<<< HEAD
           //   me.code = "";
+=======
+          me.code = "";
+>>>>>>> a2293a4a67558beb46cf476061b69ad2c49bcb59
           if ("entrada" in response.data) {
             movement = "entrada";
             message = "Bienvenido <b> " + customer.name + "</b><br>" + info;
