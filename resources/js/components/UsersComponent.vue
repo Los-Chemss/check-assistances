@@ -457,7 +457,7 @@ export default {
     getBranch() {
       let me = this;
       axios
-        .get("select-branches")
+        .get("select/branches")
         .then((response) => {
           var respuesta = response.data;
           me.branches = respuesta;

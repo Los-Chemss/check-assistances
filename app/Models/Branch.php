@@ -18,4 +18,16 @@ class Branch extends Model
     {
         return $this->belongsTo(Company::class, 'company_id');
     }
+    public function payments()
+    {
+        return $this->hasMany(Payment::class, 'registered_on_branch_id', 'id');
+    }
+    public function sales()
+    {
+        return $this->hasMany(Sale::class, 'branch_id', 'id');
+    }
+    public function purchases()
+    {
+        return $this->hasMany(Purchase::class, 'branch_id', 'id');
+    }
 }

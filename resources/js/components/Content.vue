@@ -169,7 +169,6 @@ export default {
                 me.formatDate(customer.membership.payments[0].expires_at) +
                 "</b>"
               : "");
-
           me.code = "";
           if ("entrada" in response.data) {
             movement = "entrada";

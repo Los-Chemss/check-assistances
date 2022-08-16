@@ -3,8 +3,6 @@
     Login
 @endsection
 @section('content')
-    {{-- <div class="container-fluid"
-        style="background:url(/{{ env('ASSET_URL') }}images/fondogym.jpg) no-repeat center center; background-size: cover;"> --}}
     <div class=" auth-wrapper d-flex no-block justify-content-center align-items-center"
         style="background:url(/{{ env('ASSET_URL') }}images/fondogym.jpg) no-repeat center center; background-size: cover;">
         <div class="auth-box p-4 bg-white rounded">
@@ -12,8 +10,6 @@
                 <div class="mb-4  text-center mb-4 pb-4 ">
                     <img src="/{{ env('ASSET_URL') }}images\urbanlogo-1024x1024.png" alt="homepage" width="175"
                         class="dark-logo shadow-lg p2 rounded-circle" />
-                    {{-- <img src="/{{ env('ASSET_URL') }}images\immvisas_1080.png" alt="homepage" class="light-logo "
-                            width="160px" /> --}}
                 </div>
                 <!-- Form -->
                 <div class="row">
@@ -54,17 +50,8 @@
                                     <div class="checkbox checkbox-info pt-0">
                                         <input class="material-inputs chk-col-indigot" id="checkbox-signup" type="checkbox"
                                             name="remember" {{ old('remember') ? 'checked' : '' }}>
-                                        <label for="checkbox-signup"> Remember me </label>
+                                        <label for="checkbox-signup"> Recordarme </label>
                                     </div>
-                                    {{-- <div class="ml-auto">
-                                            @if (Route::has('password.request'))
-                                                <a id="to-recover" class="text-muted float-right"
-                                                    href="{{ route('password.request') }}">
-                                                    <i class="fa fa-lock mr-1"></i>
-                                                    {{ __('Forgot Your Password?') }}
-                                                </a>
-                                            @endif
-                                        </div> --}}
                                 </div>
                             </div>
                             <div class="form-group text-center mt-4"

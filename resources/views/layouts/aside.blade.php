@@ -78,6 +78,12 @@
                                     <i data-feather="award" class="feather-icon"></i>
                                     <span class="hide-menu">Membresias</span></a>
                             </li>
+                              <li @click="menu = 10" class="sidebar-item"> <a
+                                    class="sidebar-link waves-effect waves-dark sidebar-link" href="#"
+                                    aria-expanded="false">
+                                    <i data-feather="git-branch" class="feather-icon"></i>
+                                    <span class="hide-menu">Sucursales</span></a>
+                            </li>
                         </ul>
                     </li>
 
@@ -103,6 +109,7 @@
                                     <i data-feather="shopping-bag" class="feather-icon"></i>
                                     <span class="hide-menu">Compras</span></a>
                             </li>
+
                            {{--  <li @click="menu = 10" class="sidebar-item"> <a
                                     class="sidebar-link waves-effect waves-dark sidebar-link" href="#"
                                     aria-expanded="false">

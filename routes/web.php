@@ -70,7 +70,7 @@ Route::middleware(['auth'])->group(function () {
         Route::post('/{id}/delete',  [MembershipController::class, 'destroy']);
     });
 
-    Route::get('select-branches',  [BranchController::class, 'select']);
+
 
     Route::prefix('payments')->group(function () {
         Route::get('/',  [PaymentController::class, 'index']);
@@ -104,6 +104,16 @@ Route::middleware(['auth'])->group(function () {
         Route::post('/{id}', [ProductController::class, 'update']);
         Route::get('/select', [ProductController::class, 'select']);
         Route::post('/{id}/delete', [ProductController::class, 'destroy']);
+    });
+
+    // Route::get('select-branches',  [BranchController::class, 'select']);
+    Route::prefix('branches')->group(function () {
+        Route::get('/', [BranchController::class, 'index']);
+        Route::post('/', [BranchController::class, 'store']);
+        Route::post('/{id}', [BranchController::class, 'update']);
+        Route::get('/select', [BranchController::class, 'select']);
+        Route::post('/{id}/delete', [BranchController::class, 'destroy']);
+        Route::get('/select',  [BranchController::class, 'select']);
     });
 
 

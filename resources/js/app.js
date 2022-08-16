@@ -23,6 +23,7 @@ Vue.component('users-component', require('./components/UsersComponent.vue').defa
 Vue.component('products-component', require('./components/ProductComponent.vue').default);
 Vue.component('sales-component', require('./components/SaleComponent.vue').default);
 Vue.component('purchases-component', require('./components/PurchaseComponent.vue').default);
+Vue.component('branches-component', require('./components/BranchComponent.vue').default);
 
 
 

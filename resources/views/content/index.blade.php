@@ -32,6 +32,9 @@
             <template v-if="menu==9">
                 <purchases-component />
             </template>
+            <template v-if="menu==10">
+                <branches-component />
+            </template>
             {{-- <template v-if="menu==10">
                 Stock
             </template> --}}

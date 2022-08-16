@@ -12,72 +12,100 @@
     <div class="row">
       <div class="col-12">
         <div class="card">
+          <div class="card-header border-bottom shadow-sm mt-2 mb-4">
+            <div class="row">
+              <div class="col-sm-12 col-md-8">
+                <div class="input-group mb-3 dataTables_filter">
+                  <div class="input-group-prepend">
+                    <!--  <span class="input-group-text">$</span> -->
+                    <select
+                      class="input-group-text"
+                      v-model="criterio"
+                      @change="selectCriteria"
+                    >
+                      <optgroup>
+                        <option v-for="criteria in criterions" :value="criteria">
+                          {{ criteria.val }}
+                        </option>
+                      </optgroup>
+                    </select>
+                  </div>
+
+                  <!-- <div v-if="criterio.key === 'between_dates'"> -->
+                  <input
+                    v-if="criterio.key === 'between_dates'"
+                    type="date"
+                    v-model="betweenDates['from']"
+                    class="form-control"
+                    placeholder="22/07/2022"
+                    @keyup.enter="listBranches(1, betweenDates, criterio)"
+                  />
+                  <input
+                    v-if="criterio.key === 'between_dates'"
+                    type="date"
+                    v-model="betweenDates['to']"
+                    class="form-control"
+                    placeholder="22/07/2022"
+                    @keyup.enter="listBranches(1, betweenDates, criterio)"
+                  />
+                  <input
+                    v-else
+                    type="text"
+                    v-model="buscar"
+                    @keyup.enter="listBranches(1, buscar, criterio)"
+                    class="form-control"
+                    :placeholder="
+                      criterio == 'period'
+                        ? '22/07/2022'
+                        : criterio == 'price'
+                        ? '0123'
+                        : 'Benny Juarez'
+                    "
+                  />
+                  <!-- </div> -->
+
+                  <div class="input-group-append">
+                    <button
+                      v-if="criterio.key === 'between_dates'"
+                      type="submit"
+                      @click="listBranches(1, betweenDates, criterio)"
+                      class="btn-sm btn-primary input-group-text"
+                    >
+                      <i class="fa fa-search"></i>
+                    </button>
+                    <button
+                      v-else
+                      type="submit"
+                      @click="listBranches(1, buscar, criterio)"
+                      class="btn-sm btn-primary input-group-text"
+                    >
+                      <i class="fa fa-search"></i>
+                    </button>
+                  </div>
+                  <!--  <div class="input-group-append">
+                      </div> -->
+                </div>
+              </div>
+              <div class="col-sm-6 col-md-4">
+                <button
+                  type="button"
+                  class="btn btn-primary btn-lg fas fa-edit"
+                  @click="openModal('branches', 'store')"
+                  style="float: right"
+                >
+                  Nueva sucursal
+                </button>
+              </div>
+            </div>
+          </div>
           <div class="card-body">
+            <!-- <h4 class="card-title">Memberships</h4> -->
             <div class="table-responsive">
               <div
                 id="col_render_wrapper"
                 class="dataTables_wrapper container-fluid dt-bootstrap4"
               >
-                <div class="row">
-                  <div class="col-sm-12 col-md-6">
-                    <div class="input-group mb-3 dataTables_filter">
-                      <div class="input-group-prepend">
-                        <select
-                          class="input-group-text"
-                          v-model="criterio"
-                          @change="selectCriteria"
-                        >
-                          <optgroup>
-                            <option v-for="criteria in criterions" :value="criteria">
-                              {{ criteria.val }}
-                            </option>
-                          </optgroup>
-                        </select>
-                      </div>
-                      <input
-                        :type="
-                          criterio.key == 'paid_at' || criterio.key == 'expires_at'
-                            ? 'date'
-                            : criterio.key == 'code'
-                            ? 'number'
-                            : criterio.key == 'branch'
-                            ? 'text'
-                            : 'text'
-                        "
-                        v-model="buscar"
-                        @keyup.enter="listPayments(1, buscar, criterio)"
-                        class="form-control"
-                        :placeholder="
-                          criterio.key == 'paid_at' || criterio.key == 'expires_at'
-                            ? '22/07/2022'
-                            : criterio.key == 'customer'
-                            ? 'Nombre o apellidos del cliente'
-                            : criterio.key == 'branch'
-                            ? 'Nombre de sucursal o direccion'
-                            : 'Monthly'
-                        "
-                      />
-                      <div class="input-group-append">
-                        <button
-                          type="submit"
-                          @click="listPayments(1, buscar, criterio)"
-                          class="btn-sm btn-primary input-group-text"
-                        >
-                          <i class="fa fa-search"></i>
-                        </button>
-                      </div>
-                    </div>
-                  </div>
-                  <div class="col-md-6 text-right">
-                    <button
-                      type="button"
-                      class="btn btn-primary btn-lg fas fa-edit"
-                      @click="openModal('payments', 'store')"
-                    >
-                      Nuevo pago
-                    </button>
-                  </div>
-                </div>
+                <!--  -->
                 <div class="row">
                   <div class="col-sm-12">
                     <table
@@ -88,65 +116,64 @@
                       aria-describedby="col_render_info"
                     >
                       <thead>
-                        <tr v-for="(payment, index) in payments" v-if="index < 1">
-                          <th
-                            v-for="(value, key, cIndex) in payment"
-                            v-if="
-                              !(
-                                key === 'customer' ||
-                                key === 'customerId' ||
-                                key === 'membershipId'
-                              )
-                            "
-                          >
+                        <tr v-for="(branch, index) in branches" v-if="index < 1">
+                          <th v-for="(value, key, cIndex) in branch">
                             {{
-                              key === "membership"
-                                ? "Membresia"
-                                : key === "paid_at"
-                                ? "Fecha de pago:"
-                                : key === "expires_at"
-                                ? "Expira El:"
-                                : key === "branch"
+                              key == "division"
                                 ? "Sucursal"
+                                : key === "location"
+                                ? "Direccion"
+                                : key === "payments_count"
+                                ? "Pagos"
+                                : key === "payments_sum"
+                                ? "Suma de pagos"
+                                : key === "sales_count"
+                                ? "Ventas"
+                                : key === "sales_sum"
+                                ? "Suma de ventas"
+                                : key === "purchases_count"
+                                ? "Gastos"
+                                : key === "purchases_sum"
+                                ? "Suma de gastos"
                                 : key === "id"
-                                ? "ID"
-                                : key === "amount"
-                                ? "Monto"
+                                ? "Id"
                                 : ""
                             }}
+
+                            <tr
+                              v-if="['payments', 'sales', 'purchases'].includes(key)"
+                              style="display: flex"
+                            >
+                              <th style="justify-content: left; border: 0px">Cantidad</th>
+                              <th style="justify-content: right; border: 0px">Suma</th>
+                            </tr>
                           </th>
                           <th></th>
                         </tr>
                       </thead>
                       <tbody>
                         <tr
-                          v-for="(payment, index) in payments"
+                          v-for="(branch, index) in branches"
                           v-if="index <= pagination.per_page"
                         >
-                          <td
-                            v-for="(value, key, cIndex) in payment"
-                            max-height="5px"
-                            v-if="
-                              !(
-                                key === 'customer' ||
-                                key === 'customerId' ||
-                                key === 'membershipId'
-                              )
-                            "
-                          >
+                          <td v-for="(value, key, cIndex) in branch" max-height="5px">
                             {{
-                              key === "amount"
+                              [
+                                "payments_count",
+                                "payments_sum",
+                                "sales_count",
+                                "sales_sum",
+                                "purchases_count",
+                                "purchases_sum",
+                              ].includes(key)
                                 ? value.toLocaleString("es-MX")
-                                : key === "paid_at" || key === "expires_at"
-                                ? formatDateToInput(value)
                                 : value
                             }}
-                            <!-- {{ value }} -->
                           </td>
                           <td>
                             <button
                               type="button"
-                              @click="openModal('payments', 'update', payment)"
+                              @click="openModal('branches', 'update', branch)"
                               class="btn btn-warning btn-sm"
                             >
                               <i class="icon-pencil"></i>
@@ -155,42 +182,58 @@
                             <button
                               type="button"
                               class="btn btn-danger btn-sm"
-                              @click="deletePayment(payment.id)"
+                              @click="deleteBranch(branch.id)"
                             >
                               <i class="icon-trash"></i>
                             </button>
+                            <!--   <template v-if="categoria.condicion">
+                              <button
+                                type="button"
+                                class="btn btn-danger btn-sm"
+                                @click="desactivarCategoria(categoria.id)"
+                              >
+                                <i class="icon-trash"></i>
+                              </button>
+                            </template>
+                            <template v-else>
+                              <button
+                                type="button"
+                                class="btn btn-info btn-sm"
+                                @click="activarCategoria(categoria.id)"
+                              >
+                                <i class="icon-check"></i>
+                              </button>
+                            </template> -->
                           </td>
                         </tr>
                       </tbody>
                       <tfoot>
                         <tr></tr>
-                        <tr v-for="(payment, index) in payments" v-if="index < 1">
-                          <th
-                            v-for="(value, key, cIndex) in payment"
-                            v-if="
-                              !(
-                                key === 'customer' ||
-                                key === 'customerId' ||
-                                key === 'membershipId'
-                              )
-                            "
-                          >
+                        <tr v-for="(branch, index) in branches" v-if="index < 1">
+                          <th v-for="(value, key, cIndex) in branch">
                             {{
-                              key === "membership"
-                                ? "Membresia"
-                                : key === "paid_at"
-                                ? "Fecha de pago:"
-                                : key === "expires_at"
-                                ? "Expira El:"
-                                : key === "branch"
+                              key == "division"
                                 ? "Sucursal"
+                                : key === "location"
+                                ? "Direccion"
+                                : key === "payments_count"
+                                ? "Pagos"
+                                : key === "payments_sum"
+                                ? "Suma de pagos"
+                                : key === "sales_count"
+                                ? "Ventas"
+                                : key === "sales_sum"
+                                ? "Suma de ventas"
+                                : key === "purchases_count"
+                                ? "Gastos"
+                                : key === "purchases_sum"
+                                ? "Suma de gastos"
                                 : key === "id"
-                                ? "ID"
-                                : key === "amount"
-                                ? "Monto"
+                                ? "Id"
                                 : ""
                             }}
                           </th>
+
                           <th></th>
                         </tr>
                       </tfoot>
@@ -303,28 +346,36 @@
               <div class="flex flex-wrap -m-2">
                 <form class="">
                   <div class="form-group mb-5">
-                    <label for="paid_at">Paid at</label>
+                    <label for="name">Nombre</label>
                     <input
-                      type="date"
+                      type="text"
                       class="form-control"
-                      id="paid_at"
-                      v-model="paid_at"
+                      id="name"
+                      placeholder="trimestral"
+                      v-model="branch.name"
                     />
                     <!--    <span class="bar"></span> -->
                   </div>
                   <div class="form-group mb-5">
-                    <label for="membership">Membership</label>
-                    <select
-                      class="form-control p-0"
-                      id="membership"
-                      v-model="selectedMembership"
-                      @change="selectMembership"
-                    >
-                      <option></option>
-                      <option v-for="membership in memberships" :value="membership">
-                        {{ membership.name }} | ${{ membership.price }}
-                      </option>
-                    </select>
+                    <label for="price">Precio</label>
+                    <input
+                      type="number"
+                      class="form-control"
+                      id="price"
+                      v-model="branch.price"
+                    />
+                    <!-- <span class="bar"></span> -->
+                  </div>
+                  <div class="form-group mb-5">
+                    <label for="period">Periodo (Duracion en dias)</label>
+                    <input
+                      type="number"
+                      class="form-control"
+                      id="period"
+                      placeholder="90"
+                      v-model="branch.period"
+                    />
+                    <!-- <span class="bar"></span> -->
                   </div>
                 </form>
                 <!--   </div>
@@ -334,20 +385,20 @@
             <!-- form -->
             <div class="modal-footer">
               <button
-                v-if="actionType == 1"
+                v-if="actionType === 1"
                 type="button"
                 class="btn btn-primary fas fa-save"
-                @click="savePayment"
+                @click="saveMembership"
               >
-                Save
+                Guardar
               </button>
               <button
-                v-if="actionType == 2"
+                v-if="actionType === 2"
                 type="button"
                 class="btn btn-primary fas fa-save"
-                @click="updatePayment"
+                @click="updateMembership"
               >
-                Update
+                Actualizar
               </button>
               <button
                 @click="closeModal()"
@@ -368,24 +419,23 @@
 </template>
 <script>
 export default {
-  props: ["customerInfo"],
   data() {
     return {
       loading: false,
-      payments: [],
+      branches: [],
       user: {},
-      memberships: [],
-      customers: [],
       modal: "",
       modalTitle: "",
       actionType: 0,
       errors: null,
-      paid_at: null,
-      expires_at: null,
-      amount: 0,
-      membership: null,
+      branch: {
+        division: null,
+        location: null,
+        company_id: null,
+        id: null,
+      },
+      //   branch: null,
       selectedMembership: null,
-
       pagination: {
         total: 0,
         current_page: 0,
@@ -395,15 +445,14 @@ export default {
         to: 0,
       },
       offset: 3,
-      criterio: { key: "paid_at", val: "Pagado el " },
+      criterio: { key: "division", val: "Sucursal" },
       buscar: "",
-      payment_id: null,
-      showPayments: 10,
+      betweenDates: { from: null, to: null },
+      showMemberships: 10,
       criterions: [
-        { key: "paid_at", val: "Pagado el " },
-        { key: "expires_at", val: "Expira el" },
-        { key: "membership", val: "Membresia" },
-        { key: "branch", val: "Sucursal" },
+        { key: "division", val: "Sucursal" },
+        { key: "location", val: "Direccion" },
+        { key: "between_dates", val: "Entre que fechas (Desde -> Hasta)" },
       ],
     };
   },
@@ -417,6 +466,7 @@ export default {
       if (!this.pagination.to) {
         return [];
       }
+
       var from = this.pagination.current_page - this.offset;
       if (from < 1) {
         from = 1;
@@ -426,6 +476,7 @@ export default {
       if (to >= this.pagination.last_page) {
         to = this.pagination.last_page;
       }
+
       var pagesArray = [];
       while (from <= to) {
         pagesArray.push(from);
@@ -433,29 +484,36 @@ export default {
       }
       return pagesArray;
     },
-    // filter: this.listPayments(this.page, this.buscar, this.criterio),
+
+    // filter: this.getMemberships(this.page, this.buscar, this.criterio),
   },
 
   methods: {
-    listPayments(page, buscar, criterio) {
+    listBranches(page, buscar, criterio) {
+      console.log({ buscar });
+      console.log(buscar);
+      //   console.log(this.betweenDates);
+      /*    if (this.betweenDates["from"] != null || this.betweenDates["to"] != null) {
+        buscar[this.betweenDates];
+      }
+      console.log(buscar); */
       let me = this;
-      console.log({ info: me.customerInfo.id });
-      me.loading = true;
+      //   me.loading = true;
       let url =
-        "customers/" +
-        me.customerInfo.id +
-        "/payments?page=" +
+        "branches?page=" +
         page +
         "&buscar=" +
-        buscar +
+        JSON.stringify(buscar) +
         "&criterio=" +
         criterio.key;
       axios
         .get(url)
         .then((response) => {
+          console.log(response);
+          //   return;
           var respuesta = response.data;
-          //   console.log(respuesta);
-          me.payments = respuesta.payments.data;
+          console.log(respuesta);
+          me.branches = respuesta.branches;
           me.pagination = respuesta.pagination;
         })
         .catch((error) => {
@@ -463,33 +521,6 @@ export default {
         })
         .finally(() => (me.loading = false));
     },
-
-    getMemberships() {
-      let me = this;
-      axios
-        .get("memberships/select")
-        .then((response) => {
-          //   console.log(response);
-          var respuesta = response.data;
-          me.memberships = respuesta;
-        })
-        .catch((error) => {
-          console.log(error);
-        });
-    },
-    /*   getCustomers() {
-      let me = this;
-      axios
-        .get("customers/select")
-        .then((response) => {
-          //   console.log(response);
-          var respuesta = response.data;
-          me.customers = respuesta;
-        })
-        .catch((error) => {
-          console.log(error);
-        });
-    }, */
 
     selectCriteria() {
       this.buscar = "";
@@ -504,75 +535,71 @@ export default {
           JSON.stringify(event.target.options[event.target.options.selectedIndex])
         )._value;
       }
-      this.showPayments = newVal;
+      this.showMemberships = newVal;
     },
 
-    savePayment() {
+    saveMembership() {
       let me = this;
       let request = {
-        paid_at: me.paid_at,
-        membership: me.selectedMembership.id,
-        customer: me.customerInfo.id,
+        name: me.branch.name,
+        price: me.branch.price,
+        period: me.branch.period,
       };
       axios
-        .post("payments/create", request)
+        .post("branches", request)
         .then((response) => {
-          console.log(response);
-          //   return;
-          let respuesta = response.data;
-          let message = "";
-          /*   "Ha pagado una membresia " +
-            respuesta.membership.name +
-            " con una duracion de " +
-            respuesta.membership.name +
-            " dias. Y expira el " +
-            respuesta.payment.expires_at; */
+          let message =
+            response.data != undefined
+              ? response.data
+              : "Se ha agregado un nuevo plan de sucursal";
           Swal.fire({
             type: "success",
-            title: "Registro  de pago satisfactorio",
+            title: "Registro  de sucursal satisfactorio",
             text: message,
-            timer: 3000,
+            timer: 5000,
           });
-          me.listPayments(me.page, me.buscar, me.criterio);
+          me.listBranches(me.page, me.buscar, me.criterio);
+        })
+        .catch((error) => {
+          console.log(error);
+          let message = me.swalErrorMessage(error.response.data.errors);
+          Swal.fire({
+            type: "error",
+            title: "No se pudo crear el registro",
+            html: message,
+            timer: 8000,
+          });
+        });
+      this.closeModal();
+    },
+
+    updateMembership() {
+      let me = this;
+      let request = {
+        name: me.branch.name,
+        price: me.branch.price,
+        period: me.branch.period,
+        id: me.branch.id,
+      };
+      axios
+        .post("branches/" + me.branch.id, request)
+        .then((response) => {
+          console.log(response);
+          let message = "Se ha actualizado un  plan de sucursal";
+          Swal.fire({
+            type: "success",
+            title: "Actualizacion  de sucursal satisfactorio",
+            text: message,
+            timer: 5000,
+          });
+          me.listBranches(me.page, me.buscar, me.criterio);
         })
         .catch((error) => {
           let message = me.swalErrorMessage(error.response.data.errors);
           Swal.fire({
             type: "error",
-            title: "No se pudo registrar el pago",
-            text: message,
-            timer: 8000,
-          });
-          console.table(error);
-        });
-      this.closeModal();
-    },
-
-    updatePayment() {
-      let me = this;
-      let request = {
-        paid_at: me.paid_at,
-        membership: me.selectedMembership.id,
-        customer: me.customerInfo.id,
-        id: me.payment_id,
-      };
-      axios
-        .post("payments/update/" + me.payment_id, request)
-        .then((response) => {
-          let respuesta = response.data;
-          Swal.fire({
-            type: "success",
-            title: "Pago actualizado",
-            text: "Pago actualizado exitosamente",
-            timer: 8000,
-          });
-          me.listPayments(me.page, me.buscar, me.criterio);
-        })
-        .catch((error) => {
-          Swal.fire({
-            type: "error",
-            title: "No actualizado",
-            text: "No se pudo guardar cambios :(",
+            title: "No se pudo actualizar el registro",
+            html: message,
             timer: 8000,
           });
           console.table(error);
@@ -589,6 +616,7 @@ export default {
           JSON.stringify(event.target.options[event.target.options.selectedIndex])
         )._value;
       }
+      console.log(newVal);
       this.selectedMembership = newVal;
     },
 
@@ -596,34 +624,33 @@ export default {
       this.modal = 0;
       this.title = "";
       this.errors = {};
-      this.listPayments(this.pagination.current_page, this.buscar, this.criterio);
+      this.listBranches(1, this.buscar, this.criterio);
+      //   this.userFiles();//reload component
     },
 
-    async openModal(model, action, data = []) {
+    openModal(model, action, data = []) {
       switch (model) {
-        case "payments": {
+        case "branches": {
           switch (action) {
             case "store": {
               this.modal = 1;
-              this.modalTitle = "Nuevo pago";
+              this.modalTitle = "Crear sucursal";
               this.actionType = 1;
-              this.paid_at = "";
-              this.selectedMembership = "";
+              this.name = "";
+              this.price = "";
+              this.period = "";
               break;
             }
             case "update": {
-              let mem = null;
-              this.memberships.forEach((m) => {
-                if (m.id === data.membershipId) {
-                  mem = m;
-                }
-              });
+              console.log(data);
+              console.log(this.branch);
               this.modal = 1;
-              this.modalTitle = "Editar pago";
+              this.modalTitle = "Actualizar sucursal";
               this.actionType = 2;
-              this.paid_at = new Date(data["paid_at"]).toISOString().slice(0, 10);
-              this.selectedMembership = mem;
-              this.payment_id = data.id;
+              this.branch.name = data.name;
+              this.branch.price = data.price;
+              this.branch.period = data.period;
+              this.branch.id = data.id;
               break;
             }
           }
@@ -631,7 +658,7 @@ export default {
       }
     },
 
-    deletePayment(payment) {
+    deleteBranch(branch) {
       Swal.fire({
         title: "Esta seguro que desea eliminar este objeto?",
         type: "warning",
@@ -648,25 +675,27 @@ export default {
         if (result.value) {
           let me = this;
           axios
-            .post("payments/delete/" + payment)
+            .post("branches/" + branch + "/delete")
             .then((response) => {
+              console.log(response);
               Swal.fire({
                 type: "success",
-                title: "Registro  eliminado con éxito",
-                text: "El pago ha sido eliminado !",
-                timer: 5000,
+                title: "Registro eliminado",
+                text: "Eliminado satisfactoria mente",
+                timer: 8000,
               });
-              me.listPayments(me.page, me.buscar, me.criterio);
+              me.listBranches(me.page, me.buscar, me.criterio);
             })
             .catch((error) => {
               Swal.fire({
                 type: "error",
-                title: "No pudo ser eliminado",
-                text: "Verifique si hay datos que dependan de éste",
-                timer: 5000,
+                title: "No se pudo eliminar el registro",
+                text: "El registro no pudo ser eliminado",
+                timer: 8000,
               });
               console.log(error);
             });
+          //
         } else if (
           // Read more about handling dismissals
           result.dismiss === swal.DismissReason.cancel
@@ -693,7 +722,7 @@ export default {
       //Actualiza la página actual
       me.pagination.current_page = page;
       //Envia la petición para visualizar la data de esa página
-      me.listPayments(page, buscar, criterio);
+      me.listBranches(page, buscar, criterio);
     },
 
     swalErrorMessage(errors) {
@@ -709,9 +738,7 @@ export default {
   },
 
   mounted() {
-    this.listPayments(1, this.buscar, this.criterio);
-    this.getMemberships();
-    // this.getCustomers();
+    this.listBranches(1, this.buscar, this.criterio);
   },
 };
 </script>
