@@ -85,19 +85,27 @@
                       <table>
                         <tr>
                           <td>
-                            <span class="badge badge-danger rounded-pill"
+                            <!--   <span class="badge badge-danger rounded-pill"
                               ><i class="fas fa-arrow-right"></i
-                            ></span>
+                            ></span> -->
+                            <div class="red-triangle"></div>
                           </td>
                           <td>Expirado</td>
                         </tr>
                         <tr>
                           <td>
-                            <span class="badge badge-warning rounded-pill"
+                            <!--  <span class="badge badge-warning rounded-pill"
                               ><i class="fas fa-arrow-right"></i
-                            ></span>
+                            ></span> -->
+                            <div class="yellow-triangle"></div>
                           </td>
                           <td>Expira pronto (7 dias o menos)</td>
+                        </tr>
+                        <tr>
+                          <td>
+                            <div class="green-triangle"></div>
+                          </td>
+                          <td>Activo</td>
                         </tr>
                       </table>
                     </div>
@@ -113,6 +121,7 @@
                       >
                         <thead>
                           <tr v-for="(customer, index) in customers" v-if="index < 1">
+                            <th></th>
                             <th
                               v-for="(value, key, cIndex) in customer"
                               v-if="
@@ -156,16 +165,35 @@
                           <tr
                             v-for="(customer, index) in customers"
                             v-if="index <= pagination.per_page"
-                            :class="
+                          >
+                            <!--   :class="
                               Date.now() > cusDate(customer['expires at']) ||
                               !customer['expires at']
-                                ? 'bg-danger'
+                                ? 'red-triangle'
                                 : expiresAtWeek(customer['expires at'])
-                                ? 'bg-warning'
-                                : 'bg-success'
+                                ? 'yellow-triangle'
+                                : 'green-triangle'
                             "
-                            style="color:black;"
-                          >
+                            :style="
+                              Date.now() > cusDate(customer['expires at']) ||
+                              !customer['expires at']
+                                ? ''
+                                : expiresAtWeek(customer['expires at'])
+                                ? ''
+                                : 'background-color:green'
+                            " -->
+                            <td>
+                              <div
+                                :class="
+                                  Date.now() > cusDate(customer['expires at']) ||
+                                  !customer['expires at']
+                                    ? 'red-triangle'
+                                    : expiresAtWeek(customer['expires at'])
+                                    ? 'yellow-triangle'
+                                    : 'green-triangle'
+                                "
+                              ></div>
+                            </td>
                             <td
                               v-for="(value, key, cIndex) in customer"
                               max-height="5px"
@@ -179,7 +207,14 @@
                                 )
                               "
                             >
-                              {{  key === "paid_at" || key === "expires_at"? formatDateToInput(value):value }}
+                              <!-- <div> -->
+                              {{
+                                key === "paid_at" ||
+                                (key === "expires_at" && !key === "id")
+                                  ? formatDateToInput(value)
+                                  : value
+                              }}
+                              <!--   </div> -->
                             </td>
 
                             <td>
@@ -262,8 +297,8 @@
                         role="status"
                         aria-live="polite"
                       >
-                        Showing {{ pagination.current_page }} to
-                        {{ pagination.per_page }} of {{ pagination.total }} entries
+                        Mostrando {{ pagination.current_page }} a
+                        {{ pagination.per_page }} de {{ pagination.total }} refistros
                       </div>
                     </div>
                     <div class="col-sm-12 col-md-7">
@@ -1252,9 +1287,41 @@ export default {
   },
 };
 </script>
-<style scoped>
+<style scoped lang="scss">
 .dz-max-files-reached {
   background-color: red;
 }
-
+.green-triangle {
+  width: 0;
+  height: 0;
+  border: 15px solid transparent;
+  border-top: 0;
+  border-bottom: 30px solid green;
+  transform: rotate(90deg);
+  position: relative;
+  top: -4px;
+  left: -4px;
+}
+.yellow-triangle {
+  width: 0;
+  height: 0;
+  border: 15px solid transparent;
+  border-top: 0;
+  border-bottom: 30px solid #ffcc00;
+  transform: rotate(90deg);
+  position: relative;
+  top: -4px;
+  left: -4px;
+}
+.red-triangle {
+  width: 0;
+  height: 0;
+  border: 15px solid transparent;
+  border-top: 0;
+  border-bottom: 30px solid #ff1a1a;
+  transform: rotate(90deg);
+  position: relative;
+  top: -4px;
+  left: -4px;
+}
 </style>

@@ -56,7 +56,7 @@
       </button>
     </div>
 
-    <div v-if="isPhotoTaken && isCameraOpen" class="camera-download">
+ <!--    <div v-if="isPhotoTaken && isCameraOpen" class="camera-download">
       <a
         id="downloadPhoto"
         download="my-photo.jpg"
@@ -66,7 +66,7 @@
       >
         Usar foto
       </a>
-    </div>
+    </div> -->
   </div>
 </template>
 <script>
