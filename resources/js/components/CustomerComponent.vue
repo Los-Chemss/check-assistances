@@ -41,7 +41,7 @@
                           >
                             <optgroup>
                               <option v-for="criteria in criterions" :value="criteria">
-                                {{ criteria }}
+                                {{ criteria.val }}
                               </option>
                             </optgroup>
                           </select>
@@ -50,21 +50,21 @@
                           :type="
                             criterio == 'income'
                               ? 'date'
-                              : criterio == 'code'
+                              : criterio.key == 'code'
                               ? 'number'
-                              : criterio == 'branch'
+                              : criterio.key == 'branch'
                               ? 'text'
                               : 'text'
                           "
                           v-model="buscar"
-                          @keyup.enter="getCustomers(1, buscar, criterio)"
+                          @keyup.enter="listCustomers(1, buscar, criterio)"
                           class="form-control"
                           :placeholder="
                             criterio == 'income'
                               ? '22/07/2022'
-                              : criterio == 'code'
+                              : criterio.key == 'code'
                               ? '0123'
-                              : criterio == 'branch'
+                              : criterio.key == 'branch'
                               ? 'Nombre de sucursal o direccion'
                               : 'Nombre o apellidos del cliente'
                           "
@@ -72,7 +72,7 @@
                         <div class="input-group-append">
                           <button
                             type="submit"
-                            @click="getCustomers(1, buscar, criterio)"
+                            @click="listCustomers(1, buscar, criterio)"
                             class="btn-sm btn-primary input-group-text"
                           >
                             <i class="fa fa-search"></i>
@@ -97,7 +97,7 @@
                               ><i class="fas fa-arrow-right"></i
                             ></span>
                           </td>
-                          <td>Expira pronto (15 dias o menos)</td>
+                          <td>Expira pronto (7 dias o menos)</td>
                         </tr>
                       </table>
                     </div>
@@ -156,6 +156,15 @@
                           <tr
                             v-for="(customer, index) in customers"
                             v-if="index <= pagination.per_page"
+                            :class="
+                              Date.now() > cusDate(customer['expires at']) ||
+                              !customer['expires at']
+                                ? 'bg-danger'
+                                : expiresAtWeek(customer['expires at'])
+                                ? 'bg-warning'
+                                : 'bg-success'
+                            "
+                            style="color:black;"
                           >
                             <td
                               v-for="(value, key, cIndex) in customer"
@@ -168,14 +177,6 @@
                                   key === 'phone' ||
                                   key === 'membershipId'
                                 )
-                              "
-                              :class="
-                                Date.now() > cusDate(customer['expires at']) ||
-                                !customer['expires at']
-                                  ? 'bg-danger'
-                                  : Date.now() > cusCloseDate(customer['expires at'])
-                                  ? 'bg-warning'
-                                  : ''
                               "
                             >
                               {{ value }}
@@ -197,7 +198,7 @@
                               >
                                 <i class="icon-trash"></i>
                               </button>
-                               &nbsp;
+                              &nbsp;
                               <button
                                 type="button"
                                 class="btn btn-info btn-sm"
@@ -727,7 +728,12 @@ export default {
       buscar: "",
 
       showCustomers: 10,
-      criterions: ["name", "code", "income", "branch"],
+      criterions: [
+        { key: "name", val: "Nombre" },
+        { key: "code", val: "Codigo" },
+        { key: "income", val: "Ingreso" },
+        { key: "branch", val: "Sucursal" },
+      ],
       customerInfo: {
         name: null,
         image: null,
@@ -783,14 +789,15 @@ export default {
 
     sendMessage: async function (files, xhr, formData) {
       formData.append("id", this.customerId);
-    //   formData.append("record_method", this.recordMethod);
+      //   formData.append("record_method", this.recordMethod);
     },
 
-    getCustomers(page, buscar, criterio) {
+    listCustomers(page, buscar, criterio) {
       let me = this;
       //   me.loading = true;
       me.template = 0;
-      let url = "customers?page=" + page + "&buscar=" + buscar + "&criterio=" + criterio;
+      let url =
+        "customers?page=" + page + "&buscar=" + buscar + "&criterio=" + criterio.key;
       axios
         .get(url)
         .then((response) => {
@@ -802,20 +809,40 @@ export default {
           console.log(error);
         })
         .finally(() => (me.loading = false));
+      console.log(
+        // { CloseDate: new Date(this.cusCloseDate("2022-08-20")) },
+        { 2: new Date("2022-08-20") }
+      );
     },
 
     cusDate(value) {
       if (value) {
         return new Date(value);
       }
-    },
+    } /*
     cusCloseDate(value) {
       if (value != null) {
         var date = new Date();
+        // console.log(this.formatDateToInput(date));
         if (date != null) {
-          return date.setDate(date.getDate() + 15);
+          return date.setDate(date.getDate() + 7);
         }
       }
+    }, */,
+
+    expiresAtWeek(value) {
+      let d1 = new Date();
+      let d2 = new Date(value);
+      //   console.log({ d1: this.formatDateToInput(d1) }, { d2: this.formatDateToInput(d2) });
+      let d3 = d1;
+      let d4 = new Date(d3.setDate(d3.getDate() + 7));
+      /*
+
+      console.log({ d1: this.formatDateToInput(d1) }, { d2: this.formatDateToInput(d2) });
+      console.log(d4.getTime() > d2.getTime() ? "true" : "false"); */
+      return d4.getTime() > d2.getTime() ? 1 : 0;
+
+      //   var same = d1.getTime() === d2.getTime();
     },
 
     getMemberships() {
@@ -878,7 +905,7 @@ export default {
             timer: 3000,
           });
           me.closeModal();
-          me.getCustomers(me.page, me.buscar, me.criterio);
+          me.listCustomers(me.page, me.buscar, me.criterio);
         })
         .catch((error) => {
           console.table(error);
@@ -920,7 +947,7 @@ export default {
             text: "Cliente actualizado con exito",
             timer: 3000,
           });
-          me.getCustomers(me.page, me.buscar, me.criterio);
+          me.listCustomers(me.page, me.buscar, me.criterio);
           console.log(response);
           me.closeModal();
         })
@@ -1063,7 +1090,7 @@ export default {
                   text: "eliminado correcta mente",
                   timer: 3000,
                 });
-                me.getCustomers(me.page, me.buscar, me.criterio);
+                me.listCustomers(me.page, me.buscar, me.criterio);
               })
               .catch((error) => {
                 console.log(error);
@@ -1105,13 +1132,13 @@ export default {
       //Actualiza la página actual
       me.pagination.current_page = page;
       //Envia la petición para visualizar la data de esa página
-      me.getCustomers(page, buscar, criterio);
+      me.listCustomers(page, buscar, criterio);
     },
 
     backToList() {
       let me = this;
       me.template = 0;
-      me.getCustomers(1, this.buscar, this.criterio);
+      me.listCustomers(1, this.buscar, this.criterio);
     },
 
     swalErrorMessage(errors) {
@@ -1153,11 +1180,11 @@ export default {
       }
       return pagesArray;
     },
-    // filter: this.getCustomers(this.page, this.buscar, this.criterio),
+    // filter: this.listCustomers(this.page, this.buscar, this.criterio),
   },
 
   mounted() {
-    this.getCustomers(1, this.buscar, this.criterio);
+    this.listCustomers(1, this.buscar, this.criterio);
     this.getMemberships();
   },
 };
@@ -1166,4 +1193,5 @@ export default {
 .dz-max-files-reached {
   background-color: red;
 }
+
 </style>
