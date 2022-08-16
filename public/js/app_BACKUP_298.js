@@ -2357,162 +2357,9 @@ __webpack_require__.r(__webpack_exports__);
 /*!**************************************************************************************************************************************************************************************************!*\
   !*** ./node_modules/babel-loader/lib/index.js??clonedRuleSet-5.use[0]!./node_modules/vue-loader/lib/index.js??vue-loader-options!./resources/js/components/Content.vue?vue&type=script&lang=js& ***!
   \**************************************************************************************************************************************************************************************************/
-/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+/***/ (() => {
 
-"use strict";
-__webpack_require__.r(__webpack_exports__);
-/* harmony export */ __webpack_require__.d(__webpack_exports__, {
-/* harmony export */   "default": () => (__WEBPACK_DEFAULT_EXPORT__)
-/* harmony export */ });
-/* harmony import */ var _DigitalClock_vue__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./DigitalClock.vue */ "./resources/js/components/DigitalClock.vue");
-/* provided dependency */ var process = __webpack_require__(/*! process/browser.js */ "./node_modules/process/browser.js");
-// https://codepen.io/gau/pen/LjQwGp
-
-/* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = ({
-  components: {
-    DigitalClock: _DigitalClock_vue__WEBPACK_IMPORTED_MODULE_0__["default"]
-  },
-  data: function data() {
-    return {
-      appEnv: process.env.MIX_APP_ENV,
-      email: "",
-      name: "",
-      last_name: "",
-      requiredBeAuth: false,
-      loading: false,
-      user: {},
-      summary: [],
-      Factors: [],
-      scores: null,
-      FactorsWithScores: [],
-      maritialStatusChanged: null,
-      scennariosCopies: [],
-      factorsWithSubfactors: [],
-      reloadAt: null,
-      authenticated: false,
-      code: null,
-      time: "",
-      date: "",
-      branches: [],
-      branch: null,
-      selectedBranch: null,
-      fullScreen: 0
-    };
-  },
-  created: function created() {
-    if (window.Laravel.user) {
-      this.email = window.Laravel.user.email;
-      this.name = window.Laravel.user.name;
-      this.last_name = window.Laravel.user.last_name;
-      this.authenticated = true;
-      this.branch = window.Laravel.user.branch;
-    } else {
-      this.authenticated = false;
-    }
-  },
-  mounted: function mounted() {
-    document.getElementById("code").focus(); // console.log(process.env);
-  },
-  methods: {
-    assistance: function assistance() {
-      var me = this;
-      axios.post("api/assistances", {
-        branch: me.branch.id,
-        code: me.code
-      }).then(function (response) {
-        console.log(response);
-        var movement = null;
-        var message = null;
-        var customer = response.data.customer;
-        console.log(customer);
-        var info = (customer.membership ? "Membresia: " + "<b>" + customer.membership.name + "</b>" : "") + (customer.membership.payments && customer.membership.payments[0] ? "<br> Expira el : " + "<b>" + me.formatDate(customer.membership.payments[0].expires_at) + "</b>" : ""); //   me.code = "";
-
-        if ("entrada" in response.data) {
-          movement = "entrada";
-          message = "Bienvenido <b> " + customer.name + "</b><br>" + info;
-        }
-
-        if ("salida" in response.data) {
-          movement = "salida";
-          message = "Gracias por asistir :) " + customer.name + info;
-        }
-
-        var imgPath = me.appEnv === "local" ? "/storage/" + customer.image : "/storage/app/public/" + customer.image;
-        var imgSrc = imgPath != null ? imgPath : "https://placekitten.com/150/150";
-        console.log(imgSrc);
-        Swal.fire({
-          type: "success",
-          title: "Registro  de " + movement + " satisfactorio",
-          // text: message,
-          target: document.getElementById("checkCard"),
-          html: '<img src="' + imgSrc + '" class="img-fluid rounded-circle shadow-sm" style="width:100px; height:100px;" alt="customer-image"/> <br>  <p>' + message + " </p>",
-          timer: 5000
-        });
-      })["catch"](function (error) {
-        console.table(error);
-
-        if (error.response.status === 404) {
-          Swal.fire({
-            type: "error",
-            title: "Codigo invalido",
-            text: "El codigo es invalido",
-            timer: 4000,
-            target: document.getElementById("checkCard")
-          });
-        }
-      })["finally"](function () {
-        return me.code = "";
-      });
-    },
-    openFullscreen: function openFullscreen() {
-      var me = this;
-      var elem = document.getElementById("checkCard");
-      document.getElementById("code").focus();
-      me.fullScreen = 1;
-
-      if (elem.requestFullscreen) {
-        elem.requestFullscreen();
-      } else if (elem.webkitRequestFullscreen) {
-        /* Safari */
-        elem.webkitRequestFullscreen();
-      } else if (elem.msRequestFullscreen) {
-        /* IE11 */
-        elem.msRequestFullscreen();
-      }
-    },
-    closeFullscreen: function closeFullscreen() {
-      var me = this;
-      document.getElementById("code").focus();
-      me.fullScreen = 0;
-
-      if (document.exitFullscreen) {
-        document.exitFullscreen();
-      } else if (document.webkitExitFullscreen) {
-        /* Safari */
-        document.webkitExitFullscreen();
-      } else if (document.msExitFullscreen) {
-        /* IE11 */
-        document.msExitFullscreen();
-      }
-    },
-    formatDate: function formatDate(date) {
-      var d = new Date(date);
-      var month = (d.getMonth() + 1).toString();
-      var day = d.getDate().toString();
-      var year = d.getFullYear();
-
-      if (month.length < 2) {
-        month = "0" + month;
-      }
-
-      if (day.length < 2) {
-        day = "0" + day;
-      }
-
-      return [year, month, day].join("-");
-    }
-  }
-});
+throw new Error("Module build failed (from ./node_modules/babel-loader/lib/index.js):\nSyntaxError: C:\\Users\\Heriberto\\Documents\\Development\\php\\check-assistances\\resources\\js\\components\\Content.vue: Unexpected token (77:0)\n\n\u001b[0m \u001b[90m 75 |\u001b[39m               \u001b[33m:\u001b[39m \u001b[32m\"\"\u001b[39m)\u001b[33m;\u001b[39m\u001b[0m\n\u001b[0m \u001b[90m 76 |\u001b[39m\u001b[0m\n\u001b[0m\u001b[31m\u001b[1m>\u001b[22m\u001b[39m\u001b[90m 77 |\u001b[39m \u001b[33m<<\u001b[39m\u001b[33m<<\u001b[39m\u001b[33m<<\u001b[39m\u001b[33m<\u001b[39m \u001b[33mHEAD\u001b[39m\u001b[0m\n\u001b[0m \u001b[90m    |\u001b[39m \u001b[31m\u001b[1m^\u001b[22m\u001b[39m\u001b[0m\n\u001b[0m \u001b[90m 78 |\u001b[39m \u001b[33m===\u001b[39m\u001b[33m===\u001b[39m\u001b[33m=\u001b[39m\u001b[0m\n\u001b[0m \u001b[90m 79 |\u001b[39m           \u001b[90m//   me.code = \"\";\u001b[39m\u001b[0m\n\u001b[0m \u001b[90m 80 |\u001b[39m \u001b[33m>>>\u001b[39m\u001b[33m>>>\u001b[39m\u001b[33m>\u001b[39m localCrash\u001b[0m\n    at instantiate (C:\\Users\\Heriberto\\Documents\\Development\\php\\check-assistances\\node_modules\\@babel\\parser\\lib\\index.js:72:32)\n    at constructor (C:\\Users\\Heriberto\\Documents\\Development\\php\\check-assistances\\node_modules\\@babel\\parser\\lib\\index.js:359:12)\n    at Parser.raise (C:\\Users\\Heriberto\\Documents\\Development\\php\\check-assistances\\node_modules\\@babel\\parser\\lib\\index.js:3339:19)\n    at Parser.unexpected (C:\\Users\\Heriberto\\Documents\\Development\\php\\check-assistances\\node_modules\\@babel\\parser\\lib\\index.js:3377:16)\n    at Parser.parseExprAtom (C:\\Users\\Heriberto\\Documents\\Development\\php\\check-assistances\\node_modules\\@babel\\parser\\lib\\index.js:13123:22)\n    at Parser.parseExprSubscripts (C:\\Users\\Heriberto\\Documents\\Development\\php\\check-assistances\\node_modules\\@babel\\parser\\lib\\index.js:12648:23)\n    at Parser.parseUpdate (C:\\Users\\Heriberto\\Documents\\Development\\php\\check-assistances\\node_modules\\@babel\\parser\\lib\\index.js:12627:21)\n    at Parser.parseMaybeUnary (C:\\Users\\Heriberto\\Documents\\Development\\php\\check-assistances\\node_modules\\@babel\\parser\\lib\\index.js:12598:23)\n    at Parser.parseMaybeUnaryOrPrivate (C:\\Users\\Heriberto\\Documents\\Development\\php\\check-assistances\\node_modules\\@babel\\parser\\lib\\index.js:12392:61)\n    at Parser.parseExprOps (C:\\Users\\Heriberto\\Documents\\Development\\php\\check-assistances\\node_modules\\@babel\\parser\\lib\\index.js:12399:23)");
 
 /***/ }),
 
@@ -3084,53 +2931,6 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
   mounted: function mounted() {
     this.getCustomers(1, this.buscar, this.criterio);
     this.getMemberships();
-  }
-});
-
-/***/ }),
-
-/***/ "./node_modules/babel-loader/lib/index.js??clonedRuleSet-5.use[0]!./node_modules/vue-loader/lib/index.js??vue-loader-options!./resources/js/components/DigitalClock.vue?vue&type=script&lang=js&":
-/*!*******************************************************************************************************************************************************************************************************!*\
-  !*** ./node_modules/babel-loader/lib/index.js??clonedRuleSet-5.use[0]!./node_modules/vue-loader/lib/index.js??vue-loader-options!./resources/js/components/DigitalClock.vue?vue&type=script&lang=js& ***!
-  \*******************************************************************************************************************************************************************************************************/
-/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
-
-"use strict";
-__webpack_require__.r(__webpack_exports__);
-/* harmony export */ __webpack_require__.d(__webpack_exports__, {
-/* harmony export */   "default": () => (__WEBPACK_DEFAULT_EXPORT__)
-/* harmony export */ });
-/* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = ({
-  data: function data() {
-    return {
-      clock: {
-        time: "",
-        date: ""
-      },
-      //   week: ["SUN", "MON", "TUE", "WED", "THU", "FRI", "SAT"],
-      week: ["DOM", "LUN", "MAR", "MIE", "JUE", "VIE", "SAB"],
-      timerID: setInterval(this.updateTime, 1000)
-    };
-  },
-  created: function created() {
-    this.updateTime();
-  },
-  methods: {
-    updateTime: function updateTime() {
-      var me = this;
-      var cd = new Date();
-      me.clock.time = me.zeroPadding(cd.getHours(), 2) + ":" + me.zeroPadding(cd.getMinutes(), 2) + ":" + me.zeroPadding(cd.getSeconds(), 2);
-      me.clock.date = me.zeroPadding(cd.getFullYear(), 4) + "-" + me.zeroPadding(cd.getMonth() + 1, 2) + "-" + me.zeroPadding(cd.getDate(), 2) + " " + me.week[cd.getDay()];
-    },
-    zeroPadding: function zeroPadding(num, digit) {
-      var zero = "";
-
-      for (var i = 0; i < digit; i++) {
-        zero += "0";
-      }
-
-      return (zero + num).slice(-digit);
-    }
   }
 });
 
@@ -7500,41 +7300,6 @@ render._withStripped = true;
 
 /***/ }),
 
-/***/ "./node_modules/babel-loader/lib/index.js??clonedRuleSet-5.use[0]!./node_modules/vue-loader/lib/loaders/templateLoader.js??ruleSet[1].rules[2]!./node_modules/vue-loader/lib/index.js??vue-loader-options!./resources/js/components/DigitalClock.vue?vue&type=template&id=4c9825c1&scoped=true&":
-/*!******************************************************************************************************************************************************************************************************************************************************************************************************!*\
-  !*** ./node_modules/babel-loader/lib/index.js??clonedRuleSet-5.use[0]!./node_modules/vue-loader/lib/loaders/templateLoader.js??ruleSet[1].rules[2]!./node_modules/vue-loader/lib/index.js??vue-loader-options!./resources/js/components/DigitalClock.vue?vue&type=template&id=4c9825c1&scoped=true& ***!
-  \******************************************************************************************************************************************************************************************************************************************************************************************************/
-/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
-
-"use strict";
-__webpack_require__.r(__webpack_exports__);
-/* harmony export */ __webpack_require__.d(__webpack_exports__, {
-/* harmony export */   "render": () => (/* binding */ render),
-/* harmony export */   "staticRenderFns": () => (/* binding */ staticRenderFns)
-/* harmony export */ });
-var render = function render() {
-  var _vm = this,
-      _c = _vm._self._c;
-
-  return _c("div", {
-    staticClass: "clock-body shadow-lg p-4 m-4 rounded col-md-8 m-auto"
-  }, [_c("div", {
-    attrs: {
-      id: "clock"
-    }
-  }, [_c("p", {
-    staticClass: "date"
-  }, [_vm._v(_vm._s(_vm.clock.date))]), _vm._v(" "), _c("p", {
-    staticClass: "time"
-  }, [_vm._v(_vm._s(_vm.clock.time))])])]);
-};
-
-var staticRenderFns = [];
-render._withStripped = true;
-
-
-/***/ }),
-
 /***/ "./node_modules/babel-loader/lib/index.js??clonedRuleSet-5.use[0]!./node_modules/vue-loader/lib/loaders/templateLoader.js??ruleSet[1].rules[2]!./node_modules/vue-loader/lib/index.js??vue-loader-options!./resources/js/components/MembershipComponent.vue?vue&type=template&id=510b6fa8&":
 /*!*************************************************************************************************************************************************************************************************************************************************************************************************!*\
   !*** ./node_modules/babel-loader/lib/index.js??clonedRuleSet-5.use[0]!./node_modules/vue-loader/lib/loaders/templateLoader.js??ruleSet[1].rules[2]!./node_modules/vue-loader/lib/index.js??vue-loader-options!./resources/js/components/MembershipComponent.vue?vue&type=template&id=510b6fa8& ***!
@@ -11778,7 +11543,7 @@ var render = function render() {
     })])])], 2) : _vm._e();
   }), 0), _vm._v(" "), _c("tfoot", [_c("tr"), _vm._v(" "), _vm._l(_vm.payments, function (payment, index) {
     return index < 1 ? _c("tr", [_vm._l(payment, function (value, key, cIndex) {
-      return !(key === "customer" || key === "customerId" || key === "membershipId") ? _c("th", [_vm._v("\n                          " + _vm._s(key === "membership" ? "Membresia" : key === "paid_at" ? "Fecha de pago:" : key === "expires_at" ? "Expira El:" : key === "branch" ? "Sucursal" : key === "id" ? "ID" : key === "amount" ? "Monto" : "") + "\n                        ")]) : _vm._e();
+      return !(key === "customer" || key === "customerId" || key === "membershipId") ? _c("th", [_vm._v("\n                          " + _vm._s(key === "membership" ? "Membresia" : key === "paid_at" ? "Fecha de pago:" : key === "expires_at" ? "Expira El:" : key === "branch" ? "Sucursal" : key === "id" ? "ID" : "") + "\n                        ")]) : _vm._e();
     }), _vm._v(" "), _c("th")], 2) : _vm._e();
   })], 2)])])]), _vm._v(" "), _c("div", {
     staticClass: "row"
@@ -12049,30 +11814,6 @@ __webpack_require__.r(__webpack_exports__);
 var ___CSS_LOADER_EXPORT___ = _node_modules_laravel_mix_node_modules_css_loader_dist_runtime_api_js__WEBPACK_IMPORTED_MODULE_0___default()(function(i){return i[1]});
 // Module
 ___CSS_LOADER_EXPORT___.push([module.id, ".card[data-v-7f690d44] {\n  width: 100%;\n}\n.card[data-v-7f690d44] {\n  background: #0f3854;\n  background: radial-gradient(ellipse at center, #0a2e38 0%, #000000 70%);\n  background-size: 100%;\n}\n.card .dark[data-v-7f690d44] {\n  background-color: #daf6ff;\n}\n.swal-modal[data-v-7f690d44] {\n  background-color: rgba(4, 23, 8, 0.62);\n  border: 3px solid white;\n}\n.card-header[data-v-7f690d44] {\n  font-family: \"Share Tech Mono\", monospace;\n  color: #240303;\n  text-align: center;\n  position: relative;\n  left: 50%;\n  top: 10%;\n  transform: translate(-50%, -50%);\n  color: #daf6ff;\n  text-shadow: 0 0 20px rgb(10, 175, 230), 0 0 20px rgba(10, 175, 230, 0);\n}\n.card-header .division[data-v-7f690d44] {\n  letter-spacing: 0.05em;\n  font-size: 45px;\n  padding: 5px 0;\n}\n.card-header .location[data-v-7f690d44] {\n  letter-spacing: 0.1em;\n  font-size: 24px;\n}\n.card-header .text[data-v-7f690d44] {\n  letter-spacing: 0.1em;\n  font-size: 12px;\n  padding: 20px 0 0;\n}", ""]);
-// Exports
-/* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (___CSS_LOADER_EXPORT___);
-
-
-/***/ }),
-
-/***/ "./node_modules/laravel-mix/node_modules/css-loader/dist/cjs.js??clonedRuleSet-11.use[1]!./node_modules/vue-loader/lib/loaders/stylePostLoader.js!./node_modules/postcss-loader/dist/cjs.js??clonedRuleSet-11.use[2]!./node_modules/sass-loader/dist/cjs.js??clonedRuleSet-11.use[3]!./node_modules/vue-loader/lib/index.js??vue-loader-options!./resources/js/components/DigitalClock.vue?vue&type=style&index=0&id=4c9825c1&lang=scss&scoped=true&":
-/*!***********************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************!*\
-  !*** ./node_modules/laravel-mix/node_modules/css-loader/dist/cjs.js??clonedRuleSet-11.use[1]!./node_modules/vue-loader/lib/loaders/stylePostLoader.js!./node_modules/postcss-loader/dist/cjs.js??clonedRuleSet-11.use[2]!./node_modules/sass-loader/dist/cjs.js??clonedRuleSet-11.use[3]!./node_modules/vue-loader/lib/index.js??vue-loader-options!./resources/js/components/DigitalClock.vue?vue&type=style&index=0&id=4c9825c1&lang=scss&scoped=true& ***!
-  \***********************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************/
-/***/ ((module, __webpack_exports__, __webpack_require__) => {
-
-"use strict";
-__webpack_require__.r(__webpack_exports__);
-/* harmony export */ __webpack_require__.d(__webpack_exports__, {
-/* harmony export */   "default": () => (__WEBPACK_DEFAULT_EXPORT__)
-/* harmony export */ });
-/* harmony import */ var _node_modules_laravel_mix_node_modules_css_loader_dist_runtime_api_js__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ../../../node_modules/laravel-mix/node_modules/css-loader/dist/runtime/api.js */ "./node_modules/laravel-mix/node_modules/css-loader/dist/runtime/api.js");
-/* harmony import */ var _node_modules_laravel_mix_node_modules_css_loader_dist_runtime_api_js__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(_node_modules_laravel_mix_node_modules_css_loader_dist_runtime_api_js__WEBPACK_IMPORTED_MODULE_0__);
-// Imports
-
-var ___CSS_LOADER_EXPORT___ = _node_modules_laravel_mix_node_modules_css_loader_dist_runtime_api_js__WEBPACK_IMPORTED_MODULE_0___default()(function(i){return i[1]});
-// Module
-___CSS_LOADER_EXPORT___.push([module.id, "html[data-v-4c9825c1],\n.clock-body[data-v-4c9825c1] {\n  height: 300px;\n}\n.clock-body[data-v-4c9825c1] {\n  /*   background: #0f3854;\n    background: radial-gradient(ellipse at center, #0a2e38 0%, #000000 70%);\n    background-size: 100%; */\n}\np[data-v-4c9825c1] {\n  margin: 0;\n  padding: 0;\n}\n#clock[data-v-4c9825c1] {\n  font-family: \"Share Tech Mono\", monospace;\n  color: #240303;\n  text-align: center;\n  position: relative;\n  left: 50%;\n  top: 50%;\n  transform: translate(-50%, -50%);\n  color: #daf6ff;\n  text-shadow: 0 0 20px rgb(10, 175, 230), 0 0 20px rgba(10, 175, 230, 0);\n}\n#clock .time[data-v-4c9825c1] {\n  letter-spacing: 0.05em;\n  font-size: 45px;\n  padding: 5px 0;\n}\n#clock .date[data-v-4c9825c1] {\n  letter-spacing: 0.1em;\n  font-size: 24px;\n}\n#clock .text[data-v-4c9825c1] {\n  letter-spacing: 0.1em;\n  font-size: 12px;\n  padding: 20px 0 0;\n}\n.center[data-v-4c9825c1] {\n  margin: auto;\n  width: 50%;\n  border: 3px solid green;\n  padding: 10px;\n}", ""]);
 // Exports
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (___CSS_LOADER_EXPORT___);
 
@@ -29687,36 +29428,6 @@ var update = _node_modules_style_loader_dist_runtime_injectStylesIntoStyleTag_js
 
 /***/ }),
 
-/***/ "./node_modules/style-loader/dist/cjs.js!./node_modules/laravel-mix/node_modules/css-loader/dist/cjs.js??clonedRuleSet-11.use[1]!./node_modules/vue-loader/lib/loaders/stylePostLoader.js!./node_modules/postcss-loader/dist/cjs.js??clonedRuleSet-11.use[2]!./node_modules/sass-loader/dist/cjs.js??clonedRuleSet-11.use[3]!./node_modules/vue-loader/lib/index.js??vue-loader-options!./resources/js/components/DigitalClock.vue?vue&type=style&index=0&id=4c9825c1&lang=scss&scoped=true&":
-/*!***************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************!*\
-  !*** ./node_modules/style-loader/dist/cjs.js!./node_modules/laravel-mix/node_modules/css-loader/dist/cjs.js??clonedRuleSet-11.use[1]!./node_modules/vue-loader/lib/loaders/stylePostLoader.js!./node_modules/postcss-loader/dist/cjs.js??clonedRuleSet-11.use[2]!./node_modules/sass-loader/dist/cjs.js??clonedRuleSet-11.use[3]!./node_modules/vue-loader/lib/index.js??vue-loader-options!./resources/js/components/DigitalClock.vue?vue&type=style&index=0&id=4c9825c1&lang=scss&scoped=true& ***!
-  \***************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************/
-/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
-
-"use strict";
-__webpack_require__.r(__webpack_exports__);
-/* harmony export */ __webpack_require__.d(__webpack_exports__, {
-/* harmony export */   "default": () => (__WEBPACK_DEFAULT_EXPORT__)
-/* harmony export */ });
-/* harmony import */ var _node_modules_style_loader_dist_runtime_injectStylesIntoStyleTag_js__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! !../../../node_modules/style-loader/dist/runtime/injectStylesIntoStyleTag.js */ "./node_modules/style-loader/dist/runtime/injectStylesIntoStyleTag.js");
-/* harmony import */ var _node_modules_style_loader_dist_runtime_injectStylesIntoStyleTag_js__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(_node_modules_style_loader_dist_runtime_injectStylesIntoStyleTag_js__WEBPACK_IMPORTED_MODULE_0__);
-/* harmony import */ var _node_modules_laravel_mix_node_modules_css_loader_dist_cjs_js_clonedRuleSet_11_use_1_node_modules_vue_loader_lib_loaders_stylePostLoader_js_node_modules_postcss_loader_dist_cjs_js_clonedRuleSet_11_use_2_node_modules_sass_loader_dist_cjs_js_clonedRuleSet_11_use_3_node_modules_vue_loader_lib_index_js_vue_loader_options_DigitalClock_vue_vue_type_style_index_0_id_4c9825c1_lang_scss_scoped_true___WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! !!../../../node_modules/laravel-mix/node_modules/css-loader/dist/cjs.js??clonedRuleSet-11.use[1]!../../../node_modules/vue-loader/lib/loaders/stylePostLoader.js!../../../node_modules/postcss-loader/dist/cjs.js??clonedRuleSet-11.use[2]!../../../node_modules/sass-loader/dist/cjs.js??clonedRuleSet-11.use[3]!../../../node_modules/vue-loader/lib/index.js??vue-loader-options!./DigitalClock.vue?vue&type=style&index=0&id=4c9825c1&lang=scss&scoped=true& */ "./node_modules/laravel-mix/node_modules/css-loader/dist/cjs.js??clonedRuleSet-11.use[1]!./node_modules/vue-loader/lib/loaders/stylePostLoader.js!./node_modules/postcss-loader/dist/cjs.js??clonedRuleSet-11.use[2]!./node_modules/sass-loader/dist/cjs.js??clonedRuleSet-11.use[3]!./node_modules/vue-loader/lib/index.js??vue-loader-options!./resources/js/components/DigitalClock.vue?vue&type=style&index=0&id=4c9825c1&lang=scss&scoped=true&");
-
-            
-
-var options = {};
-
-options.insert = "head";
-options.singleton = false;
-
-var update = _node_modules_style_loader_dist_runtime_injectStylesIntoStyleTag_js__WEBPACK_IMPORTED_MODULE_0___default()(_node_modules_laravel_mix_node_modules_css_loader_dist_cjs_js_clonedRuleSet_11_use_1_node_modules_vue_loader_lib_loaders_stylePostLoader_js_node_modules_postcss_loader_dist_cjs_js_clonedRuleSet_11_use_2_node_modules_sass_loader_dist_cjs_js_clonedRuleSet_11_use_3_node_modules_vue_loader_lib_index_js_vue_loader_options_DigitalClock_vue_vue_type_style_index_0_id_4c9825c1_lang_scss_scoped_true___WEBPACK_IMPORTED_MODULE_1__["default"], options);
-
-
-
-/* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (_node_modules_laravel_mix_node_modules_css_loader_dist_cjs_js_clonedRuleSet_11_use_1_node_modules_vue_loader_lib_loaders_stylePostLoader_js_node_modules_postcss_loader_dist_cjs_js_clonedRuleSet_11_use_2_node_modules_sass_loader_dist_cjs_js_clonedRuleSet_11_use_3_node_modules_vue_loader_lib_index_js_vue_loader_options_DigitalClock_vue_vue_type_style_index_0_id_4c9825c1_lang_scss_scoped_true___WEBPACK_IMPORTED_MODULE_1__["default"].locals || {});
-
-/***/ }),
-
 /***/ "./node_modules/vue2-dropzone/dist/vue2Dropzone.min.css":
 /*!**************************************************************!*\
   !*** ./node_modules/vue2-dropzone/dist/vue2Dropzone.min.css ***!
@@ -30322,47 +30033,6 @@ component.options.__file = "resources/js/components/CustomerComponent.vue"
 
 /***/ }),
 
-/***/ "./resources/js/components/DigitalClock.vue":
-/*!**************************************************!*\
-  !*** ./resources/js/components/DigitalClock.vue ***!
-  \**************************************************/
-/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
-
-"use strict";
-__webpack_require__.r(__webpack_exports__);
-/* harmony export */ __webpack_require__.d(__webpack_exports__, {
-/* harmony export */   "default": () => (__WEBPACK_DEFAULT_EXPORT__)
-/* harmony export */ });
-/* harmony import */ var _DigitalClock_vue_vue_type_template_id_4c9825c1_scoped_true___WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./DigitalClock.vue?vue&type=template&id=4c9825c1&scoped=true& */ "./resources/js/components/DigitalClock.vue?vue&type=template&id=4c9825c1&scoped=true&");
-/* harmony import */ var _DigitalClock_vue_vue_type_script_lang_js___WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./DigitalClock.vue?vue&type=script&lang=js& */ "./resources/js/components/DigitalClock.vue?vue&type=script&lang=js&");
-/* harmony import */ var _DigitalClock_vue_vue_type_style_index_0_id_4c9825c1_lang_scss_scoped_true___WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./DigitalClock.vue?vue&type=style&index=0&id=4c9825c1&lang=scss&scoped=true& */ "./resources/js/components/DigitalClock.vue?vue&type=style&index=0&id=4c9825c1&lang=scss&scoped=true&");
-/* harmony import */ var _node_modules_vue_loader_lib_runtime_componentNormalizer_js__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! !../../../node_modules/vue-loader/lib/runtime/componentNormalizer.js */ "./node_modules/vue-loader/lib/runtime/componentNormalizer.js");
-
-
-
-;
-
-
-/* normalize component */
-
-var component = (0,_node_modules_vue_loader_lib_runtime_componentNormalizer_js__WEBPACK_IMPORTED_MODULE_3__["default"])(
-  _DigitalClock_vue_vue_type_script_lang_js___WEBPACK_IMPORTED_MODULE_1__["default"],
-  _DigitalClock_vue_vue_type_template_id_4c9825c1_scoped_true___WEBPACK_IMPORTED_MODULE_0__.render,
-  _DigitalClock_vue_vue_type_template_id_4c9825c1_scoped_true___WEBPACK_IMPORTED_MODULE_0__.staticRenderFns,
-  false,
-  null,
-  "4c9825c1",
-  null
-  
-)
-
-/* hot reload */
-if (false) { var api; }
-component.options.__file = "resources/js/components/DigitalClock.vue"
-/* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (component.exports);
-
-/***/ }),
-
 /***/ "./resources/js/components/MembershipComponent.vue":
 /*!*********************************************************!*\
   !*** ./resources/js/components/MembershipComponent.vue ***!
@@ -30782,22 +30452,6 @@ __webpack_require__.r(__webpack_exports__);
 
 /***/ }),
 
-/***/ "./resources/js/components/DigitalClock.vue?vue&type=script&lang=js&":
-/*!***************************************************************************!*\
-  !*** ./resources/js/components/DigitalClock.vue?vue&type=script&lang=js& ***!
-  \***************************************************************************/
-/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
-
-"use strict";
-__webpack_require__.r(__webpack_exports__);
-/* harmony export */ __webpack_require__.d(__webpack_exports__, {
-/* harmony export */   "default": () => (__WEBPACK_DEFAULT_EXPORT__)
-/* harmony export */ });
-/* harmony import */ var _node_modules_babel_loader_lib_index_js_clonedRuleSet_5_use_0_node_modules_vue_loader_lib_index_js_vue_loader_options_DigitalClock_vue_vue_type_script_lang_js___WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! -!../../../node_modules/babel-loader/lib/index.js??clonedRuleSet-5.use[0]!../../../node_modules/vue-loader/lib/index.js??vue-loader-options!./DigitalClock.vue?vue&type=script&lang=js& */ "./node_modules/babel-loader/lib/index.js??clonedRuleSet-5.use[0]!./node_modules/vue-loader/lib/index.js??vue-loader-options!./resources/js/components/DigitalClock.vue?vue&type=script&lang=js&");
- /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (_node_modules_babel_loader_lib_index_js_clonedRuleSet_5_use_0_node_modules_vue_loader_lib_index_js_vue_loader_options_DigitalClock_vue_vue_type_script_lang_js___WEBPACK_IMPORTED_MODULE_0__["default"]); 
-
-/***/ }),
-
 /***/ "./resources/js/components/MembershipComponent.vue?vue&type=script&lang=js&":
 /*!**********************************************************************************!*\
   !*** ./resources/js/components/MembershipComponent.vue?vue&type=script&lang=js& ***!
@@ -31010,23 +30664,6 @@ __webpack_require__.r(__webpack_exports__);
 
 /***/ }),
 
-/***/ "./resources/js/components/DigitalClock.vue?vue&type=template&id=4c9825c1&scoped=true&":
-/*!*********************************************************************************************!*\
-  !*** ./resources/js/components/DigitalClock.vue?vue&type=template&id=4c9825c1&scoped=true& ***!
-  \*********************************************************************************************/
-/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
-
-"use strict";
-__webpack_require__.r(__webpack_exports__);
-/* harmony export */ __webpack_require__.d(__webpack_exports__, {
-/* harmony export */   "render": () => (/* reexport safe */ _node_modules_babel_loader_lib_index_js_clonedRuleSet_5_use_0_node_modules_vue_loader_lib_loaders_templateLoader_js_ruleSet_1_rules_2_node_modules_vue_loader_lib_index_js_vue_loader_options_DigitalClock_vue_vue_type_template_id_4c9825c1_scoped_true___WEBPACK_IMPORTED_MODULE_0__.render),
-/* harmony export */   "staticRenderFns": () => (/* reexport safe */ _node_modules_babel_loader_lib_index_js_clonedRuleSet_5_use_0_node_modules_vue_loader_lib_loaders_templateLoader_js_ruleSet_1_rules_2_node_modules_vue_loader_lib_index_js_vue_loader_options_DigitalClock_vue_vue_type_template_id_4c9825c1_scoped_true___WEBPACK_IMPORTED_MODULE_0__.staticRenderFns)
-/* harmony export */ });
-/* harmony import */ var _node_modules_babel_loader_lib_index_js_clonedRuleSet_5_use_0_node_modules_vue_loader_lib_loaders_templateLoader_js_ruleSet_1_rules_2_node_modules_vue_loader_lib_index_js_vue_loader_options_DigitalClock_vue_vue_type_template_id_4c9825c1_scoped_true___WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! -!../../../node_modules/babel-loader/lib/index.js??clonedRuleSet-5.use[0]!../../../node_modules/vue-loader/lib/loaders/templateLoader.js??ruleSet[1].rules[2]!../../../node_modules/vue-loader/lib/index.js??vue-loader-options!./DigitalClock.vue?vue&type=template&id=4c9825c1&scoped=true& */ "./node_modules/babel-loader/lib/index.js??clonedRuleSet-5.use[0]!./node_modules/vue-loader/lib/loaders/templateLoader.js??ruleSet[1].rules[2]!./node_modules/vue-loader/lib/index.js??vue-loader-options!./resources/js/components/DigitalClock.vue?vue&type=template&id=4c9825c1&scoped=true&");
-
-
-/***/ }),
-
 /***/ "./resources/js/components/MembershipComponent.vue?vue&type=template&id=510b6fa8&":
 /*!****************************************************************************************!*\
   !*** ./resources/js/components/MembershipComponent.vue?vue&type=template&id=510b6fa8& ***!
@@ -31189,19 +30826,6 @@ __webpack_require__.r(__webpack_exports__);
 "use strict";
 __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _node_modules_style_loader_dist_cjs_js_node_modules_laravel_mix_node_modules_css_loader_dist_cjs_js_clonedRuleSet_11_use_1_node_modules_vue_loader_lib_loaders_stylePostLoader_js_node_modules_postcss_loader_dist_cjs_js_clonedRuleSet_11_use_2_node_modules_sass_loader_dist_cjs_js_clonedRuleSet_11_use_3_node_modules_vue_loader_lib_index_js_vue_loader_options_Content_vue_vue_type_style_index_0_id_7f690d44_lang_scss_scoped_true___WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! -!../../../node_modules/style-loader/dist/cjs.js!../../../node_modules/laravel-mix/node_modules/css-loader/dist/cjs.js??clonedRuleSet-11.use[1]!../../../node_modules/vue-loader/lib/loaders/stylePostLoader.js!../../../node_modules/postcss-loader/dist/cjs.js??clonedRuleSet-11.use[2]!../../../node_modules/sass-loader/dist/cjs.js??clonedRuleSet-11.use[3]!../../../node_modules/vue-loader/lib/index.js??vue-loader-options!./Content.vue?vue&type=style&index=0&id=7f690d44&lang=scss&scoped=true& */ "./node_modules/style-loader/dist/cjs.js!./node_modules/laravel-mix/node_modules/css-loader/dist/cjs.js??clonedRuleSet-11.use[1]!./node_modules/vue-loader/lib/loaders/stylePostLoader.js!./node_modules/postcss-loader/dist/cjs.js??clonedRuleSet-11.use[2]!./node_modules/sass-loader/dist/cjs.js??clonedRuleSet-11.use[3]!./node_modules/vue-loader/lib/index.js??vue-loader-options!./resources/js/components/Content.vue?vue&type=style&index=0&id=7f690d44&lang=scss&scoped=true&");
-
-
-/***/ }),
-
-/***/ "./resources/js/components/DigitalClock.vue?vue&type=style&index=0&id=4c9825c1&lang=scss&scoped=true&":
-/*!************************************************************************************************************!*\
-  !*** ./resources/js/components/DigitalClock.vue?vue&type=style&index=0&id=4c9825c1&lang=scss&scoped=true& ***!
-  \************************************************************************************************************/
-/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
-
-"use strict";
-__webpack_require__.r(__webpack_exports__);
-/* harmony import */ var _node_modules_style_loader_dist_cjs_js_node_modules_laravel_mix_node_modules_css_loader_dist_cjs_js_clonedRuleSet_11_use_1_node_modules_vue_loader_lib_loaders_stylePostLoader_js_node_modules_postcss_loader_dist_cjs_js_clonedRuleSet_11_use_2_node_modules_sass_loader_dist_cjs_js_clonedRuleSet_11_use_3_node_modules_vue_loader_lib_index_js_vue_loader_options_DigitalClock_vue_vue_type_style_index_0_id_4c9825c1_lang_scss_scoped_true___WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! -!../../../node_modules/style-loader/dist/cjs.js!../../../node_modules/laravel-mix/node_modules/css-loader/dist/cjs.js??clonedRuleSet-11.use[1]!../../../node_modules/vue-loader/lib/loaders/stylePostLoader.js!../../../node_modules/postcss-loader/dist/cjs.js??clonedRuleSet-11.use[2]!../../../node_modules/sass-loader/dist/cjs.js??clonedRuleSet-11.use[3]!../../../node_modules/vue-loader/lib/index.js??vue-loader-options!./DigitalClock.vue?vue&type=style&index=0&id=4c9825c1&lang=scss&scoped=true& */ "./node_modules/style-loader/dist/cjs.js!./node_modules/laravel-mix/node_modules/css-loader/dist/cjs.js??clonedRuleSet-11.use[1]!./node_modules/vue-loader/lib/loaders/stylePostLoader.js!./node_modules/postcss-loader/dist/cjs.js??clonedRuleSet-11.use[2]!./node_modules/sass-loader/dist/cjs.js??clonedRuleSet-11.use[3]!./node_modules/vue-loader/lib/index.js??vue-loader-options!./resources/js/components/DigitalClock.vue?vue&type=style&index=0&id=4c9825c1&lang=scss&scoped=true&");
 
 
 /***/ }),

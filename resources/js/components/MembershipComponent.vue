@@ -184,8 +184,8 @@
                       role="status"
                       aria-live="polite"
                     >
-                      Showing {{ pagination.current_page }} to
-                      {{ pagination.per_page }} of {{ pagination.total }} entries
+                      Mostrando{{ pagination.current_page }} a
+                      {{ pagination.per_page }} de {{ pagination.total }} registros
                     </div>
                   </div>
                   <div class="col-sm-12 col-md-7">

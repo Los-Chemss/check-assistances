@@ -2425,7 +2425,7 @@ __webpack_require__.r(__webpack_exports__);
         var message = null;
         var customer = response.data.customer;
         console.log(customer);
-        var info = (customer.membership ? "Membresia: " + "<b>" + customer.membership.name + "</b>" : "") + (customer.membership.payments && customer.membership.payments[0] ? "<br> Expira el : " + "<b>" + me.formatDate(customer.membership.payments[0].expires_at) + "</b>" : ""); //   me.code = "";
+        var info = (customer.membership ? "Membresia: " + "<b>" + customer.membership.name + "</b>" : "") + (customer.membership.payments && customer.membership.payments[0] ? "<br> Expira el : " + "<b>" + me.formatDate(customer.membership.payments[0].expires_at) + "</b>" : "");
 
         if ("entrada" in response.data) {
           movement = "entrada";
@@ -5607,26 +5607,11 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
         to: 0
       },
       offset: 3,
-      criterio: {
-        key: "paid_at",
-        val: "Pagado el "
-      },
+      criterio: "paid_at",
       buscar: "",
       payment_id: null,
       showPayments: 10,
-      criterions: [{
-        key: "paid_at",
-        val: "Pagado el "
-      }, {
-        key: "expires_at",
-        val: "Expira el"
-      }, {
-        key: "membership",
-        val: "Membresia"
-      }, {
-        key: "branch",
-        val: "Sucursal"
-      }]
+      criterions: ["paid_at", "expires_at", "membership", "branch"]
     };
   },
   computed: {
@@ -5669,7 +5654,7 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
         info: me.customerInfo.id
       });
       me.loading = true;
-      var url = "customers/" + me.customerInfo.id + "/payments?page=" + page + "&buscar=" + buscar + "&criterio=" + criterio.key;
+      var url = "customers/" + me.customerInfo.id + "/payments?page=" + page + "&buscar=" + buscar + "&criterio=" + criterio;
       axios.get(url).then(function (response) {
         var respuesta = response.data; //   console.log(respuesta);
 
@@ -5691,20 +5676,16 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
         console.log(error);
       });
     },
-
-    /*   getCustomers() {
-      let me = this;
-      axios
-        .get("customers/select")
-        .then((response) => {
-          //   console.log(response);
-          var respuesta = response.data;
-          me.customers = respuesta;
-        })
-        .catch((error) => {
-          console.log(error);
-        });
-    }, */
+    getCustomers: function getCustomers() {
+      var me = this;
+      axios.get("customers/select").then(function (response) {
+        //   console.log(response);
+        var respuesta = response.data;
+        me.customers = respuesta;
+      })["catch"](function (error) {
+        console.log(error);
+      });
+    },
     selectCriteria: function selectCriteria() {
       this.buscar = "";
     },
@@ -5824,7 +5805,7 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
 
               case 7:
                 _this.modal = 1;
-                _this.modalTitle = "Nuevo pago";
+                _this.modalTitle = "New payment";
                 _this.actionType = 1;
                 _this.paid_at = "";
                 _this.selectedMembership = "";
@@ -5840,7 +5821,7 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
                 });
 
                 _this.modal = 1;
-                _this.modalTitle = "Editar pago";
+                _this.modalTitle = "Update payment";
                 _this.actionType = 2;
                 _this.paid_at = new Date(data["paid_at"]).toISOString().slice(0, 10);
                 _this.selectedMembership = mem;
@@ -5926,7 +5907,8 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
   },
   mounted: function mounted() {
     this.listPayments(1, this.buscar, this.criterio);
-    this.getMemberships(); // this.getCustomers();
+    this.getMemberships();
+    this.getCustomers();
   }
 });
 
@@ -6145,7 +6127,7 @@ var render = function render() {
       role: "status",
       "aria-live": "polite"
     }
-  }, [_vm._v("\n                    Mostrando" + _vm._s(_vm.pagination.current_page) + " a\n                    " + _vm._s(_vm.pagination.per_page) + " de " + _vm._s(_vm.pagination.total) + " registros\n                  ")])]), _vm._v(" "), _c("div", {
+  }, [_vm._v("\n                    Showing " + _vm._s(_vm.pagination.current_page) + " to\n                    " + _vm._s(_vm.pagination.per_page) + " of " + _vm._s(_vm.pagination.total) + " entries\n                  ")])]), _vm._v(" "), _c("div", {
     staticClass: "col-sm-12 col-md-7"
   }, [_c("div", {
     staticClass: "dataTables_paginate paging_simple_numbers",
@@ -6872,7 +6854,7 @@ var render = function render() {
       }
     }, [_c("i", {
       staticClass: "icon-trash"
-    })]), _vm._v("\n                              \n                            "), _c("button", {
+    })]), _vm._v(" "), _c("button", {
       staticClass: "btn btn-info btn-sm",
       attrs: {
         type: "button"
@@ -7401,7 +7383,7 @@ var render = function render() {
     attrs: {
       width: "390"
     }
-  }, [_vm._v("Valor del cliente")]), _vm._v(" "), _c("td", [_c("b", [_vm._v(" $ " + _vm._s(_vm.customerInfo.value.toLocaleString("es-MX")) + " ")])])])])])])]), _vm._v(" "), _c("div", {
+  }, [_vm._v("Valor del cliente")]), _vm._v(" "), _c("td", [_c("b", [_vm._v(" $ " + _vm._s(_vm.customerInfo.value) + " ")])])])])])])]), _vm._v(" "), _c("div", {
     staticClass: "col-lg-12 col-md-12 col-sm-12"
   }, [_c("div", {
     staticClass: "card"
@@ -7784,7 +7766,7 @@ var render = function render() {
       role: "status",
       "aria-live": "polite"
     }
-  }, [_vm._v("\n                    Mostrando" + _vm._s(_vm.pagination.current_page) + " a\n                    " + _vm._s(_vm.pagination.per_page) + " de " + _vm._s(_vm.pagination.total) + " registros\n                  ")])]), _vm._v(" "), _c("div", {
+  }, [_vm._v("\n                    Showing " + _vm._s(_vm.pagination.current_page) + " to\n                    " + _vm._s(_vm.pagination.per_page) + " of " + _vm._s(_vm.pagination.total) + " entries\n                  ")])]), _vm._v(" "), _c("div", {
     staticClass: "col-sm-12 col-md-7"
   }, [_c("div", {
     staticClass: "dataTables_paginate paging_simple_numbers",
@@ -8282,7 +8264,7 @@ var render = function render() {
       role: "status",
       "aria-live": "polite"
     }
-  }, [_vm._v("\n                    Mostrando" + _vm._s(_vm.pagination.current_page) + " a\n                    " + _vm._s(_vm.pagination.per_page) + " de " + _vm._s(_vm.pagination.total) + " registros\n                  ")])]), _vm._v(" "), _c("div", {
+  }, [_vm._v("\n                    Showing " + _vm._s(_vm.pagination.current_page) + " to\n                    " + _vm._s(_vm.pagination.per_page) + " of " + _vm._s(_vm.pagination.total) + " entries\n                  ")])]), _vm._v(" "), _c("div", {
     staticClass: "col-sm-12 col-md-7"
   }, [_c("div", {
     staticClass: "dataTables_paginate paging_simple_numbers",
@@ -8787,7 +8769,7 @@ var render = function render() {
       role: "status",
       "aria-live": "polite"
     }
-  }, [_vm._v("\n                    Mostrando" + _vm._s(_vm.pagination.current_page) + " a\n                    " + _vm._s(_vm.pagination.per_page) + " de " + _vm._s(_vm.pagination.total) + " registros\n                  ")])]), _vm._v(" "), _c("div", {
+  }, [_vm._v("\n                    Showing " + _vm._s(_vm.pagination.current_page) + " to\n                    " + _vm._s(_vm.pagination.per_page) + " of " + _vm._s(_vm.pagination.total) + " entries\n                  ")])]), _vm._v(" "), _c("div", {
     staticClass: "col-sm-12 col-md-7"
   }, [_c("div", {
     staticClass: "dataTables_paginate paging_simple_numbers",
@@ -9776,7 +9758,7 @@ var render = function render() {
       role: "status",
       "aria-live": "polite"
     }
-  }, [_vm._v("\n                    Mostrando" + _vm._s(_vm.pagination.current_page) + " a\n                    " + _vm._s(_vm.pagination.per_page) + " de " + _vm._s(_vm.pagination.total) + " registros\n                  ")])]), _vm._v(" "), _c("div", {
+  }, [_vm._v("\n                    Showing " + _vm._s(_vm.pagination.current_page) + " to\n                    " + _vm._s(_vm.pagination.per_page) + " of " + _vm._s(_vm.pagination.total) + " entries\n                  ")])]), _vm._v(" "), _c("div", {
     staticClass: "col-sm-12 col-md-7"
   }, [_c("div", {
     staticClass: "dataTables_paginate paging_simple_numbers",
@@ -10249,7 +10231,7 @@ var render = function render() {
       role: "status",
       "aria-live": "polite"
     }
-  }, [_vm._v("\n                    Mostrando" + _vm._s(_vm.pagination.current_page) + " a\n                    " + _vm._s(_vm.pagination.per_page) + " de " + _vm._s(_vm.pagination.total) + " registros\n                  ")])]), _vm._v(" "), _c("div", {
+  }, [_vm._v("\n                    Showing " + _vm._s(_vm.pagination.current_page) + " to\n                    " + _vm._s(_vm.pagination.per_page) + " of " + _vm._s(_vm.pagination.total) + " entries\n                  ")])]), _vm._v(" "), _c("div", {
     staticClass: "col-sm-12 col-md-7"
   }, [_c("div", {
     staticClass: "dataTables_paginate paging_simple_numbers",
@@ -10730,7 +10712,7 @@ var render = function render() {
       role: "status",
       "aria-live": "polite"
     }
-  }, [_vm._v("\n                    Mostrando" + _vm._s(_vm.pagination.current_page) + " a\n                    " + _vm._s(_vm.pagination.per_page) + " de " + _vm._s(_vm.pagination.total) + " registros\n                  ")])]), _vm._v(" "), _c("div", {
+  }, [_vm._v("\n                    Showing " + _vm._s(_vm.pagination.current_page) + " to\n                    " + _vm._s(_vm.pagination.per_page) + " of " + _vm._s(_vm.pagination.total) + " entries\n                  ")])]), _vm._v(" "), _c("div", {
     staticClass: "col-sm-12 col-md-7"
   }, [_c("div", {
     staticClass: "dataTables_paginate paging_simple_numbers",
@@ -11276,7 +11258,7 @@ var render = function render() {
       role: "status",
       "aria-live": "polite"
     }
-  }, [_vm._v("\n                    Mostrando" + _vm._s(_vm.pagination.current_page) + " a\n                    " + _vm._s(_vm.pagination.per_page) + " de " + _vm._s(_vm.pagination.total) + " registros\n                  ")])]), _vm._v(" "), _c("div", {
+  }, [_vm._v("\n                    Showing " + _vm._s(_vm.pagination.current_page) + " to\n                    " + _vm._s(_vm.pagination.per_page) + " of " + _vm._s(_vm.pagination.total) + " entries\n                  ")])]), _vm._v(" "), _c("div", {
     staticClass: "col-sm-12 col-md-7"
   }, [_c("div", {
     staticClass: "dataTables_paginate paging_simple_numbers",
@@ -11611,8 +11593,8 @@ var render = function render() {
       domProps: {
         value: criteria
       }
-    }, [_vm._v("\n                            " + _vm._s(criteria.val) + "\n                          ")]);
-  }), 0)])]), _vm._v(" "), (_vm.criterio.key == "paid_at" || _vm.criterio.key == "expires_at" ? "date" : _vm.criterio.key == "code" ? "number" : _vm.criterio.key == "branch" ? "text" : "text") === "checkbox" ? _c("input", {
+    }, [_vm._v("\n                            " + _vm._s(criteria) + "\n                          ")]);
+  }), 0)])]), _vm._v(" "), (_vm.criterio == "paid_at" || _vm.criterio == "expires_at" ? "date" : _vm.criterio == "code" ? "number" : _vm.criterio == "branch" ? "text" : "text") === "checkbox" ? _c("input", {
     directives: [{
       name: "model",
       rawName: "v-model",
@@ -11621,7 +11603,7 @@ var render = function render() {
     }],
     staticClass: "form-control",
     attrs: {
-      placeholder: _vm.criterio.key == "paid_at" || _vm.criterio.key == "expires_at" ? "22/07/2022" : _vm.criterio.key == "customer" ? "Nombre o apellidos del cliente" : _vm.criterio.key == "branch" ? "Nombre de sucursal o direccion" : "Monthly",
+      placeholder: _vm.criterio == "paid_at" || _vm.criterio == "expires_at" ? "22/07/2022" : _vm.criterio == "customer" ? "Nombre o apellidos del cliente" : _vm.criterio == "branch" ? "Nombre de sucursal o direccion" : "Monthly",
       type: "checkbox"
     },
     domProps: {
@@ -11651,7 +11633,7 @@ var render = function render() {
         }
       }
     }
-  }) : (_vm.criterio.key == "paid_at" || _vm.criterio.key == "expires_at" ? "date" : _vm.criterio.key == "code" ? "number" : _vm.criterio.key == "branch" ? "text" : "text") === "radio" ? _c("input", {
+  }) : (_vm.criterio == "paid_at" || _vm.criterio == "expires_at" ? "date" : _vm.criterio == "code" ? "number" : _vm.criterio == "branch" ? "text" : "text") === "radio" ? _c("input", {
     directives: [{
       name: "model",
       rawName: "v-model",
@@ -11660,7 +11642,7 @@ var render = function render() {
     }],
     staticClass: "form-control",
     attrs: {
-      placeholder: _vm.criterio.key == "paid_at" || _vm.criterio.key == "expires_at" ? "22/07/2022" : _vm.criterio.key == "customer" ? "Nombre o apellidos del cliente" : _vm.criterio.key == "branch" ? "Nombre de sucursal o direccion" : "Monthly",
+      placeholder: _vm.criterio == "paid_at" || _vm.criterio == "expires_at" ? "22/07/2022" : _vm.criterio == "customer" ? "Nombre o apellidos del cliente" : _vm.criterio == "branch" ? "Nombre de sucursal o direccion" : "Monthly",
       type: "radio"
     },
     domProps: {
@@ -11684,8 +11666,8 @@ var render = function render() {
     }],
     staticClass: "form-control",
     attrs: {
-      placeholder: _vm.criterio.key == "paid_at" || _vm.criterio.key == "expires_at" ? "22/07/2022" : _vm.criterio.key == "customer" ? "Nombre o apellidos del cliente" : _vm.criterio.key == "branch" ? "Nombre de sucursal o direccion" : "Monthly",
-      type: _vm.criterio.key == "paid_at" || _vm.criterio.key == "expires_at" ? "date" : _vm.criterio.key == "code" ? "number" : _vm.criterio.key == "branch" ? "text" : "text"
+      placeholder: _vm.criterio == "paid_at" || _vm.criterio == "expires_at" ? "22/07/2022" : _vm.criterio == "customer" ? "Nombre o apellidos del cliente" : _vm.criterio == "branch" ? "Nombre de sucursal o direccion" : "Monthly",
+      type: _vm.criterio == "paid_at" || _vm.criterio == "expires_at" ? "date" : _vm.criterio == "code" ? "number" : _vm.criterio == "branch" ? "text" : "text"
     },
     domProps: {
       value: _vm.buscar
@@ -11726,7 +11708,7 @@ var render = function render() {
         return _vm.openModal("payments", "store");
       }
     }
-  }, [_vm._v("\n                    Nuevo pago\n                  ")])])]), _vm._v(" "), _c("div", {
+  }, [_vm._v("\n                    New Payment\n                  ")])])]), _vm._v(" "), _c("div", {
     staticClass: "row"
   }, [_c("div", {
     staticClass: "col-sm-12"
@@ -11742,7 +11724,7 @@ var render = function render() {
     }
   }, [_c("thead", _vm._l(_vm.payments, function (payment, index) {
     return index < 1 ? _c("tr", [_vm._l(payment, function (value, key, cIndex) {
-      return !(key === "customer" || key === "customerId" || key === "membershipId") ? _c("th", [_vm._v("\n                          " + _vm._s(key === "membership" ? "Membresia" : key === "paid_at" ? "Fecha de pago:" : key === "expires_at" ? "Expira El:" : key === "branch" ? "Sucursal" : key === "id" ? "ID" : key === "amount" ? "Monto" : "") + "\n                        ")]) : _vm._e();
+      return !(key === "customer" || key === "customerId" || key === "membershipId") ? _c("th", [_vm._v("\n                          " + _vm._s(key) + "\n                        ")]) : _vm._e();
     }), _vm._v(" "), _c("th")], 2) : _vm._e();
   }), 0), _vm._v(" "), _c("tbody", _vm._l(_vm.payments, function (payment, index) {
     return index <= _vm.pagination.per_page ? _c("tr", [_vm._l(payment, function (value, key, cIndex) {
@@ -11750,7 +11732,7 @@ var render = function render() {
         attrs: {
           "max-height": "5px"
         }
-      }, [_vm._v("\n                          " + _vm._s(key === "amount" ? value.toLocaleString("es-MX") : key === "paid_at" || key === "expires_at" ? _vm.formatDateToInput(value) : value) + "\n                          ")]) : _vm._e();
+      }, [_vm._v("\n                          " + _vm._s(value) + "\n                        ")]) : _vm._e();
     }), _vm._v(" "), _c("td", [_c("button", {
       staticClass: "btn btn-warning btn-sm",
       attrs: {
@@ -11778,7 +11760,7 @@ var render = function render() {
     })])])], 2) : _vm._e();
   }), 0), _vm._v(" "), _c("tfoot", [_c("tr"), _vm._v(" "), _vm._l(_vm.payments, function (payment, index) {
     return index < 1 ? _c("tr", [_vm._l(payment, function (value, key, cIndex) {
-      return !(key === "customer" || key === "customerId" || key === "membershipId") ? _c("th", [_vm._v("\n                          " + _vm._s(key === "membership" ? "Membresia" : key === "paid_at" ? "Fecha de pago:" : key === "expires_at" ? "Expira El:" : key === "branch" ? "Sucursal" : key === "id" ? "ID" : key === "amount" ? "Monto" : "") + "\n                        ")]) : _vm._e();
+      return !(key === "customer" || key === "customerId" || key === "membershipId") ? _c("th", [_vm._v("\n                          " + _vm._s(key) + "\n                        ")]) : _vm._e();
     }), _vm._v(" "), _c("th")], 2) : _vm._e();
   })], 2)])])]), _vm._v(" "), _c("div", {
     staticClass: "row"
@@ -11791,7 +11773,7 @@ var render = function render() {
       role: "status",
       "aria-live": "polite"
     }
-  }, [_vm._v("\n                    Mostrando" + _vm._s(_vm.pagination.current_page) + " a\n                    " + _vm._s(_vm.pagination.per_page) + " de " + _vm._s(_vm.pagination.total) + " registros\n                  ")])]), _vm._v(" "), _c("div", {
+  }, [_vm._v("\n                    Showing " + _vm._s(_vm.pagination.current_page) + " to\n                    " + _vm._s(_vm.pagination.per_page) + " of " + _vm._s(_vm.pagination.total) + " entries\n                  ")])]), _vm._v(" "), _c("div", {
     staticClass: "col-sm-12 col-md-7"
   }, [_c("div", {
     staticClass: "dataTables_paginate paging_simple_numbers",

@@ -167,6 +167,7 @@ export default {
                 "</b>"
               : "");
 
+          //   me.code = "";
           if ("entrada" in response.data) {
             movement = "entrada";
             message = "Bienvenido <b> " + customer.name + "</b><br>" + info;

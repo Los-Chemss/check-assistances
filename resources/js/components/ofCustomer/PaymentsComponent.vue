@@ -29,18 +29,18 @@
                         >
                           <optgroup>
                             <option v-for="criteria in criterions" :value="criteria">
-                              {{ criteria }}
+                              {{ criteria.val }}
                             </option>
                           </optgroup>
                         </select>
                       </div>
                       <input
                         :type="
-                          criterio == 'paid_at' || criterio == 'expires_at'
+                          criterio.key == 'paid_at' || criterio.key == 'expires_at'
                             ? 'date'
-                            : criterio == 'code'
+                            : criterio.key == 'code'
                             ? 'number'
-                            : criterio == 'branch'
+                            : criterio.key == 'branch'
                             ? 'text'
                             : 'text'
                         "
@@ -48,11 +48,11 @@
                         @keyup.enter="listPayments(1, buscar, criterio)"
                         class="form-control"
                         :placeholder="
-                          criterio == 'paid_at' || criterio == 'expires_at'
+                          criterio.key == 'paid_at' || criterio.key == 'expires_at'
                             ? '22/07/2022'
-                            : criterio == 'customer'
+                            : criterio.key == 'customer'
                             ? 'Nombre o apellidos del cliente'
-                            : criterio == 'branch'
+                            : criterio.key == 'branch'
                             ? 'Nombre de sucursal o direccion'
                             : 'Monthly'
                         "
@@ -74,7 +74,7 @@
                       class="btn btn-primary btn-lg fas fa-edit"
                       @click="openModal('payments', 'store')"
                     >
-                      New Payment
+                      Nuevo pago
                     </button>
                   </div>
                 </div>
@@ -99,7 +99,21 @@
                               )
                             "
                           >
-                            {{ key }}
+                            {{
+                              key === "membership"
+                                ? "Membresia"
+                                : key === "paid_at"
+                                ? "Fecha de pago:"
+                                : key === "expires_at"
+                                ? "Expira El:"
+                                : key === "branch"
+                                ? "Sucursal"
+                                : key === "id"
+                                ? "ID"
+                                : key === "amount"
+                                ? "Monto"
+                                : ""
+                            }}
                           </th>
                           <th></th>
                         </tr>
@@ -120,7 +134,14 @@
                               )
                             "
                           >
-                            {{ value }}
+                            {{
+                              key === "amount"
+                                ? value.toLocaleString("es-MX")
+                                : key === "paid_at" || key === "expires_at"
+                                ? formatDateToInput(value)
+                                : value
+                            }}
+                            <!-- {{ value }} -->
                           </td>
                           <td>
                             <button
@@ -154,7 +175,21 @@
                               )
                             "
                           >
-                            {{ key }}
+                            {{
+                              key === "membership"
+                                ? "Membresia"
+                                : key === "paid_at"
+                                ? "Fecha de pago:"
+                                : key === "expires_at"
+                                ? "Expira El:"
+                                : key === "branch"
+                                ? "Sucursal"
+                                : key === "id"
+                                ? "ID"
+                                : key === "amount"
+                                ? "Monto"
+                                : ""
+                            }}
                           </th>
                           <th></th>
                         </tr>
@@ -170,8 +205,8 @@
                       role="status"
                       aria-live="polite"
                     >
-                      Showing {{ pagination.current_page }} to
-                      {{ pagination.per_page }} of {{ pagination.total }} entries
+                      Mostrando{{ pagination.current_page }} a
+                      {{ pagination.per_page }} de {{ pagination.total }} registros
                     </div>
                   </div>
                   <div class="col-sm-12 col-md-7">
@@ -360,11 +395,16 @@ export default {
         to: 0,
       },
       offset: 3,
-      criterio: "paid_at",
+      criterio: { key: "paid_at", val: "Pagado el " },
       buscar: "",
       payment_id: null,
       showPayments: 10,
-      criterions: ["paid_at", "expires_at", "membership", "branch"],
+      criterions: [
+        { key: "paid_at", val: "Pagado el " },
+        { key: "expires_at", val: "Expira el" },
+        { key: "membership", val: "Membresia" },
+        { key: "branch", val: "Sucursal" },
+      ],
     };
   },
 
@@ -409,7 +449,7 @@ export default {
         "&buscar=" +
         buscar +
         "&criterio=" +
-        criterio;
+        criterio.key;
       axios
         .get(url)
         .then((response) => {
@@ -437,7 +477,7 @@ export default {
           console.log(error);
         });
     },
-    getCustomers() {
+    /*   getCustomers() {
       let me = this;
       axios
         .get("customers/select")
@@ -449,7 +489,7 @@ export default {
         .catch((error) => {
           console.log(error);
         });
-    },
+    }, */
 
     selectCriteria() {
       this.buscar = "";
@@ -565,7 +605,7 @@ export default {
           switch (action) {
             case "store": {
               this.modal = 1;
-              this.modalTitle = "New payment";
+              this.modalTitle = "Nuevo pago";
               this.actionType = 1;
               this.paid_at = "";
               this.selectedMembership = "";
@@ -579,7 +619,7 @@ export default {
                 }
               });
               this.modal = 1;
-              this.modalTitle = "Update payment";
+              this.modalTitle = "Editar pago";
               this.actionType = 2;
               this.paid_at = new Date(data["paid_at"]).toISOString().slice(0, 10);
               this.selectedMembership = mem;
@@ -671,7 +711,7 @@ export default {
   mounted() {
     this.listPayments(1, this.buscar, this.criterio);
     this.getMemberships();
-    this.getCustomers();
+    // this.getCustomers();
   },
 };
 </script>
