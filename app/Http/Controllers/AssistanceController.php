@@ -40,7 +40,7 @@ class AssistanceController extends Controller
                     'nombre' => isset($as->customer) ? $as->customer->name : null,
                     'entrada' => $as->input,
                     // 'salida' => $as->output,
-                    'sucursal' => isset($as->branc) ? $as->branch->division : null,
+                    'sucursal' => isset($as->branch) ? $as->branch->division : null,
                 ]);
             }
 
