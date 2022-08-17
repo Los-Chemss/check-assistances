@@ -35,10 +35,10 @@ class AssistanceController extends Controller
             foreach ($asistances as $as) {
                 array_push($asistancesRes, [
                     'id' => $as->id,
-                    'nombre' => $as->customer->name,
+                    'nombre' => isset($as->customer) ? $as->customer->name : null,
                     'entrada' => $as->input,
                     // 'salida' => $as->output,
-                    'sucursal' => $as->branch->division,
+                    'sucursal' => isset($as->branc) ? $as->branch->division : null,
                 ]);
             }
 
