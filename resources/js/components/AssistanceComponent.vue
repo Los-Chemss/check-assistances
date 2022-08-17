@@ -434,7 +434,7 @@ export default {
       axios
         .post("assistances/store", request)
         .then((response) => {
-          console.log(response);
+          console.log({response});
         })
         .catch((error) => {
           console.table(error);

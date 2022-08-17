@@ -27,7 +27,7 @@ use App\Http\Controllers\UserTokenController;
     return response()->json(['password' => $pass, "Hashed" => password_hash($pass, PASSWORD_DEFAULT)]);
 }); */
 
-Route::apiResource('companies', CompanyController::class);
+/* Route::apiResource('companies', CompanyController::class);
 Route::apiResource('assistances', AssistanceController::class);
 Route::apiResource('branches', BranchController::class);
 
@@ -36,7 +36,7 @@ Route::apiResource('customers', CustomerController::class);
 Route::apiResource('memberships', MembershipController::class);
 Route::apiResource('payments', PaymentController::class);
 
-Route::post('sanctum/token', UserTokenController::class);
+Route::post('sanctum/token', UserTokenController::class); */
 
 ///Devuelve factores y escenarios de usuario autenticado
 

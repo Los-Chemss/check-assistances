@@ -29,8 +29,9 @@ use Illuminate\Support\Facades\Mail;
 
 Auth::routes();
 
-Route::middleware(['auth'])->group(function () {
-    Route::get('/', [DashboardController::class, 'index'])->name('dashboard');
+Route::middleware('auth')->group(function () {
+    Route::auth();
+    Route::get('/', [DashboardController::class, 'index'])->name('dashboard')->middleware('auth');
     //user
     Route::get('/profile',  [UserController::class, 'profile'])->name('profile');
     Route::get('/account',  [UserController::class, 'account']);

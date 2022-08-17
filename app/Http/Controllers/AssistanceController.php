@@ -7,6 +7,7 @@ use App\Http\Requests\StoreAssistanceRequest;
 use App\Http\Requests\UpdateAssistanceRequest;
 use App\Models\Branch;
 use App\Models\Customer;
+use App\Models\User;
 use Exception;
 use Google\Service\AnalyticsData\OrderBy;
 use Illuminate\Http\Request;
@@ -120,10 +121,11 @@ class AssistanceController extends Controller
     public function store(Request $request)
     {
         try {
-            $user = Auth::user();
+            $user = User::where('id', Auth::user()->id)->first();
+            if (!$user) return response('User not found', 404);
             $code = $request->code;
             $customer = Customer::where('code', $code)->first();
-            if (!$customer) return response('User not found', 404);
+            if (!$customer) return response('Customer not found', 404);
             $branch = Branch::where('id', $user->branch_id)->first(); //It be found by ip ? or aautenticatin manager
             if (!$branch) return response('Branch not found', 404);
             $customer = Customer::where('id', $customer->id)

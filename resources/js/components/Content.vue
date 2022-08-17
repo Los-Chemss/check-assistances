@@ -172,7 +172,7 @@ export default {
     assistance() {
       let me = this;
       axios
-        .post("api/assistances", { branch: me.branch.id, code: me.code })
+        .post("/assistances", { branch: me.branch.id, code: me.code })
         .then((response) => {
           console.log(response);
           let movement = null;
