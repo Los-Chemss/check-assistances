@@ -121,10 +121,11 @@ class AssistanceController extends Controller
         try {
             $code = $request->code;
             $customer = Customer::where('code', $code)->first();
-            if (!isset($customer->id)) return response('User not found', 404);
+            if (! $customer) return response('User not found', 404);
             $branch = Branch::where('id', $customer->branch_id)->first(); //It be found by ip ? or aautenticatin manager
-            if (!isset($branch->id)) return response('Branch not found', 404);
-            $customer = Customer::where('id', $customer->id)->with(['membership' => function ($q) use ($customer) {
+            if (! $branch) return response('Branch not found', 404);
+            $customer = Customer::where('id', $customer->id)
+            ->with(['membership' => function ($q) use ($customer) {
                 $q->with(['payments' => function ($q1) use ($customer) { //->where('customer_id', $customer->id)
                     $q1->orderBy('expires_at', 'desc')->first();
                 }]);
