@@ -55,7 +55,7 @@ class AssistanceController extends Controller
             ];
         } catch (Exception $e) {
             $c = $this;
-            return response($e->getMessage(),   __FUNCTION__);
+            return $this->catchEx($e->getMessage(), $c,  __FUNCTION__ . ' | ' . $e->getLine());
         }
     }
     public function customerAsistances(Request $request, $customer)
