@@ -10,6 +10,7 @@ use App\Models\Customer;
 use Exception;
 use Google\Service\AnalyticsData\OrderBy;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 
 class AssistanceController extends Controller
 {
@@ -119,17 +120,18 @@ class AssistanceController extends Controller
     public function store(Request $request)
     {
         try {
+            $user = Auth::user();
             $code = $request->code;
             $customer = Customer::where('code', $code)->first();
-            if (! $customer) return response('User not found', 404);
-            $branch = Branch::where('id', $customer->branch_id)->first(); //It be found by ip ? or aautenticatin manager
-            if (! $branch) return response('Branch not found', 404);
+            if (!$customer) return response('User not found', 404);
+            $branch = Branch::where('id', $user->branch_id)->first(); //It be found by ip ? or aautenticatin manager
+            if (!$branch) return response('Branch not found', 404);
             $customer = Customer::where('id', $customer->id)
-            ->with(['membership' => function ($q) use ($customer) {
-                $q->with(['payments' => function ($q1) use ($customer) { //->where('customer_id', $customer->id)
-                    $q1->orderBy('expires_at', 'desc')->first();
-                }]);
-            }])->first();
+                ->with(['membership' => function ($q) use ($customer) {
+                    $q->with(['payments' => function ($q1) use ($customer) { //->where('customer_id', $customer->id)
+                        $q1->orderBy('expires_at', 'desc')->first();
+                    }]);
+                }])->first();
 
             $data = [
                 'customer_id' => $customer->id,
