@@ -83,29 +83,23 @@
 
                     <div class="col-md-12">
                       <table>
-                        <tr>
+                          <tr>
                           <td>
-                            <!--   <span class="badge badge-danger rounded-pill"
-                              ><i class="fas fa-arrow-right"></i
-                            ></span> -->
-                            <div class="red-triangle"></div>
+                            <div class="circle tgreen"></div>
                           </td>
-                          <td>Expirado</td>
+                          <td>Activo</td>
                         </tr>
                         <tr>
                           <td>
-                            <!--  <span class="badge badge-warning rounded-pill"
-                              ><i class="fas fa-arrow-right"></i
-                            ></span> -->
-                            <div class="yellow-triangle"></div>
+                            <div class="circle tyellow"></div>
                           </td>
                           <td>Expira pronto (7 dias o menos)</td>
                         </tr>
-                        <tr>
+                         <tr>
                           <td>
-                            <div class="green-triangle"></div>
+                            <div class="circle tred"></div>
                           </td>
-                          <td>Activo</td>
+                          <td>Expirado</td>
                         </tr>
                       </table>
                     </div>
@@ -182,15 +176,15 @@
                                 ? ''
                                 : 'background-color:green'
                             " -->
-                            <td>
+                            <td class="circle-column">
                               <div
                                 :class="
                                   Date.now() > cusDate(customer['expires at']) ||
                                   !customer['expires at']
-                                    ? 'red-triangle'
+                                    ? 'circle tred'
                                     : expiresAtWeek(customer['expires at'])
-                                    ? 'yellow-triangle'
-                                    : 'green-triangle'
+                                    ? 'circle tyellow'
+                                    : 'circle tgreen'
                                 "
                               ></div>
                             </td>
@@ -207,10 +201,8 @@
                                 )
                               "
                             >
-                              <!-- <div> -->
                               {{
-                                key === "paid_at" ||
-                                (key === "expires_at" && !key === "id")
+                                key === "last paid" || key === "expires at"
                                   ? formatDateToInput(value)
                                   : value
                               }}
@@ -1291,37 +1283,27 @@ export default {
 .dz-max-files-reached {
   background-color: red;
 }
-.green-triangle {
-  width: 0;
-  height: 0;
-  border: 15px solid transparent;
-  border-top: 0;
-  border-bottom: 30px solid green;
-  transform: rotate(90deg);
-  position: relative;
-  top: -4px;
-  left: -4px;
+
+.circle {
+  width: 20px;
+  height: 20px;
+  -moz-border-radius: 50%;
+  -webkit-border-radius: 50%;
+  border-radius: 50%;
 }
-.yellow-triangle {
-  width: 0;
-  height: 0;
-  border: 15px solid transparent;
-  border-top: 0;
-  border-bottom: 30px solid #ffcc00;
-  transform: rotate(90deg);
-  position: relative;
-  top: -4px;
-  left: -4px;
+
+.tgreen {
+  background: #5cb85c;
 }
-.red-triangle {
-  width: 0;
-  height: 0;
-  border: 15px solid transparent;
-  border-top: 0;
-  border-bottom: 30px solid #ff1a1a;
-  transform: rotate(90deg);
-  position: relative;
-  top: -4px;
-  left: -4px;
+.tred {
+  background: #ff1a1a;
+}
+.tyellow {
+  background: #ffcc00;
+}
+
+.circle-column {
+  vertical-align: middle;
+  text-align: center;
 }
 </style>

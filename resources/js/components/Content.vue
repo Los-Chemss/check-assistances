@@ -1,9 +1,13 @@
 <template>
   <!--  <div class="container-fluid"> -->
   <div class="row">
-    <div class="card clockCard">
+    <div class="card">
       <div class="card-body">
         <div class="row">
+          <!--    style="
+              background-image: url('images/fondogym.jpg');
+             no-repeat center center; background-size: cover;
+            " -->
           <div class="card" id="checkCard">
             <div class="row">
               <div class="col-md-12 ml4">
@@ -32,13 +36,6 @@
                   <i class="mdi mdi-fullscreen-exit"></i>
                 </button>
               </div>
-              <!--    <div class="col-md-12 text-center m-auto border border-danger">
-                <img
-                  src="images/urbanlogo-1024x1024.png"
-                  height="100px"
-                  alt="logo"
-                />
-              </div> -->
             </div>
 
             <div class="card-header" id="aca">
@@ -51,6 +48,32 @@
                 <p>No branch selected. Please select one.</p>
               </h1>
             </div>
+            <div class="row mt-4">
+              <div
+                class="col-md-12 text-center m-auto"
+                style="display: flex; justify-content: center; align-items: center"
+              >
+                <div
+                  class="rounded-circle shadow-lg p-4"
+                  style="
+                    background-color: white;
+                    width: 250px;
+                    height: 250px;
+                    display: flex;
+                    align-items: center;
+                    justify-content: center;
+                  "
+                >
+                  <img
+                    src="images/urbanlogo-1024x1024.png"
+                    height="200px"
+                    alt="logo"
+                    class=""
+                  />
+                </div>
+              </div>
+            </div>
+            <!-- -->
             <div class="card-body">
               <div class="col-md-12">
                 <DigitalClock />
@@ -167,7 +190,8 @@ export default {
               ? "<br> Expira el : " +
                 "<b class='text-success'>" +
                 me.formatDate(customer.membership.payments[0].expires_at) +
-                "</b>"
+                "</b>" +
+                "<br><h1 style='color:red; '> ! EXPIRARÁ PRONTO ! <h1>"
               : "");
           me.code = "";
           if ("entrada" in response.data) {
@@ -206,7 +230,7 @@ export default {
               '"class="img-fluid" style="width:150px; height:150px; box-shadow:0 1rem 3rem rgba(68, 122, 17, 0.967), 0 1rem 3rem rgba(0, 0, 0, 0.19); border-radius:50%" alt="customer-image"/> <br>  <h1 style="margin-top:10px;">' +
               message +
               " </h1></div>",
-            timer: 5000,
+            // timer: 5000,
           });
         })
         .catch((error) => {
@@ -276,7 +300,7 @@ export default {
 <style lang="css">
 .swal-bg {
   color: #000000;
-  background: #1d2228;
+  background: #000000;
   /* background: radial-gradient(ellipse at center, #18380a 0%, #000000 120%); */
   background-size: 100%;
   width: 80%;
@@ -288,34 +312,37 @@ export default {
 }
 </style>
 <style lang="scss" scoped>
-/* .custon-s-popup .swal2-content {
-  color: #fbfbfb;
-}
- */
-/* .custon-s-popup {
-  border-radius: 8.3125em;
-  background: #162222;
+/* body .card {
+  background-color: #bf1515 !important;
 } */
 
 .card {
   width: 100%;
-}
+  margin-bottom: 0;
+  background-color: transparent !important;
 
-.card {
-  background: #0f3854;
-  background: radial-gradient(ellipse at center, #0a2e38 0%, #000000 70%);
-  background-size: 100%;
+  background-attachment: fixed;
+  background: radial-gradient(
+    ellipse at center,
+    rgb(10 56 46 / 98%) 0%,
+    rgb(0 0 0 / 92%) 70%
+  );
+  //   background: radial-gradient(ellipse at center, #0a2e3895 0%, #00000080 70%);
+  //   background: #0f3854;
+  //   background-image: url("storage/images/fondogym.jpg");
+  //   background-image: url('images/fondogym.jpg');
+  //   background-image: url("images/fondogym.jpg");
+  //   background-repeat: no-repeat;
+
+  //   background-size: 100%;
 
   //@at-root
 }
+/* .form-control{
+    background-color: transparent !important;
+    border:none;
+} */
 
-.card .dark {
-  background-color: #daf6ff;
-}
-
-.card-body {
-  //  opacity: 35%;
-}
 .swal-modal {
   background-color: rgba(4, 23, 8, 0.62);
   border: 3px solid white;

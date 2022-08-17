@@ -1,6 +1,6 @@
 <template>
-  <div class="clock-body shadow-lg p-4 m-4 rounded col-md-8 m-auto">
-    <div id="clock" class="">
+  <div class="clock-body p-4 m-4 rounded col-md-8 m-auto">
+    <div id="clock" class="shadow-lg ">
       <p class="date">{{ clock.date }}</p>
       <p class="time">{{ clock.time }}</p>
       <!-- <p class="text">DIGITAL CLOCK with Vue.js</p> -->
@@ -53,12 +53,9 @@ export default {
 };
 </script>
 <style lang="scss" scoped>
-
-html,
-
-
+@import url('http://fonts.cdnfonts.com/css/seven-segment');
 .clock-body {
-  height: 300px;
+  height: 200px;
 }
 .clock-body {
 /*   background: #0f3854;
@@ -70,7 +67,8 @@ p {
   padding: 0;
 }
 #clock {
-  font-family: "Share Tech Mono", monospace;
+//   font-family: "Share Tech Mono", monospace;
+font-family: 'Seven Segment', sans-serif !important;
   color: #240303;
   text-align: center;
   position: relative;
