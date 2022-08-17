@@ -14,6 +14,7 @@ use App\Models\Payment;
 use Illuminate\Support\Facades\Auth;
 use App\Models\User;
 use Exception;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Storage;
 
 class CustomerController extends Controller
@@ -174,25 +175,6 @@ class CustomerController extends Controller
     public function store(Request $request)
     {
         try {
-            /*  if ($request->file('image')) {
-                $asset = $request->file('image')->getClientOriginalName();
-                return $asset;
-            }
-            return $request; */
-
-            if ($request->image) {
-                $img = $request->image;
-                $img = str_replace('data:image/jpeg;base64,', '', $img);
-                $img = str_replace(' ', '+', $img);
-                $data = base64_decode($img);
-                Storage::put('picture.jpg', $data);
-
-                return 'stored';
-                // return response(Response::HTTP_OK);
-            }
-
-            return 'crash';
-
             $user = Auth::user();
             $branch = Branch::where('id', $user->branch_id)->first();
             if (!isset($branch->id)) return response('No branch', 404);
@@ -200,10 +182,25 @@ class CustomerController extends Controller
             $membership =  Membership::where('id', $request->membership)->first();
             if (!isset($membership->id)) return response('Membership not found', 404);
 
+            $lastCode = Customer::select(
+                DB::raw("MAX(code) AS code")
+            )->get();
+
+            // return $lastCode;
+            /*   $cusCodes =  DB::table("customers")
+                ->select("(max(code)+1) as max_val")
+                ->get(); */
+
+            //SELECT (MAX(Column_Name)+1) AS Max_val FROM Table_Name;
+
+            // $index = 0001;
+
+
+
             $data = [
                 'name' => $request->name,
                 'lastname' => $request->lastname,
-                'code' => $request->code,
+                'code' =>  str_pad($lastCode[0]->code ? $lastCode[0]->code + 1 : 1, 4, "0", STR_PAD_LEFT),
                 'income' => $request->income,
                 'company_id' => $company->id,
                 'address' => $request->address,
@@ -215,18 +212,88 @@ class CustomerController extends Controller
             ];
 
             $customer = Customer::create($data);
+            // $paidDate=date('Y-m-d', strtotime($request->paid_at));
             $paid = [
                 'paid_at' => $request->income,
-                'expires_at' => date('Y-m-d', strtotime($request->paid_at . "+ $membership->period days")),
+                'expires_at' => date('Y-m-d', strtotime($request->income . "+ $membership->period days")),
                 'membership_id' => $membership->id,
                 'registered_on_branch_id' => $branch->id,
                 'customer_id' => $customer->id,
                 'amount' => $membership->price
             ];
             $payment = Payment::create($paid);
+
+            if ($request->image) {
+                $img = $request->image;
+                $img = str_replace('data:image/jpeg;base64,', '', $img);
+                $img = str_replace(' ', '+', $img);
+                $data = base64_decode($img);
+
+                $this->uploadPicture($data, $customer);
+                // Storage::put('picture.jpg', $data);
+
+                // return response(Response::HTTP_OK);
+            }
+
+
             return response($customer, 201);
         } catch (Exception $e) {
             return response($e->getMessage(), 500);
+        }
+    }
+
+    public function uploadPicture($data, $customer)
+    {
+        try {
+            if ($customer->image) {
+                foreach (explode(', ',  $customer->image) as $image) {
+                    $image = env('APP_ENV') === 'local' ? $image : substr($image, 0);
+                    if (Storage::exists($image) ?: Storage::disk('public')->exists($image)) {
+                        Storage::delete($image) ?: Storage::disk('public')->delete($image);
+                    }
+                }
+                // Storage::deleteDirectory("images/customers/" . $customer->id);
+            }
+            $cusPath =  $customer->id ?: 'crash';
+            $destination = "images/customers/" . $cusPath . '/avatar';
+            $destination = str_replace(' ', '_', $destination);
+
+
+
+            /*   $filename = date('dmY-His');
+            $filename = str_replace(' ', '', $filename);
+            $filename = str_replace('-', '_', $filename); */
+            /*   if (env('APP_ENV') == 'local') {
+                $data->storeAs("public/$destination", $filename);
+            } else {
+                $data->storeAs("$destination", $filename);
+            } */
+            $filePath = $destination . '/' . date('dmY-His') . '.jpg';
+            Storage::disk('public')->put($filePath,  /*  "\xEF\xBB\xBF" . */ $data);
+            // $fileUrl = "$destination/$filename";
+            // $request->request->add(['file' => $data]);
+
+
+            /*  foreach ($files as $file) {
+                array_push($fileList, $fileUrl);
+            } */
+
+            if ($customer['image'] != null) {
+                foreach (explode(', ', $customer->image) as $image) {
+                    $this->consoleWrite()->writeln($image);
+                    if (Storage::exists($image)) {
+                        Storage::delete($image);
+                        $this->consoleWrite()->writeln("Deleted");
+                    }
+                }
+            }
+            $customer['image'] = $filePath;
+            $customer->save();
+            return response()->json('File uploaded', 200);
+            // }
+        } catch (Exception $e) {
+            $c = $this;
+            return $this->catchEx($e->getMessage(), $c,  __FUNCTION__ . ' | ' . $e->getLine());
         }
     }
 

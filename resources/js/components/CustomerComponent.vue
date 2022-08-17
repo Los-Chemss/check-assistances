@@ -83,7 +83,7 @@
 
                     <div class="col-md-12">
                       <table>
-                          <tr>
+                        <tr>
                           <td>
                             <div class="circle tgreen"></div>
                           </td>
@@ -95,7 +95,7 @@
                           </td>
                           <td>Expira pronto (7 dias o menos)</td>
                         </tr>
-                         <tr>
+                        <tr>
                           <td>
                             <div class="circle tred"></div>
                           </td>
@@ -1293,7 +1293,7 @@ export default {
 }
 
 .tgreen {
-  background: #5cb85c;
+  background: #398bf7;
 }
 .tred {
   background: #ff1a1a;
