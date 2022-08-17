@@ -53,7 +53,7 @@ export default {
 };
 </script>
 <style lang="scss" scoped>
-@import url('http://fonts.cdnfonts.com/css/seven-segment');
+@import url('https://fonts.cdnfonts.com/css/seven-segment');
 .clock-body {
   height: 200px;
 }
