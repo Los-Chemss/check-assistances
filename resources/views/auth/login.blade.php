@@ -7,9 +7,14 @@
         style="background:url(/{{ env('ASSET_URL') }}images/fondogym.jpg) no-repeat center center; background-size: cover;">
         <div class="auth-box p-4 bg-white rounded">
             <div id="loginform" style="opacity:85%; position:relative;">
-                <div class="mb-4  text-center mb-4 pb-4 ">
-                    <img src="/{{ env('ASSET_URL') }}images\urbanlogo-1024x1024.png" alt="homepage" width="175"
-                        class="dark-logo shadow-lg p2 rounded-circle" />
+                <div class="mb-4  text-center mb-4 pb-4 " style="display:flex; justify-content:center;">
+                    <div class="shadow-lg p-4"
+                        style="border-radius: 50%; width:250px; height:250px;
+                         align-items:center; display:flex; justify-content:center;">
+                        <img src="images/urbanlogo-1024x1024.png" height="200px" alt="logo" class="" />
+                    </div>
+                    {{-- <img src="/{{ env('ASSET_URL') }}images\urbanlogo-1024x1024.png" alt="homepage" width="175"
+                        class="dark-logo shadow-lg p2 rounded-circle" /> --}}
                 </div>
                 <!-- Form -->
                 <div class="row">

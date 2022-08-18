@@ -148,6 +148,9 @@ export default {
       selectedBranch: null,
 
       fullScreen: 0,
+
+      expired: null,
+      expiresClose: null,
     };
   },
 
@@ -172,13 +175,19 @@ export default {
     assistance() {
       let me = this;
       axios
-        .post("/assistances", { branch: me.branch.id, code: me.code })
+        .post("assistances", { branch: me.branch.id, code: me.code })
         .then((response) => {
           console.log(response);
           let movement = null;
           let message = null;
           let customer = response.data.customer;
           console.log(customer);
+          me.expired =
+            Date.now() > me.cusDate(customer.payments[0].expires_at) ? true : false;
+          me.expiresClose = me.expiresAtWeek(customer.payments[0].expires_at)
+            ? true
+            : false;
+
           let info =
             (customer.membership
               ? "Membresia: " +
@@ -186,12 +195,17 @@ export default {
                 customer.membership.name +
                 "</b>"
               : "") +
-            (customer.membership.payments && customer.membership.payments[0]
+            (customer.membership.payments && customer.payments[0]
               ? "<br> Expira el : " +
                 "<b class='text-success'>" +
-                me.formatDate(customer.membership.payments[0].expires_at) +
+                me.formatDate(customer.payments[0].expires_at) +
                 "</b>" +
-                "<br><h1 style='color:red; '> ! EXPIRARÁ PRONTO ! <h1>"
+                "<br><h1 style='color:red; '>" +
+                me.expired
+                ? "Ha expirado"
+                : me.expiresClose
+                ? "Esta por expirar"
+                : "" + " <h1>"
               : "");
           me.code = "";
           if ("entrada" in response.data) {
@@ -210,18 +224,28 @@ export default {
 
           let imgSrc = imgPath != null ? imgPath : "https://placekitten.com/150/150";
           console.log(imgSrc);
+          let mamadolores = !(me.expired || me.expiresClose)
+            ? '<img src="/images/iconogym2.png"/ ' +
+              'style="box-shadow:0 1rem 3rem rgba(68, 122, 17, 0.967), 0 1rem 3rem rgba(0, 0, 0, 0.19);' +
+              ' border-radius:50%; rgba(10, 175, 230, 1), 0 0 20px rgba(10, 175, 230, 0);">'
+            : "";
+
           Swal.fire({
-            // type: "success",
-            /*   imageUrl: "/images/iconogym2.png",
-            imageWidth: 200,
-            imageHeight: 200,
-            imageAlt: "Custom image", */
-            customClass: { popup: "swal-bg" },
+            type: me.expired ? "error" : me.expiresClose ? "info" : "",
+            customClass: {
+              popup: me.expired
+                ? "swal-bg-red"
+                : me.expiresClose
+                ? "swal-bg-yellow"
+                : "swal-bg",
+            },
             // text: message,
             target: document.getElementById("checkCard"),
             // title: "Registro  de " + movement + " satisfactorio",
             html:
-              '<div> <img src="/images/iconogym2.png"/ style="box-shadow:0 1rem 3rem rgba(68, 122, 17, 0.967), 0 1rem 3rem rgba(0, 0, 0, 0.19); border-radius:50%; rgba(10, 175, 230, 1), 0 0 20px rgba(10, 175, 230, 0);"> </div>' +
+              "<div> " +
+              mamadolores +
+              " </div>" +
               '<h1 style="color:white;"><b> Registro  de ' +
               movement +
               " satisfactorio</b></h1>" +
@@ -233,6 +257,7 @@ export default {
             // timer: 5000,
           });
         })
+
         .catch((error) => {
           console.table(error);
           if (error.response.status === 404) {
@@ -245,7 +270,7 @@ export default {
             });
           }
         })
-        .finally(() => (me.code = ""));
+        .finally(() => ((me.code = ""), (me.expired = null), (me.expiresClose = null)));
     },
 
     openFullscreen() {
@@ -293,14 +318,43 @@ export default {
       }
       return [year, month, day].join("-");
     },
+    expiresAtWeek(value) {
+      let d1 = new Date();
+      let d2 = new Date(value);
+      let d3 = d1;
+      let d4 = new Date(d3.setDate(d3.getDate() + 7));
+      return d4.getTime() > d2.getTime() ? 1 : 0;
+    },
+    cusDate(value) {
+      if (value) {
+        return new Date(value);
+      }
+    },
   },
 };
 </script>
 
-<style lang="css">
+<style lang="scss" scope>
 .swal-bg {
   color: #000000;
   background: #000000;
+  /* background: radial-gradient(ellipse at center, #18380a 0%, #000000 120%); */
+  background-size: 100%;
+  width: 80%;
+  height: 80%;
+}
+.swal-bg-red {
+  color: #000000;
+  background: red;
+  /* background: radial-gradient(ellipse at center, #18380a 0%, #000000 120%); */
+  background-size: 100%;
+  width: 80%;
+  height: 80%;
+}
+
+.swal-bg-yellow {
+  color: #000000;
+  background: rgb(255 172 0);
   /* background: radial-gradient(ellipse at center, #18380a 0%, #000000 120%); */
   background-size: 100%;
   width: 80%;
@@ -310,8 +364,19 @@ export default {
   color: white;
   /* text-shadow: 2px 2px 5px white; */
 }
-</style>
-<style lang="scss" scoped>
+
+.swal2-icon.swal2-info {
+  border-color: #000000;
+  color: #bf1212;
+}
+
+.swal2-icon.swal2-error {
+  border-color: #5d4d4d;
+}
+
+.swal2-icon.swal2-error {
+  background-color: #0c0c0c;
+}
 /* body .card {
   background-color: #bf1515 !important;
 } */

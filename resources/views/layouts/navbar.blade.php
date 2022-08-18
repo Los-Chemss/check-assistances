@@ -6,12 +6,17 @@
         <!-- Logo -->
         <a class="navbar-brand" href="{{ route('dashboard') }}">
             <!-- Logo icon -->
-            <b class="logo">
+            <div class="logo" style="display:flex; justify-content:center;">
                 <!--You can put here icon as well  -->
-                <img src="/{{ env('ASSET_URL') }}images\urbanlogo-1024x1024.png" width="60px" sizes="40x40"
-                    alt="homepage" class="dark-logo" />
-                <img src="/{{ env('ASSET_URL') }}images\urbanlogo-1024x1024.png" width="60px"  alt="homepage" class="light-logo" />
-            </b>
+                <div class="shadow-lg p-4"
+                    style="border-radius: 50%; width:70px; height:70px;
+                         align-items:center; display:flex; justify-content:center; background-color:white;" >
+                    <img src="/{{ env('ASSET_URL') }}images\urbanlogo-1024x1024.png" width="60px" sizes="40x40"
+                        alt="homepage" class="dark-logo" />
+                    <img src="/{{ env('ASSET_URL') }}images\urbanlogo-1024x1024.png" width="60px" alt="homepage"
+                        class="light-logo" />
+                </div>
+            </div>
             <!--End Logo icon -->
             <!-- Logo text -->
             {{-- <span class="logo-text">
@@ -91,8 +96,10 @@
                             <li class="user-list">
                                 <form method="POST" action="{{ route('logout') }}">
                                     @csrf
-                                    <a class="px-3 py-20" href="route('logout')" onclick="event.preventDefault();
-                                this.closest('form').submit();" aria-expanded="false">
+                                    <a class="px-3 py-20" href="route('logout')"
+                                        onclick="event.preventDefault();
+                                this.closest('form').submit();"
+                                        aria-expanded="false">
                                         <i class="fa fa-power-off  text-danger"></i>
                                         <span class="hide-menu"> Logout </span>
                                     </a>

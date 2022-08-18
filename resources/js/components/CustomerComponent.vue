@@ -459,7 +459,7 @@
                           v-model="customer.lastname"
                         />
                       </div>
-                      <div class="form-group col-md-4">
+                    <!--   <div class="form-group col-md-4">
                         <label for="code">code</label>
                         <input
                           type="text"
@@ -467,8 +467,7 @@
                           id="code"
                           v-model="customer.code"
                         />
-                        <!-- <span class="bar"></span> -->
-                      </div>
+                      </div> -->
                     </div>
                     <div class="row">
                       <div class="form-group col-md-4">
@@ -1259,6 +1258,7 @@ export default {
       return pagesArray;
     },
     // filter: this.listCustomers(this.page, this.buscar, this.criterio),
+
   },
 
   mounted() {

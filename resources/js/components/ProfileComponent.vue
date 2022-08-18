@@ -107,6 +107,26 @@
               aria-labelledby="pills-setting-tab"
             >
               <div class="card-body">
+                <div>
+                  <label class="typo__label">Seleccionar sucursal</label>
+                  <multiselect
+                    style="background-color: black"
+                    v-model="selectedBranch"
+                    deselect-label="Seleccionado actual"
+                    track-by="division"
+                    label="division"
+                    placeholder="Seleccione uno"
+                    :options="branches"
+                    :searchable="false"
+                    :allow-empty="false"
+                  >
+                    <template slot="singleLabel" slot-scope="{ option }">
+                      <strong>{{ option.division }}</strong>
+                      | <strong>{{ option.location }}</strong>
+                    </template>
+                  </multiselect>
+                  <!-- <pre class="language-json"><code>{{ selectedBranch  }}</code></pre> -->
+                </div>
                 <form
                   class="form-horizontal form-material"
                   enctype="multipart/form-data"
@@ -120,17 +140,18 @@
                   /> -->
                   <div class="form-group" autocomplete="none">
                     <label for="select2-search-hide">Select branch</label>
-                    <multiselect
+
+                    <!--   <multiselect
                       v-model="selectedBranch"
                       tag-placeholder="Add this as new tag"
                       placeholder="Search or add a tag"
                       label="division"
                       track-by="division"
-                      :options=[1,2,3,4,5,6,7]
+                      :options="[1, 2, 3, 4, 5, 6, 7]"
                       :multiple="true"
                       :taggable="true"
                       @change="selectBranch"
-                    ></multiselect>
+                    ></multiselect> -->
 
                     <!--     <select
                       @tag="addTag"
@@ -279,8 +300,8 @@
 
 <script>
 import DisableAutocomplete from "vue-disable-autocomplete";
-Vue.use(DisableAutocomplete);
 import Multiselect from "vue-multiselect";
+Vue.use(DisableAutocomplete);
 export default {
   components: { Multiselect },
   data() {
@@ -311,7 +332,7 @@ export default {
       axios
         .get("branches")
         .then((response) => {
-           console.log(response);
+          console.log(response);
           me.branches = response.data.branches;
         })
         .catch((error) => {
@@ -461,4 +482,33 @@ export default {
   },
 };
 </script>
-<style src="vue-multiselect/dist/vue-multiselect.min.css"></style>
+<style scoped src="vue-multiselect/dist/vue-multiselect.min.css"></style>
+<style scoped lang="scss">
+/* .e-multiselect.e-input-group .e-multi-select-wrapper {
+  background-color: red;
+} */
+.multiselect__option--group {
+  background: red !important;
+  color: #35495e !important;
+  font-weight: bold !important;
+}
+.multiselect__tags {
+  background: black !important;
+}
+/* .multiselect .multiselect__select {
+  background: black !important;
+  border-radius: 50%;
+}
+.multiselect .multiselect__content-wrapper {
+  background: black !important;
+  border-radius: 50%;
+}
+.multiselect .multiselect__content {
+  background: black !important;
+  border-radius: 50%;
+}
+.multiselect .multiselect__single {
+  background: black !important;
+  border-radius: 50%;
+} */
+</style>
