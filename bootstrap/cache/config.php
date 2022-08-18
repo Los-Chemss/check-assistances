@@ -1,16 +1,16 @@
 <?php return array (
   'app' => 
   array (
-    'name' => 'Urban fit',
+    'name' => 'Laravel',
     'env' => 'local',
     'debug' => true,
     'url' => 'http://localhost',
-    'asset_url' => '',
+    'asset_url' => 'any/',
     'timezone' => 'America/Mexico_City',
     'locale' => 'en',
     'fallback_locale' => 'en',
     'faker_locale' => 'en_US',
-    'key' => 'base64:DPWSu5IHui9kYUNCYrfax9Cq2m3ZXClArkMx7NF/h90=',
+    'key' => 'base64:0gLZ209qw8YvhcfYN42CVsKPRjLLycJgLiC2iNM//NI=',
     'cipher' => 'AES-256-CBC',
     'providers' => 
     array (
@@ -229,7 +229,7 @@
         'driver' => 'octane',
       ),
     ),
-    'prefix' => 'urban_fit_cache',
+    'prefix' => 'laravel_cache',
   ),
   'cors' => 
   array (
@@ -268,7 +268,7 @@
       array (
         'driver' => 'sqlite',
         'url' => NULL,
-        'database' => 'checkassistances',
+        'database' => 'checkin',
         'prefix' => '',
         'foreign_key_constraints' => true,
       ),
@@ -278,7 +278,7 @@
         'url' => NULL,
         'host' => 'mysql',
         'port' => '3306',
-        'database' => 'checkassistances',
+        'database' => 'checkin',
         'username' => 'sail',
         'password' => 'password',
         'unix_socket' => '',
@@ -318,7 +318,7 @@
         'url' => NULL,
         'host' => 'mysql',
         'port' => '3306',
-        'database' => 'checkassistances',
+        'database' => 'checkin',
         'username' => 'sail',
         'password' => 'password',
         'charset' => 'utf8',
@@ -333,7 +333,7 @@
         'url' => NULL,
         'host' => 'mysql',
         'port' => '3306',
-        'database' => 'checkassistances',
+        'database' => 'checkin',
         'username' => 'sail',
         'password' => 'password',
         'charset' => 'utf8',
@@ -348,7 +348,7 @@
       'options' => 
       array (
         'cluster' => 'redis',
-        'prefix' => 'urban_fit_database_',
+        'prefix' => 'laravel_database_',
       ),
       'default' => 
       array (
@@ -571,7 +571,7 @@
     'from' => 
     array (
       'address' => NULL,
-      'name' => 'Urban fit',
+      'name' => 'Laravel',
     ),
     'markdown' => 
     array (
@@ -759,7 +759,7 @@
       0 => 2,
       1 => 100,
     ),
-    'cookie' => 'urban_fit_session',
+    'cookie' => 'laravel_session',
     'path' => '/',
     'domain' => NULL,
     'secure' => NULL,

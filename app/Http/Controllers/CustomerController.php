@@ -110,6 +110,7 @@ class CustomerController extends Controller
                 'customers' => $customersRes
             ];
         } catch (Exception $e) {
+            $c = $this;
             return response($e->getMessage());
         }
     }
@@ -182,20 +183,7 @@ class CustomerController extends Controller
             $membership =  Membership::where('id', $request->membership)->first();
             if (!isset($membership->id)) return response('Membership not found', 404);
 
-            $lastCode = Customer::select(
-                DB::raw("MAX(code) AS code")
-            )->get();
-
-            // return $lastCode;
-            /*   $cusCodes =  DB::table("customers")
-                ->select("(max(code)+1) as max_val")
-                ->get(); */
-
-            //SELECT (MAX(Column_Name)+1) AS Max_val FROM Table_Name;
-
-            // $index = 0001;
-
-
+            $lastCode = Customer::select(DB::raw("MAX(code) AS code"))->get();
 
             $data = [
                 'name' => $request->name,
@@ -210,9 +198,8 @@ class CustomerController extends Controller
                 'membership_id' => $membership->id,
                 'registered_on_branch_id' => $branch->id
             ];
-
             $customer = Customer::create($data);
-            // $paidDate=date('Y-m-d', strtotime($request->paid_at));
+
             $paid = [
                 'paid_at' => $request->income,
                 'expires_at' => date('Y-m-d', strtotime($request->income . "+ $membership->period days")),
@@ -221,24 +208,21 @@ class CustomerController extends Controller
                 'customer_id' => $customer->id,
                 'amount' => $membership->price
             ];
-            $payment = Payment::create($paid);
+            Payment::create($paid);
 
             if ($request->image) {
                 $img = $request->image;
                 $img = str_replace('data:image/jpeg;base64,', '', $img);
                 $img = str_replace(' ', '+', $img);
                 $data = base64_decode($img);
-
                 $this->uploadPicture($data, $customer);
-                // Storage::put('picture.jpg', $data);
-
-                // return response(Response::HTTP_OK);
             }
 
 
             return response($customer, 201);
         } catch (Exception $e) {
-            return response($e->getMessage(), 500);
+            $c = $this;
+            return $this->catchEx($e->getMessage(), $c,  __FUNCTION__ . ' | ' . $e->getLine());
         }
     }
 
@@ -258,25 +242,8 @@ class CustomerController extends Controller
             $destination = "images/customers/" . $cusPath . '/avatar';
             $destination = str_replace(' ', '_', $destination);
 
-
-
-            /*   $filename = date('dmY-His');
-            $filename = str_replace(' ', '', $filename);
-            $filename = str_replace('-', '_', $filename); */
-            /*   if (env('APP_ENV') == 'local') {
-                $data->storeAs("public/$destination", $filename);
-            } else {
-                $data->storeAs("$destination", $filename);
-            } */
             $filePath = $destination . '/' . date('dmY-His') . '.jpg';
             Storage::disk('public')->put($filePath,  /*  "\xEF\xBB\xBF" . */ $data);
-            // $fileUrl = "$destination/$filename";
-            // $request->request->add(['file' => $data]);
-
-
-            /*  foreach ($files as $file) {
-                array_push($fileList, $fileUrl);
-            } */
 
             if ($customer['image'] != null) {
                 foreach (explode(', ', $customer->image) as $image) {
@@ -310,8 +277,6 @@ class CustomerController extends Controller
                 ->with('membership')
                 ->first();
 
-            // $customer->image = Storage::disk('public')->get($customer->image);
-
             $payments = Payment::where('customer_id', $customer->id)
                 ->select('amount')
                 ->get();
@@ -324,7 +289,7 @@ class CustomerController extends Controller
             return response()->json([$customer, $sum]);
         } catch (Exception $e) {
             $c = $this;
-            return $this->catchEx($e->getMessage(), $c,  __FUNCTION__);
+            return $this->catchEx($e->getMessage(), $c,  __FUNCTION__ . ' | ' . $e->getLine());
         }
     }
 
@@ -357,9 +322,15 @@ class CustomerController extends Controller
                         $customer->$key = $val;
                     }
                 }
+                if ($request->image) {
+                    $img = $request->image;
+                    $img = str_replace('data:image/jpeg;base64,', '', $img);
+                    $img = str_replace(' ', '+', $img);
+                    $data = base64_decode($img);
+                    $this->uploadPicture($data, $customer);
+                }
                 $customer->save();
             }
-            // return response()->json(200);
             return response('Updated', 200);
         } catch (Exception $e) {
             $c = $this;
@@ -459,7 +430,8 @@ class CustomerController extends Controller
                 return response()->json(['message' => 'error uploading file'], 503);
             }
         } catch (Exception $e) {
-            return $this->returnJsonError($e, ['CLItemController' => 'uploadFile']);
+            $c = $this;
+            return $this->catchEx($e->getMessage(), $c,  __FUNCTION__ . ' | ' . $e->getLine());
         }
     }
 }

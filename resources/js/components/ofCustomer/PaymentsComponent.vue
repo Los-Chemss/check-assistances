@@ -303,17 +303,16 @@
               <div class="flex flex-wrap -m-2">
                 <form class="">
                   <div class="form-group mb-5">
-                    <label for="paid_at">Paid at</label>
+                    <label for="paid_at">Fecha de pago</label>
                     <input
                       type="date"
                       class="form-control"
                       id="paid_at"
                       v-model="paid_at"
                     />
-                    <!--    <span class="bar"></span> -->
                   </div>
                   <div class="form-group mb-5">
-                    <label for="membership">Membership</label>
+                    <label for="membership">Membresia</label>
                     <select
                       class="form-control p-0"
                       id="membership"
@@ -322,7 +321,7 @@
                     >
                       <option></option>
                       <option v-for="membership in memberships" :value="membership">
-                        {{ membership.name }} | ${{ membership.price }}
+                        {{ membership.name }} | <i class="fas fa-arrow-left"></i> ${{ membership.price }}
                       </option>
                     </select>
                   </div>
@@ -605,7 +604,7 @@ export default {
           switch (action) {
             case "store": {
               this.modal = 1;
-              this.modalTitle = "Nuevo pago";
+              this.modalTitle = "Nuevo pago | Renovar suscripcion";
               this.actionType = 1;
               this.paid_at = "";
               this.selectedMembership = "";

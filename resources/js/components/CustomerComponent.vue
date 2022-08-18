@@ -594,7 +594,7 @@
               <!-- <h3 class="card-title">Detalles</h3>
               <h6 class="card-subtitle">{{ customerInfo.name }}</h6> -->
               <div class="row">
-                <div class="col-lg-3 col-md-3 col-sm-6">
+                <div class="col-lg-3 col-md-3 col-sm-6 vcenter">
                   <div class="white-box text-center">
                     <img
                       :src="
@@ -604,6 +604,7 @@
                       "
                       class="img-fluid rounded-circle shadow-lg p-2"
                       width="150"
+                      height="150"
                       alt="customer-image"
                     />
                     <!-- <label for="">{{ customerInfo.image }}</label> -->
@@ -948,8 +949,6 @@ export default {
 
     saveCustomer() {
       let me = this;
-      /*  console.log(me.currentPhoto ? "i has" : "on no");
-      return; */
       let request = {
         name: me.customer.name,
         lastname: me.customer.lastname,
@@ -974,10 +973,7 @@ export default {
           this.customerId = response.data.id;
           this.recordMethod = "store";
           console.log({ cusId: me.customerId });
-          if (!document.getElementById("downloadPhoto")) {
-            me.shootMessage();
-            // request.file = document.getElementById("downloadPhoto");
-          }
+          me.shootMessage();
 
           Swal.fire({
             type: "success",
@@ -1013,24 +1009,16 @@ export default {
         phone: me.customer.phone,
         membership_id: me.selectedMembership.id,
         id: me.customer.id,
+        image: me.currentPhoto,
       };
-      if (this.photo) {
-        alert("some photo");
-        request["file"] = this.photo;
-      }
-
       axios
         .post("customers/update/" + me.customer.id, request)
         .then((response) => {
           this.customerId = me.customer.id;
           this.recordMethod = "update";
           console.log({ cusId: me.customerId });
-          //   me.shootMessage();
-          if (document.getElementById("downloadPhoto")) {
-            request.file = document.getElementById("downloadPhoto");
-          } else {
-            me.shootMessage();
-          }
+          me.shootMessage();
+
           Swal.fire({
             type: "success",
             title: "Cliente actualizado",
@@ -1042,7 +1030,7 @@ export default {
           me.closeModal();
         })
         .catch((error) => {
-          console.log(error);
+          console.table(error);
           let message = me.swalErrorMessage(error.response.data.errors);
           Swal.fire({
             type: "error",
@@ -1305,5 +1293,11 @@ export default {
 .circle-column {
   vertical-align: middle;
   text-align: center;
+}
+
+.vcenter {
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
 </style>

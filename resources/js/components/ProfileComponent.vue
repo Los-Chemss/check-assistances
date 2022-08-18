@@ -120,7 +120,20 @@
                   /> -->
                   <div class="form-group" autocomplete="none">
                     <label for="select2-search-hide">Select branch</label>
-                    <select
+                    <multiselect
+                      v-model="selectedBranch"
+                      tag-placeholder="Add this as new tag"
+                      placeholder="Search or add a tag"
+                      label="division"
+                      track-by="division"
+                      :options=[1,2,3,4,5,6,7]
+                      :multiple="true"
+                      :taggable="true"
+                      @change="selectBranch"
+                    ></multiselect>
+
+                    <!--     <select
+                      @tag="addTag"
                       class="select2 form-control custom-select"
                       id="select2-search-hide"
                       style="width: 100%"
@@ -133,7 +146,7 @@
                         </p>
                         <br />
                       </option>
-                    </select>
+                    </select> -->
                   </div>
 
                   <div class="form-group" autocomplete="none">
@@ -267,8 +280,9 @@
 <script>
 import DisableAutocomplete from "vue-disable-autocomplete";
 Vue.use(DisableAutocomplete);
-
+import Multiselect from "vue-multiselect";
 export default {
+  components: { Multiselect },
   data() {
     return {
       loading: false,
@@ -294,14 +308,11 @@ export default {
   methods: {
     getBranches() {
       let me = this;
-
       axios
-        .get("api/branches")
+        .get("branches")
         .then((response) => {
-          console.log(response);
-
-          //   console.log(response);
-          me.branches = response.data;
+           console.log(response);
+          me.branches = response.data.branches;
         })
         .catch((error) => {
           console.table(error);
@@ -312,8 +323,7 @@ export default {
       const branch = JSON.parse(
         JSON.stringify(event.target.options[event.target.options.selectedIndex])
       )._value;
-
-      console.log(branch);
+      //   console.log(branch);
       this.selectedBranch = branch;
     },
 
@@ -339,7 +349,6 @@ export default {
       this.submitted = true;
       this.errors = {};
       //   this.valideForm();
-
       console.log(Object.keys(this.errors));
       if (Object.keys(this.errors).length) {
         return;
@@ -452,3 +461,4 @@ export default {
   },
 };
 </script>
+<style src="vue-multiselect/dist/vue-multiselect.min.css"></style>
