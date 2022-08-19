@@ -438,7 +438,7 @@
                           </div>
                         </div>
                       </div>
-                      <div class="form-group col-md-4">
+                      <div class="form-group col-md-6">
                         <label for="name">Nombre</label>
                         <input
                           type="text"
@@ -449,7 +449,7 @@
                         />
                         <!--    <span class="bar"></span> -->
                       </div>
-                      <div class="form-group col-md-4">
+                      <div class="form-group col-md-6">
                         <label for="lastname">Apellidos</label>
                         <input
                           placeholder="Simpson"
@@ -459,7 +459,7 @@
                           v-model="customer.lastname"
                         />
                       </div>
-                    <!--   <div class="form-group col-md-4">
+                      <!--   <div class="form-group col-md-4">
                         <label for="code">code</label>
                         <input
                           type="text"
@@ -536,12 +536,8 @@
                           id="income"
                           v-model="customer.income"
                         />
-                        <!-- <span class="bar"></span> -->
                       </div>
                     </div>
-                    <!--  </form> -->
-                    <!--   </div>
-                </div> -->
                   </div>
                 </div>
                 <!-- form -->
@@ -602,9 +598,9 @@
                           : 'https://placekitten.com/150/150'
                       "
                       class="img-fluid rounded-circle shadow-lg p-2"
-                      width="150"
-                      height="150"
+
                       alt="customer-image"
+                      style="width:200px; height:200px"
                     />
                     <!-- <label for="">{{ customerInfo.image }}</label> -->
                   </div>
@@ -717,19 +713,12 @@ import Camera from "./extra/Camera.vue";
 import PaymentsComponent from "./ofCustomer/PaymentsComponent.vue";
 import AsistancesComponent from "./ofCustomer/AssistancesComponent.vue";
 export default {
-  //   props: ["photo"],
-  /*   watch: {
-    photo: function () {
-      this.currentPhoto = this.photo;
-      // this.$emit("MaritialStatusChanged", this.mutableMaritialStatus); // send the sum
-    },
-  }, */
   data() {
     return {
       loading: false,
       dropzoneOptions: {
         url: "/customers/upload-file",
-        /*  accept: function (file, done) {
+        accept: function (file, done) {
           console.log("uploaded");
           done();
         },
@@ -739,8 +728,7 @@ export default {
               this.removeFile(this.files[0]);
             }
           });
-        }, */
-
+        },
         thumbnailWidth: 150,
         parallelUploads: 1,
         maxFiles: 1,
@@ -886,16 +874,7 @@ export default {
       if (value) {
         return new Date(value);
       }
-    } /*
-    cusCloseDate(value) {
-      if (value != null) {
-        var date = new Date();
-        // console.log(this.formatDateToInput(date));
-        if (date != null) {
-          return date.setDate(date.getDate() + 7);
-        }
-      }
-    }, */,
+    },
 
     expiresAtWeek(value) {
       let d1 = new Date();
@@ -943,6 +922,7 @@ export default {
     },
 
     takedPhoto(value) {
+      this.$refs.myVueDropzone.removeAllFiles();
       this.currentPhoto = value;
     },
 
@@ -958,12 +938,10 @@ export default {
         postcode: me.customer.postcode,
         phone: me.customer.phone,
         membership: me.selectedMembership.id,
-        image: me.currentPhoto,
       };
-      /*  request["file"] = this.photo;
-      if (this.photo) {
-        alert("some photo");
-      } */
+      if (me.currentPhoto != null) {
+        request.image = me.currentPhoto;
+      }
 
       axios
         .post("customers/create", request)
@@ -973,7 +951,6 @@ export default {
           this.recordMethod = "store";
           console.log({ cusId: me.customerId });
           me.shootMessage();
-
           Swal.fire({
             type: "success",
             title: "Cliente creado",
@@ -1008,8 +985,11 @@ export default {
         phone: me.customer.phone,
         membership_id: me.selectedMembership.id,
         id: me.customer.id,
-        image: me.currentPhoto,
+        // image: me.currentPhoto,
       };
+      if (me.currentPhoto != null) {
+        request['image'] = me.currentPhoto;
+      }
       axios
         .post("customers/update/" + me.customer.id, request)
         .then((response) => {
@@ -1258,7 +1238,6 @@ export default {
       return pagesArray;
     },
     // filter: this.listCustomers(this.page, this.buscar, this.criterio),
-
   },
 
   mounted() {

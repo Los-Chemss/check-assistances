@@ -26,13 +26,25 @@ class AssistanceController extends Controller
             $buscar = $request->buscar;
             $criterio = $request->criterio;
 
-            $asistances = Assistance::with('customer')
-                ->with('branch')
-                ->when($buscar && $criterio, function ($q) use ($criterio, $buscar) {
-                    $q->criterion($criterio, $buscar);
-                })
-                // ->criterion($criterio, $buscar)
+            $asistances = Assistance::with(['customer' => function ($q) use ($criterio, $buscar) {
+                if (isset($buscar) && in_array($criterio, ['code', 'name', 'income'])) {
+                    $criterio === 'name' ?
+                        $q->where('name', 'LIkE', '%' . $buscar . '%')
+                        ->orWhere('lastname', 'LIkE', '%' . $buscar . '%')
+                        : ($criterio === 'income' ?
+                            $q->where('income', '>=', date('ymd', strtotime($buscar))) :
+                            $q->where('code', 'LIkE', '%' . $buscar . '%'));
+                }
+            }])
+                ->with(['branch' => function ($q)  use ($criterio, $buscar) {
+                    if (isset($buscar) && $criterio === 'branch') {
+                        $q->where('division', 'LIKE', '%' . $buscar . '%');
+                    }
+                }])
+                ->orderBy('input', 'desc')
                 ->paginate(10);
+            // return $asistances;
+
             $asistancesRes = [];
             foreach ($asistances as $as) {
                 array_push($asistancesRes, [
@@ -70,9 +82,10 @@ class AssistanceController extends Controller
                 ->with('customer')
                 ->with('branch')
                 ->when($buscar && $criterio, function ($q) use ($criterio, $buscar) {
-                    $q->criterion($criterio, $buscar);
+                    if ($criterio === 'income') {
+                        $q->where('income', '>=', date('ymd', strtotime($buscar)));
+                    }
                 })
-                // ->criterion($criterio, $buscar)
                 ->paginate(10);
             $asistancesRes = [];
             foreach ($asistances as $as) {
@@ -128,12 +141,18 @@ class AssistanceController extends Controller
             if (!$customer) return response('Customer not found', 404);
             $branch = Branch::where('id', $user->branch_id)->first(); //It be found by ip ? or aautenticatin manager
             if (!$branch) return response('Branch not found', 404);
-            $customer = Customer::where('id', $customer->id)
+            /*   $customer = Customer::where('id', $customer->id)
                 ->with('membership')
                 ->with('payments', function ($q) {
                     $q->orderBy('expires_at', 'desc')->first();
                 })
-                ->first();
+                ->first(); */
+            $customer = Customer::where('id', $customer->id)->with(['membership' => function ($q) use ($customer) {
+                $q->with(['payments' => function ($q1) use ($customer) { //->where('customer_id', $customer->id)
+                    $q1->where('customer_id', $customer->id)->orderBy('expires_at', 'desc')->first();
+                }]);
+            }])->first();
+
             /* ->with(['membership' => function ($q) use ($customer) {
                    /*  $q->with(['payments' => function ($q1) use ($customer) { //->where('customer_id', $customer->id)
                         $q1->orderBy('expires_at', 'desc')->first();

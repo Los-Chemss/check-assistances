@@ -13,72 +13,78 @@
       <div class="col-12">
         <div class="card">
           <div class="card-header border-bottom shadow-sm pt-4 mt-4 pb-2 mb-22">
-            <button
-              type="button"
-              class="btn btn-primary btn-lg fas fa-edit"
-              @click="openModal('payments', 'store')"
-            >
-             <i class="fas fa-dollar"></i> Nuevo pago
-            </button>
+            <div class="row">
+              <div class="col-sm-12 col-md-8">
+                <div class="input-group mb-3 dataTables_filter">
+                  <div class="input-group-prepend">
+                    <select
+                      class="input-group-text"
+                      v-model="criterio"
+                      @change="selectCriteria"
+                    >
+                      <optgroup>
+                        <option v-for="criteria in criterions" :value="criteria">
+                          {{ criteria.val }}
+                        </option>
+                      </optgroup>
+                    </select>
+                  </div>
+                  <input
+                    :type="
+                      criterio.key == 'paid_at' || criterio.key == 'expires_at'
+                        ? 'date'
+                        : criterio.key == 'code'
+                        ? 'number'
+                        : criterio.key == 'branch'
+                        ? 'text'
+                        : 'text'
+                    "
+                    v-model="buscar"
+                    @keyup.enter="listPayments(1, buscar, criterio)"
+                    class="form-control"
+                    :placeholder="
+                      criterio.key == 'paid_at' || criterio.key == 'expires_at'
+                        ? '22/07/2022'
+                        : criterio.key == 'customer'
+                        ? 'Nombre o apellidos del cliente'
+                        : criterio.key == 'branch'
+                        ? 'Nombre de sucursal o direccion'
+                        : 'Monthly'
+                    "
+                  />
+                  <div class="input-group-append">
+                    <button
+                      type="submit"
+                      @click="listPayments(1, buscar, criterio)"
+                      class="btn-sm btn-primary input-group-text"
+                    >
+                      <i class="fa fa-search"></i>
+                    </button>
+                  </div>
+                </div>
+              </div>
+              <div class="col-sm-6 col-md-4">
+                <button
+                  type="button"
+                  class="btn btn-primary btn-lg fas fa-edit"
+                  @click="openModal('payments', 'store')"
+                  style="float: right"
+                >
+                  <i class="fas fa-dollar"></i> Nuevo pago
+                </button>
+              </div>
+            </div>
           </div>
           <div class="card-body">
-            <h4 class="card-title">Payments</h4>
+            <!-- <h4 class="card-title">Payments</h4> -->
             <div class="table-responsive">
               <div
                 id="col_render_wrapper"
                 class="dataTables_wrapper container-fluid dt-bootstrap4"
               >
-                <div class="row">
-                  <div class="col-sm-12 col-md-6">
-                    <div class="input-group mb-3 dataTables_filter">
-                      <div class="input-group-prepend">
-                        <select
-                          class="input-group-text"
-                          v-model="criterio"
-                          @change="selectCriteria"
-                        >
-                          <optgroup>
-                            <option v-for="criteria in criterions" :value="criteria">
-                              {{ criteria }}
-                            </option>
-                          </optgroup>
-                        </select>
-                      </div>
-                      <input
-                        :type="
-                          criterio == 'paid_at' || criterio == 'expires_at'
-                            ? 'date'
-                            : criterio == 'code'
-                            ? 'number'
-                            : criterio == 'branch'
-                            ? 'text'
-                            : 'text'
-                        "
-                        v-model="buscar"
-                        @keyup.enter="listPayments(1, buscar, criterio)"
-                        class="form-control"
-                        :placeholder="
-                          criterio == 'paid_at' || criterio == 'expires_at'
-                            ? '22/07/2022'
-                            : criterio == 'customer'
-                            ? 'Nombre o apellidos del cliente'
-                            : criterio == 'branch'
-                            ? 'Nombre de sucursal o direccion'
-                            : 'Monthly'
-                        "
-                      />
-                      <div class="input-group-append">
-                        <button
-                          type="submit"
-                          @click="listPayments(1, buscar, criterio)"
-                          class="btn-sm btn-primary input-group-text"
-                        >
-                          <i class="fa fa-search"></i>
-                        </button>
-                      </div>
-                    </div>
-                  </div>
-                </div>
+                <!-- <div class="row">
+
+                </div> -->
                 <div class="row">
                   <div class="col-sm-12">
                     <table
@@ -123,7 +129,11 @@
                             max-height="5px"
                             v-if="key != 'customerId' || key != 'embershipId'"
                           >
-                            {{ value }}
+                            {{
+                              key === "paid_at" || key === "expires_at"
+                                ? formatDateToInput(value)
+                                : value
+                            }}
                           </td>
                           <td>
                             <button
@@ -151,7 +161,7 @@
                             v-for="(value, key, cIndex) in payment"
                             v-if="key != 'customerId' || key != 'embershipId'"
                           >
-                             {{
+                            {{
                               key === "customer"
                                 ? "Cliente"
                                 : key === "membership"
@@ -386,11 +396,18 @@ export default {
         to: 0,
       },
       offset: 3,
-      criterio: "paid_at",
+      criterio: { key: "paid_at", val: "Pagado el " },
       buscar: "",
       payment_id: null,
       showPayments: 10,
-      criterions: ["paid_at", "expires_at", "customer", "membership", "branch"],
+      criterions: [
+        { key: "paid_at", val: "Pagado el " },
+        { key: "customer", val: "Cliente" },
+        { key: "expires_at", val: "Expira el" },
+        { key: "membership", val: "Membresia" },
+        { key: "branch", val: "Sucursal" },
+      ],
+      //   criterions: ["paid_at", "expires_at", "customer", "membership", "branch"],
     };
   },
 
@@ -424,10 +441,10 @@ export default {
 
   methods: {
     listPayments(page, buscar, criterio) {
-      console.log("getted");
       let me = this;
       me.loading = true;
-      let url = "payments?page=" + page + "&buscar=" + buscar + "&criterio=" + criterio;
+      let url =
+        "payments?page=" + page + "&buscar=" + buscar + "&criterio=" + criterio.key;
       axios
         .get(url)
         .then((response) => {
@@ -460,7 +477,6 @@ export default {
       axios
         .get("customers/select")
         .then((response) => {
-          //   console.log(response);
           var respuesta = response.data;
           me.customers = respuesta;
         })
@@ -499,7 +515,7 @@ export default {
           //   return;
           let respuesta = response.data;
           console.log(respuesta);
-        //   return;
+          //   return;
           let message = "";
           /*   "Ha pagado una membresia " +
             respuesta.membership.name +
@@ -541,7 +557,7 @@ export default {
         .then((response) => {
           let respuesta = response.data;
           console.log(respuesta);
-          return;
+          //   return;
           Swal.fire({
             type: "success",
             title: "Pago actualizado",

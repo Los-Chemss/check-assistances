@@ -40,7 +40,7 @@
                         >
                           <optgroup>
                             <option v-for="criteria in criterions" :value="criteria">
-                              {{ criteria }}
+                              {{ criteria.val }}
                             </option>
                           </optgroup>
                         </select>

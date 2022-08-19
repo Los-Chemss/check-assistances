@@ -56,7 +56,7 @@
       </button>
     </div>
 
- <!--    <div v-if="isPhotoTaken && isCameraOpen" class="camera-download">
+    <!--    <div v-if="isPhotoTaken && isCameraOpen" class="camera-download">
       <a
         id="downloadPhoto"
         download="my-photo.jpg"
@@ -84,12 +84,15 @@ export default {
 
   methods: {
     toggleCamera() {
+      console.log("camera togled");
       if (this.isCameraOpen) {
+        console.log("camera closed");
         this.isCameraOpen = false;
         this.isPhotoTaken = false;
         this.isShotPhoto = false;
         this.stopCameraStream();
       } else {
+        console.log("camera open");
         this.isCameraOpen = true;
         this.createCameraElement();
       }
@@ -142,26 +145,16 @@ export default {
       console.log({ context });
       console.log({ canvas });
     },
-    /*
-    usePhoto() {
-      const download = document.getElementById("downloadPhoto");
-      const canvas = document
-        .getElementById("photoTaken")
-        .toDataURL("image/jpeg")
-        .replace("image/jpeg", "image/octet-stream");
-      this.photo = canvas;
 
-      //   download.setAttribute("href", canvas);
-    }, */
 
-    downloadImage() {
+ /*    downloadImage() {
       const download = document.getElementById("downloadPhoto");
       const canvas = document
         .getElementById("photoTaken")
         .toDataURL("image/jpeg")
         .replace("image/jpeg", "image/octet-stream");
       download.setAttribute("href", canvas);
-    },
+    }, */
   },
 };
 </script>
