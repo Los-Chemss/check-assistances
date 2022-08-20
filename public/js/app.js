@@ -4706,15 +4706,15 @@ Vue.use(vue_disable_autocomplete__WEBPACK_IMPORTED_MODULE_0__["default"]);
       this.valideUrlField("userObj.cf_2252", "instagram");
       this.valideUrlField("userObj.cf_2250", "linkedin");
     },
-      valideUrlField(field, as) {
+     valideUrlField(field, as) {
       let fail;
       if (field === "userObj.cf_2254") fail = this.userObj.cf_2254;
       if (field === "userObj.cf_2246") fail = this.userObj.cf_2246;
       if (field === "userObj.cf_2252") fail = this.userObj.cf_2252;
       if (field === "userObj.cf_2250") fail = this.userObj.cf_2250;
-        console.log(field);
+       console.log(field);
       console.log(fail);
-        if (
+       if (
         !/(http|https):\/\/(\w+:{0,1}\w*@)?(\S+)(:[0-9]+)?(\/|\/([\w#!:.?+=&%@!\-\/]))?/i.test(
           fail
         ) &&
