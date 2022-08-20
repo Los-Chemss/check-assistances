@@ -181,11 +181,18 @@ export default {
           let customer = response.data.customer;
           console.log(customer);
           me.expired =
-            Date.now() > me.cusDate(customer.payments[0].expires_at) ? true : false;
-          me.expiresClose = me.expiresAtWeek(customer.payments[0].expires_at)
+            Date.now() > me.cusDate(customer.membership.payments[0].expires_at)
+              ? true
+              : false;
+          me.expiresClose = me.expiresAtWeek(customer.membership.payments[0].expires_at)
             ? true
             : false;
 
+          let expirationStatus = me.expired
+            ? "<h1 class='text-danger'>Ha expirado </h1>"
+            : me.expiresClose
+            ? "<h1 class='text-warning'>Esta por expirar </h1>"
+            : "";
           let info =
             (customer.membership
               ? "Membresia: " +
@@ -193,23 +200,32 @@ export default {
                 customer.membership.name +
                 "</b>"
               : "") +
-            (customer.membership.payments && customer.payments[0]
+            (customer.membership.payments && customer.membership.payments[0]
               ? "<br> Expira el : " +
                 "<b class='text-success'>" +
-                me.formatDate(customer.payments[0].expires_at) +
-                "</b>" +
+                me.formatDate(customer.membership.payments[0].expires_at) +
+                "</b>"
+              : "") +
+            "<br>" +
+            expirationStatus;
+          /* +
                 "<br><h1 style='color:red; '>" +
                 me.expired
                 ? "Ha expirado"
                 : me.expiresClose
                 ? "Esta por expirar"
                 : "" + " <h1>"
-              : "");
+              : "" */
           me.code = "";
           if ("entrada" in response.data) {
             movement = "entrada";
             message =
-              "Bienvenido <b class='text-success'> " + customer.name + "</b><br>" + info;
+              "Bienvenido <b class='text-success'> " +
+              customer.name +
+              " " +
+              customer.lastname +
+              "</b><br>" +
+              info;
           }
           if ("salida" in response.data) {
             movement = "salida";
@@ -230,13 +246,15 @@ export default {
 
           Swal.fire({
             type: me.expired ? "error" : me.expiresClose ? "info" : "",
-            customClass: {
-              popup: me.expired
+            customClass: { popup: "swal-bg" },
+            /*   customClass: {
+              popup: "swal-bg",
+                popup: me.expired
                 ? "swal-bg-red"
                 : me.expiresClose
                 ? "swal-bg-yellow"
                 : "swal-bg",
-            },
+            }, */
             // text: message,
             target: document.getElementById("checkCard"),
             // title: "Registro  de " + movement + " satisfactorio",
@@ -331,8 +349,12 @@ export default {
   },
 };
 </script>
+<<<<<<< HEAD
 
 <style lang="scss" scoped>
+=======
+<style lang="scss">
+>>>>>>> 94b54081afb02fb827aa0f8e819b0e154103ba05
 .swal-bg {
   color: #000000;
   background: #000000;
@@ -344,7 +366,6 @@ export default {
 .swal-bg-red {
   color: #000000;
   background: red;
-  /* background: radial-gradient(ellipse at center, #18380a 0%, #000000 120%); */
   background-size: 100%;
   width: 80%;
   height: 80%;
@@ -353,7 +374,6 @@ export default {
 .swal-bg-yellow {
   color: #000000;
   background: rgb(255 172 0);
-  /* background: radial-gradient(ellipse at center, #18380a 0%, #000000 120%); */
   background-size: 100%;
   width: 80%;
   height: 80%;
@@ -375,10 +395,11 @@ export default {
 .swal2-icon.swal2-error {
   background-color: #0c0c0c;
 }
+</style>
+<style lang="scss" scoped>
 /* body .card {
   background-color: #bf1515 !important;
 } */
-
 .card {
   width: 100%;
   margin-bottom: 0;
@@ -437,6 +458,7 @@ export default {
     padding: 20px 0 0;
   }
 }
+<<<<<<< HEAD
 // background-color: white;
 .logo-circle {
   background-attachment: fixed;
@@ -454,4 +476,6 @@ export default {
 /*   .customClass {
     color: #973955;
   } */
+=======
+>>>>>>> 94b54081afb02fb827aa0f8e819b0e154103ba05
 </style>

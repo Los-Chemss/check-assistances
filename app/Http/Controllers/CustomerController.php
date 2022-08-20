@@ -36,7 +36,6 @@ class CustomerController extends Controller
     public function index(Request $request)
     {
         try {
-            // return $request;
             $buscar = $request->buscar;
             $criterio = $request->criterio;
 
@@ -210,7 +209,7 @@ class CustomerController extends Controller
             ];
             Payment::create($paid);
 
-            if ($request->image) {
+            if (isset($request->image)) {
                 $img = $request->image;
                 $img = str_replace('data:image/jpeg;base64,', '', $img);
                 $img = str_replace(' ', '+', $img);
@@ -392,6 +391,7 @@ class CustomerController extends Controller
                         $image = env('APP_ENV') === 'local' ? $image : substr($image, 0);
                         if (Storage::exists($image) ?: Storage::disk('public')->exists($image)) {
                             Storage::delete($image) ?: Storage::disk('public')->delete($image);
+                            $this->consoleWrite()->writeln("Deleted");
                         }
                     }
                     // Storage::deleteDirectory("images/customers/" . $customer->id);
@@ -414,15 +414,21 @@ class CustomerController extends Controller
                     array_push($fileList, $fileUrl);
                 }
 
-                if ($customer['image'] != null) {
+                /*  if ($customer['image'] != null) {
                     foreach (explode(', ', $customer->image) as $image) {
                         $this->consoleWrite()->writeln($image);
-                        if (Storage::exists($image)) {
-                            Storage::delete($image);
+
+                        $image = env('APP_ENV') === 'local' ? $image : substr($image, 0);
+                        if (Storage::exists($image) ?: Storage::disk('public')->exists($image)) {
+                            Storage::delete($image) ?: Storage::disk('public')->delete($image);
                             $this->consoleWrite()->writeln("Deleted");
                         }
+                       /*  if (Storage::exists($image)) {
+                            Storage::delete($image);
+                        } *
+                        /
                     }
-                }
+                } */
                 $customer['image'] = implode(', ', $fileList);
                 $customer->save();
                 return response()->json('File uploaded', 200);

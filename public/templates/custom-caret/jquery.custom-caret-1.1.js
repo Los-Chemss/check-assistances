@@ -1,18 +1,18 @@
 (function ($) {
 
     $.fn.customCaret = function(options) {
-    
+
         var settings = $.extend({
             caretID: 'caret',
             callback: null
         }, options);
-        
+
         function getCaretPosition(element) {
             var caretPosition = 0;
             var doc = element.ownerDocument || element.document;
             var win = doc.defaultView || doc.parentWindow;
             var sel;
-        
+
             if (typeof win.getSelection != "undefined") {
                 sel = win.getSelection();
                 if (sel.rangeCount > 0) {

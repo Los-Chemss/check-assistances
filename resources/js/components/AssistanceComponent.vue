@@ -22,14 +22,14 @@
             </button>
           </div> -->
           <div class="card-body">
-            <h4 class="card-title">Assistances</h4>
+            <!-- <h4 class="card-title">Assistances</h4> -->
             <div class="table-responsive">
               <div
                 id="col_render_wrapper"
                 class="dataTables_wrapper container-fluid dt-bootstrap4"
               >
                 <div class="row">
-                  <div class="col-sm-12 col-md-6">
+                  <div class="col-md-11 ml-auto mr-auto">
                     <div class="input-group mb-3 dataTables_filter">
                       <div class="input-group-prepend">
                         <!--  <span class="input-group-text">$</span> -->
@@ -40,26 +40,26 @@
                         >
                           <optgroup>
                             <option v-for="criteria in criterions" :value="criteria">
-                              {{ criteria }}
+                              {{ criteria.val }}
                             </option>
                           </optgroup>
                         </select>
                       </div>
                       <input
                         :type="
-                          criterio == 'income'
+                          criterio.key == 'income'
                             ? 'date'
-                            : criterio == 'code'
+                            : criterio.key == 'code'
                             ? 'number'
                             : 'text'
                         "
                         v-model="buscar"
-                        @keyup.enter="getAssistances(1, buscar, criterio)"
+                        @keyup.enter="listAssistances(1, buscar, criterio)"
                         class="form-control"
                         :placeholder="
-                          criterio == 'income'
+                          criterio.key == 'income'
                             ? '22/07/2022'
-                            : criterio == 'code'
+                            : criterio.key == 'code'
                             ? '0123'
                             : 'Benny Juarez'
                         "
@@ -67,7 +67,7 @@
                       <div class="input-group-append">
                         <button
                           type="submit"
-                          @click="getAssistances(1, buscar, criterio)"
+                          @click="listAssistances(1, buscar, criterio)"
                           class="btn-sm btn-primary input-group-text"
                         >
                           <i class="fa fa-search"></i>
@@ -138,7 +138,7 @@
                       role="status"
                       aria-live="polite"
                     >
-                      Mostrando{{ pagination.current_page }} a
+                      Mostrando {{ pagination.current_page }} a
                       {{ pagination.per_page }} de {{ pagination.total }} registros
                     </div>
                   </div>
@@ -334,11 +334,17 @@ export default {
         to: 0,
       },
       offset: 3,
-      criterio: "name",
       buscar: "",
 
       showAssistances: 10,
-      criterions: ["name", "code", "income"],
+
+      criterio: { key: "name", val: "Cliente " },
+      criterions: [
+        { key: "name", val: "Cliente " },
+        { key: "code", val: "Codigo" },
+        { key: "income", val: "Fecha de ingreso" },
+        { key: "branch", val: "Sucursal" },
+      ],
     };
   },
 
@@ -370,15 +376,15 @@ export default {
       return pagesArray;
     },
 
-    // filter: this.getAssistances(this.page, this.buscar, this.criterio),
+    // filter: this.listAssistances(this.page, this.buscar, this.criterio),
   },
 
   methods: {
-    getAssistances(page, buscar, criterio) {
+    listAssistances(page, buscar, criterio) {
       console.log("getted");
       let me = this;
       let url =
-        "assistances?page=" + page + "&buscar=" + buscar + "&criterio=" + criterio;
+        "assistances?page=" + page + "&buscar=" + buscar + "&criterio=" + criterio.key;
       axios
         .get(url)
         .then((response) => {
@@ -434,7 +440,7 @@ export default {
       axios
         .post("assistances/store", request)
         .then((response) => {
-          console.log({response});
+          console.log({ response });
         })
         .catch((error) => {
           console.table(error);
@@ -518,7 +524,7 @@ export default {
             .post("assistances/" + assistance + "/delete")
             .then((response) => {
               console.log(response);
-              me.getAssistances(me.page, me.buscar, me.criterio);
+              me.listAssistances(me.page, me.buscar, me.criterio);
             })
             .catch((error) => {
               console.log(error);
@@ -549,13 +555,13 @@ export default {
       //Actualiza la página actual
       me.pagination.current_page = page;
       //Envia la petición para visualizar la data de esa página
-      me.getAssistances(page, buscar, criterio);
+      me.listAssistances(page, buscar, criterio);
     },
   },
 
   mounted() {
     this.getMemberships();
-    this.getAssistances(1, this.buscar, this.criterio);
+    this.listAssistances(1, this.buscar, this.criterio);
   },
 };
 </script>
