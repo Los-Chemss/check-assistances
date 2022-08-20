@@ -1,6 +1,6 @@
 <template>
   <div class="clock-body p-4 m-4 rounded col-md-8 m-auto">
-    <div id="clock" class="shadow-lg ">
+    <div id="clock" class="shadow-lg p-3 m-2 rounded">
       <p class="date">{{ clock.date }}</p>
       <p class="time">{{ clock.time }}</p>
       <!-- <p class="text">DIGITAL CLOCK with Vue.js</p> -->
@@ -92,6 +92,10 @@ font-family: 'Seven Segment', sans-serif !important;
     font-size: 12px;
     padding: 20px 0 0;
   }
+}
+#clock{
+max-width:207px;
+
 }
 .center {
   margin: auto;

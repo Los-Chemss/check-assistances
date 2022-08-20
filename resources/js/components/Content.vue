@@ -53,17 +53,7 @@
                 class="col-md-12 text-center m-auto"
                 style="display: flex; justify-content: center; align-items: center"
               >
-                <div
-                  class="rounded-circle shadow-lg p-4"
-                  style="
-                    background-color: white;
-                    width: 250px;
-                    height: 250px;
-                    display: flex;
-                    align-items: center;
-                    justify-content: center;
-                  "
-                >
+                <div class="rounded-circle shadow-lg p-4 logo-circle">
                   <img
                     src="images/urbanlogo-1024x1024.png"
                     height="200px"
@@ -96,6 +86,13 @@
                         v-on:keydown.enter.prevent="assistance"
                         autofocus
                         required
+                        style="
+                          border: none;
+                          opacity: 70%;
+                          font-size: 24px;
+                          font-weight: bold;
+                          letter-spacing: 8px;
+                        "
                       />
                       <div class="input-group-append">
                         <button class="btn btn-info" type="button" @click="assistance">
@@ -114,6 +111,7 @@
   </div>
   <!--   </div> -->
 </template>
+
 <script>
 // https://codepen.io/gau/pen/LjQwGp
 import DigitalClock from "./DigitalClock.vue";
@@ -334,7 +332,7 @@ export default {
 };
 </script>
 
-<style lang="scss" scope>
+<style lang="scss" scoped>
 .swal-bg {
   color: #000000;
   background: #000000;
@@ -438,6 +436,20 @@ export default {
     font-size: 12px;
     padding: 20px 0 0;
   }
+}
+// background-color: white;
+.logo-circle {
+  background-attachment: fixed;
+  background: radial-gradient(
+    ellipse at center,
+    rgb(255 255 255) 58%,
+    rgb(10 56 46 / 21%) 68%
+  );
+  width: 250px;
+  height: 250px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
 /*   .customClass {
     color: #973955;
