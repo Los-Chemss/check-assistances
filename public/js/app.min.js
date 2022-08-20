@@ -3156,7 +3156,7 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
       var d3 = d1;
       var d4 = new Date(d3.setDate(d3.getDate() + 7));
       /*
-       console.log({ d1: this.formatDateToInput(d1) }, { d2: this.formatDateToInput(d2) });
+        console.log({ d1: this.formatDateToInput(d1) }, { d2: this.formatDateToInput(d2) });
       console.log(d4.getTime() > d2.getTime() ? "true" : "false"); */
 
       return d4.getTime() > d2.getTime() ? 1 : 0; //   var same = d1.getTime() === d2.getTime();
