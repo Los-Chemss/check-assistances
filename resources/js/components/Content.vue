@@ -349,12 +349,7 @@ export default {
   },
 };
 </script>
-<<<<<<< HEAD
-
-<style lang="scss" scoped>
-=======
 <style lang="scss">
->>>>>>> 94b54081afb02fb827aa0f8e819b0e154103ba05
 .swal-bg {
   color: #000000;
   background: #000000;
@@ -458,24 +453,4 @@ export default {
     padding: 20px 0 0;
   }
 }
-<<<<<<< HEAD
-// background-color: white;
-.logo-circle {
-  background-attachment: fixed;
-  background: radial-gradient(
-    ellipse at center,
-    rgb(255 255 255) 58%,
-    rgb(10 56 46 / 21%) 68%
-  );
-  width: 250px;
-  height: 250px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-}
-/*   .customClass {
-    color: #973955;
-  } */
-=======
->>>>>>> 94b54081afb02fb827aa0f8e819b0e154103ba05
 </style>
