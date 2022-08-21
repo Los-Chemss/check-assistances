@@ -17,15 +17,17 @@ class CustomerFactory extends Factory
      */
     public function definition()
     {
-        $cus = Customer::select('code')->get();
+     /*    $cus = Customer::select('code')->get();
         $codes = [];
         foreach ($cus as $c) {
             array_push($codes, $c->code);
-        }
-        $unique = null;
+        } */
         $companyId = function () {
             return Company::query()->inRandomOrder()->first()->id;
         };
+        /*
+        $unique = null;
+
         do {
             $unique = $this->faker->numberBetween(1000, 9999);
         } while (in_array($unique, $codes, true));
@@ -39,12 +41,17 @@ class CustomerFactory extends Factory
             }
             dd($codes);
             // return;
+        } */
+
+        $codes = [];
+        for ($x = 0001; $x <= 0005; $x++) {
+        array_push($codes, str_pad($x , 4, "0", STR_PAD_LEFT));
         }
 
         return [
             'name' => $this->faker->firstName(),
             'lastname' => $this->faker->lastName(),
-            'code' => $unique,
+            'code' => $this->faker->unique()->randomElement($codes),
             'income' => $this->faker->dateTime(),
             'membership_id' =>  function () use ($companyId) {
                 return  Membership::query()->inRandomOrder()->first()->id;
@@ -58,6 +65,5 @@ class CustomerFactory extends Factory
                 return  Branch::query()/* ->where('company_id', $companyId) */->inRandomOrder()->first()->id;
             },
         ];
-
     }
 }

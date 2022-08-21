@@ -110,7 +110,6 @@
                 <div>
                   <label class="typo__label">Seleccionar sucursal</label>
                   <multiselect
-                    style="background-color: black"
                     v-model="selectedBranch"
                     deselect-label="Seleccionado actual"
                     track-by="division"
@@ -482,7 +481,7 @@ export default {
   },
 };
 </script>
-<style scoped src="vue-multiselect/dist/vue-multiselect.min.css"></style>
+<style  src="vue-multiselect/dist/vue-multiselect.min.css"></style>
 <style scoped lang="scss">
 /* .e-multiselect.e-input-group .e-multi-select-wrapper {
   background-color: red;

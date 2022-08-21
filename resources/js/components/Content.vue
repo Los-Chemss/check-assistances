@@ -231,6 +231,7 @@ export default {
             movement = "salida";
             message = "Gracias por asistir :) " + customer.name + info;
           }
+        //   alert(me.appEnv);
           let imgPath =
             me.appEnv === "local"
               ? "/storage/" + customer.image
@@ -407,6 +408,7 @@ export default {
     rgb(0 0 0 / 92%) 70%
   );
   //   background: radial-gradient(ellipse at center, #0a2e3895 0%, #00000080 70%);
+
   //   background: #0f3854;
   //   background-image: url("storage/images/fondogym.jpg");
   //   background-image: url('images/fondogym.jpg');
@@ -452,5 +454,18 @@ export default {
     font-size: 12px;
     padding: 20px 0 0;
   }
+}
+.logo-circle {
+  background-attachment: fixed;
+  background: radial-gradient(
+    ellipse at center,
+    rgb(255 255 255) 58%,
+    rgb(10 56 46 / 21%) 68%
+  );
+  width: 250px;
+  height: 250px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
 </style>

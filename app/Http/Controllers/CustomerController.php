@@ -14,19 +14,21 @@ use App\Models\Payment;
 use Illuminate\Support\Facades\Auth;
 use App\Models\User;
 use Exception;
+use App\Helper\File;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Storage;
 
 class CustomerController extends Controller
 {
-    public function __construct()
+    use File;
+    /*    public function __construct()
     {
         $this->middleware(function ($request, $next) {
             $this->user = Auth::user();
             return $next($request);
         });
     }
-
+ */
 
     /**
      * Display a listing of the resource.
@@ -216,8 +218,6 @@ class CustomerController extends Controller
                 $data = base64_decode($img);
                 $this->uploadPicture($data, $customer);
             }
-
-
             return response($customer, 201);
         } catch (Exception $e) {
             $c = $this;
@@ -228,11 +228,14 @@ class CustomerController extends Controller
     public function uploadPicture($data, $customer)
     {
         try {
-            if ($customer->image) {
+            $this->consoleWrite()->writeln("Upload photo");
+            $customer = Customer::where('id', $customer->id)->first();
+            if (isset($customer->image)) {
                 foreach (explode(', ',  $customer->image) as $image) {
                     $image = env('APP_ENV') === 'local' ? $image : substr($image, 0);
                     if (Storage::exists($image) ?: Storage::disk('public')->exists($image)) {
                         Storage::delete($image) ?: Storage::disk('public')->delete($image);
+                        $this->consoleWrite()->writeln("Deleted");
                     }
                 }
                 // Storage::deleteDirectory("images/customers/" . $customer->id);
@@ -240,23 +243,12 @@ class CustomerController extends Controller
             $cusPath =  $customer->id ?: 'crash';
             $destination = "images/customers/" . $cusPath . '/avatar';
             $destination = str_replace(' ', '_', $destination);
-
             $filePath = $destination . '/' . date('dmY-His') . '.jpg';
+            $this->consoleWrite()->writeln($filePath);
             Storage::disk('public')->put($filePath,  /*  "\xEF\xBB\xBF" . */ $data);
-
-            if ($customer['image'] != null) {
-                foreach (explode(', ', $customer->image) as $image) {
-                    $this->consoleWrite()->writeln($image);
-                    if (Storage::exists($image)) {
-                        Storage::delete($image);
-                        $this->consoleWrite()->writeln("Deleted");
-                    }
-                }
-            }
-            $customer['image'] = $filePath;
+            $customer['image'] =  $filePath;
             $customer->save();
             return response()->json('File uploaded', 200);
-            // }
         } catch (Exception $e) {
             $c = $this;
             return $this->catchEx($e->getMessage(), $c,  __FUNCTION__ . ' | ' . $e->getLine());
@@ -317,7 +309,7 @@ class CustomerController extends Controller
             $customer = Customer::where('id', $request->id)->first();
             if (isset($request)) {
                 foreach ($request->all() as $key => $val) {
-                    if ($customer->$key) {
+                    if ($customer->$key && $key != 'image') {
                         $customer->$key = $val;
                     }
                 }
@@ -377,7 +369,9 @@ class CustomerController extends Controller
     public function uploadFile(Request $request)
     {
         try {
-            if ($request->file('file') && $request->id) {
+            $this->consoleWrite()->writeln("Upload file");
+
+            if ($file = $request->file('file') && $request->id) {
                 $files = $request->file('file');
                 if (!is_array($files)) {
                     $files = [$files];
@@ -397,21 +391,23 @@ class CustomerController extends Controller
                     // Storage::deleteDirectory("images/customers/" . $customer->id);
                 }
                 $cusPath = $request->id != null ? $customer->id : 'crash';
-                $destination = "images/customers/" . $cusPath . '/avatar';
+                $destination = "customers/" . $cusPath . '/avatar';
                 $destination = str_replace(' ', '_', $destination);
 
                 foreach ($files as $file) {
                     $filename = $file->getClientOriginalName();
                     $filename = str_replace(' ', '', $filename);
                     $filename = str_replace('-', '_', $filename);
-                    if (env('APP_ENV') == 'local') {
+                    $fileUrl = "$destination/$filename";
+                    $url = $this->file($file, $fileUrl, 300, 300);
+                    array_push($fileList, $url);
+                    /*   if (env('APP_ENV') == 'local') {
                         $file->storeAs("public/$destination", $filename);
                     } else {
                         $file->storeAs("$destination", $filename);
-                    }
-                    $fileUrl = "$destination/$filename";
-                    $request->request->add(['file' => $file]);
-                    array_push($fileList, $fileUrl);
+                    } */
+
+                    // $request->request->add(['file' => $file]);
                 }
 
                 /*  if ($customer['image'] != null) {
@@ -429,6 +425,7 @@ class CustomerController extends Controller
                         /
                     }
                 } */
+                $this->consoleWrite()->writeln($fileList);
                 $customer['image'] = implode(', ', $fileList);
                 $customer->save();
                 return response()->json('File uploaded', 200);
