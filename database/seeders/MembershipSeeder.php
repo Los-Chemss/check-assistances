@@ -10,17 +10,16 @@ class MembershipSeeder extends Seeder
 {
     public function run()
     {
-
         $companies =  Company::select('id')->get();
         foreach ($companies as $company) {
             Membership::create([
-                'name' => 'monthly',
+                'name' => 'Mensual',
                 'price' => 300,
                 'company_id' => $company->id,
                 'period' => 30,
             ]);
             Membership::create([
-                'name' => 'yearly',
+                'name' => 'Anual',
                 'price' => 1300,
                 'company_id' => $company->id,
                 'period' => 365

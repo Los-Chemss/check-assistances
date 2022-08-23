@@ -26,7 +26,7 @@ class AssistanceController extends Controller
             $buscar = $request->buscar;
             $criterio = $request->criterio;
 
-            $asistances = Assistance::with(['customer' => function ($q) use ($criterio, $buscar) {
+            /* with(['customer' => function ($q) use ($criterio, $buscar) {
                 if (isset($buscar) && in_array($criterio, ['code', 'name', 'income'])) {
                     $criterio === 'name' ?
                         $q->where('name', 'LIkE', '%' . $buscar . '%')
@@ -36,6 +36,18 @@ class AssistanceController extends Controller
                             $q->where('code', 'LIkE', '%' . $buscar . '%'));
                 }
             }])
+                -> */
+            $asistances = Assistance::join('customers', function ($j)  use ($criterio, $buscar) {
+                $j->on('customers.id', 'assistances.customer_id');
+                if (isset($buscar) && in_array($criterio, ['code', 'name', 'income'])) {
+                    $criterio === 'name' ?
+                        $j->where('customers.name', 'LIkE', '%' . $buscar . '%')
+                        ->orWhere('customers.lastname', 'LIkE', '%' . $buscar . '%')
+                        : ($criterio === 'income' ?
+                            $j->where('customers.income', '>=', date('ymd', strtotime($buscar))) :
+                            $j->where('customers.code', 'LIkE', '%' . $buscar . '%'));
+                }
+            })
                 ->with(['branch' => function ($q)  use ($criterio, $buscar) {
                     if (isset($buscar) && $criterio === 'branch') {
                         $q->where('division', 'LIKE', '%' . $buscar . '%');
@@ -49,7 +61,8 @@ class AssistanceController extends Controller
             foreach ($asistances as $as) {
                 array_push($asistancesRes, [
                     'id' => $as->id,
-                    'nombre' => isset($as->customer) ? $as->customer->name : null,
+                    'nombre' =>  $as->name . ' ' . $as->lastname,
+                    // 'nombre' => isset($as->customer) ? $as->customer->name . ' ' . $as->customer->lastname  : null,
                     'entrada' => $as->input,
                     // 'salida' => $as->output,
                     'sucursal' => isset($as->branch) ? $as->branch->division : null,

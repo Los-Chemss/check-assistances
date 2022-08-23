@@ -74,6 +74,7 @@
                   <form class="mt-3">
                     <div class="input-group mb-3" name="checkForm">
                       <input
+                        :disabled="loading ? true : false"
                         class="form-control text-center"
                         id="code"
                         type="number"
@@ -172,6 +173,7 @@ export default {
   methods: {
     assistance() {
       let me = this;
+      me.loading = true;
       axios
         .post("assistances", { branch: me.branch.id, code: me.code })
         .then((response) => {
@@ -208,14 +210,7 @@ export default {
               : "") +
             "<br>" +
             expirationStatus;
-          /* +
-                "<br><h1 style='color:red; '>" +
-                me.expired
-                ? "Ha expirado"
-                : me.expiresClose
-                ? "Esta por expirar"
-                : "" + " <h1>"
-              : "" */
+
           me.code = "";
           if ("entrada" in response.data) {
             movement = "entrada";
@@ -231,13 +226,15 @@ export default {
             movement = "salida";
             message = "Gracias por asistir :) " + customer.name + info;
           }
-        //   alert(me.appEnv);
+          // alert(me.appEnv);
           let imgPath =
             me.appEnv === "local"
               ? "/storage/" + customer.image
               : "/storage/app/public/" + customer.image;
 
-          let imgSrc = imgPath != null ? imgPath : "https://placekitten.com/150/150";
+          let imgSrc =
+            customer.image != null ? imgPath : "https://placekitten.com/150/150";
+          console.log(customer.image);
           console.log(imgSrc);
           let mamadolores = !(me.expired || me.expiresClose)
             ? '<img src="/images/iconogym2.png"/ ' +
@@ -248,17 +245,12 @@ export default {
           Swal.fire({
             type: me.expired ? "error" : me.expiresClose ? "info" : "",
             customClass: { popup: "swal-bg" },
-            /*   customClass: {
-              popup: "swal-bg",
-                popup: me.expired
-                ? "swal-bg-red"
-                : me.expiresClose
-                ? "swal-bg-yellow"
-                : "swal-bg",
-            }, */
-            // text: message,
+            backdrop: me.expired
+              ? "#ba0c0c8c"
+              : me.expiresClose
+              ? "#c29b089c"
+              : "#010601e3",
             target: document.getElementById("checkCard"),
-            // title: "Registro  de " + movement + " satisfactorio",
             html:
               "<div> " +
               mamadolores +
@@ -268,11 +260,15 @@ export default {
               " satisfactorio</b></h1>" +
               ' <div class="text-center pt-2"> <img src="' +
               imgSrc +
-              '"class="img-fluid" style="width:150px; height:150px; box-shadow:0 1rem 3rem rgba(68, 122, 17, 0.967), 0 1rem 3rem rgba(0, 0, 0, 0.19); border-radius:50%" alt="customer-image"/> <br>  <h1 style="margin-top:10px;">' +
+              '"class="img-fluid" style="width:150px; height:150px; box-shadow:0 1rem 3rem rgba(68, 122, 17, 0.967), 0 1rem 3rem rgba(0, 0, 0, 0.19);' +
+              ' border-radius:50%" alt="customer-image"/> <br>  <h1 style="margin-top:10px;">' +
               message +
               " </h1></div>",
-            // timer: 5000,
+            timer: 5000,
           });
+
+          /*       let elem = document.getElementById("checkCard");
+          document.getElementById("code").focus(); */
         })
 
         .catch((error) => {
@@ -280,14 +276,27 @@ export default {
           if (error.response.status === 404) {
             Swal.fire({
               type: "error",
+              // background: "#070707",
+              // color: "white",
+              backdrop: "#ba0c0c8c",
               title: "Codigo invalido",
               text: "El codigo es invalido",
-              timer: 4000,
+              // timer: 4000,
               target: document.getElementById("checkCard"),
             });
           }
+          /*  let elem = document.getElementById("checkCard");
+          document.getElementById("code").focus(); */
         })
-        .finally(() => ((me.code = ""), (me.expired = null), (me.expiresClose = null)));
+        .finally(
+          () => (
+            (me.code = ""),
+            (me.expired = null),
+            (me.expiresClose = null),
+            (me.loading = false),
+            document.getElementById("code").focus()
+          )
+        );
     },
 
     openFullscreen() {
@@ -352,7 +361,7 @@ export default {
 </script>
 <style lang="scss">
 .swal-bg {
-  color: #000000;
+  // color: #000000;
   background: #000000;
   /* background: radial-gradient(ellipse at center, #18380a 0%, #000000 120%); */
   background-size: 100%;
@@ -379,17 +388,29 @@ export default {
   /* text-shadow: 2px 2px 5px white; */
 }
 
-.swal2-icon.swal2-info {
+/* .swal2-icon.swal2-info {
   border-color: #000000;
   color: #bf1212;
+} */
+
+.swal2-icon.swal2-info {
+  border-color: #bf8a12;
+  color: #bf8a12;
 }
 
-.swal2-icon.swal2-error {
-  border-color: #5d4d4d;
+.swal2-container.swal2-shown-warning {
+  background-color: rgb(169 123 26 / 40%);
+}
+.swal2-container.swal2-shown-danger {
+  background-color: rgb(185 10 10 / 40%);
 }
 
+/* .swal2-icon.swal2-error {
+  // border-color: #5d4d4d;
+} */
+
 .swal2-icon.swal2-error {
-  background-color: #0c0c0c;
+  // background-color: #0c0c0c;
 }
 </style>
 <style lang="scss" scoped>

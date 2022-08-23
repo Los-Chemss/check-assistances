@@ -14,96 +14,106 @@
         <div class="col-12">
           <div class="card">
             <div class="card-header border-bottom shadow-sm pt-4 mt-4 pb-2 mb-22">
-              <button
-                type="button"
-                class="btn btn-primary btn-lg fas fa-edit"
-                @click="openModal('customers', 'store')"
-              >
-                Nuevo cliente
-              </button>
+              <div class="row">
+                <h4 class="card-title">Clientes</h4>
+                <br />
+                <br />
+              </div>
+              <div class="row">
+                <div class="col-md-8">
+                  <div class="input-group mb-3 dataTables_filter">
+                    <div class="input-group-prepend">
+                      <!--  <span class="input-group-text">$</span> -->
+                      <select
+                        class="input-group-text"
+                        v-model="criterio"
+                        @change="selectCriteria"
+                      >
+                        <optgroup>
+                          <option v-for="criteria in criterions" :value="criteria">
+                            {{ criteria.val }}
+                          </option>
+                        </optgroup>
+                      </select>
+                    </div>
+                    <input
+                      :type="
+                        criterio.key == 'income'
+                          ? 'date'
+                          : criterio.key == 'code'
+                          ? 'number'
+                          : criterio.key == 'branch'
+                          ? 'text'
+                          : 'text'
+                      "
+                      v-model="buscar"
+                      @keyup.enter="listCustomers(1, buscar, criterio)"
+                      class="form-control"
+                      :placeholder="
+                        criterio.key == 'income'
+                          ? '22/07/2022'
+                          : criterio.key == 'code'
+                          ? '0123'
+                          : criterio.key == 'branch'
+                          ? 'Nombre de sucursal o direccion'
+                          : 'Nombre o apellidos del cliente'
+                      "
+                    />
+                    <div class="input-group-append">
+                      <button
+                        type="submit"
+                        @click="listCustomers(1, buscar, criterio)"
+                        class="btn-sm btn-primary input-group-text"
+                      >
+                        <i class="fa fa-search"></i>
+                      </button>
+                    </div>
+                  </div>
+                </div>
+                <div class="col-md-4">
+                  <button
+                    style="float: right"
+                    type="button"
+                    class="btn btn-primary btn-lg fas fa-edit"
+                    @click="openModal('customers', 'store')"
+                  >
+                    Nuevo cliente
+                  </button>
+                </div>
+                <br />
+                <br />
+                <div class="row">
+                  <div class="col-md-12">
+                    <table>
+                      <tr>
+                        <td>
+                          <div class="circle tgreen"></div>
+                        </td>
+                        <td>Activo</td>
+                      </tr>
+                      <tr>
+                        <td>
+                          <div class="circle tyellow"></div>
+                        </td>
+                        <td>Expira pronto (7 dias o menos)</td>
+                      </tr>
+                      <tr>
+                        <td>
+                          <div class="circle tred"></div>
+                        </td>
+                        <td>Expirado</td>
+                      </tr>
+                    </table>
+                  </div>
+                </div>
+              </div>
             </div>
             <div class="card-body">
-              <h4 class="card-title">Customers</h4>
               <div class="table-responsive">
                 <div
                   id="col_render_wrapper"
                   class="dataTables_wrapper container-fluid dt-bootstrap4"
                 >
-                  <div class="row">
-                    <div class="col-sm-12 col-md-6">
-                      <div class="input-group mb-3 dataTables_filter">
-                        <div class="input-group-prepend">
-                          <!--  <span class="input-group-text">$</span> -->
-                          <select
-                            class="input-group-text"
-                            v-model="criterio"
-                            @change="selectCriteria"
-                          >
-                            <optgroup>
-                              <option v-for="criteria in criterions" :value="criteria">
-                                {{ criteria.val }}
-                              </option>
-                            </optgroup>
-                          </select>
-                        </div>
-                        <input
-                          :type="
-                            criterio == 'income'
-                              ? 'date'
-                              : criterio.key == 'code'
-                              ? 'number'
-                              : criterio.key == 'branch'
-                              ? 'text'
-                              : 'text'
-                          "
-                          v-model="buscar"
-                          @keyup.enter="listCustomers(1, buscar, criterio)"
-                          class="form-control"
-                          :placeholder="
-                            criterio == 'income'
-                              ? '22/07/2022'
-                              : criterio.key == 'code'
-                              ? '0123'
-                              : criterio.key == 'branch'
-                              ? 'Nombre de sucursal o direccion'
-                              : 'Nombre o apellidos del cliente'
-                          "
-                        />
-                        <div class="input-group-append">
-                          <button
-                            type="submit"
-                            @click="listCustomers(1, buscar, criterio)"
-                            class="btn-sm btn-primary input-group-text"
-                          >
-                            <i class="fa fa-search"></i>
-                          </button>
-                        </div>
-                      </div>
-                    </div>
-
-                    <div class="col-md-12">
-                      <table>
-                        <tr>
-                          <td>
-                            <div class="circle tgreen"></div>
-                          </td>
-                          <td>Activo</td>
-                        </tr>
-                        <tr>
-                          <td>
-                            <div class="circle tyellow"></div>
-                          </td>
-                          <td>Expira pronto (7 dias o menos)</td>
-                        </tr>
-                        <tr>
-                          <td>
-                            <div class="circle tred"></div>
-                          </td>
-                          <td>Expirado</td>
-                        </tr>
-                      </table>
-                    </div>
-                  </div>
                   <div class="row">
                     <div class="col-sm-12">
                       <table
@@ -202,7 +212,7 @@
                               "
                             >
                               {{
-                                key === "last paid" || key === "expires at"
+                                key == "last paid" || key == "expires at"
                                   ? formatDateToInput(value)
                                   : value
                               }}
@@ -239,6 +249,7 @@
                         <tfoot>
                           <tr></tr>
                           <tr v-for="(customer, index) in customers" v-if="index < 1">
+                            <th></th>
                             <th
                               v-for="(value, key, cIndex) in customer"
                               v-if="
@@ -598,9 +609,8 @@
                           : 'https://placekitten.com/150/150'
                       "
                       class="img-fluid rounded-circle shadow-lg p-2"
-
                       alt="customer-image"
-                      style="width:200px; height:200px"
+                      style="width: 200px; height: 200px"
                     />
                     <!-- <label for="">{{ customerInfo.image }}</label> -->
                   </div>
@@ -988,7 +998,7 @@ export default {
         // image: me.currentPhoto,
       };
       if (me.currentPhoto != null) {
-        request['image'] = me.currentPhoto;
+        request["image"] = me.currentPhoto;
       }
       axios
         .post("customers/update/" + me.customer.id, request)

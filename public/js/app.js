@@ -2705,7 +2705,6 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */   "default": () => (__WEBPACK_DEFAULT_EXPORT__)
 /* harmony export */ });
 /* harmony import */ var _DigitalClock_vue__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./DigitalClock.vue */ "./resources/js/components/DigitalClock.vue");
-/* provided dependency */ var process = __webpack_require__(/*! process/browser.js */ "./node_modules/process/browser.js");
 // https://codepen.io/gau/pen/LjQwGp
 
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = ({
@@ -2714,7 +2713,7 @@ __webpack_require__.r(__webpack_exports__);
   },
   data: function data() {
     return {
-      appEnv: process.env.MIX_APP_ENV,
+      appEnv: "local",
       email: "",
       name: "",
       last_name: "",
@@ -2758,6 +2757,7 @@ __webpack_require__.r(__webpack_exports__);
   methods: {
     assistance: function assistance() {
       var me = this;
+      me.loading = true;
       axios.post("assistances", {
         branch: me.branch.id,
         code: me.code
@@ -2771,15 +2771,6 @@ __webpack_require__.r(__webpack_exports__);
         me.expiresClose = me.expiresAtWeek(customer.membership.payments[0].expires_at) ? true : false;
         var expirationStatus = me.expired ? "<h1 class='text-danger'>Ha expirado </h1>" : me.expiresClose ? "<h1 class='text-warning'>Esta por expirar </h1>" : "";
         var info = (customer.membership ? "Membresia: " + "<b class='text-success'>" + customer.membership.name + "</b>" : "") + (customer.membership.payments && customer.membership.payments[0] ? "<br> Expira el : " + "<b class='text-success'>" + me.formatDate(customer.membership.payments[0].expires_at) + "</b>" : "") + "<br>" + expirationStatus;
-        /* +
-              "<br><h1 style='color:red; '>" +
-              me.expired
-              ? "Ha expirado"
-              : me.expiresClose
-              ? "Esta por expirar"
-              : "" + " <h1>"
-            : "" */
-
         me.code = "";
 
         if ("entrada" in response.data) {
@@ -2790,11 +2781,12 @@ __webpack_require__.r(__webpack_exports__);
         if ("salida" in response.data) {
           movement = "salida";
           message = "Gracias por asistir :) " + customer.name + info;
-        } //   alert(me.appEnv);
+        } // alert(me.appEnv);
 
 
         var imgPath = me.appEnv === "local" ? "/storage/" + customer.image : "/storage/app/public/" + customer.image;
-        var imgSrc = imgPath != null ? imgPath : "https://placekitten.com/150/150";
+        var imgSrc = customer.image != null ? imgPath : "https://placekitten.com/150/150";
+        console.log(customer.image);
         console.log(imgSrc);
         var mamadolores = !(me.expired || me.expiresClose) ? '<img src="/images/iconogym2.png"/ ' + 'style="box-shadow:0 1rem 3rem rgba(68, 122, 17, 0.967), 0 1rem 3rem rgba(0, 0, 0, 0.19);' + ' border-radius:50%; rgba(10, 175, 230, 1), 0 0 20px rgba(10, 175, 230, 0);">' : "";
         Swal.fire({
@@ -2802,35 +2794,33 @@ __webpack_require__.r(__webpack_exports__);
           customClass: {
             popup: "swal-bg"
           },
-
-          /*   customClass: {
-            popup: "swal-bg",
-              popup: me.expired
-              ? "swal-bg-red"
-              : me.expiresClose
-              ? "swal-bg-yellow"
-              : "swal-bg",
-          }, */
-          // text: message,
+          backdrop: me.expired ? "#ba0c0c8c" : me.expiresClose ? "#c29b089c" : "#010601e3",
           target: document.getElementById("checkCard"),
-          // title: "Registro  de " + movement + " satisfactorio",
-          html: "<div> " + mamadolores + " </div>" + '<h1 style="color:white;"><b> Registro  de ' + movement + " satisfactorio</b></h1>" + ' <div class="text-center pt-2"> <img src="' + imgSrc + '"class="img-fluid" style="width:150px; height:150px; box-shadow:0 1rem 3rem rgba(68, 122, 17, 0.967), 0 1rem 3rem rgba(0, 0, 0, 0.19); border-radius:50%" alt="customer-image"/> <br>  <h1 style="margin-top:10px;">' + message + " </h1></div>" // timer: 5000,
-
+          html: "<div> " + mamadolores + " </div>" + '<h1 style="color:white;"><b> Registro  de ' + movement + " satisfactorio</b></h1>" + ' <div class="text-center pt-2"> <img src="' + imgSrc + '"class="img-fluid" style="width:150px; height:150px; box-shadow:0 1rem 3rem rgba(68, 122, 17, 0.967), 0 1rem 3rem rgba(0, 0, 0, 0.19);' + ' border-radius:50%" alt="customer-image"/> <br>  <h1 style="margin-top:10px;">' + message + " </h1></div>",
+          timer: 5000
         });
+        /*       let elem = document.getElementById("checkCard");
+        document.getElementById("code").focus(); */
       })["catch"](function (error) {
         console.table(error);
 
         if (error.response.status === 404) {
           Swal.fire({
             type: "error",
+            // background: "#070707",
+            // color: "white",
+            backdrop: "#ba0c0c8c",
             title: "Codigo invalido",
             text: "El codigo es invalido",
-            timer: 4000,
+            // timer: 4000,
             target: document.getElementById("checkCard")
           });
         }
+        /*  let elem = document.getElementById("checkCard");
+        document.getElementById("code").focus(); */
+
       })["finally"](function () {
-        return me.code = "", me.expired = null, me.expiresClose = null;
+        return me.code = "", me.expired = null, me.expiresClose = null, me.loading = false, document.getElementById("code").focus();
       });
     },
     openFullscreen: function openFullscreen() {
@@ -3157,7 +3147,7 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
       var d3 = d1;
       var d4 = new Date(d3.setDate(d3.getDate() + 7));
       /*
-        console.log({ d1: this.formatDateToInput(d1) }, { d2: this.formatDateToInput(d2) });
+       console.log({ d1: this.formatDateToInput(d1) }, { d2: this.formatDateToInput(d2) });
       console.log(d4.getTime() > d2.getTime() ? "true" : "false"); */
 
       return d4.getTime() > d2.getTime() ? 1 : 0; //   var same = d1.getTime() === d2.getTime();
@@ -3258,7 +3248,7 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
       };
 
       if (me.currentPhoto != null) {
-        request['image'] = me.currentPhoto;
+        request["image"] = me.currentPhoto;
       }
 
       axios.post("customers/update/" + me.customer.id, request).then(function (response) {
@@ -7650,6 +7640,7 @@ var render = function render() {
       "letter-spacing": "8px"
     },
     attrs: {
+      disabled: _vm.loading ? true : false,
       id: "code",
       type: "number",
       placeholder: "1921",
@@ -7745,31 +7736,10 @@ var render = function render() {
     staticClass: "card"
   }, [_c("div", {
     staticClass: "card-header border-bottom shadow-sm pt-4 mt-4 pb-2 mb-22"
-  }, [_c("button", {
-    staticClass: "btn btn-primary btn-lg fas fa-edit",
-    attrs: {
-      type: "button"
-    },
-    on: {
-      click: function click($event) {
-        return _vm.openModal("customers", "store");
-      }
-    }
-  }, [_vm._v("\n              Nuevo cliente\n            ")])]), _vm._v(" "), _c("div", {
-    staticClass: "card-body"
-  }, [_c("h4", {
-    staticClass: "card-title"
-  }, [_vm._v("Customers")]), _vm._v(" "), _c("div", {
-    staticClass: "table-responsive"
-  }, [_c("div", {
-    staticClass: "dataTables_wrapper container-fluid dt-bootstrap4",
-    attrs: {
-      id: "col_render_wrapper"
-    }
-  }, [_c("div", {
+  }, [_vm._m(1), _vm._v(" "), _c("div", {
     staticClass: "row"
   }, [_c("div", {
-    staticClass: "col-sm-12 col-md-6"
+    staticClass: "col-md-8"
   }, [_c("div", {
     staticClass: "input-group mb-3 dataTables_filter"
   }, [_c("div", {
@@ -7798,8 +7768,8 @@ var render = function render() {
       domProps: {
         value: criteria
       }
-    }, [_vm._v("\n                              " + _vm._s(criteria.val) + "\n                            ")]);
-  }), 0)])]), _vm._v(" "), (_vm.criterio == "income" ? "date" : _vm.criterio.key == "code" ? "number" : _vm.criterio.key == "branch" ? "text" : "text") === "checkbox" ? _c("input", {
+    }, [_vm._v("\n                          " + _vm._s(criteria.val) + "\n                        ")]);
+  }), 0)])]), _vm._v(" "), (_vm.criterio.key == "income" ? "date" : _vm.criterio.key == "code" ? "number" : _vm.criterio.key == "branch" ? "text" : "text") === "checkbox" ? _c("input", {
     directives: [{
       name: "model",
       rawName: "v-model",
@@ -7808,7 +7778,7 @@ var render = function render() {
     }],
     staticClass: "form-control",
     attrs: {
-      placeholder: _vm.criterio == "income" ? "22/07/2022" : _vm.criterio.key == "code" ? "0123" : _vm.criterio.key == "branch" ? "Nombre de sucursal o direccion" : "Nombre o apellidos del cliente",
+      placeholder: _vm.criterio.key == "income" ? "22/07/2022" : _vm.criterio.key == "code" ? "0123" : _vm.criterio.key == "branch" ? "Nombre de sucursal o direccion" : "Nombre o apellidos del cliente",
       type: "checkbox"
     },
     domProps: {
@@ -7838,7 +7808,7 @@ var render = function render() {
         }
       }
     }
-  }) : (_vm.criterio == "income" ? "date" : _vm.criterio.key == "code" ? "number" : _vm.criterio.key == "branch" ? "text" : "text") === "radio" ? _c("input", {
+  }) : (_vm.criterio.key == "income" ? "date" : _vm.criterio.key == "code" ? "number" : _vm.criterio.key == "branch" ? "text" : "text") === "radio" ? _c("input", {
     directives: [{
       name: "model",
       rawName: "v-model",
@@ -7847,7 +7817,7 @@ var render = function render() {
     }],
     staticClass: "form-control",
     attrs: {
-      placeholder: _vm.criterio == "income" ? "22/07/2022" : _vm.criterio.key == "code" ? "0123" : _vm.criterio.key == "branch" ? "Nombre de sucursal o direccion" : "Nombre o apellidos del cliente",
+      placeholder: _vm.criterio.key == "income" ? "22/07/2022" : _vm.criterio.key == "code" ? "0123" : _vm.criterio.key == "branch" ? "Nombre de sucursal o direccion" : "Nombre o apellidos del cliente",
       type: "radio"
     },
     domProps: {
@@ -7871,8 +7841,8 @@ var render = function render() {
     }],
     staticClass: "form-control",
     attrs: {
-      placeholder: _vm.criterio == "income" ? "22/07/2022" : _vm.criterio.key == "code" ? "0123" : _vm.criterio.key == "branch" ? "Nombre de sucursal o direccion" : "Nombre o apellidos del cliente",
-      type: _vm.criterio == "income" ? "date" : _vm.criterio.key == "code" ? "number" : _vm.criterio.key == "branch" ? "text" : "text"
+      placeholder: _vm.criterio.key == "income" ? "22/07/2022" : _vm.criterio.key == "code" ? "0123" : _vm.criterio.key == "branch" ? "Nombre de sucursal o direccion" : "Nombre o apellidos del cliente",
+      type: _vm.criterio.key == "income" ? "date" : _vm.criterio.key == "code" ? "number" : _vm.criterio.key == "branch" ? "text" : "text"
     },
     domProps: {
       value: _vm.buscar
@@ -7901,7 +7871,31 @@ var render = function render() {
     }
   }, [_c("i", {
     staticClass: "fa fa-search"
-  })])])])]), _vm._v(" "), _vm._m(1)]), _vm._v(" "), _c("div", {
+  })])])])]), _vm._v(" "), _c("div", {
+    staticClass: "col-md-4"
+  }, [_c("button", {
+    staticClass: "btn btn-primary btn-lg fas fa-edit",
+    staticStyle: {
+      "float": "right"
+    },
+    attrs: {
+      type: "button"
+    },
+    on: {
+      click: function click($event) {
+        return _vm.openModal("customers", "store");
+      }
+    }
+  }, [_vm._v("\n                  Nuevo cliente\n                ")])]), _vm._v(" "), _c("br"), _vm._v(" "), _c("br"), _vm._v(" "), _vm._m(2)])]), _vm._v(" "), _c("div", {
+    staticClass: "card-body"
+  }, [_c("div", {
+    staticClass: "table-responsive"
+  }, [_c("div", {
+    staticClass: "dataTables_wrapper container-fluid dt-bootstrap4",
+    attrs: {
+      id: "col_render_wrapper"
+    }
+  }, [_c("div", {
     staticClass: "row"
   }, [_c("div", {
     staticClass: "col-sm-12"
@@ -7929,7 +7923,7 @@ var render = function render() {
         attrs: {
           "max-height": "5px"
         }
-      }, [_vm._v("\n                            " + _vm._s(key === "last paid" || key === "expires at" ? _vm.formatDateToInput(value) : value) + "\n                            ")]) : _vm._e();
+      }, [_vm._v("\n                            " + _vm._s(key == "last paid" || key == "expires at" ? _vm.formatDateToInput(value) : value) + "\n                            ")]) : _vm._e();
     }), _vm._v(" "), _c("td", [_c("button", {
       staticClass: "btn btn-warning btn-sm",
       attrs: {
@@ -7968,7 +7962,7 @@ var render = function render() {
       staticClass: "icon-eye"
     })])])], 2) : _vm._e();
   }), 0), _vm._v(" "), _c("tfoot", [_c("tr"), _vm._v(" "), _vm._l(_vm.customers, function (customer, index) {
-    return index < 1 ? _c("tr", [_vm._l(customer, function (value, key, cIndex) {
+    return index < 1 ? _c("tr", [_c("th"), _vm._v(" "), _vm._l(customer, function (value, key, cIndex) {
       return !(key === "address" || key === "province" || key === "post_code" || key === "phone" || key === "membershipId") ? _c("th", [_vm._v("\n                            " + _vm._s(key === "name" ? "Nombre" : key === "lastname" ? "Apellidos" : key === "code" ? "Codigo" : key === "income" ? "Ingreso" : key === "membership" ? "Membresia" : key === "last paid" ? "Ultimo pago" : key === "expires at" ? "Expira en" : key === "branch" ? "Sucursal" : key === "postcode" ? "Codigo postal" : key === "id" ? "ID" : "") + "\n                          ")]) : _vm._e();
     }), _vm._v(" "), _c("th")], 2) : _vm._e();
   })], 2)])])]), _vm._v(" "), _c("div", {
@@ -8102,7 +8096,7 @@ var render = function render() {
     attrs: {
       "for": "attachment"
     }
-  }, [_vm._v("Imagen del cliente ")]), _c("br"), _vm._v(" "), _vm._m(2), _vm._v(" "), _c("div", {
+  }, [_vm._v("Imagen del cliente ")]), _c("br"), _vm._v(" "), _vm._m(3), _vm._v(" "), _c("div", {
     staticClass: "tab-content"
   }, [_c("div", {
     staticClass: "tab-pane active",
@@ -8480,7 +8474,7 @@ var render = function render() {
     staticClass: "card"
   }, [_c("div", {
     staticClass: "card-body"
-  }, [_vm._m(3), _vm._v(" "), _c("div", {
+  }, [_vm._m(4), _vm._v(" "), _c("div", {
     staticClass: "tab-content"
   }, [_c("div", {
     staticClass: "tab-pane active",
@@ -8524,6 +8518,17 @@ var staticRenderFns = [function () {
       _c = _vm._self._c;
 
   return _c("div", {
+    staticClass: "row"
+  }, [_c("h4", {
+    staticClass: "card-title"
+  }, [_vm._v("Clientes")]), _vm._v(" "), _c("br"), _vm._v(" "), _c("br")]);
+}, function () {
+  var _vm = this,
+      _c = _vm._self._c;
+
+  return _c("div", {
+    staticClass: "row"
+  }, [_c("div", {
     staticClass: "col-md-12"
   }, [_c("table", [_c("tr", [_c("td", [_c("div", {
     staticClass: "circle tgreen"
@@ -8531,7 +8536,7 @@ var staticRenderFns = [function () {
     staticClass: "circle tyellow"
   })]), _vm._v(" "), _c("td", [_vm._v("Expira pronto (7 dias o menos)")])]), _vm._v(" "), _c("tr", [_c("td", [_c("div", {
     staticClass: "circle tred"
-  })]), _vm._v(" "), _c("td", [_vm._v("Expirado")])])])]);
+  })]), _vm._v(" "), _c("td", [_vm._v("Expirado")])])])])]);
 }, function () {
   var _vm = this,
       _c = _vm._self._c;
@@ -13275,7 +13280,7 @@ __webpack_require__.r(__webpack_exports__);
 
 var ___CSS_LOADER_EXPORT___ = _node_modules_laravel_mix_node_modules_css_loader_dist_runtime_api_js__WEBPACK_IMPORTED_MODULE_0___default()(function(i){return i[1]});
 // Module
-___CSS_LOADER_EXPORT___.push([module.id, ".swal-bg {\n  color: #000000;\n  background: #000000;\n  /* background: radial-gradient(ellipse at center, #18380a 0%, #000000 120%); */\n  background-size: 100%;\n  width: 80%;\n  height: 80%;\n}\n.swal-bg-red {\n  color: #000000;\n  background: red;\n  background-size: 100%;\n  width: 80%;\n  height: 80%;\n}\n.swal-bg-yellow {\n  color: #000000;\n  background: rgb(255, 172, 0);\n  background-size: 100%;\n  width: 80%;\n  height: 80%;\n}\n.swal-bg .swal2-content {\n  color: white;\n  /* text-shadow: 2px 2px 5px white; */\n}\n.swal2-icon.swal2-info {\n  border-color: #000000;\n  color: #bf1212;\n}\n.swal2-icon.swal2-error {\n  border-color: #5d4d4d;\n}\n.swal2-icon.swal2-error {\n  background-color: #0c0c0c;\n}", ""]);
+___CSS_LOADER_EXPORT___.push([module.id, ".swal-bg {\n  background: #000000;\n  /* background: radial-gradient(ellipse at center, #18380a 0%, #000000 120%); */\n  background-size: 100%;\n  width: 80%;\n  height: 80%;\n}\n.swal-bg-red {\n  color: #000000;\n  background: red;\n  background-size: 100%;\n  width: 80%;\n  height: 80%;\n}\n.swal-bg-yellow {\n  color: #000000;\n  background: rgb(255, 172, 0);\n  background-size: 100%;\n  width: 80%;\n  height: 80%;\n}\n.swal-bg .swal2-content {\n  color: white;\n  /* text-shadow: 2px 2px 5px white; */\n}\n\n/* .swal2-icon.swal2-info {\n  border-color: #000000;\n  color: #bf1212;\n} */\n.swal2-icon.swal2-info {\n  border-color: #bf8a12;\n  color: #bf8a12;\n}\n.swal2-container.swal2-shown-warning {\n  background-color: rgba(169, 123, 26, 0.4);\n}\n.swal2-container.swal2-shown-danger {\n  background-color: rgba(185, 10, 10, 0.4);\n}\n\n/* .swal2-icon.swal2-error {\n  // border-color: #5d4d4d;\n} */", ""]);
 // Exports
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (___CSS_LOADER_EXPORT___);
 
