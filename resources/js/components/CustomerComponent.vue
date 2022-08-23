@@ -866,6 +866,7 @@ export default {
       axios
         .get(url)
         .then((response) => {
+          console.log(response);
           var respuesta = response.data;
           me.customers = respuesta.customers;
           me.pagination = respuesta.pagination;
@@ -874,10 +875,10 @@ export default {
           console.log(error);
         })
         .finally(() => (me.loading = false));
-      console.log(
+      /*   console.log(
         // { CloseDate: new Date(this.cusCloseDate("2022-08-20")) },
         { 2: new Date("2022-08-20") }
-      );
+      ); */
     },
 
     cusDate(value) {

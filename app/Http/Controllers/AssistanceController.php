@@ -160,11 +160,14 @@ class AssistanceController extends Controller
                     $q->orderBy('expires_at', 'desc')->first();
                 })
                 ->first(); */
-            $customer = Customer::where('id', $customer->id)->with(['membership' => function ($q) use ($customer) {
-                $q->with(['payments' => function ($q1) use ($customer) { //->where('customer_id', $customer->id)
-                    $q1->where('customer_id', $customer->id)->orderBy('expires_at', 'desc')->first();
-                }]);
-            }])->first();
+            $customer = Customer::where('id', $customer->id)
+                ->with(['membership' => function ($q) use ($customer) {
+                    $q->with(['payments' => function ($q1) use ($customer) { //->where('customer_id', $customer->id)
+                        $q1->where('customer_id', $customer->id)
+                            ->orderBy('expires_at', 'desc')->first();
+                    }]);
+                }])
+                ->first();
 
             /* ->with(['membership' => function ($q) use ($customer) {
                    /*  $q->with(['payments' => function ($q1) use ($customer) { //->where('customer_id', $customer->id)
