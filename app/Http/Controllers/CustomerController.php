@@ -64,11 +64,6 @@ class CustomerController extends Controller
                     'customers.postcode',
                     'customers.phone',
                 )
-                /*    ->with('membership', function ($q) {
-                    $q->with('payments', function ($q) {
-                        $q->orderBy('expires_at', 'asc')->first();
-                    });
-                }) */
                 ->join('memberships', function ($j) {
                     $j->on('memberships.id', 'customers.membership_id');
                 })
@@ -88,11 +83,12 @@ class CustomerController extends Controller
                         }
                     }
                 )
+                ->groupBy('customers.id')
                 ->addSelect('branches.division')
                 ->orderBy('id', 'asc')
                 ->paginate(10);
             //add pagination
-            // return $customers;
+            //    return $customers;
             $customersRes = [];
             foreach ($customers as $cus) {
                 array_push($customersRes, [
@@ -108,8 +104,8 @@ class CustomerController extends Controller
                     'income' => $cus->income,
                     'membership' => isset($cus->membership) ? $cus->membership['name'] . ' | ' . $cus->membership['price'] : null,
                     'membershipId' => isset($cus->membership) ? $cus->membership['id'] : null,
-                    'last paid' => isset($cus->membership->payments[0]) ? $cus->membership->payments[0]['paid_at'] : null,
-                    'expires at' => isset($cus->membership->payments[0]) ? $cus->membership->payments[0]['expires_at'] : null,
+                    'last paid' => isset($cus->latestPayment[0]) ? $cus->latestPayment[0]['paid_at'] : null,
+                    'expires at' => isset($cus->latestPayment[0]) ? $cus->latestPayment[0]['expires_at'] : null,
                     /* 'last paid' => $cus->latestPayment ? date($cus->latestPayment->paid_at) : '',
                     'expires at' => $cus->latestPayment ? date($cus->latestPayment->expires_at) : '' */
                 ]);
@@ -133,12 +129,13 @@ class CustomerController extends Controller
     public function select()
     {
         $customers = Customer::where('company_id', 1)
-            ->with(['membership' => function ($query) {
+          /*   ->with(['membership' => function ($query) {
                 $query->with(['payments' => function ($q) {
-                    $q->with('membership');
+                    // $q->with('membership');
                     // $q->where('customer_id', 'customer.id')->orderBy('paid_at', 'desc')->first();
                 }]);
-            }])->get();
+            }]) */
+            ->get();
         return $customers;
     }
 

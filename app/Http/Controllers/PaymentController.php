@@ -24,7 +24,6 @@ class PaymentController extends Controller
     public function index(Request $request)
     {
         try {
-
             $buscar = $request->buscar;
             $criterio = $request->criterio;
 
@@ -72,6 +71,7 @@ class PaymentController extends Controller
 
                     // 'memberships.id as membershipId',
                 )
+                ->orderBy('payments.paid_at', 'desc')
                 ->paginate();
 
             // return $payments;
@@ -158,7 +158,7 @@ class PaymentController extends Controller
 
             // return $payments;
 
-         /*    $paymentsRes = [];
+            /*    $paymentsRes = [];
             foreach ($payments as $pay) {
                 array_push($paymentsRes, [
                     'id' => $pay->id,

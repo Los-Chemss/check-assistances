@@ -859,7 +859,7 @@ export default {
 
     listCustomers(page, buscar, criterio) {
       let me = this;
-      //   me.loading = true;
+      me.loading = true;
       me.template = 0;
       let url =
         "customers?page=" + page + "&buscar=" + buscar + "&criterio=" + criterio.key;
@@ -915,7 +915,6 @@ export default {
           console.log(error);
         });
     },
-
     selectCriteria() {
       this.buscar = "";
     },

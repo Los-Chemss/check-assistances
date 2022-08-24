@@ -6,6 +6,7 @@ use App\Models\Branch;
 use App\Models\Company;
 use App\Models\Customer;
 use App\Models\Membership;
+use App\Models\Payment;
 use DateTime;
 use Illuminate\Database\Eloquent\Factories\Factory;
 
@@ -18,13 +19,19 @@ class PaymentFactory extends Factory
      */
     public function definition()
     {
-        $customer = Customer::query()->where('company_id', 1)->inRandomOrder()->first();
+        $customer = Customer::query()/* ->where('company_id', 1) */->inRandomOrder()->first();
         $membership =   Membership::query()->inRandomOrder()->first();
         $customer->membership_id = $membership->id;
         $companyId = function () {
             return Company::query()->inRandomOrder()->first()->id;
         };
-        $date = $this->faker->dateTimeBetween('-3 years', 'now');
+
+        $date = $this->faker->dateTimeBetween($customer->income, 'now');
+        $pay = Payment::where('customer_id', $customer->id)->orderBy('paid_at', 'desc')->first();
+        if ($pay) {
+            $p = $membership->period;;
+            $date = date('Y-m-d', strtotime($pay->paid_at . " + $p days"));
+        }
         $output = $date->format('Y-m-d');
         // dd($output);
         return [

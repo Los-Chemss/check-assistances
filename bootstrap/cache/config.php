@@ -9,7 +9,7 @@
     'timezone' => 'America/Mexico_City',
     'locale' => 'en',
     'fallback_locale' => 'en',
-    'faker_locale' => 'en_US',
+    'faker_locale' => 'es_MX',
     'key' => 'base64:DPWSu5IHui9kYUNCYrfax9Cq2m3ZXClArkMx7NF/h90=',
     'cipher' => 'AES-256-CBC',
     'providers' => 
