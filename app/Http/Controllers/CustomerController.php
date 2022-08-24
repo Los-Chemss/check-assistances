@@ -75,7 +75,7 @@ class CustomerController extends Controller
                 ->join('payments', function ($j) {
                     $j->on('payments.membership_id', 'memberships.id')
                         ->on('payments.customer_id', 'customers.id', function ($q) {
-                            $q->orderBy('payments.expires_at', 'desc')->first();
+                            $q->orderBy('payments.expires_at', 'desc');
                         });
                 })
                 ->Join(
