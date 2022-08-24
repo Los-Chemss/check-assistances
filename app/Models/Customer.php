@@ -44,7 +44,9 @@ class Customer extends Model
 
     public function latestPayment()
     {
-        return $this->hasOne(Payment::class, 'customer_id', 'id')->orderBy('paid_at', 'desc')->latest();
+        // return $this->payments()->take(1);
+        return $this->hasMany(Payment::class)->orderBy('paid_at', 'desc');
+        // return $this->belongsTo(Payment::class, 'customer_id', 'id')->orderBy('paid_at','desc');
     }
 
 

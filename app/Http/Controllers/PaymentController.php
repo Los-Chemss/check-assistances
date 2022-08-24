@@ -71,7 +71,7 @@ class PaymentController extends Controller
                     // 'customers.id as customerId',
 
                     // 'memberships.id as membershipId',
-                )
+                )->oederBy('payments.paid_at', 'desc')
                 ->paginate();
 
             // return $payments;
@@ -158,7 +158,7 @@ class PaymentController extends Controller
 
             // return $payments;
 
-         /*    $paymentsRes = [];
+            /*    $paymentsRes = [];
             foreach ($payments as $pay) {
                 array_push($paymentsRes, [
                     'id' => $pay->id,

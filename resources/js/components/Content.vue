@@ -165,8 +165,8 @@ export default {
     }
   },
 
-  mounted() {
-    document.getElementById("code").focus();
+  async mounted() {
+    await document.getElementById("code").focus();
     // console.log(process.env);
   },
 
@@ -195,6 +195,7 @@ export default {
             : me.expiresClose
             ? "<h1 class='text-warning'>Esta por expirar </h1>"
             : "";
+
           let info =
             (customer.membership
               ? "Membresia: " +
@@ -266,9 +267,8 @@ export default {
               " </h1></div>",
             timer: 5000,
           });
-
-          /*       let elem = document.getElementById("checkCard");
-          document.getElementById("code").focus(); */
+          me.loading = false;
+          document.getElementById("code").focus();
         })
 
         .catch((error) => {
@@ -285,16 +285,15 @@ export default {
               target: document.getElementById("checkCard"),
             });
           }
-          /*  let elem = document.getElementById("checkCard");
-          document.getElementById("code").focus(); */
+          document.getElementById("code").focus();
         })
         .finally(
-          () => (
+          async () => (
             (me.code = ""),
             (me.expired = null),
             (me.expiresClose = null),
             (me.loading = false),
-            document.getElementById("code").focus()
+            await document.getElementById("code").focus()
           )
         );
     },
