@@ -1,6 +1,6 @@
 <template>
   <!--  <div class="container-fluid"> -->
-  <div class="row">
+  <div class="row" style="background: url('/templates/confeti/Confeti.html')">
     <div class="card">
       <div class="card-body">
         <div class="row">
@@ -67,6 +67,7 @@
             <div class="card-body">
               <div class="col-md-12">
                 <DigitalClock />
+                <!-- <Confeti /> -->
                 <div class="col-md-8 m-auto mb-4 pb-4 mt-3 pt-4">
                   <h4 class="card-title text-center text-danger">
                     Ingresa tu codigo de socio
@@ -116,9 +117,11 @@
 <script>
 // https://codepen.io/gau/pen/LjQwGp
 import DigitalClock from "./DigitalClock.vue";
+// import Confeti from "./extra/Confeti.html";
 export default {
   components: {
     DigitalClock,
+    // Confeti,
   },
   data() {
     return {
@@ -150,6 +153,7 @@ export default {
 
       expired: null,
       expiresClose: null,
+      runn: 0,
     };
   },
 
@@ -174,6 +178,8 @@ export default {
     assistance() {
       let me = this;
       me.loading = true;
+      me.run = 1;
+      var w = new me.showConfeti();
       axios
         .post("assistances", { branch: me.branch.id, code: me.code })
         .then((response) => {
@@ -243,17 +249,38 @@ export default {
               ' border-radius:50%; rgba(10, 175, 230, 1), 0 0 20px rgba(10, 175, 230, 0);">'
             : "";
 
+          let birthBackdrop = `url("https://placekitten.com/150/150")  left top  no-repeat`;
+          let backdrop = me.expired
+            ? "#ba0c0c8c"
+            : me.expiresClose
+            ? "#c29b089c"
+            : "#010601e3";
+
+          let now = new Date();
+          let birth = new Date(customer.birthday);
+          let nowDay = now.getDay();
+          let nowMonth = now.getMonth();
+
+          let birthDay = birth.getDay();
+          let birthMonth = birth.getMonth();
+
+          /* console.log({ day: now.getDay() });
+          console.log({ month: now.getMonth() });
+          console.log({ day: birth.getDay() });
+          console.log({ month: birth.getMonth() }); */
+          this.showConfeti(1);
+          //   return;
+
           Swal.fire({
             type: me.expired ? "error" : me.expiresClose ? "info" : "",
             customClass: { popup: "swal-bg" },
-            backdrop: me.expired
-              ? "#ba0c0c8c"
-              : me.expiresClose
-              ? "#c29b089c"
-              : "#010601e3",
+            backdrop:
+              nowDay === birthDay && nowMonth === birthMonth
+                ? backdrop + birthBackdrop
+                : backdrop,
             target: document.getElementById("checkCard"),
             html:
-              "<div> " +
+              "<div style=' target=' _blank ' > " +
               mamadolores +
               " </div>" +
               '<h1 style="color:white;"><b> Registro  de ' +
@@ -293,7 +320,12 @@ export default {
             (me.expired = null),
             (me.expiresClose = null),
             (me.loading = false),
-            await document.getElementById("code").focus()
+            await document.getElementById("code").focus(),
+            (me.run = 0)
+            // this.showConfeti(0)
+
+            /* setTimeout(w._createClass.bind(w), 0),
+            setTimeout(w._createClass.bind(w), 3000) */
           )
         );
     },
@@ -353,6 +385,255 @@ export default {
     cusDate(value) {
       if (value) {
         return new Date(value);
+      }
+    },
+
+    /*  openConfeti() {
+      this.showConfeti();
+    },
+    closeConfeti() {
+      null;
+    }, */
+    //cONFETI SCRIPT
+    showConfeti(show) {
+      let _createClass = null;
+      let Progress = null;
+      let Confetti = null;
+      if (!show) {
+        this.canvas = null;
+        console.log("try to stop confeti");
+        return;
+      } else {
+        _createClass = (function () {
+          function defineProperties(target, props) {
+            for (var i = 0; i < props.length; i++) {
+              var descriptor = props[i];
+              descriptor.enumerable = descriptor.enumerable || false;
+              descriptor.configurable = true;
+              if ("value" in descriptor) descriptor.writable = true;
+              Object.defineProperty(target, descriptor.key, descriptor);
+            }
+          }
+          return function (Constructor, protoProps, staticProps) {
+            if (protoProps) defineProperties(Constructor.prototype, protoProps);
+            if (staticProps) defineProperties(Constructor, staticProps);
+            return Constructor;
+          };
+        })();
+
+        function _classCallCheck(instance, Constructor) {
+          if (!(instance instanceof Constructor)) {
+            throw new TypeError("Cannot call a class as a function");
+          }
+        }
+
+        Progress = (function () {
+          function Progress() {
+            var param =
+              arguments.length <= 0 || arguments[0] === undefined ? {} : arguments[0];
+
+            _classCallCheck(this, Progress);
+
+            this.timestamp = null;
+            this.duration = param.duration || Progress.CONST.DURATION;
+            this.progress = 0;
+            this.delta = 0;
+            this.progress = 0;
+            this.isLoop = !!param.isLoop;
+            this.reset();
+          }
+
+          Progress.prototype.reset = function reset() {
+            this.timestamp = null;
+          };
+
+          Progress.prototype.start = function start(now) {
+            this.timestamp = now;
+          };
+
+          Progress.prototype.tick = function tick(now) {
+            if (this.timestamp) {
+              this.delta = now - this.timestamp;
+              this.progress = Math.min(this.delta / this.duration, 1);
+
+              if (this.progress >= 1 && this.isLoop) {
+                console.log(this.progress);
+                this.start(now);
+              }
+
+              return this.progress;
+            } else {
+              return 0;
+            }
+          };
+
+          _createClass(Progress, null, [
+            {
+              key: "CONST",
+              get: function get() {
+                return {
+                  DURATION: 1000,
+                };
+              },
+            },
+          ]);
+
+          return Progress;
+        })();
+
+        Confetti = (function () {
+          function Confetti(param) {
+            _classCallCheck(this, Confetti);
+            console.log(param);
+
+            this.parent = param.elm || document.body;
+            this.canvas = document.createElement("canvas");
+            this.ctx = this.canvas.getContext("2d");
+            this.width = param.width || this.parent.offsetWidth;
+            this.height = param.height || this.parent.offsetHeight;
+            this.length = param.length || Confetti.CONST.PAPER_LENGTH;
+            this.yRange = param.yRange || this.height * 2;
+            this.progress = new Progress({
+              duration: param.duration,
+              isLoop: true,
+            });
+            this.rotationRange =
+              typeof param.rotationLength === "number" ? param.rotationRange : 10;
+            this.speedRange =
+              typeof param.speedRange === "number" ? param.speedRange : 10;
+            this.sprites = [];
+
+            this.canvas.style.cssText = [
+              "display: block",
+              "position: absolute",
+              "top: 0",
+              "left: 0",
+              "pointer-events: none",
+              "z-index:10000",
+            ].join(";");
+
+            this.render = this.render.bind(this);
+            this.build();
+            this.parent.append(this.canvas);
+            this.progress.start(performance.now());
+            requestAnimationFrame(this.render);
+          }
+
+          Confetti.prototype.build = function build() {
+            for (var i = 0; i < this.length; ++i) {
+              var canvas = document.createElement("canvas"),
+                ctx = canvas.getContext("2d");
+
+              canvas.width = Confetti.CONST.SPRITE_WIDTH;
+              canvas.height = Confetti.CONST.SPRITE_HEIGHT;
+
+              canvas.position = {
+                initX: Math.random() * this.width,
+                initY: -canvas.height - Math.random() * this.yRange,
+              };
+
+              canvas.rotation =
+                this.rotationRange / 2 - Math.random() * this.rotationRange;
+              canvas.speed = this.speedRange / 2 + Math.random() * (this.speedRange / 2);
+
+              ctx.save();
+              ctx.fillStyle =
+                Confetti.CONST.COLORS[(Math.random() * Confetti.CONST.COLORS.length) | 0];
+              ctx.fillRect(0, 0, canvas.width, canvas.height);
+              ctx.restore();
+
+              this.sprites.push(canvas);
+            }
+          };
+
+          Confetti.prototype.render = function render(now) {
+            var progress = this.progress.tick(now);
+
+            this.canvas.width = this.width;
+            this.canvas.height = this.height;
+
+            for (var i = 0; i < this.length; ++i) {
+              this.ctx.save();
+              this.ctx.translate(
+                this.sprites[i].position.initX +
+                  this.sprites[i].rotation * Confetti.CONST.ROTATION_RATE * progress,
+                this.sprites[i].position.initY + progress * (this.height + this.yRange)
+              );
+              this.ctx.rotate(this.sprites[i].rotation);
+              this.ctx.drawImage(
+                this.sprites[i],
+                (-Confetti.CONST.SPRITE_WIDTH *
+                  Math.abs(Math.sin(progress * Math.PI * 2 * this.sprites[i].speed))) /
+                  2,
+                -Confetti.CONST.SPRITE_HEIGHT / 2,
+                Confetti.CONST.SPRITE_WIDTH *
+                  Math.abs(Math.sin(progress * Math.PI * 2 * this.sprites[i].speed)),
+                Confetti.CONST.SPRITE_HEIGHT
+              );
+              this.ctx.restore();
+            }
+
+            requestAnimationFrame(this.render);
+          };
+
+          _createClass(Confetti, null, [
+            {
+              key: "CONST",
+              get: function get() {
+                return {
+                  SPRITE_WIDTH: 9,
+                  SPRITE_HEIGHT: 16,
+                  PAPER_LENGTH: 100,
+                  DURATION: 8000,
+                  ROTATION_RATE: 50,
+                  COLORS: [
+                    "#EF5350",
+                    "#EC407A",
+                    "#AB47BC",
+                    "#7E57C2",
+                    "#5C6BC0",
+                    "#42A5F5",
+                    "#29B6F6",
+                    "#26C6DA",
+                    "#26A69A",
+                    "#66BB6A",
+                    "#9CCC65",
+                    "#D4E157",
+                    "#FFEE58",
+                    "#FFCA28",
+                    "#FFA726",
+                    "#FF7043",
+                    "#8D6E63",
+                    "#BDBDBD",
+                    "#78909C",
+                  ],
+                };
+              },
+            },
+          ]);
+          return Confetti;
+        })();
+
+        (function () {
+          var DURATION = 8000,
+            LENGTH = 120;
+
+          new Confetti({
+            width: window.innerWidth,
+            height: window.innerHeight,
+            length: LENGTH,
+            duration: DURATION,
+          });
+
+          setTimeout(function () {
+            new Confetti({
+              width: window.innerWidth,
+              height: window.innerHeight,
+              length: LENGTH,
+              duration: DURATION,
+            });
+          }, DURATION / 2);
+        })();
       }
     },
   },
@@ -427,6 +708,9 @@ export default {
     rgb(10 56 46 / 98%) 0%,
     rgb(0 0 0 / 92%) 70%
   );
+  /*   background-image: url("data:html, %3Cdiv%3EHello%3C/div%3E");
+  background-image: url(/templates/confeti/Confeti.html);
+  background-size: 100%; */
   //   background: radial-gradient(ellipse at center, #0a2e3895 0%, #00000080 70%);
 
   //   background: #0f3854;

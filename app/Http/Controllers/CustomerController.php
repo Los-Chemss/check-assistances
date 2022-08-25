@@ -208,6 +208,7 @@ class CustomerController extends Controller
                 'province' => $request->province,
                 'postcode' => $request->postcode,
                 'phone' => $request->phone,
+                'birthday' => $request->birthday,
                 'membership_id' => $membership->id,
                 'registered_on_branch_id' => $branch->id
             ];

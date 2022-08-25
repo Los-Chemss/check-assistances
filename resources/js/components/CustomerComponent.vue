@@ -449,7 +449,7 @@
                           </div>
                         </div>
                       </div>
-                      <div class="form-group col-md-6">
+                      <div class="form-group col-md-4">
                         <label for="name">Nombre</label>
                         <input
                           type="text"
@@ -460,7 +460,7 @@
                         />
                         <!--    <span class="bar"></span> -->
                       </div>
-                      <div class="form-group col-md-6">
+                      <div class="form-group col-md-4">
                         <label for="lastname">Apellidos</label>
                         <input
                           placeholder="Simpson"
@@ -470,15 +470,15 @@
                           v-model="customer.lastname"
                         />
                       </div>
-                      <!--   <div class="form-group col-md-4">
-                        <label for="code">code</label>
+                        <div class="form-group col-md-4">
+                        <label for="code">Fecha de nacimiento</label>
                         <input
-                          type="text"
+                          type="date"
                           class="form-control"
-                          id="code"
-                          v-model="customer.code"
+                          id="birthday"
+                          v-model="customer.birthday"
                         />
-                      </div> -->
+                      </div>
                     </div>
                     <div class="row">
                       <div class="form-group col-md-4">
@@ -525,7 +525,7 @@
                         />
                       </div>
                       <div class="form-group col-md-4">
-                        <label for="membership">Membership</label>
+                        <label for="membership">Membresia</label>
                         <select
                           class="form-control p-0"
                           id="membership"
@@ -540,7 +540,7 @@
                       </div>
 
                       <div class="form-group col-md-4">
-                        <label for="income">income</label>
+                        <label for="income">Ingreso</label>
                         <input
                           type="date"
                           class="form-control text-right"
@@ -947,6 +947,7 @@ export default {
         province: me.customer.province,
         postcode: me.customer.postcode,
         phone: me.customer.phone,
+        birthday: me.customer.birthday,
         membership: me.selectedMembership.id,
       };
       if (me.currentPhoto != null) {
@@ -993,6 +994,7 @@ export default {
         province: me.customer.province,
         postcode: me.customer.postcode,
         phone: me.customer.phone,
+        birthday: me.customer.birthday,
         membership_id: me.selectedMembership.id,
         id: me.customer.id,
         // image: me.currentPhoto,

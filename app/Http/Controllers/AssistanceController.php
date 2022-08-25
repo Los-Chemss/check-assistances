@@ -61,11 +61,11 @@ class AssistanceController extends Controller
             foreach ($asistances as $as) {
                 array_push($asistancesRes, [
                     'id' => $as->id,
-                    'nombre' =>  $as->name . ' ' . $as->lastname,
-                    // 'nombre' => isset($as->customer) ? $as->customer->name . ' ' . $as->customer->lastname  : null,
+                    'nombre' => $as->customer ? $as->customer->name . ' ' . $as->customer->lastname  : null,
                     'entrada' => $as->input,
-                    // 'salida' => $as->output,
                     'sucursal' => isset($as->branch) ? $as->branch->division : null,
+                    //'nombre' =>  $as->name . ' ' . $as->lastname,
+                    // 'salida' => $as->output,
                 ]);
             }
 
@@ -106,8 +106,8 @@ class AssistanceController extends Controller
                     'id' => $as->id,
                     'nombre' => $as->customer->name,
                     'entrada' => $as->input,
-                    // 'salida' => $as->output,
                     'sucursal' => $as->branch->division,
+                    // 'salida' => $as->output,
                 ]);
             }
 

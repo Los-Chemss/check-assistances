@@ -17,7 +17,7 @@ class CustomerFactory extends Factory
      */
     public function definition()
     {
-     /*    $cus = Customer::select('code')->get();
+        /*    $cus = Customer::select('code')->get();
         $codes = [];
         foreach ($cus as $c) {
             array_push($codes, $c->code);
@@ -45,7 +45,7 @@ class CustomerFactory extends Factory
 
         $codes = [];
         for ($x = 0001; $x <= 0005; $x++) {
-        array_push($codes, str_pad($x , 4, "0", STR_PAD_LEFT));
+            array_push($codes, str_pad($x, 4, "0", STR_PAD_LEFT));
         }
 
         return [
@@ -53,6 +53,7 @@ class CustomerFactory extends Factory
             'lastname' => $this->faker->lastName(),
             'code' => $this->faker->unique()->randomElement($codes),
             'income' => $this->faker->dateTime(),
+            'birthday' => $this->faker->date(),
             'membership_id' =>  function () use ($companyId) {
                 return  Membership::query()->inRandomOrder()->first()->id;
             },

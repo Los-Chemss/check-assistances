@@ -2714,10 +2714,12 @@ function asyncGeneratorStep(gen, resolve, reject, _next, _throw, key, arg) { try
 function _asyncToGenerator(fn) { return function () { var self = this, args = arguments; return new Promise(function (resolve, reject) { var gen = fn.apply(self, args); function _next(value) { asyncGeneratorStep(gen, resolve, reject, _next, _throw, "next", value); } function _throw(err) { asyncGeneratorStep(gen, resolve, reject, _next, _throw, "throw", err); } _next(undefined); }); }; }
 
 // https://codepen.io/gau/pen/LjQwGp
+ // import Confeti from "./extra/Confeti.html";
 
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = ({
   components: {
-    DigitalClock: _DigitalClock_vue__WEBPACK_IMPORTED_MODULE_0__["default"]
+    DigitalClock: _DigitalClock_vue__WEBPACK_IMPORTED_MODULE_0__["default"] // Confeti,
+
   },
   data: function data() {
     return {
@@ -2745,7 +2747,8 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
       selectedBranch: null,
       fullScreen: 0,
       expired: null,
-      expiresClose: null
+      expiresClose: null,
+      runn: 0
     };
   },
   created: function created() {
@@ -2778,8 +2781,12 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
   },
   methods: {
     assistance: function assistance() {
+      var _this = this;
+
       var me = this;
       me.loading = true;
+      me.run = 1;
+      var w = new me.showConfeti();
       axios.post("assistances", {
         branch: me.branch.id,
         code: me.code
@@ -2811,14 +2818,30 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
         console.log(customer.image);
         console.log(imgSrc);
         var mamadolores = !(me.expired || me.expiresClose) ? '<img src="/images/iconogym2.png"/ ' + 'style="box-shadow:0 1rem 3rem rgba(68, 122, 17, 0.967), 0 1rem 3rem rgba(0, 0, 0, 0.19);' + ' border-radius:50%; rgba(10, 175, 230, 1), 0 0 20px rgba(10, 175, 230, 0);">' : "";
+        var birthBackdrop = "url(\"https://placekitten.com/150/150\")  left top  no-repeat";
+        var backdrop = me.expired ? "#ba0c0c8c" : me.expiresClose ? "#c29b089c" : "#010601e3";
+        var now = new Date();
+        var birth = new Date(customer.birthday);
+        var nowDay = now.getDay();
+        var nowMonth = now.getMonth();
+        var birthDay = birth.getDay();
+        var birthMonth = birth.getMonth();
+        /* console.log({ day: now.getDay() });
+        console.log({ month: now.getMonth() });
+        console.log({ day: birth.getDay() });
+        console.log({ month: birth.getMonth() }); */
+
+        _this.showConfeti(1); //   return;
+
+
         Swal.fire({
           type: me.expired ? "error" : me.expiresClose ? "info" : "",
           customClass: {
             popup: "swal-bg"
           },
-          backdrop: me.expired ? "#ba0c0c8c" : me.expiresClose ? "#c29b089c" : "#010601e3",
+          backdrop: nowDay === birthDay && nowMonth === birthMonth ? backdrop + birthBackdrop : backdrop,
           target: document.getElementById("checkCard"),
-          html: "<div> " + mamadolores + " </div>" + '<h1 style="color:white;"><b> Registro  de ' + movement + " satisfactorio</b></h1>" + ' <div class="text-center pt-2"> <img src="' + imgSrc + '"class="img-fluid" style="width:150px; height:150px; box-shadow:0 1rem 3rem rgba(68, 122, 17, 0.967), 0 1rem 3rem rgba(0, 0, 0, 0.19);' + ' border-radius:50%" alt="customer-image"/> <br>  <h1 style="margin-top:10px;">' + message + " </h1></div>",
+          html: "<div style=' target=' _blank ' > " + mamadolores + " </div>" + '<h1 style="color:white;"><b> Registro  de ' + movement + " satisfactorio</b></h1>" + ' <div class="text-center pt-2"> <img src="' + imgSrc + '"class="img-fluid" style="width:150px; height:150px; box-shadow:0 1rem 3rem rgba(68, 122, 17, 0.967), 0 1rem 3rem rgba(0, 0, 0, 0.19);' + ' border-radius:50%" alt="customer-image"/> <br>  <h1 style="margin-top:10px;">' + message + " </h1></div>",
           timer: 5000
         });
         me.loading = false;
@@ -2853,7 +2876,11 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
                 return document.getElementById("code").focus();
 
               case 6:
-                return _context2.abrupt("return", _context2.sent);
+                return _context2.abrupt("return", me.run = 0 // this.showConfeti(0)
+
+                /* setTimeout(w._createClass.bind(w), 0),
+                setTimeout(w._createClass.bind(w), 3000) */
+                );
 
               case 7:
               case "end":
@@ -2920,6 +2947,199 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
     cusDate: function cusDate(value) {
       if (value) {
         return new Date(value);
+      }
+    },
+
+    /*  openConfeti() {
+      this.showConfeti();
+    },
+    closeConfeti() {
+      null;
+    }, */
+    //cONFETI SCRIPT
+    showConfeti: function showConfeti(show) {
+      var _createClass = null;
+      var Progress = null;
+      var Confetti = null;
+
+      if (!show) {
+        this.canvas = null;
+        console.log("try to stop confeti");
+        return;
+      } else {
+        var _classCallCheck = function _classCallCheck(instance, Constructor) {
+          if (!(instance instanceof Constructor)) {
+            throw new TypeError("Cannot call a class as a function");
+          }
+        };
+
+        _createClass = function () {
+          function defineProperties(target, props) {
+            for (var i = 0; i < props.length; i++) {
+              var descriptor = props[i];
+              descriptor.enumerable = descriptor.enumerable || false;
+              descriptor.configurable = true;
+              if ("value" in descriptor) descriptor.writable = true;
+              Object.defineProperty(target, descriptor.key, descriptor);
+            }
+          }
+
+          return function (Constructor, protoProps, staticProps) {
+            if (protoProps) defineProperties(Constructor.prototype, protoProps);
+            if (staticProps) defineProperties(Constructor, staticProps);
+            return Constructor;
+          };
+        }();
+
+        Progress = function () {
+          function Progress() {
+            var param = arguments.length <= 0 || arguments[0] === undefined ? {} : arguments[0];
+
+            _classCallCheck(this, Progress);
+
+            this.timestamp = null;
+            this.duration = param.duration || Progress.CONST.DURATION;
+            this.progress = 0;
+            this.delta = 0;
+            this.progress = 0;
+            this.isLoop = !!param.isLoop;
+            this.reset();
+          }
+
+          Progress.prototype.reset = function reset() {
+            this.timestamp = null;
+          };
+
+          Progress.prototype.start = function start(now) {
+            this.timestamp = now;
+          };
+
+          Progress.prototype.tick = function tick(now) {
+            if (this.timestamp) {
+              this.delta = now - this.timestamp;
+              this.progress = Math.min(this.delta / this.duration, 1);
+
+              if (this.progress >= 1 && this.isLoop) {
+                console.log(this.progress);
+                this.start(now);
+              }
+
+              return this.progress;
+            } else {
+              return 0;
+            }
+          };
+
+          _createClass(Progress, null, [{
+            key: "CONST",
+            get: function get() {
+              return {
+                DURATION: 1000
+              };
+            }
+          }]);
+
+          return Progress;
+        }();
+
+        Confetti = function () {
+          function Confetti(param) {
+            _classCallCheck(this, Confetti);
+
+            console.log(param);
+            this.parent = param.elm || document.body;
+            this.canvas = document.createElement("canvas");
+            this.ctx = this.canvas.getContext("2d");
+            this.width = param.width || this.parent.offsetWidth;
+            this.height = param.height || this.parent.offsetHeight;
+            this.length = param.length || Confetti.CONST.PAPER_LENGTH;
+            this.yRange = param.yRange || this.height * 2;
+            this.progress = new Progress({
+              duration: param.duration,
+              isLoop: true
+            });
+            this.rotationRange = typeof param.rotationLength === "number" ? param.rotationRange : 10;
+            this.speedRange = typeof param.speedRange === "number" ? param.speedRange : 10;
+            this.sprites = [];
+            this.canvas.style.cssText = ["display: block", "position: absolute", "top: 0", "left: 0", "pointer-events: none", "z-index:10000"].join(";");
+            this.render = this.render.bind(this);
+            this.build();
+            this.parent.append(this.canvas);
+            this.progress.start(performance.now());
+            requestAnimationFrame(this.render);
+          }
+
+          Confetti.prototype.build = function build() {
+            for (var i = 0; i < this.length; ++i) {
+              var canvas = document.createElement("canvas"),
+                  ctx = canvas.getContext("2d");
+              canvas.width = Confetti.CONST.SPRITE_WIDTH;
+              canvas.height = Confetti.CONST.SPRITE_HEIGHT;
+              canvas.position = {
+                initX: Math.random() * this.width,
+                initY: -canvas.height - Math.random() * this.yRange
+              };
+              canvas.rotation = this.rotationRange / 2 - Math.random() * this.rotationRange;
+              canvas.speed = this.speedRange / 2 + Math.random() * (this.speedRange / 2);
+              ctx.save();
+              ctx.fillStyle = Confetti.CONST.COLORS[Math.random() * Confetti.CONST.COLORS.length | 0];
+              ctx.fillRect(0, 0, canvas.width, canvas.height);
+              ctx.restore();
+              this.sprites.push(canvas);
+            }
+          };
+
+          Confetti.prototype.render = function render(now) {
+            var progress = this.progress.tick(now);
+            this.canvas.width = this.width;
+            this.canvas.height = this.height;
+
+            for (var i = 0; i < this.length; ++i) {
+              this.ctx.save();
+              this.ctx.translate(this.sprites[i].position.initX + this.sprites[i].rotation * Confetti.CONST.ROTATION_RATE * progress, this.sprites[i].position.initY + progress * (this.height + this.yRange));
+              this.ctx.rotate(this.sprites[i].rotation);
+              this.ctx.drawImage(this.sprites[i], -Confetti.CONST.SPRITE_WIDTH * Math.abs(Math.sin(progress * Math.PI * 2 * this.sprites[i].speed)) / 2, -Confetti.CONST.SPRITE_HEIGHT / 2, Confetti.CONST.SPRITE_WIDTH * Math.abs(Math.sin(progress * Math.PI * 2 * this.sprites[i].speed)), Confetti.CONST.SPRITE_HEIGHT);
+              this.ctx.restore();
+            }
+
+            requestAnimationFrame(this.render);
+          };
+
+          _createClass(Confetti, null, [{
+            key: "CONST",
+            get: function get() {
+              return {
+                SPRITE_WIDTH: 9,
+                SPRITE_HEIGHT: 16,
+                PAPER_LENGTH: 100,
+                DURATION: 8000,
+                ROTATION_RATE: 50,
+                COLORS: ["#EF5350", "#EC407A", "#AB47BC", "#7E57C2", "#5C6BC0", "#42A5F5", "#29B6F6", "#26C6DA", "#26A69A", "#66BB6A", "#9CCC65", "#D4E157", "#FFEE58", "#FFCA28", "#FFA726", "#FF7043", "#8D6E63", "#BDBDBD", "#78909C"]
+              };
+            }
+          }]);
+
+          return Confetti;
+        }();
+
+        (function () {
+          var DURATION = 8000,
+              LENGTH = 120;
+          new Confetti({
+            width: window.innerWidth,
+            height: window.innerHeight,
+            length: LENGTH,
+            duration: DURATION
+          });
+          setTimeout(function () {
+            new Confetti({
+              width: window.innerWidth,
+              height: window.innerHeight,
+              length: LENGTH,
+              duration: DURATION
+            });
+          }, DURATION / 2);
+        })();
       }
     }
   }
@@ -3157,8 +3377,8 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
       return sendMessage;
     }(),
     listCustomers: function listCustomers(page, buscar, criterio) {
-      var me = this; //   me.loading = true;
-
+      var me = this;
+      me.loading = true;
       me.template = 0;
       var url = "customers?page=" + page + "&buscar=" + buscar + "&criterio=" + criterio.key;
       axios.get(url).then(function (response) {
@@ -3188,7 +3408,7 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
       var d3 = d1;
       var d4 = new Date(d3.setDate(d3.getDate() + 7));
       /*
-        console.log({ d1: this.formatDateToInput(d1) }, { d2: this.formatDateToInput(d2) });
+       console.log({ d1: this.formatDateToInput(d1) }, { d2: this.formatDateToInput(d2) });
       console.log(d4.getTime() > d2.getTime() ? "true" : "false"); */
 
       return d4.getTime() > d2.getTime() ? 1 : 0; //   var same = d1.getTime() === d2.getTime();
@@ -3236,6 +3456,7 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
         province: me.customer.province,
         postcode: me.customer.postcode,
         phone: me.customer.phone,
+        birthday: me.customer.birthday,
         membership: me.selectedMembership.id
       };
 
@@ -3283,6 +3504,7 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
         province: me.customer.province,
         postcode: me.customer.postcode,
         phone: me.customer.phone,
+        birthday: me.customer.birthday,
         membership_id: me.selectedMembership.id,
         id: me.customer.id // image: me.currentPhoto,
 
@@ -4774,15 +4996,15 @@ Vue.use(vue_disable_autocomplete__WEBPACK_IMPORTED_MODULE_0__["default"]);
       this.valideUrlField("userObj.cf_2252", "instagram");
       this.valideUrlField("userObj.cf_2250", "linkedin");
     },
-     valideUrlField(field, as) {
+      valideUrlField(field, as) {
       let fail;
       if (field === "userObj.cf_2254") fail = this.userObj.cf_2254;
       if (field === "userObj.cf_2246") fail = this.userObj.cf_2246;
       if (field === "userObj.cf_2252") fail = this.userObj.cf_2252;
       if (field === "userObj.cf_2250") fail = this.userObj.cf_2250;
-       console.log(field);
+        console.log(field);
       console.log(fail);
-       if (
+        if (
         !/(http|https):\/\/(\w+:{0,1}\w*@)?(\S+)(:[0-9]+)?(\/|\/([\w#!:.?+=&%@!\-\/]))?/i.test(
           fail
         ) &&
@@ -7589,7 +7811,10 @@ var render = function render() {
       _c = _vm._self._c;
 
   return _c("div", {
-    staticClass: "row"
+    staticClass: "row",
+    staticStyle: {
+      background: "url('/templates/confeti/Confeti.html')"
+    }
   }, [_c("div", {
     staticClass: "card"
   }, [_c("div", {
@@ -8165,7 +8390,7 @@ var render = function render() {
       takedPhoto: _vm.takedPhoto
     }
   })], 1)])])])]), _vm._v(" "), _c("div", {
-    staticClass: "form-group col-md-6"
+    staticClass: "form-group col-md-4"
   }, [_c("label", {
     attrs: {
       "for": "name"
@@ -8194,7 +8419,7 @@ var render = function render() {
       }
     }
   })]), _vm._v(" "), _c("div", {
-    staticClass: "form-group col-md-6"
+    staticClass: "form-group col-md-4"
   }, [_c("label", {
     attrs: {
       "for": "lastname"
@@ -8220,6 +8445,34 @@ var render = function render() {
         if ($event.target.composing) return;
 
         _vm.$set(_vm.customer, "lastname", $event.target.value);
+      }
+    }
+  })]), _vm._v(" "), _c("div", {
+    staticClass: "form-group col-md-4"
+  }, [_c("label", {
+    attrs: {
+      "for": "code"
+    }
+  }, [_vm._v("Fecha de nacimiento")]), _vm._v(" "), _c("input", {
+    directives: [{
+      name: "model",
+      rawName: "v-model",
+      value: _vm.customer.birthday,
+      expression: "customer.birthday"
+    }],
+    staticClass: "form-control",
+    attrs: {
+      type: "date",
+      id: "birthday"
+    },
+    domProps: {
+      value: _vm.customer.birthday
+    },
+    on: {
+      input: function input($event) {
+        if ($event.target.composing) return;
+
+        _vm.$set(_vm.customer, "birthday", $event.target.value);
       }
     }
   })])]), _vm._v(" "), _c("div", {
@@ -8348,7 +8601,7 @@ var render = function render() {
     attrs: {
       "for": "membership"
     }
-  }, [_vm._v("Membership")]), _vm._v(" "), _c("select", {
+  }, [_vm._v("Membresia")]), _vm._v(" "), _c("select", {
     directives: [{
       name: "model",
       rawName: "v-model",
@@ -8382,7 +8635,7 @@ var render = function render() {
     attrs: {
       "for": "income"
     }
-  }, [_vm._v("income")]), _vm._v(" "), _c("input", {
+  }, [_vm._v("Ingreso")]), _vm._v(" "), _c("input", {
     directives: [{
       name: "model",
       rawName: "v-model",
@@ -13345,7 +13598,7 @@ __webpack_require__.r(__webpack_exports__);
 
 var ___CSS_LOADER_EXPORT___ = _node_modules_laravel_mix_node_modules_css_loader_dist_runtime_api_js__WEBPACK_IMPORTED_MODULE_0___default()(function(i){return i[1]});
 // Module
-___CSS_LOADER_EXPORT___.push([module.id, "/* body .card {\n  background-color: #bf1515 !important;\n} */\n.card[data-v-7f690d44] {\n  width: 100%;\n  margin-bottom: 0;\n  background-color: transparent !important;\n  background-attachment: fixed;\n  background: radial-gradient(ellipse at center, rgba(10, 56, 46, 0.98) 0%, rgba(0, 0, 0, 0.92) 70%);\n}\n\n/* .form-control{\n    background-color: transparent !important;\n    border:none;\n} */\n.swal-modal[data-v-7f690d44] {\n  background-color: rgba(4, 23, 8, 0.62);\n  border: 3px solid white;\n}\n.card-header[data-v-7f690d44] {\n  font-family: \"Share Tech Mono\", monospace;\n  color: #240303;\n  text-align: center;\n  position: relative;\n  left: 50%;\n  top: 10%;\n  transform: translate(-50%, -50%);\n  color: #daf6ff;\n  text-shadow: 0 0 20px rgb(10, 175, 230), 0 0 20px rgba(10, 175, 230, 0);\n}\n.card-header .division[data-v-7f690d44] {\n  letter-spacing: 0.05em;\n  font-size: 45px;\n  padding: 5px 0;\n}\n.card-header .location[data-v-7f690d44] {\n  letter-spacing: 0.1em;\n  font-size: 24px;\n}\n.card-header .text[data-v-7f690d44] {\n  letter-spacing: 0.1em;\n  font-size: 12px;\n  padding: 20px 0 0;\n}\n.logo-circle[data-v-7f690d44] {\n  background-attachment: fixed;\n  background: radial-gradient(ellipse at center, rgb(255, 255, 255) 58%, rgba(10, 56, 46, 0.21) 68%);\n  width: 250px;\n  height: 250px;\n  display: flex;\n  align-items: center;\n  justify-content: center;\n}", ""]);
+___CSS_LOADER_EXPORT___.push([module.id, "/* body .card {\n  background-color: #bf1515 !important;\n} */\n.card[data-v-7f690d44] {\n  width: 100%;\n  margin-bottom: 0;\n  background-color: transparent !important;\n  background-attachment: fixed;\n  background: radial-gradient(ellipse at center, rgba(10, 56, 46, 0.98) 0%, rgba(0, 0, 0, 0.92) 70%);\n  /*   background-image: url(\"data:html, %3Cdiv%3EHello%3C/div%3E\");\n  background-image: url(/templates/confeti/Confeti.html);\n  background-size: 100%; */\n}\n\n/* .form-control{\n    background-color: transparent !important;\n    border:none;\n} */\n.swal-modal[data-v-7f690d44] {\n  background-color: rgba(4, 23, 8, 0.62);\n  border: 3px solid white;\n}\n.card-header[data-v-7f690d44] {\n  font-family: \"Share Tech Mono\", monospace;\n  color: #240303;\n  text-align: center;\n  position: relative;\n  left: 50%;\n  top: 10%;\n  transform: translate(-50%, -50%);\n  color: #daf6ff;\n  text-shadow: 0 0 20px rgb(10, 175, 230), 0 0 20px rgba(10, 175, 230, 0);\n}\n.card-header .division[data-v-7f690d44] {\n  letter-spacing: 0.05em;\n  font-size: 45px;\n  padding: 5px 0;\n}\n.card-header .location[data-v-7f690d44] {\n  letter-spacing: 0.1em;\n  font-size: 24px;\n}\n.card-header .text[data-v-7f690d44] {\n  letter-spacing: 0.1em;\n  font-size: 12px;\n  padding: 20px 0 0;\n}\n.logo-circle[data-v-7f690d44] {\n  background-attachment: fixed;\n  background: radial-gradient(ellipse at center, rgb(255, 255, 255) 58%, rgba(10, 56, 46, 0.21) 68%);\n  width: 250px;\n  height: 250px;\n  display: flex;\n  align-items: center;\n  justify-content: center;\n}", ""]);
 // Exports
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (___CSS_LOADER_EXPORT___);
 
@@ -13490,7 +13743,7 @@ __webpack_require__.r(__webpack_exports__);
 
 var ___CSS_LOADER_EXPORT___ = _node_modules_laravel_mix_node_modules_css_loader_dist_runtime_api_js__WEBPACK_IMPORTED_MODULE_0___default()(function(i){return i[1]});
 // Module
-___CSS_LOADER_EXPORT___.push([module.id, ".modal-content {\r\n    width: 100% !important;\r\n    position: fixed !important;\r\n    overflow-y: visible;\r\n  }\r\n  .mostrar {\r\n    display: list-item !important;\r\n    opacity: 1 !important;\r\n    background-color: #3c29297a !important;\r\n  }\r\n  .div-error {\r\n    display: flex;\r\n    justify-content: center;\r\n  }\r\n  .text-error {\r\n    color: red !important;\r\n    font-weight: bold;\r\n  }\r\n\r\n", ""]);
+___CSS_LOADER_EXPORT___.push([module.id, ".modal-content {\n    width: 100% !important;\n    position: fixed !important;\n    overflow-y: visible;\n  }\n  .mostrar {\n    display: list-item !important;\n    opacity: 1 !important;\n    background-color: #3c29297a !important;\n  }\n  .div-error {\n    display: flex;\n    justify-content: center;\n  }\n  .text-error {\n    color: red !important;\n    font-weight: bold;\n  }\n\n", ""]);
 // Exports
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (___CSS_LOADER_EXPORT___);
 
@@ -13514,7 +13767,7 @@ __webpack_require__.r(__webpack_exports__);
 
 var ___CSS_LOADER_EXPORT___ = _laravel_mix_node_modules_css_loader_dist_runtime_api_js__WEBPACK_IMPORTED_MODULE_0___default()(function(i){return i[1]});
 // Module
-___CSS_LOADER_EXPORT___.push([module.id, "fieldset[disabled] .multiselect[data-v-2a5f3821] {\r\n    pointer-events: none\n}\n.multiselect__spinner[data-v-2a5f3821] {\r\n    position: absolute;\r\n    right: 1px;\r\n    top: 1px;\r\n    width: 48px;\r\n    height: 35px;\r\n    background: #fff;\r\n    display: block\n}\n.multiselect__spinner[data-v-2a5f3821]:after,\r\n.multiselect__spinner[data-v-2a5f3821]:before {\r\n    position: absolute;\r\n    content: \"\";\r\n    top: 50%;\r\n    left: 50%;\r\n    margin: -8px 0 0 -8px;\r\n    width: 16px;\r\n    height: 16px;\r\n    border-radius: 100%;\r\n    border: 2px solid transparent;\r\n    border-top-color: #41b883;\r\n    box-shadow: 0 0 0 1px transparent\n}\n.multiselect__spinner[data-v-2a5f3821]:before {\r\n    -webkit-animation: spinning-2a5f3821 2.4s cubic-bezier(.41, .26, .2, .62);\r\n            animation: spinning-2a5f3821 2.4s cubic-bezier(.41, .26, .2, .62);\r\n    -webkit-animation-iteration-count: infinite;\r\n            animation-iteration-count: infinite\n}\n.multiselect__spinner[data-v-2a5f3821]:after {\r\n    -webkit-animation: spinning-2a5f3821 2.4s cubic-bezier(.51, .09, .21, .8);\r\n            animation: spinning-2a5f3821 2.4s cubic-bezier(.51, .09, .21, .8);\r\n    -webkit-animation-iteration-count: infinite;\r\n            animation-iteration-count: infinite\n}\n.multiselect__loading-enter-active[data-v-2a5f3821],\r\n.multiselect__loading-leave-active[data-v-2a5f3821] {\r\n    transition: opacity .4s ease-in-out;\r\n    opacity: 1\n}\n.multiselect__loading-enter[data-v-2a5f3821],\r\n.multiselect__loading-leave-active[data-v-2a5f3821] {\r\n    opacity: 0\n}\n.multiselect[data-v-2a5f3821],\r\n.multiselect__input[data-v-2a5f3821],\r\n.multiselect__single[data-v-2a5f3821] {\r\n    font-family: inherit;\r\n    font-size: 16px;\r\n    touch-action: manipulation\n}\n.multiselect[data-v-2a5f3821] {\r\n    box-sizing: content-box;\r\n    display: block;\r\n    position: relative;\r\n    width: 100%;\r\n    min-height: 40px;\r\n    text-align: left;\r\n    color: #35495e\n}\n.multiselect *[data-v-2a5f3821] {\r\n    box-sizing: border-box\n}\n.multiselect[data-v-2a5f3821]:focus {\r\n    outline: none\n}\n.multiselect--disabled[data-v-2a5f3821] {\r\n    background: #ededed;\r\n    pointer-events: none;\r\n    opacity: .6\n}\n.multiselect--active[data-v-2a5f3821] {\r\n    z-index: 50\n}\n.multiselect--active:not(.multiselect--above) .multiselect__current[data-v-2a5f3821],\r\n.multiselect--active:not(.multiselect--above) .multiselect__input[data-v-2a5f3821],\r\n.multiselect--active:not(.multiselect--above) .multiselect__tags[data-v-2a5f3821] {\r\n    border-bottom-left-radius: 0;\r\n    border-bottom-right-radius: 0\n}\n.multiselect--active .multiselect__select[data-v-2a5f3821] {\r\n    transform: rotate(180deg)\n}\n.multiselect--above.multiselect--active .multiselect__current[data-v-2a5f3821],\r\n.multiselect--above.multiselect--active .multiselect__input[data-v-2a5f3821],\r\n.multiselect--above.multiselect--active .multiselect__tags[data-v-2a5f3821] {\r\n    border-top-left-radius: 0;\r\n    border-top-right-radius: 0\n}\n.multiselect__input[data-v-2a5f3821],\r\n.multiselect__single[data-v-2a5f3821] {\r\n    position: relative;\r\n    display: inline-block;\r\n    min-height: 20px;\r\n    line-height: 20px;\r\n    border: none;\r\n    border-radius: 5px;\r\n    background: #fff;\r\n    padding: 0 0 0 5px;\r\n    width: 100%;\r\n    transition: border .1s ease;\r\n    box-sizing: border-box;\r\n    margin-bottom: 8px;\r\n    vertical-align: top\n}\n.multiselect__input[data-v-2a5f3821]::-moz-placeholder {\r\n    color: #35495e\n}\n.multiselect__input[data-v-2a5f3821]::placeholder {\r\n    color: #35495e\n}\n.multiselect__tag~.multiselect__input[data-v-2a5f3821],\r\n.multiselect__tag~.multiselect__single[data-v-2a5f3821] {\r\n    width: auto\n}\n.multiselect__input[data-v-2a5f3821]:hover,\r\n.multiselect__single[data-v-2a5f3821]:hover {\r\n    border-color: #cfcfcf\n}\n.multiselect__input[data-v-2a5f3821]:focus,\r\n.multiselect__single[data-v-2a5f3821]:focus {\r\n    border-color: #a8a8a8;\r\n    outline: none\n}\n.multiselect__single[data-v-2a5f3821] {\r\n    padding-left: 5px;\r\n    margin-bottom: 8px\n}\n.multiselect__tags-wrap[data-v-2a5f3821] {\r\n    display: inline\n}\n.multiselect__tags[data-v-2a5f3821] {\r\n    min-height: 40px;\r\n    display: block;\r\n    padding: 8px 40px 0 8px;\r\n    border-radius: 5px;\r\n    border: 1px solid #e8e8e8;\r\n    background: #fff;\r\n    font-size: 14px\n}\n.multiselect__tag[data-v-2a5f3821] {\r\n    position: relative;\r\n    display: inline-block;\r\n    padding: 4px 26px 4px 10px;\r\n    border-radius: 5px;\r\n    margin-right: 10px;\r\n    color: #fff;\r\n    line-height: 1;\r\n    background: #41b883;\r\n    margin-bottom: 5px;\r\n    white-space: nowrap;\r\n    overflow: hidden;\r\n    max-width: 100%;\r\n    text-overflow: ellipsis\n}\n.multiselect__tag-icon[data-v-2a5f3821] {\r\n    cursor: pointer;\r\n    margin-left: 7px;\r\n    position: absolute;\r\n    right: 0;\r\n    top: 0;\r\n    bottom: 0;\r\n    font-weight: 700;\r\n    font-style: normal;\r\n    width: 22px;\r\n    text-align: center;\r\n    line-height: 22px;\r\n    transition: all .2s ease;\r\n    border-radius: 5px\n}\n.multiselect__tag-icon[data-v-2a5f3821]:after {\r\n    content: \"\\D7\";\r\n    color: #266d4d;\r\n    font-size: 14px\n}\n.multiselect__tag-icon[data-v-2a5f3821]:focus,\r\n.multiselect__tag-icon[data-v-2a5f3821]:hover {\r\n    background: #369a6e\n}\n.multiselect__tag-icon[data-v-2a5f3821]:focus:after,\r\n.multiselect__tag-icon[data-v-2a5f3821]:hover:after {\r\n    color: #fff\n}\n.multiselect__current[data-v-2a5f3821] {\r\n    min-height: 40px;\r\n    overflow: hidden;\r\n    padding: 8px 30px 0 12px;\r\n    white-space: nowrap;\r\n    border-radius: 5px;\r\n    border: 1px solid #e8e8e8\n}\n.multiselect__current[data-v-2a5f3821],\r\n.multiselect__select[data-v-2a5f3821] {\r\n    line-height: 16px;\r\n    box-sizing: border-box;\r\n    display: block;\r\n    margin: 0;\r\n    text-decoration: none;\r\n    cursor: pointer\n}\n.multiselect__select[data-v-2a5f3821] {\r\n    position: absolute;\r\n    width: 40px;\r\n    height: 38px;\r\n    right: 1px;\r\n    top: 1px;\r\n    padding: 4px 8px;\r\n    text-align: center;\r\n    transition: transform .2s ease\n}\n.multiselect__select[data-v-2a5f3821]:before {\r\n    position: relative;\r\n    right: 0;\r\n    top: 65%;\r\n    color: #999;\r\n    margin-top: 4px;\r\n    border-color: #999 transparent transparent;\r\n    border-style: solid;\r\n    border-width: 5px 5px 0;\r\n    content: \"\"\n}\n.multiselect__placeholder[data-v-2a5f3821] {\r\n    color: #adadad;\r\n    display: inline-block;\r\n    margin-bottom: 10px;\r\n    padding-top: 2px\n}\n.multiselect--active .multiselect__placeholder[data-v-2a5f3821] {\r\n    display: none\n}\n.multiselect__content-wrapper[data-v-2a5f3821] {\r\n    position: absolute;\r\n    display: block;\r\n    background: #fff;\r\n    width: 100%;\r\n    max-height: 240px;\r\n    overflow: auto;\r\n    border: 1px solid #e8e8e8;\r\n    border-top: none;\r\n    border-bottom-left-radius: 5px;\r\n    border-bottom-right-radius: 5px;\r\n    z-index: 50;\r\n    -webkit-overflow-scrolling: touch\n}\n.multiselect__content[data-v-2a5f3821] {\r\n    list-style: none;\r\n    display: inline-block;\r\n    padding: 0;\r\n    margin: 0;\r\n    min-width: 100%;\r\n    vertical-align: top\n}\n.multiselect--above .multiselect__content-wrapper[data-v-2a5f3821] {\r\n    bottom: 100%;\r\n    border-bottom-left-radius: 0;\r\n    border-bottom-right-radius: 0;\r\n    border-top-left-radius: 5px;\r\n    border-top-right-radius: 5px;\r\n    border-bottom: none;\r\n    border-top: 1px solid #e8e8e8\n}\n.multiselect__content[data-v-2a5f3821]::webkit-scrollbar {\r\n    display: none\n}\n.multiselect__element[data-v-2a5f3821] {\r\n    display: block\n}\n.multiselect__option[data-v-2a5f3821] {\r\n    display: block;\r\n    padding: 12px;\r\n    min-height: 40px;\r\n    line-height: 16px;\r\n    text-decoration: none;\r\n    text-transform: none;\r\n    vertical-align: middle;\r\n    position: relative;\r\n    cursor: pointer;\r\n    white-space: nowrap\n}\n.multiselect__option[data-v-2a5f3821]:after {\r\n    top: 0;\r\n    right: 0;\r\n    position: absolute;\r\n    line-height: 40px;\r\n    padding-right: 12px;\r\n    padding-left: 20px;\r\n    font-size: 13px\n}\n.multiselect__option--highlight[data-v-2a5f3821] {\r\n    background: #41b883;\r\n    outline: none;\r\n    color: #fff\n}\n.multiselect__option--highlight[data-v-2a5f3821]:after {\r\n    content: attr(data-select);\r\n    background: #41b883;\r\n    color: #fff\n}\n.multiselect__option--selected[data-v-2a5f3821] {\r\n    background: #f3f3f3;\r\n    color: #35495e;\r\n    font-weight: 700\n}\n.multiselect__option--selected[data-v-2a5f3821]:after {\r\n    content: attr(data-selected);\r\n    color: silver\n}\n.multiselect__option--selected.multiselect__option--highlight[data-v-2a5f3821] {\r\n    background: #ff6a6a;\r\n    color: #fff\n}\n.multiselect__option--selected.multiselect__option--highlight[data-v-2a5f3821]:after {\r\n    background: #ff6a6a;\r\n    content: attr(data-deselect);\r\n    color: #fff\n}\n.multiselect--disabled .multiselect__current[data-v-2a5f3821],\r\n.multiselect--disabled .multiselect__select[data-v-2a5f3821] {\r\n    background: #ededed;\r\n    color: #a6a6a6\n}\n.multiselect__option--disabled[data-v-2a5f3821] {\r\n    background: #ededed !important;\r\n    color: #a6a6a6 !important;\r\n    cursor: text;\r\n    pointer-events: none\n}\n.multiselect__option--group[data-v-2a5f3821] {\r\n    background: #ededed;\r\n    color: #35495e\n}\n.multiselect__option--group.multiselect__option--highlight[data-v-2a5f3821] {\r\n    background: #35495e;\r\n    color: #fff\n}\n.multiselect__option--group.multiselect__option--highlight[data-v-2a5f3821]:after {\r\n    background: #35495e\n}\n.multiselect__option--disabled.multiselect__option--highlight[data-v-2a5f3821] {\r\n    background: #dedede\n}\n.multiselect__option--group-selected.multiselect__option--highlight[data-v-2a5f3821] {\r\n    background: #ff6a6a;\r\n    color: #fff\n}\n.multiselect__option--group-selected.multiselect__option--highlight[data-v-2a5f3821]:after {\r\n    background: #ff6a6a;\r\n    content: attr(data-deselect);\r\n    color: #fff\n}\n.multiselect-enter-active[data-v-2a5f3821],\r\n.multiselect-leave-active[data-v-2a5f3821] {\r\n    transition: all .15s ease\n}\n.multiselect-enter[data-v-2a5f3821],\r\n.multiselect-leave-active[data-v-2a5f3821] {\r\n    opacity: 0\n}\n.multiselect__strong[data-v-2a5f3821] {\r\n    margin-bottom: 8px;\r\n    line-height: 20px;\r\n    display: inline-block;\r\n    vertical-align: top\n}\n[dir=rtl] .multiselect[data-v-2a5f3821] {\r\n    text-align: right\n}\n[dir=rtl] .multiselect__select[data-v-2a5f3821] {\r\n    right: auto;\r\n    left: 1px\n}\n[dir=rtl] .multiselect__tags[data-v-2a5f3821] {\r\n    padding: 8px 8px 0 40px\n}\n[dir=rtl] .multiselect__content[data-v-2a5f3821] {\r\n    text-align: right\n}\n[dir=rtl] .multiselect__option[data-v-2a5f3821]:after {\r\n    right: auto;\r\n    left: 0\n}\n[dir=rtl] .multiselect__clear[data-v-2a5f3821] {\r\n    right: auto;\r\n    left: 12px\n}\n[dir=rtl] .multiselect__spinner[data-v-2a5f3821] {\r\n    right: auto;\r\n    left: 1px\n}\n@-webkit-keyframes spinning-2a5f3821 {\n0% {\r\n        transform: rotate(0)\n}\nto {\r\n        transform: rotate(2turn)\n}\n}\n@keyframes spinning-2a5f3821 {\n0% {\r\n        transform: rotate(0)\n}\nto {\r\n        transform: rotate(2turn)\n}\n}", ""]);
+___CSS_LOADER_EXPORT___.push([module.id, "fieldset[disabled] .multiselect[data-v-2a5f3821]{pointer-events:none}.multiselect__spinner[data-v-2a5f3821]{position:absolute;right:1px;top:1px;width:48px;height:35px;background:#fff;display:block}.multiselect__spinner[data-v-2a5f3821]:after,.multiselect__spinner[data-v-2a5f3821]:before{position:absolute;content:\"\";top:50%;left:50%;margin:-8px 0 0 -8px;width:16px;height:16px;border-radius:100%;border:2px solid transparent;border-top-color:#41b883;box-shadow:0 0 0 1px transparent}.multiselect__spinner[data-v-2a5f3821]:before{-webkit-animation:spinning-2a5f3821 2.4s cubic-bezier(.41,.26,.2,.62);animation:spinning-2a5f3821 2.4s cubic-bezier(.41,.26,.2,.62);-webkit-animation-iteration-count:infinite;animation-iteration-count:infinite}.multiselect__spinner[data-v-2a5f3821]:after{-webkit-animation:spinning-2a5f3821 2.4s cubic-bezier(.51,.09,.21,.8);animation:spinning-2a5f3821 2.4s cubic-bezier(.51,.09,.21,.8);-webkit-animation-iteration-count:infinite;animation-iteration-count:infinite}.multiselect__loading-enter-active[data-v-2a5f3821],.multiselect__loading-leave-active[data-v-2a5f3821]{transition:opacity .4s ease-in-out;opacity:1}.multiselect__loading-enter[data-v-2a5f3821],.multiselect__loading-leave-active[data-v-2a5f3821]{opacity:0}.multiselect[data-v-2a5f3821],.multiselect__input[data-v-2a5f3821],.multiselect__single[data-v-2a5f3821]{font-family:inherit;font-size:16px;touch-action:manipulation}.multiselect[data-v-2a5f3821]{box-sizing:content-box;display:block;position:relative;width:100%;min-height:40px;text-align:left;color:#35495e}.multiselect *[data-v-2a5f3821]{box-sizing:border-box}.multiselect[data-v-2a5f3821]:focus{outline:none}.multiselect--disabled[data-v-2a5f3821]{background:#ededed;pointer-events:none;opacity:.6}.multiselect--active[data-v-2a5f3821]{z-index:50}.multiselect--active:not(.multiselect--above) .multiselect__current[data-v-2a5f3821],.multiselect--active:not(.multiselect--above) .multiselect__input[data-v-2a5f3821],.multiselect--active:not(.multiselect--above) .multiselect__tags[data-v-2a5f3821]{border-bottom-left-radius:0;border-bottom-right-radius:0}.multiselect--active .multiselect__select[data-v-2a5f3821]{transform:rotate(180deg)}.multiselect--above.multiselect--active .multiselect__current[data-v-2a5f3821],.multiselect--above.multiselect--active .multiselect__input[data-v-2a5f3821],.multiselect--above.multiselect--active .multiselect__tags[data-v-2a5f3821]{border-top-left-radius:0;border-top-right-radius:0}.multiselect__input[data-v-2a5f3821],.multiselect__single[data-v-2a5f3821]{position:relative;display:inline-block;min-height:20px;line-height:20px;border:none;border-radius:5px;background:#fff;padding:0 0 0 5px;width:100%;transition:border .1s ease;box-sizing:border-box;margin-bottom:8px;vertical-align:top}.multiselect__input[data-v-2a5f3821]::-moz-placeholder{color:#35495e}.multiselect__input[data-v-2a5f3821]::placeholder{color:#35495e}.multiselect__tag~.multiselect__input[data-v-2a5f3821],.multiselect__tag~.multiselect__single[data-v-2a5f3821]{width:auto}.multiselect__input[data-v-2a5f3821]:hover,.multiselect__single[data-v-2a5f3821]:hover{border-color:#cfcfcf}.multiselect__input[data-v-2a5f3821]:focus,.multiselect__single[data-v-2a5f3821]:focus{border-color:#a8a8a8;outline:none}.multiselect__single[data-v-2a5f3821]{padding-left:5px;margin-bottom:8px}.multiselect__tags-wrap[data-v-2a5f3821]{display:inline}.multiselect__tags[data-v-2a5f3821]{min-height:40px;display:block;padding:8px 40px 0 8px;border-radius:5px;border:1px solid #e8e8e8;background:#fff;font-size:14px}.multiselect__tag[data-v-2a5f3821]{position:relative;display:inline-block;padding:4px 26px 4px 10px;border-radius:5px;margin-right:10px;color:#fff;line-height:1;background:#41b883;margin-bottom:5px;white-space:nowrap;overflow:hidden;max-width:100%;text-overflow:ellipsis}.multiselect__tag-icon[data-v-2a5f3821]{cursor:pointer;margin-left:7px;position:absolute;right:0;top:0;bottom:0;font-weight:700;font-style:normal;width:22px;text-align:center;line-height:22px;transition:all .2s ease;border-radius:5px}.multiselect__tag-icon[data-v-2a5f3821]:after{content:\"\\D7\";color:#266d4d;font-size:14px}.multiselect__tag-icon[data-v-2a5f3821]:focus,.multiselect__tag-icon[data-v-2a5f3821]:hover{background:#369a6e}.multiselect__tag-icon[data-v-2a5f3821]:focus:after,.multiselect__tag-icon[data-v-2a5f3821]:hover:after{color:#fff}.multiselect__current[data-v-2a5f3821]{min-height:40px;overflow:hidden;padding:8px 30px 0 12px;white-space:nowrap;border-radius:5px;border:1px solid #e8e8e8}.multiselect__current[data-v-2a5f3821],.multiselect__select[data-v-2a5f3821]{line-height:16px;box-sizing:border-box;display:block;margin:0;text-decoration:none;cursor:pointer}.multiselect__select[data-v-2a5f3821]{position:absolute;width:40px;height:38px;right:1px;top:1px;padding:4px 8px;text-align:center;transition:transform .2s ease}.multiselect__select[data-v-2a5f3821]:before{position:relative;right:0;top:65%;color:#999;margin-top:4px;border-color:#999 transparent transparent;border-style:solid;border-width:5px 5px 0;content:\"\"}.multiselect__placeholder[data-v-2a5f3821]{color:#adadad;display:inline-block;margin-bottom:10px;padding-top:2px}.multiselect--active .multiselect__placeholder[data-v-2a5f3821]{display:none}.multiselect__content-wrapper[data-v-2a5f3821]{position:absolute;display:block;background:#fff;width:100%;max-height:240px;overflow:auto;border:1px solid #e8e8e8;border-top:none;border-bottom-left-radius:5px;border-bottom-right-radius:5px;z-index:50;-webkit-overflow-scrolling:touch}.multiselect__content[data-v-2a5f3821]{list-style:none;display:inline-block;padding:0;margin:0;min-width:100%;vertical-align:top}.multiselect--above .multiselect__content-wrapper[data-v-2a5f3821]{bottom:100%;border-bottom-left-radius:0;border-bottom-right-radius:0;border-top-left-radius:5px;border-top-right-radius:5px;border-bottom:none;border-top:1px solid #e8e8e8}.multiselect__content[data-v-2a5f3821]::webkit-scrollbar{display:none}.multiselect__element[data-v-2a5f3821]{display:block}.multiselect__option[data-v-2a5f3821]{display:block;padding:12px;min-height:40px;line-height:16px;text-decoration:none;text-transform:none;vertical-align:middle;position:relative;cursor:pointer;white-space:nowrap}.multiselect__option[data-v-2a5f3821]:after{top:0;right:0;position:absolute;line-height:40px;padding-right:12px;padding-left:20px;font-size:13px}.multiselect__option--highlight[data-v-2a5f3821]{background:#41b883;outline:none;color:#fff}.multiselect__option--highlight[data-v-2a5f3821]:after{content:attr(data-select);background:#41b883;color:#fff}.multiselect__option--selected[data-v-2a5f3821]{background:#f3f3f3;color:#35495e;font-weight:700}.multiselect__option--selected[data-v-2a5f3821]:after{content:attr(data-selected);color:silver}.multiselect__option--selected.multiselect__option--highlight[data-v-2a5f3821]{background:#ff6a6a;color:#fff}.multiselect__option--selected.multiselect__option--highlight[data-v-2a5f3821]:after{background:#ff6a6a;content:attr(data-deselect);color:#fff}.multiselect--disabled .multiselect__current[data-v-2a5f3821],.multiselect--disabled .multiselect__select[data-v-2a5f3821]{background:#ededed;color:#a6a6a6}.multiselect__option--disabled[data-v-2a5f3821]{background:#ededed!important;color:#a6a6a6!important;cursor:text;pointer-events:none}.multiselect__option--group[data-v-2a5f3821]{background:#ededed;color:#35495e}.multiselect__option--group.multiselect__option--highlight[data-v-2a5f3821]{background:#35495e;color:#fff}.multiselect__option--group.multiselect__option--highlight[data-v-2a5f3821]:after{background:#35495e}.multiselect__option--disabled.multiselect__option--highlight[data-v-2a5f3821]{background:#dedede}.multiselect__option--group-selected.multiselect__option--highlight[data-v-2a5f3821]{background:#ff6a6a;color:#fff}.multiselect__option--group-selected.multiselect__option--highlight[data-v-2a5f3821]:after{background:#ff6a6a;content:attr(data-deselect);color:#fff}.multiselect-enter-active[data-v-2a5f3821],.multiselect-leave-active[data-v-2a5f3821]{transition:all .15s ease}.multiselect-enter[data-v-2a5f3821],.multiselect-leave-active[data-v-2a5f3821]{opacity:0}.multiselect__strong[data-v-2a5f3821]{margin-bottom:8px;line-height:20px;display:inline-block;vertical-align:top}[dir=rtl] .multiselect[data-v-2a5f3821]{text-align:right}[dir=rtl] .multiselect__select[data-v-2a5f3821]{right:auto;left:1px}[dir=rtl] .multiselect__tags[data-v-2a5f3821]{padding:8px 8px 0 40px}[dir=rtl] .multiselect__content[data-v-2a5f3821]{text-align:right}[dir=rtl] .multiselect__option[data-v-2a5f3821]:after{right:auto;left:0}[dir=rtl] .multiselect__clear[data-v-2a5f3821]{right:auto;left:12px}[dir=rtl] .multiselect__spinner[data-v-2a5f3821]{right:auto;left:1px}@-webkit-keyframes spinning-2a5f3821{0%{transform:rotate(0)}to{transform:rotate(2turn)}}@keyframes spinning-2a5f3821{0%{transform:rotate(0)}to{transform:rotate(2turn)}}", ""]);
 // Exports
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (___CSS_LOADER_EXPORT___);
 
@@ -13538,7 +13791,7 @@ __webpack_require__.r(__webpack_exports__);
 
 var ___CSS_LOADER_EXPORT___ = _laravel_mix_node_modules_css_loader_dist_runtime_api_js__WEBPACK_IMPORTED_MODULE_0___default()(function(i){return i[1]});
 // Module
-___CSS_LOADER_EXPORT___.push([module.id, "fieldset[disabled] .multiselect[data-v-3fa4cd1b] {\r\n    pointer-events: none\n}\n.multiselect__spinner[data-v-3fa4cd1b] {\r\n    position: absolute;\r\n    right: 1px;\r\n    top: 1px;\r\n    width: 48px;\r\n    height: 35px;\r\n    background: #fff;\r\n    display: block\n}\n.multiselect__spinner[data-v-3fa4cd1b]:after,\r\n.multiselect__spinner[data-v-3fa4cd1b]:before {\r\n    position: absolute;\r\n    content: \"\";\r\n    top: 50%;\r\n    left: 50%;\r\n    margin: -8px 0 0 -8px;\r\n    width: 16px;\r\n    height: 16px;\r\n    border-radius: 100%;\r\n    border: 2px solid transparent;\r\n    border-top-color: #41b883;\r\n    box-shadow: 0 0 0 1px transparent\n}\n.multiselect__spinner[data-v-3fa4cd1b]:before {\r\n    -webkit-animation: spinning-3fa4cd1b 2.4s cubic-bezier(.41, .26, .2, .62);\r\n            animation: spinning-3fa4cd1b 2.4s cubic-bezier(.41, .26, .2, .62);\r\n    -webkit-animation-iteration-count: infinite;\r\n            animation-iteration-count: infinite\n}\n.multiselect__spinner[data-v-3fa4cd1b]:after {\r\n    -webkit-animation: spinning-3fa4cd1b 2.4s cubic-bezier(.51, .09, .21, .8);\r\n            animation: spinning-3fa4cd1b 2.4s cubic-bezier(.51, .09, .21, .8);\r\n    -webkit-animation-iteration-count: infinite;\r\n            animation-iteration-count: infinite\n}\n.multiselect__loading-enter-active[data-v-3fa4cd1b],\r\n.multiselect__loading-leave-active[data-v-3fa4cd1b] {\r\n    transition: opacity .4s ease-in-out;\r\n    opacity: 1\n}\n.multiselect__loading-enter[data-v-3fa4cd1b],\r\n.multiselect__loading-leave-active[data-v-3fa4cd1b] {\r\n    opacity: 0\n}\n.multiselect[data-v-3fa4cd1b],\r\n.multiselect__input[data-v-3fa4cd1b],\r\n.multiselect__single[data-v-3fa4cd1b] {\r\n    font-family: inherit;\r\n    font-size: 16px;\r\n    touch-action: manipulation\n}\n.multiselect[data-v-3fa4cd1b] {\r\n    box-sizing: content-box;\r\n    display: block;\r\n    position: relative;\r\n    width: 100%;\r\n    min-height: 40px;\r\n    text-align: left;\r\n    color: #35495e\n}\n.multiselect *[data-v-3fa4cd1b] {\r\n    box-sizing: border-box\n}\n.multiselect[data-v-3fa4cd1b]:focus {\r\n    outline: none\n}\n.multiselect--disabled[data-v-3fa4cd1b] {\r\n    background: #ededed;\r\n    pointer-events: none;\r\n    opacity: .6\n}\n.multiselect--active[data-v-3fa4cd1b] {\r\n    z-index: 50\n}\n.multiselect--active:not(.multiselect--above) .multiselect__current[data-v-3fa4cd1b],\r\n.multiselect--active:not(.multiselect--above) .multiselect__input[data-v-3fa4cd1b],\r\n.multiselect--active:not(.multiselect--above) .multiselect__tags[data-v-3fa4cd1b] {\r\n    border-bottom-left-radius: 0;\r\n    border-bottom-right-radius: 0\n}\n.multiselect--active .multiselect__select[data-v-3fa4cd1b] {\r\n    transform: rotate(180deg)\n}\n.multiselect--above.multiselect--active .multiselect__current[data-v-3fa4cd1b],\r\n.multiselect--above.multiselect--active .multiselect__input[data-v-3fa4cd1b],\r\n.multiselect--above.multiselect--active .multiselect__tags[data-v-3fa4cd1b] {\r\n    border-top-left-radius: 0;\r\n    border-top-right-radius: 0\n}\n.multiselect__input[data-v-3fa4cd1b],\r\n.multiselect__single[data-v-3fa4cd1b] {\r\n    position: relative;\r\n    display: inline-block;\r\n    min-height: 20px;\r\n    line-height: 20px;\r\n    border: none;\r\n    border-radius: 5px;\r\n    background: #fff;\r\n    padding: 0 0 0 5px;\r\n    width: 100%;\r\n    transition: border .1s ease;\r\n    box-sizing: border-box;\r\n    margin-bottom: 8px;\r\n    vertical-align: top\n}\n.multiselect__input[data-v-3fa4cd1b]::-moz-placeholder {\r\n    color: #35495e\n}\n.multiselect__input[data-v-3fa4cd1b]::placeholder {\r\n    color: #35495e\n}\n.multiselect__tag~.multiselect__input[data-v-3fa4cd1b],\r\n.multiselect__tag~.multiselect__single[data-v-3fa4cd1b] {\r\n    width: auto\n}\n.multiselect__input[data-v-3fa4cd1b]:hover,\r\n.multiselect__single[data-v-3fa4cd1b]:hover {\r\n    border-color: #cfcfcf\n}\n.multiselect__input[data-v-3fa4cd1b]:focus,\r\n.multiselect__single[data-v-3fa4cd1b]:focus {\r\n    border-color: #a8a8a8;\r\n    outline: none\n}\n.multiselect__single[data-v-3fa4cd1b] {\r\n    padding-left: 5px;\r\n    margin-bottom: 8px\n}\n.multiselect__tags-wrap[data-v-3fa4cd1b] {\r\n    display: inline\n}\n.multiselect__tags[data-v-3fa4cd1b] {\r\n    min-height: 40px;\r\n    display: block;\r\n    padding: 8px 40px 0 8px;\r\n    border-radius: 5px;\r\n    border: 1px solid #e8e8e8;\r\n    background: #fff;\r\n    font-size: 14px\n}\n.multiselect__tag[data-v-3fa4cd1b] {\r\n    position: relative;\r\n    display: inline-block;\r\n    padding: 4px 26px 4px 10px;\r\n    border-radius: 5px;\r\n    margin-right: 10px;\r\n    color: #fff;\r\n    line-height: 1;\r\n    background: #41b883;\r\n    margin-bottom: 5px;\r\n    white-space: nowrap;\r\n    overflow: hidden;\r\n    max-width: 100%;\r\n    text-overflow: ellipsis\n}\n.multiselect__tag-icon[data-v-3fa4cd1b] {\r\n    cursor: pointer;\r\n    margin-left: 7px;\r\n    position: absolute;\r\n    right: 0;\r\n    top: 0;\r\n    bottom: 0;\r\n    font-weight: 700;\r\n    font-style: normal;\r\n    width: 22px;\r\n    text-align: center;\r\n    line-height: 22px;\r\n    transition: all .2s ease;\r\n    border-radius: 5px\n}\n.multiselect__tag-icon[data-v-3fa4cd1b]:after {\r\n    content: \"\\D7\";\r\n    color: #266d4d;\r\n    font-size: 14px\n}\n.multiselect__tag-icon[data-v-3fa4cd1b]:focus,\r\n.multiselect__tag-icon[data-v-3fa4cd1b]:hover {\r\n    background: #369a6e\n}\n.multiselect__tag-icon[data-v-3fa4cd1b]:focus:after,\r\n.multiselect__tag-icon[data-v-3fa4cd1b]:hover:after {\r\n    color: #fff\n}\n.multiselect__current[data-v-3fa4cd1b] {\r\n    min-height: 40px;\r\n    overflow: hidden;\r\n    padding: 8px 30px 0 12px;\r\n    white-space: nowrap;\r\n    border-radius: 5px;\r\n    border: 1px solid #e8e8e8\n}\n.multiselect__current[data-v-3fa4cd1b],\r\n.multiselect__select[data-v-3fa4cd1b] {\r\n    line-height: 16px;\r\n    box-sizing: border-box;\r\n    display: block;\r\n    margin: 0;\r\n    text-decoration: none;\r\n    cursor: pointer\n}\n.multiselect__select[data-v-3fa4cd1b] {\r\n    position: absolute;\r\n    width: 40px;\r\n    height: 38px;\r\n    right: 1px;\r\n    top: 1px;\r\n    padding: 4px 8px;\r\n    text-align: center;\r\n    transition: transform .2s ease\n}\n.multiselect__select[data-v-3fa4cd1b]:before {\r\n    position: relative;\r\n    right: 0;\r\n    top: 65%;\r\n    color: #999;\r\n    margin-top: 4px;\r\n    border-color: #999 transparent transparent;\r\n    border-style: solid;\r\n    border-width: 5px 5px 0;\r\n    content: \"\"\n}\n.multiselect__placeholder[data-v-3fa4cd1b] {\r\n    color: #adadad;\r\n    display: inline-block;\r\n    margin-bottom: 10px;\r\n    padding-top: 2px\n}\n.multiselect--active .multiselect__placeholder[data-v-3fa4cd1b] {\r\n    display: none\n}\n.multiselect__content-wrapper[data-v-3fa4cd1b] {\r\n    position: absolute;\r\n    display: block;\r\n    background: #fff;\r\n    width: 100%;\r\n    max-height: 240px;\r\n    overflow: auto;\r\n    border: 1px solid #e8e8e8;\r\n    border-top: none;\r\n    border-bottom-left-radius: 5px;\r\n    border-bottom-right-radius: 5px;\r\n    z-index: 50;\r\n    -webkit-overflow-scrolling: touch\n}\n.multiselect__content[data-v-3fa4cd1b] {\r\n    list-style: none;\r\n    display: inline-block;\r\n    padding: 0;\r\n    margin: 0;\r\n    min-width: 100%;\r\n    vertical-align: top\n}\n.multiselect--above .multiselect__content-wrapper[data-v-3fa4cd1b] {\r\n    bottom: 100%;\r\n    border-bottom-left-radius: 0;\r\n    border-bottom-right-radius: 0;\r\n    border-top-left-radius: 5px;\r\n    border-top-right-radius: 5px;\r\n    border-bottom: none;\r\n    border-top: 1px solid #e8e8e8\n}\n.multiselect__content[data-v-3fa4cd1b]::webkit-scrollbar {\r\n    display: none\n}\n.multiselect__element[data-v-3fa4cd1b] {\r\n    display: block\n}\n.multiselect__option[data-v-3fa4cd1b] {\r\n    display: block;\r\n    padding: 12px;\r\n    min-height: 40px;\r\n    line-height: 16px;\r\n    text-decoration: none;\r\n    text-transform: none;\r\n    vertical-align: middle;\r\n    position: relative;\r\n    cursor: pointer;\r\n    white-space: nowrap\n}\n.multiselect__option[data-v-3fa4cd1b]:after {\r\n    top: 0;\r\n    right: 0;\r\n    position: absolute;\r\n    line-height: 40px;\r\n    padding-right: 12px;\r\n    padding-left: 20px;\r\n    font-size: 13px\n}\n.multiselect__option--highlight[data-v-3fa4cd1b] {\r\n    background: #41b883;\r\n    outline: none;\r\n    color: #fff\n}\n.multiselect__option--highlight[data-v-3fa4cd1b]:after {\r\n    content: attr(data-select);\r\n    background: #41b883;\r\n    color: #fff\n}\n.multiselect__option--selected[data-v-3fa4cd1b] {\r\n    background: #f3f3f3;\r\n    color: #35495e;\r\n    font-weight: 700\n}\n.multiselect__option--selected[data-v-3fa4cd1b]:after {\r\n    content: attr(data-selected);\r\n    color: silver\n}\n.multiselect__option--selected.multiselect__option--highlight[data-v-3fa4cd1b] {\r\n    background: #ff6a6a;\r\n    color: #fff\n}\n.multiselect__option--selected.multiselect__option--highlight[data-v-3fa4cd1b]:after {\r\n    background: #ff6a6a;\r\n    content: attr(data-deselect);\r\n    color: #fff\n}\n.multiselect--disabled .multiselect__current[data-v-3fa4cd1b],\r\n.multiselect--disabled .multiselect__select[data-v-3fa4cd1b] {\r\n    background: #ededed;\r\n    color: #a6a6a6\n}\n.multiselect__option--disabled[data-v-3fa4cd1b] {\r\n    background: #ededed !important;\r\n    color: #a6a6a6 !important;\r\n    cursor: text;\r\n    pointer-events: none\n}\n.multiselect__option--group[data-v-3fa4cd1b] {\r\n    background: #ededed;\r\n    color: #35495e\n}\n.multiselect__option--group.multiselect__option--highlight[data-v-3fa4cd1b] {\r\n    background: #35495e;\r\n    color: #fff\n}\n.multiselect__option--group.multiselect__option--highlight[data-v-3fa4cd1b]:after {\r\n    background: #35495e\n}\n.multiselect__option--disabled.multiselect__option--highlight[data-v-3fa4cd1b] {\r\n    background: #dedede\n}\n.multiselect__option--group-selected.multiselect__option--highlight[data-v-3fa4cd1b] {\r\n    background: #ff6a6a;\r\n    color: #fff\n}\n.multiselect__option--group-selected.multiselect__option--highlight[data-v-3fa4cd1b]:after {\r\n    background: #ff6a6a;\r\n    content: attr(data-deselect);\r\n    color: #fff\n}\n.multiselect-enter-active[data-v-3fa4cd1b],\r\n.multiselect-leave-active[data-v-3fa4cd1b] {\r\n    transition: all .15s ease\n}\n.multiselect-enter[data-v-3fa4cd1b],\r\n.multiselect-leave-active[data-v-3fa4cd1b] {\r\n    opacity: 0\n}\n.multiselect__strong[data-v-3fa4cd1b] {\r\n    margin-bottom: 8px;\r\n    line-height: 20px;\r\n    display: inline-block;\r\n    vertical-align: top\n}\n[dir=rtl] .multiselect[data-v-3fa4cd1b] {\r\n    text-align: right\n}\n[dir=rtl] .multiselect__select[data-v-3fa4cd1b] {\r\n    right: auto;\r\n    left: 1px\n}\n[dir=rtl] .multiselect__tags[data-v-3fa4cd1b] {\r\n    padding: 8px 8px 0 40px\n}\n[dir=rtl] .multiselect__content[data-v-3fa4cd1b] {\r\n    text-align: right\n}\n[dir=rtl] .multiselect__option[data-v-3fa4cd1b]:after {\r\n    right: auto;\r\n    left: 0\n}\n[dir=rtl] .multiselect__clear[data-v-3fa4cd1b] {\r\n    right: auto;\r\n    left: 12px\n}\n[dir=rtl] .multiselect__spinner[data-v-3fa4cd1b] {\r\n    right: auto;\r\n    left: 1px\n}\n@-webkit-keyframes spinning-3fa4cd1b {\n0% {\r\n        transform: rotate(0)\n}\nto {\r\n        transform: rotate(2turn)\n}\n}\n@keyframes spinning-3fa4cd1b {\n0% {\r\n        transform: rotate(0)\n}\nto {\r\n        transform: rotate(2turn)\n}\n}", ""]);
+___CSS_LOADER_EXPORT___.push([module.id, "fieldset[disabled] .multiselect[data-v-3fa4cd1b]{pointer-events:none}.multiselect__spinner[data-v-3fa4cd1b]{position:absolute;right:1px;top:1px;width:48px;height:35px;background:#fff;display:block}.multiselect__spinner[data-v-3fa4cd1b]:after,.multiselect__spinner[data-v-3fa4cd1b]:before{position:absolute;content:\"\";top:50%;left:50%;margin:-8px 0 0 -8px;width:16px;height:16px;border-radius:100%;border:2px solid transparent;border-top-color:#41b883;box-shadow:0 0 0 1px transparent}.multiselect__spinner[data-v-3fa4cd1b]:before{-webkit-animation:spinning-3fa4cd1b 2.4s cubic-bezier(.41,.26,.2,.62);animation:spinning-3fa4cd1b 2.4s cubic-bezier(.41,.26,.2,.62);-webkit-animation-iteration-count:infinite;animation-iteration-count:infinite}.multiselect__spinner[data-v-3fa4cd1b]:after{-webkit-animation:spinning-3fa4cd1b 2.4s cubic-bezier(.51,.09,.21,.8);animation:spinning-3fa4cd1b 2.4s cubic-bezier(.51,.09,.21,.8);-webkit-animation-iteration-count:infinite;animation-iteration-count:infinite}.multiselect__loading-enter-active[data-v-3fa4cd1b],.multiselect__loading-leave-active[data-v-3fa4cd1b]{transition:opacity .4s ease-in-out;opacity:1}.multiselect__loading-enter[data-v-3fa4cd1b],.multiselect__loading-leave-active[data-v-3fa4cd1b]{opacity:0}.multiselect[data-v-3fa4cd1b],.multiselect__input[data-v-3fa4cd1b],.multiselect__single[data-v-3fa4cd1b]{font-family:inherit;font-size:16px;touch-action:manipulation}.multiselect[data-v-3fa4cd1b]{box-sizing:content-box;display:block;position:relative;width:100%;min-height:40px;text-align:left;color:#35495e}.multiselect *[data-v-3fa4cd1b]{box-sizing:border-box}.multiselect[data-v-3fa4cd1b]:focus{outline:none}.multiselect--disabled[data-v-3fa4cd1b]{background:#ededed;pointer-events:none;opacity:.6}.multiselect--active[data-v-3fa4cd1b]{z-index:50}.multiselect--active:not(.multiselect--above) .multiselect__current[data-v-3fa4cd1b],.multiselect--active:not(.multiselect--above) .multiselect__input[data-v-3fa4cd1b],.multiselect--active:not(.multiselect--above) .multiselect__tags[data-v-3fa4cd1b]{border-bottom-left-radius:0;border-bottom-right-radius:0}.multiselect--active .multiselect__select[data-v-3fa4cd1b]{transform:rotate(180deg)}.multiselect--above.multiselect--active .multiselect__current[data-v-3fa4cd1b],.multiselect--above.multiselect--active .multiselect__input[data-v-3fa4cd1b],.multiselect--above.multiselect--active .multiselect__tags[data-v-3fa4cd1b]{border-top-left-radius:0;border-top-right-radius:0}.multiselect__input[data-v-3fa4cd1b],.multiselect__single[data-v-3fa4cd1b]{position:relative;display:inline-block;min-height:20px;line-height:20px;border:none;border-radius:5px;background:#fff;padding:0 0 0 5px;width:100%;transition:border .1s ease;box-sizing:border-box;margin-bottom:8px;vertical-align:top}.multiselect__input[data-v-3fa4cd1b]::-moz-placeholder{color:#35495e}.multiselect__input[data-v-3fa4cd1b]::placeholder{color:#35495e}.multiselect__tag~.multiselect__input[data-v-3fa4cd1b],.multiselect__tag~.multiselect__single[data-v-3fa4cd1b]{width:auto}.multiselect__input[data-v-3fa4cd1b]:hover,.multiselect__single[data-v-3fa4cd1b]:hover{border-color:#cfcfcf}.multiselect__input[data-v-3fa4cd1b]:focus,.multiselect__single[data-v-3fa4cd1b]:focus{border-color:#a8a8a8;outline:none}.multiselect__single[data-v-3fa4cd1b]{padding-left:5px;margin-bottom:8px}.multiselect__tags-wrap[data-v-3fa4cd1b]{display:inline}.multiselect__tags[data-v-3fa4cd1b]{min-height:40px;display:block;padding:8px 40px 0 8px;border-radius:5px;border:1px solid #e8e8e8;background:#fff;font-size:14px}.multiselect__tag[data-v-3fa4cd1b]{position:relative;display:inline-block;padding:4px 26px 4px 10px;border-radius:5px;margin-right:10px;color:#fff;line-height:1;background:#41b883;margin-bottom:5px;white-space:nowrap;overflow:hidden;max-width:100%;text-overflow:ellipsis}.multiselect__tag-icon[data-v-3fa4cd1b]{cursor:pointer;margin-left:7px;position:absolute;right:0;top:0;bottom:0;font-weight:700;font-style:normal;width:22px;text-align:center;line-height:22px;transition:all .2s ease;border-radius:5px}.multiselect__tag-icon[data-v-3fa4cd1b]:after{content:\"\\D7\";color:#266d4d;font-size:14px}.multiselect__tag-icon[data-v-3fa4cd1b]:focus,.multiselect__tag-icon[data-v-3fa4cd1b]:hover{background:#369a6e}.multiselect__tag-icon[data-v-3fa4cd1b]:focus:after,.multiselect__tag-icon[data-v-3fa4cd1b]:hover:after{color:#fff}.multiselect__current[data-v-3fa4cd1b]{min-height:40px;overflow:hidden;padding:8px 30px 0 12px;white-space:nowrap;border-radius:5px;border:1px solid #e8e8e8}.multiselect__current[data-v-3fa4cd1b],.multiselect__select[data-v-3fa4cd1b]{line-height:16px;box-sizing:border-box;display:block;margin:0;text-decoration:none;cursor:pointer}.multiselect__select[data-v-3fa4cd1b]{position:absolute;width:40px;height:38px;right:1px;top:1px;padding:4px 8px;text-align:center;transition:transform .2s ease}.multiselect__select[data-v-3fa4cd1b]:before{position:relative;right:0;top:65%;color:#999;margin-top:4px;border-color:#999 transparent transparent;border-style:solid;border-width:5px 5px 0;content:\"\"}.multiselect__placeholder[data-v-3fa4cd1b]{color:#adadad;display:inline-block;margin-bottom:10px;padding-top:2px}.multiselect--active .multiselect__placeholder[data-v-3fa4cd1b]{display:none}.multiselect__content-wrapper[data-v-3fa4cd1b]{position:absolute;display:block;background:#fff;width:100%;max-height:240px;overflow:auto;border:1px solid #e8e8e8;border-top:none;border-bottom-left-radius:5px;border-bottom-right-radius:5px;z-index:50;-webkit-overflow-scrolling:touch}.multiselect__content[data-v-3fa4cd1b]{list-style:none;display:inline-block;padding:0;margin:0;min-width:100%;vertical-align:top}.multiselect--above .multiselect__content-wrapper[data-v-3fa4cd1b]{bottom:100%;border-bottom-left-radius:0;border-bottom-right-radius:0;border-top-left-radius:5px;border-top-right-radius:5px;border-bottom:none;border-top:1px solid #e8e8e8}.multiselect__content[data-v-3fa4cd1b]::webkit-scrollbar{display:none}.multiselect__element[data-v-3fa4cd1b]{display:block}.multiselect__option[data-v-3fa4cd1b]{display:block;padding:12px;min-height:40px;line-height:16px;text-decoration:none;text-transform:none;vertical-align:middle;position:relative;cursor:pointer;white-space:nowrap}.multiselect__option[data-v-3fa4cd1b]:after{top:0;right:0;position:absolute;line-height:40px;padding-right:12px;padding-left:20px;font-size:13px}.multiselect__option--highlight[data-v-3fa4cd1b]{background:#41b883;outline:none;color:#fff}.multiselect__option--highlight[data-v-3fa4cd1b]:after{content:attr(data-select);background:#41b883;color:#fff}.multiselect__option--selected[data-v-3fa4cd1b]{background:#f3f3f3;color:#35495e;font-weight:700}.multiselect__option--selected[data-v-3fa4cd1b]:after{content:attr(data-selected);color:silver}.multiselect__option--selected.multiselect__option--highlight[data-v-3fa4cd1b]{background:#ff6a6a;color:#fff}.multiselect__option--selected.multiselect__option--highlight[data-v-3fa4cd1b]:after{background:#ff6a6a;content:attr(data-deselect);color:#fff}.multiselect--disabled .multiselect__current[data-v-3fa4cd1b],.multiselect--disabled .multiselect__select[data-v-3fa4cd1b]{background:#ededed;color:#a6a6a6}.multiselect__option--disabled[data-v-3fa4cd1b]{background:#ededed!important;color:#a6a6a6!important;cursor:text;pointer-events:none}.multiselect__option--group[data-v-3fa4cd1b]{background:#ededed;color:#35495e}.multiselect__option--group.multiselect__option--highlight[data-v-3fa4cd1b]{background:#35495e;color:#fff}.multiselect__option--group.multiselect__option--highlight[data-v-3fa4cd1b]:after{background:#35495e}.multiselect__option--disabled.multiselect__option--highlight[data-v-3fa4cd1b]{background:#dedede}.multiselect__option--group-selected.multiselect__option--highlight[data-v-3fa4cd1b]{background:#ff6a6a;color:#fff}.multiselect__option--group-selected.multiselect__option--highlight[data-v-3fa4cd1b]:after{background:#ff6a6a;content:attr(data-deselect);color:#fff}.multiselect-enter-active[data-v-3fa4cd1b],.multiselect-leave-active[data-v-3fa4cd1b]{transition:all .15s ease}.multiselect-enter[data-v-3fa4cd1b],.multiselect-leave-active[data-v-3fa4cd1b]{opacity:0}.multiselect__strong[data-v-3fa4cd1b]{margin-bottom:8px;line-height:20px;display:inline-block;vertical-align:top}[dir=rtl] .multiselect[data-v-3fa4cd1b]{text-align:right}[dir=rtl] .multiselect__select[data-v-3fa4cd1b]{right:auto;left:1px}[dir=rtl] .multiselect__tags[data-v-3fa4cd1b]{padding:8px 8px 0 40px}[dir=rtl] .multiselect__content[data-v-3fa4cd1b]{text-align:right}[dir=rtl] .multiselect__option[data-v-3fa4cd1b]:after{right:auto;left:0}[dir=rtl] .multiselect__clear[data-v-3fa4cd1b]{right:auto;left:12px}[dir=rtl] .multiselect__spinner[data-v-3fa4cd1b]{right:auto;left:1px}@-webkit-keyframes spinning-3fa4cd1b{0%{transform:rotate(0)}to{transform:rotate(2turn)}}@keyframes spinning-3fa4cd1b{0%{transform:rotate(0)}to{transform:rotate(2turn)}}", ""]);
 // Exports
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (___CSS_LOADER_EXPORT___);
 
@@ -13562,7 +13815,7 @@ __webpack_require__.r(__webpack_exports__);
 
 var ___CSS_LOADER_EXPORT___ = _laravel_mix_node_modules_css_loader_dist_runtime_api_js__WEBPACK_IMPORTED_MODULE_0___default()(function(i){return i[1]});
 // Module
-___CSS_LOADER_EXPORT___.push([module.id, "fieldset[disabled] .multiselect {\r\n    pointer-events: none\n}\n.multiselect__spinner {\r\n    position: absolute;\r\n    right: 1px;\r\n    top: 1px;\r\n    width: 48px;\r\n    height: 35px;\r\n    background: #fff;\r\n    display: block\n}\n.multiselect__spinner:after,\r\n.multiselect__spinner:before {\r\n    position: absolute;\r\n    content: \"\";\r\n    top: 50%;\r\n    left: 50%;\r\n    margin: -8px 0 0 -8px;\r\n    width: 16px;\r\n    height: 16px;\r\n    border-radius: 100%;\r\n    border: 2px solid transparent;\r\n    border-top-color: #41b883;\r\n    box-shadow: 0 0 0 1px transparent\n}\n.multiselect__spinner:before {\r\n    -webkit-animation: spinning 2.4s cubic-bezier(.41, .26, .2, .62);\r\n            animation: spinning 2.4s cubic-bezier(.41, .26, .2, .62);\r\n    -webkit-animation-iteration-count: infinite;\r\n            animation-iteration-count: infinite\n}\n.multiselect__spinner:after {\r\n    -webkit-animation: spinning 2.4s cubic-bezier(.51, .09, .21, .8);\r\n            animation: spinning 2.4s cubic-bezier(.51, .09, .21, .8);\r\n    -webkit-animation-iteration-count: infinite;\r\n            animation-iteration-count: infinite\n}\n.multiselect__loading-enter-active,\r\n.multiselect__loading-leave-active {\r\n    transition: opacity .4s ease-in-out;\r\n    opacity: 1\n}\n.multiselect__loading-enter,\r\n.multiselect__loading-leave-active {\r\n    opacity: 0\n}\n.multiselect,\r\n.multiselect__input,\r\n.multiselect__single {\r\n    font-family: inherit;\r\n    font-size: 16px;\r\n    touch-action: manipulation\n}\n.multiselect {\r\n    box-sizing: content-box;\r\n    display: block;\r\n    position: relative;\r\n    width: 100%;\r\n    min-height: 40px;\r\n    text-align: left;\r\n    color: #35495e\n}\n.multiselect * {\r\n    box-sizing: border-box\n}\n.multiselect:focus {\r\n    outline: none\n}\n.multiselect--disabled {\r\n    background: #ededed;\r\n    pointer-events: none;\r\n    opacity: .6\n}\n.multiselect--active {\r\n    z-index: 50\n}\n.multiselect--active:not(.multiselect--above) .multiselect__current,\r\n.multiselect--active:not(.multiselect--above) .multiselect__input,\r\n.multiselect--active:not(.multiselect--above) .multiselect__tags {\r\n    border-bottom-left-radius: 0;\r\n    border-bottom-right-radius: 0\n}\n.multiselect--active .multiselect__select {\r\n    transform: rotate(180deg)\n}\n.multiselect--above.multiselect--active .multiselect__current,\r\n.multiselect--above.multiselect--active .multiselect__input,\r\n.multiselect--above.multiselect--active .multiselect__tags {\r\n    border-top-left-radius: 0;\r\n    border-top-right-radius: 0\n}\n.multiselect__input,\r\n.multiselect__single {\r\n    position: relative;\r\n    display: inline-block;\r\n    min-height: 20px;\r\n    line-height: 20px;\r\n    border: none;\r\n    border-radius: 5px;\r\n    background: #fff;\r\n    padding: 0 0 0 5px;\r\n    width: 100%;\r\n    transition: border .1s ease;\r\n    box-sizing: border-box;\r\n    margin-bottom: 8px;\r\n    vertical-align: top\n}\n.multiselect__input::-moz-placeholder {\r\n    color: #35495e\n}\n.multiselect__input::placeholder {\r\n    color: #35495e\n}\n.multiselect__tag~.multiselect__input,\r\n.multiselect__tag~.multiselect__single {\r\n    width: auto\n}\n.multiselect__input:hover,\r\n.multiselect__single:hover {\r\n    border-color: #cfcfcf\n}\n.multiselect__input:focus,\r\n.multiselect__single:focus {\r\n    border-color: #a8a8a8;\r\n    outline: none\n}\n.multiselect__single {\r\n    padding-left: 5px;\r\n    margin-bottom: 8px\n}\n.multiselect__tags-wrap {\r\n    display: inline\n}\n.multiselect__tags {\r\n    min-height: 40px;\r\n    display: block;\r\n    padding: 8px 40px 0 8px;\r\n    border-radius: 5px;\r\n    border: 1px solid #e8e8e8;\r\n    background: #fff;\r\n    font-size: 14px\n}\n.multiselect__tag {\r\n    position: relative;\r\n    display: inline-block;\r\n    padding: 4px 26px 4px 10px;\r\n    border-radius: 5px;\r\n    margin-right: 10px;\r\n    color: #fff;\r\n    line-height: 1;\r\n    background: #41b883;\r\n    margin-bottom: 5px;\r\n    white-space: nowrap;\r\n    overflow: hidden;\r\n    max-width: 100%;\r\n    text-overflow: ellipsis\n}\n.multiselect__tag-icon {\r\n    cursor: pointer;\r\n    margin-left: 7px;\r\n    position: absolute;\r\n    right: 0;\r\n    top: 0;\r\n    bottom: 0;\r\n    font-weight: 700;\r\n    font-style: normal;\r\n    width: 22px;\r\n    text-align: center;\r\n    line-height: 22px;\r\n    transition: all .2s ease;\r\n    border-radius: 5px\n}\n.multiselect__tag-icon:after {\r\n    content: \"\\D7\";\r\n    color: #266d4d;\r\n    font-size: 14px\n}\n.multiselect__tag-icon:focus,\r\n.multiselect__tag-icon:hover {\r\n    background: #369a6e\n}\n.multiselect__tag-icon:focus:after,\r\n.multiselect__tag-icon:hover:after {\r\n    color: #fff\n}\n.multiselect__current {\r\n    min-height: 40px;\r\n    overflow: hidden;\r\n    padding: 8px 30px 0 12px;\r\n    white-space: nowrap;\r\n    border-radius: 5px;\r\n    border: 1px solid #e8e8e8\n}\n.multiselect__current,\r\n.multiselect__select {\r\n    line-height: 16px;\r\n    box-sizing: border-box;\r\n    display: block;\r\n    margin: 0;\r\n    text-decoration: none;\r\n    cursor: pointer\n}\n.multiselect__select {\r\n    position: absolute;\r\n    width: 40px;\r\n    height: 38px;\r\n    right: 1px;\r\n    top: 1px;\r\n    padding: 4px 8px;\r\n    text-align: center;\r\n    transition: transform .2s ease\n}\n.multiselect__select:before {\r\n    position: relative;\r\n    right: 0;\r\n    top: 65%;\r\n    color: #999;\r\n    margin-top: 4px;\r\n    border-color: #999 transparent transparent;\r\n    border-style: solid;\r\n    border-width: 5px 5px 0;\r\n    content: \"\"\n}\n.multiselect__placeholder {\r\n    color: #adadad;\r\n    display: inline-block;\r\n    margin-bottom: 10px;\r\n    padding-top: 2px\n}\n.multiselect--active .multiselect__placeholder {\r\n    display: none\n}\n.multiselect__content-wrapper {\r\n    position: absolute;\r\n    display: block;\r\n    background: #fff;\r\n    width: 100%;\r\n    max-height: 240px;\r\n    overflow: auto;\r\n    border: 1px solid #e8e8e8;\r\n    border-top: none;\r\n    border-bottom-left-radius: 5px;\r\n    border-bottom-right-radius: 5px;\r\n    z-index: 50;\r\n    -webkit-overflow-scrolling: touch\n}\n.multiselect__content {\r\n    list-style: none;\r\n    display: inline-block;\r\n    padding: 0;\r\n    margin: 0;\r\n    min-width: 100%;\r\n    vertical-align: top\n}\n.multiselect--above .multiselect__content-wrapper {\r\n    bottom: 100%;\r\n    border-bottom-left-radius: 0;\r\n    border-bottom-right-radius: 0;\r\n    border-top-left-radius: 5px;\r\n    border-top-right-radius: 5px;\r\n    border-bottom: none;\r\n    border-top: 1px solid #e8e8e8\n}\n.multiselect__content::webkit-scrollbar {\r\n    display: none\n}\n.multiselect__element {\r\n    display: block\n}\n.multiselect__option {\r\n    display: block;\r\n    padding: 12px;\r\n    min-height: 40px;\r\n    line-height: 16px;\r\n    text-decoration: none;\r\n    text-transform: none;\r\n    vertical-align: middle;\r\n    position: relative;\r\n    cursor: pointer;\r\n    white-space: nowrap\n}\n.multiselect__option:after {\r\n    top: 0;\r\n    right: 0;\r\n    position: absolute;\r\n    line-height: 40px;\r\n    padding-right: 12px;\r\n    padding-left: 20px;\r\n    font-size: 13px\n}\n.multiselect__option--highlight {\r\n    background: #41b883;\r\n    outline: none;\r\n    color: #fff\n}\n.multiselect__option--highlight:after {\r\n    content: attr(data-select);\r\n    background: #41b883;\r\n    color: #fff\n}\n.multiselect__option--selected {\r\n    background: #f3f3f3;\r\n    color: #35495e;\r\n    font-weight: 700\n}\n.multiselect__option--selected:after {\r\n    content: attr(data-selected);\r\n    color: silver\n}\n.multiselect__option--selected.multiselect__option--highlight {\r\n    background: #ff6a6a;\r\n    color: #fff\n}\n.multiselect__option--selected.multiselect__option--highlight:after {\r\n    background: #ff6a6a;\r\n    content: attr(data-deselect);\r\n    color: #fff\n}\n.multiselect--disabled .multiselect__current,\r\n.multiselect--disabled .multiselect__select {\r\n    background: #ededed;\r\n    color: #a6a6a6\n}\n.multiselect__option--disabled {\r\n    background: #ededed !important;\r\n    color: #a6a6a6 !important;\r\n    cursor: text;\r\n    pointer-events: none\n}\n.multiselect__option--group {\r\n    background: #ededed;\r\n    color: #35495e\n}\n.multiselect__option--group.multiselect__option--highlight {\r\n    background: #35495e;\r\n    color: #fff\n}\n.multiselect__option--group.multiselect__option--highlight:after {\r\n    background: #35495e\n}\n.multiselect__option--disabled.multiselect__option--highlight {\r\n    background: #dedede\n}\n.multiselect__option--group-selected.multiselect__option--highlight {\r\n    background: #ff6a6a;\r\n    color: #fff\n}\n.multiselect__option--group-selected.multiselect__option--highlight:after {\r\n    background: #ff6a6a;\r\n    content: attr(data-deselect);\r\n    color: #fff\n}\n.multiselect-enter-active,\r\n.multiselect-leave-active {\r\n    transition: all .15s ease\n}\n.multiselect-enter,\r\n.multiselect-leave-active {\r\n    opacity: 0\n}\n.multiselect__strong {\r\n    margin-bottom: 8px;\r\n    line-height: 20px;\r\n    display: inline-block;\r\n    vertical-align: top\n}\n[dir=rtl] .multiselect {\r\n    text-align: right\n}\n[dir=rtl] .multiselect__select {\r\n    right: auto;\r\n    left: 1px\n}\n[dir=rtl] .multiselect__tags {\r\n    padding: 8px 8px 0 40px\n}\n[dir=rtl] .multiselect__content {\r\n    text-align: right\n}\n[dir=rtl] .multiselect__option:after {\r\n    right: auto;\r\n    left: 0\n}\n[dir=rtl] .multiselect__clear {\r\n    right: auto;\r\n    left: 12px\n}\n[dir=rtl] .multiselect__spinner {\r\n    right: auto;\r\n    left: 1px\n}\n@-webkit-keyframes spinning {\n0% {\r\n        transform: rotate(0)\n}\nto {\r\n        transform: rotate(2turn)\n}\n}\n@keyframes spinning {\n0% {\r\n        transform: rotate(0)\n}\nto {\r\n        transform: rotate(2turn)\n}\n}", ""]);
+___CSS_LOADER_EXPORT___.push([module.id, "fieldset[disabled] .multiselect{pointer-events:none}.multiselect__spinner{position:absolute;right:1px;top:1px;width:48px;height:35px;background:#fff;display:block}.multiselect__spinner:after,.multiselect__spinner:before{position:absolute;content:\"\";top:50%;left:50%;margin:-8px 0 0 -8px;width:16px;height:16px;border-radius:100%;border:2px solid transparent;border-top-color:#41b883;box-shadow:0 0 0 1px transparent}.multiselect__spinner:before{-webkit-animation:spinning 2.4s cubic-bezier(.41,.26,.2,.62);animation:spinning 2.4s cubic-bezier(.41,.26,.2,.62);-webkit-animation-iteration-count:infinite;animation-iteration-count:infinite}.multiselect__spinner:after{-webkit-animation:spinning 2.4s cubic-bezier(.51,.09,.21,.8);animation:spinning 2.4s cubic-bezier(.51,.09,.21,.8);-webkit-animation-iteration-count:infinite;animation-iteration-count:infinite}.multiselect__loading-enter-active,.multiselect__loading-leave-active{transition:opacity .4s ease-in-out;opacity:1}.multiselect__loading-enter,.multiselect__loading-leave-active{opacity:0}.multiselect,.multiselect__input,.multiselect__single{font-family:inherit;font-size:16px;touch-action:manipulation}.multiselect{box-sizing:content-box;display:block;position:relative;width:100%;min-height:40px;text-align:left;color:#35495e}.multiselect *{box-sizing:border-box}.multiselect:focus{outline:none}.multiselect--disabled{background:#ededed;pointer-events:none;opacity:.6}.multiselect--active{z-index:50}.multiselect--active:not(.multiselect--above) .multiselect__current,.multiselect--active:not(.multiselect--above) .multiselect__input,.multiselect--active:not(.multiselect--above) .multiselect__tags{border-bottom-left-radius:0;border-bottom-right-radius:0}.multiselect--active .multiselect__select{transform:rotate(180deg)}.multiselect--above.multiselect--active .multiselect__current,.multiselect--above.multiselect--active .multiselect__input,.multiselect--above.multiselect--active .multiselect__tags{border-top-left-radius:0;border-top-right-radius:0}.multiselect__input,.multiselect__single{position:relative;display:inline-block;min-height:20px;line-height:20px;border:none;border-radius:5px;background:#fff;padding:0 0 0 5px;width:100%;transition:border .1s ease;box-sizing:border-box;margin-bottom:8px;vertical-align:top}.multiselect__input::-moz-placeholder{color:#35495e}.multiselect__input::placeholder{color:#35495e}.multiselect__tag~.multiselect__input,.multiselect__tag~.multiselect__single{width:auto}.multiselect__input:hover,.multiselect__single:hover{border-color:#cfcfcf}.multiselect__input:focus,.multiselect__single:focus{border-color:#a8a8a8;outline:none}.multiselect__single{padding-left:5px;margin-bottom:8px}.multiselect__tags-wrap{display:inline}.multiselect__tags{min-height:40px;display:block;padding:8px 40px 0 8px;border-radius:5px;border:1px solid #e8e8e8;background:#fff;font-size:14px}.multiselect__tag{position:relative;display:inline-block;padding:4px 26px 4px 10px;border-radius:5px;margin-right:10px;color:#fff;line-height:1;background:#41b883;margin-bottom:5px;white-space:nowrap;overflow:hidden;max-width:100%;text-overflow:ellipsis}.multiselect__tag-icon{cursor:pointer;margin-left:7px;position:absolute;right:0;top:0;bottom:0;font-weight:700;font-style:normal;width:22px;text-align:center;line-height:22px;transition:all .2s ease;border-radius:5px}.multiselect__tag-icon:after{content:\"\\D7\";color:#266d4d;font-size:14px}.multiselect__tag-icon:focus,.multiselect__tag-icon:hover{background:#369a6e}.multiselect__tag-icon:focus:after,.multiselect__tag-icon:hover:after{color:#fff}.multiselect__current{min-height:40px;overflow:hidden;padding:8px 30px 0 12px;white-space:nowrap;border-radius:5px;border:1px solid #e8e8e8}.multiselect__current,.multiselect__select{line-height:16px;box-sizing:border-box;display:block;margin:0;text-decoration:none;cursor:pointer}.multiselect__select{position:absolute;width:40px;height:38px;right:1px;top:1px;padding:4px 8px;text-align:center;transition:transform .2s ease}.multiselect__select:before{position:relative;right:0;top:65%;color:#999;margin-top:4px;border-color:#999 transparent transparent;border-style:solid;border-width:5px 5px 0;content:\"\"}.multiselect__placeholder{color:#adadad;display:inline-block;margin-bottom:10px;padding-top:2px}.multiselect--active .multiselect__placeholder{display:none}.multiselect__content-wrapper{position:absolute;display:block;background:#fff;width:100%;max-height:240px;overflow:auto;border:1px solid #e8e8e8;border-top:none;border-bottom-left-radius:5px;border-bottom-right-radius:5px;z-index:50;-webkit-overflow-scrolling:touch}.multiselect__content{list-style:none;display:inline-block;padding:0;margin:0;min-width:100%;vertical-align:top}.multiselect--above .multiselect__content-wrapper{bottom:100%;border-bottom-left-radius:0;border-bottom-right-radius:0;border-top-left-radius:5px;border-top-right-radius:5px;border-bottom:none;border-top:1px solid #e8e8e8}.multiselect__content::webkit-scrollbar{display:none}.multiselect__element{display:block}.multiselect__option{display:block;padding:12px;min-height:40px;line-height:16px;text-decoration:none;text-transform:none;vertical-align:middle;position:relative;cursor:pointer;white-space:nowrap}.multiselect__option:after{top:0;right:0;position:absolute;line-height:40px;padding-right:12px;padding-left:20px;font-size:13px}.multiselect__option--highlight{background:#41b883;outline:none;color:#fff}.multiselect__option--highlight:after{content:attr(data-select);background:#41b883;color:#fff}.multiselect__option--selected{background:#f3f3f3;color:#35495e;font-weight:700}.multiselect__option--selected:after{content:attr(data-selected);color:silver}.multiselect__option--selected.multiselect__option--highlight{background:#ff6a6a;color:#fff}.multiselect__option--selected.multiselect__option--highlight:after{background:#ff6a6a;content:attr(data-deselect);color:#fff}.multiselect--disabled .multiselect__current,.multiselect--disabled .multiselect__select{background:#ededed;color:#a6a6a6}.multiselect__option--disabled{background:#ededed!important;color:#a6a6a6!important;cursor:text;pointer-events:none}.multiselect__option--group{background:#ededed;color:#35495e}.multiselect__option--group.multiselect__option--highlight{background:#35495e;color:#fff}.multiselect__option--group.multiselect__option--highlight:after{background:#35495e}.multiselect__option--disabled.multiselect__option--highlight{background:#dedede}.multiselect__option--group-selected.multiselect__option--highlight{background:#ff6a6a;color:#fff}.multiselect__option--group-selected.multiselect__option--highlight:after{background:#ff6a6a;content:attr(data-deselect);color:#fff}.multiselect-enter-active,.multiselect-leave-active{transition:all .15s ease}.multiselect-enter,.multiselect-leave-active{opacity:0}.multiselect__strong{margin-bottom:8px;line-height:20px;display:inline-block;vertical-align:top}[dir=rtl] .multiselect{text-align:right}[dir=rtl] .multiselect__select{right:auto;left:1px}[dir=rtl] .multiselect__tags{padding:8px 8px 0 40px}[dir=rtl] .multiselect__content{text-align:right}[dir=rtl] .multiselect__option:after{right:auto;left:0}[dir=rtl] .multiselect__clear{right:auto;left:12px}[dir=rtl] .multiselect__spinner{right:auto;left:1px}@-webkit-keyframes spinning{0%{transform:rotate(0)}to{transform:rotate(2turn)}}@keyframes spinning{0%{transform:rotate(0)}to{transform:rotate(2turn)}}", ""]);
 // Exports
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (___CSS_LOADER_EXPORT___);
 
@@ -45005,7 +45258,7 @@ Vue.compile = compileToFunctions;
 /***/ ((module) => {
 
 "use strict";
-module.exports = JSON.parse('{"_args":[["axios@0.21.4","C:\\\\Users\\\\Heriberto\\\\Documents\\\\Development\\\\php\\\\check-assistances"]],"_development":true,"_from":"axios@0.21.4","_id":"axios@0.21.4","_inBundle":false,"_integrity":"sha512-ut5vewkiu8jjGBdqpM44XxjuCjq9LAKeHVmoVfHVzy8eHgxxq8SbAVQNovDA8mVi05kP0Ea/n/UzcSHcTJQfNg==","_location":"/axios","_phantomChildren":{},"_requested":{"type":"version","registry":true,"raw":"axios@0.21.4","name":"axios","escapedName":"axios","rawSpec":"0.21.4","saveSpec":null,"fetchSpec":"0.21.4"},"_requiredBy":["#DEV:/"],"_resolved":"https://registry.npmjs.org/axios/-/axios-0.21.4.tgz","_spec":"0.21.4","_where":"C:\\\\Users\\\\Heriberto\\\\Documents\\\\Development\\\\php\\\\check-assistances","author":{"name":"Matt Zabriskie"},"browser":{"./lib/adapters/http.js":"./lib/adapters/xhr.js"},"bugs":{"url":"https://github.com/axios/axios/issues"},"bundlesize":[{"path":"./dist/axios.min.js","threshold":"5kB"}],"dependencies":{"follow-redirects":"^1.14.0"},"description":"Promise based HTTP client for the browser and node.js","devDependencies":{"coveralls":"^3.0.0","es6-promise":"^4.2.4","grunt":"^1.3.0","grunt-banner":"^0.6.0","grunt-cli":"^1.2.0","grunt-contrib-clean":"^1.1.0","grunt-contrib-watch":"^1.0.0","grunt-eslint":"^23.0.0","grunt-karma":"^4.0.0","grunt-mocha-test":"^0.13.3","grunt-ts":"^6.0.0-beta.19","grunt-webpack":"^4.0.2","istanbul-instrumenter-loader":"^1.0.0","jasmine-core":"^2.4.1","karma":"^6.3.2","karma-chrome-launcher":"^3.1.0","karma-firefox-launcher":"^2.1.0","karma-jasmine":"^1.1.1","karma-jasmine-ajax":"^0.1.13","karma-safari-launcher":"^1.0.0","karma-sauce-launcher":"^4.3.6","karma-sinon":"^1.0.5","karma-sourcemap-loader":"^0.3.8","karma-webpack":"^4.0.2","load-grunt-tasks":"^3.5.2","minimist":"^1.2.0","mocha":"^8.2.1","sinon":"^4.5.0","terser-webpack-plugin":"^4.2.3","typescript":"^4.0.5","url-search-params":"^0.10.0","webpack":"^4.44.2","webpack-dev-server":"^3.11.0"},"homepage":"https://axios-http.com","jsdelivr":"dist/axios.min.js","keywords":["xhr","http","ajax","promise","node"],"license":"MIT","main":"index.js","name":"axios","repository":{"type":"git","url":"git+https://github.com/axios/axios.git"},"scripts":{"build":"NODE_ENV=production grunt build","coveralls":"cat coverage/lcov.info | ./node_modules/coveralls/bin/coveralls.js","examples":"node ./examples/server.js","fix":"eslint --fix lib/**/*.js","postversion":"git push && git push --tags","preversion":"npm test","start":"node ./sandbox/server.js","test":"grunt test","version":"npm run build && grunt version && git add -A dist && git add CHANGELOG.md bower.json package.json"},"typings":"./index.d.ts","unpkg":"dist/axios.min.js","version":"0.21.4"}');
+module.exports = JSON.parse('{"name":"axios","version":"0.21.4","description":"Promise based HTTP client for the browser and node.js","main":"index.js","scripts":{"test":"grunt test","start":"node ./sandbox/server.js","build":"NODE_ENV=production grunt build","preversion":"npm test","version":"npm run build && grunt version && git add -A dist && git add CHANGELOG.md bower.json package.json","postversion":"git push && git push --tags","examples":"node ./examples/server.js","coveralls":"cat coverage/lcov.info | ./node_modules/coveralls/bin/coveralls.js","fix":"eslint --fix lib/**/*.js"},"repository":{"type":"git","url":"https://github.com/axios/axios.git"},"keywords":["xhr","http","ajax","promise","node"],"author":"Matt Zabriskie","license":"MIT","bugs":{"url":"https://github.com/axios/axios/issues"},"homepage":"https://axios-http.com","devDependencies":{"coveralls":"^3.0.0","es6-promise":"^4.2.4","grunt":"^1.3.0","grunt-banner":"^0.6.0","grunt-cli":"^1.2.0","grunt-contrib-clean":"^1.1.0","grunt-contrib-watch":"^1.0.0","grunt-eslint":"^23.0.0","grunt-karma":"^4.0.0","grunt-mocha-test":"^0.13.3","grunt-ts":"^6.0.0-beta.19","grunt-webpack":"^4.0.2","istanbul-instrumenter-loader":"^1.0.0","jasmine-core":"^2.4.1","karma":"^6.3.2","karma-chrome-launcher":"^3.1.0","karma-firefox-launcher":"^2.1.0","karma-jasmine":"^1.1.1","karma-jasmine-ajax":"^0.1.13","karma-safari-launcher":"^1.0.0","karma-sauce-launcher":"^4.3.6","karma-sinon":"^1.0.5","karma-sourcemap-loader":"^0.3.8","karma-webpack":"^4.0.2","load-grunt-tasks":"^3.5.2","minimist":"^1.2.0","mocha":"^8.2.1","sinon":"^4.5.0","terser-webpack-plugin":"^4.2.3","typescript":"^4.0.5","url-search-params":"^0.10.0","webpack":"^4.44.2","webpack-dev-server":"^3.11.0"},"browser":{"./lib/adapters/http.js":"./lib/adapters/xhr.js"},"jsdelivr":"dist/axios.min.js","unpkg":"dist/axios.min.js","typings":"./index.d.ts","dependencies":{"follow-redirects":"^1.14.0"},"bundlesize":[{"path":"./dist/axios.min.js","threshold":"5kB"}]}');
 
 /***/ })
 
