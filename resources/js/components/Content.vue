@@ -1,6 +1,9 @@
 <template>
   <!--  <div class="container-fluid"> -->
-  <div class="row" style="background: url('/templates/confeti/Confeti.html')">
+  <div
+    class="row"
+    style="background-image: url('/images/birthday.png') center z-index:99999 "
+  >
     <div class="card">
       <div class="card-body">
         <div class="row">
@@ -103,6 +106,14 @@
                       </div>
                     </div>
                   </form>
+
+                  <button @click="startConfetti()" class="btn btn-danger">Start</button>
+
+                  <button @click="stopConfetti()" class="btn btn-info">Stop</button>
+
+                  <button @click="toggleConfetti()" class="btn btn-warning">
+                    Toggle
+                  </button>
                 </div>
               </div>
             </div>
@@ -117,11 +128,10 @@
 <script>
 // https://codepen.io/gau/pen/LjQwGp
 import DigitalClock from "./DigitalClock.vue";
-// import Confeti from "./extra/Confeti.html";
+// import { Confeti } from "../../../public/templates/confeti/confetti-falling-animation/confetti.js";
 export default {
   components: {
     DigitalClock,
-    // Confeti,
   },
   data() {
     return {
@@ -154,6 +164,32 @@ export default {
       expired: null,
       expiresClose: null,
       runn: 0,
+      //confetty vars
+      maxParticleCount: 150, //set max confetti count
+      particleSpeed: 2, //set the particle animation speed
+      //   startConfetti, //call to start confetti animation
+      //   stopConfetti, //call to stop adding confetti
+      //   toggleConfetti, //call to start or stop the confetti animation depending on whether it's already running
+      //   removeConfetti, //call to stop the confetti animation and remove all confetti immediately
+
+      colors: [
+        "DodgerBlue",
+        "OliveDrab",
+        "Gold",
+        "Pink",
+        "SlateBlue",
+        "LightBlue",
+        "Violet",
+        "PaleGreen",
+        "SteelBlue",
+        "SandyBrown",
+        "Chocolate",
+        "Crimson",
+      ],
+      streamingConfetti: false,
+      animationTimer: null,
+      particles: [],
+      waveAngle: 0,
     };
   },
 
@@ -179,7 +215,8 @@ export default {
       let me = this;
       me.loading = true;
       me.run = 1;
-      var w = new me.showConfeti();
+      //   var w = new me.showConfeti();
+      me.startConfetti();
       axios
         .post("assistances", { branch: me.branch.id, code: me.code })
         .then((response) => {
@@ -249,12 +286,12 @@ export default {
               ' border-radius:50%; rgba(10, 175, 230, 1), 0 0 20px rgba(10, 175, 230, 0);">'
             : "";
 
-          let birthBackdrop = `url("https://placekitten.com/150/150")  left top  no-repeat`;
-          let backdrop = me.expired
+          let birthBackdrop = `url("../../images/birthday.png")  left top  no-repeat`;
+          let backdrop = birthBackdrop; /* me.expired
             ? "#ba0c0c8c"
             : me.expiresClose
             ? "#c29b089c"
-            : "#010601e3";
+            : "#010601e3"; */
 
           let now = new Date();
           let birth = new Date(customer.birthday);
@@ -268,7 +305,6 @@ export default {
           console.log({ month: now.getMonth() });
           console.log({ day: birth.getDay() });
           console.log({ month: birth.getMonth() }); */
-          this.showConfeti(1);
           //   return;
 
           Swal.fire({
@@ -292,7 +328,7 @@ export default {
               ' border-radius:50%" alt="customer-image"/> <br>  <h1 style="margin-top:10px;">' +
               message +
               " </h1></div>",
-            timer: 5000,
+            // timer: 5000,
           });
           me.loading = false;
           document.getElementById("code").focus();
@@ -323,6 +359,7 @@ export default {
             await document.getElementById("code").focus(),
             (me.run = 0)
             // this.showConfeti(0)
+            // me.stopConfetti()
 
             /* setTimeout(w._createClass.bind(w), 0),
             setTimeout(w._createClass.bind(w), 3000) */
@@ -395,251 +432,166 @@ export default {
       null;
     }, */
     //cONFETI SCRIPT
-    showConfeti(show) {
-      let _createClass = null;
-      let Progress = null;
-      let Confetti = null;
-      if (!show) {
-        this.canvas = null;
-        console.log("try to stop confeti");
-        return;
-      } else {
-        _createClass = (function () {
-          function defineProperties(target, props) {
-            for (var i = 0; i < props.length; i++) {
-              var descriptor = props[i];
-              descriptor.enumerable = descriptor.enumerable || false;
-              descriptor.configurable = true;
-              if ("value" in descriptor) descriptor.writable = true;
-              Object.defineProperty(target, descriptor.key, descriptor);
-            }
+    // showConfeti() {
+
+    //   (function () {
+
+    startConfetti() {
+      console.log("Start");
+      this.startConfettiInner();
+    },
+    stopConfetti() {
+      console.log("Start");
+      return this.stopConfettiInner;
+    },
+    toggleConfetti() {
+      return this.toggleConfettiInner;
+    },
+    removeConfetti() {
+      return this.removeConfettiInner;
+    },
+    /*
+        stopConfetti = stopConfettiInner;
+        toggleConfetti = toggleConfettiInner;
+        removeConfetti = removeConfettiInner;
+ */
+    /* function */
+    resetParticle(particle, width, height) {
+      let colors = this.colors;
+      particle.color = colors[(Math.random() * colors.length) | 0];
+      particle.x = Math.random() * width;
+      particle.y = Math.random() * height - height;
+      particle.diameter = Math.random() * 10 + 5;
+      particle.tilt = Math.random() * 10 - 10;
+      particle.tiltAngleIncrement = Math.random() * 0.07 + 0.05;
+      particle.tiltAngle = 0;
+      return particle;
+    },
+
+    startConfettiInner() {
+      console.log("Start inner");
+      let me = this;
+      let particles = me.particles;
+      var width = window.innerWidth;
+      var height = window.innerHeight;
+      window.requestAnimFrame = function () {
+        return (
+          window.requestAnimationFrame ||
+          window.webkitRequestAnimationFrame ||
+          window.mozRequestAnimationFrame ||
+          window.oRequestAnimationFrame ||
+          window.msRequestAnimationFrame ||
+          function (callback) {
+            return window.setTimeout(callback, 16.6666667);
           }
-          return function (Constructor, protoProps, staticProps) {
-            if (protoProps) defineProperties(Constructor.prototype, protoProps);
-            if (staticProps) defineProperties(Constructor, staticProps);
-            return Constructor;
-          };
-        })();
-
-        function _classCallCheck(instance, Constructor) {
-          if (!(instance instanceof Constructor)) {
-            throw new TypeError("Cannot call a class as a function");
+        );
+      };
+      var canvas = document.getElementById("confetti-canvas");
+      if (canvas === null) {
+        canvas = document.createElement("canvas");
+        canvas.setAttribute("id", "confetti-canvas");
+        canvas.setAttribute("style", "display:block;z-index:999999;pointer-events:none");
+        document.body.appendChild(canvas);
+        canvas.width = width;
+        canvas.height = height;
+        window.addEventListener(
+          "resize",
+          function () {
+            canvas.width = window.innerWidth;
+            canvas.height = window.innerHeight;
+          },
+          true
+        );
+      }
+      var context = canvas.getContext("2d");
+      while (particles.length < me.maxParticleCount)
+        particles.push(me.resetParticle({}, width, height));
+      me.streamingConfetti = true;
+      if (me.animationTimer === null) {
+        (function runAnimation() {
+          context.clearRect(0, 0, window.innerWidth, window.innerHeight);
+          if (particles.length === 0) me.animationTimer = null;
+          else {
+            me.updateParticles();
+            me.drawParticles(context);
+            me.animationTimer = requestAnimFrame(runAnimation);
           }
-        }
-
-        Progress = (function () {
-          function Progress() {
-            var param =
-              arguments.length <= 0 || arguments[0] === undefined ? {} : arguments[0];
-
-            _classCallCheck(this, Progress);
-
-            this.timestamp = null;
-            this.duration = param.duration || Progress.CONST.DURATION;
-            this.progress = 0;
-            this.delta = 0;
-            this.progress = 0;
-            this.isLoop = !!param.isLoop;
-            this.reset();
-          }
-
-          Progress.prototype.reset = function reset() {
-            this.timestamp = null;
-          };
-
-          Progress.prototype.start = function start(now) {
-            this.timestamp = now;
-          };
-
-          Progress.prototype.tick = function tick(now) {
-            if (this.timestamp) {
-              this.delta = now - this.timestamp;
-              this.progress = Math.min(this.delta / this.duration, 1);
-
-              if (this.progress >= 1 && this.isLoop) {
-                console.log(this.progress);
-                this.start(now);
-              }
-
-              return this.progress;
-            } else {
-              return 0;
-            }
-          };
-
-          _createClass(Progress, null, [
-            {
-              key: "CONST",
-              get: function get() {
-                return {
-                  DURATION: 1000,
-                };
-              },
-            },
-          ]);
-
-          return Progress;
-        })();
-
-        Confetti = (function () {
-          function Confetti(param) {
-            _classCallCheck(this, Confetti);
-            console.log(param);
-
-            this.parent = param.elm || document.body;
-            this.canvas = document.createElement("canvas");
-            this.ctx = this.canvas.getContext("2d");
-            this.width = param.width || this.parent.offsetWidth;
-            this.height = param.height || this.parent.offsetHeight;
-            this.length = param.length || Confetti.CONST.PAPER_LENGTH;
-            this.yRange = param.yRange || this.height * 2;
-            this.progress = new Progress({
-              duration: param.duration,
-              isLoop: true,
-            });
-            this.rotationRange =
-              typeof param.rotationLength === "number" ? param.rotationRange : 10;
-            this.speedRange =
-              typeof param.speedRange === "number" ? param.speedRange : 10;
-            this.sprites = [];
-
-            this.canvas.style.cssText = [
-              "display: block",
-              "position: absolute",
-              "top: 0",
-              "left: 0",
-              "pointer-events: none",
-              "z-index:10000",
-            ].join(";");
-
-            this.render = this.render.bind(this);
-            this.build();
-            this.parent.append(this.canvas);
-            this.progress.start(performance.now());
-            requestAnimationFrame(this.render);
-          }
-
-          Confetti.prototype.build = function build() {
-            for (var i = 0; i < this.length; ++i) {
-              var canvas = document.createElement("canvas"),
-                ctx = canvas.getContext("2d");
-
-              canvas.width = Confetti.CONST.SPRITE_WIDTH;
-              canvas.height = Confetti.CONST.SPRITE_HEIGHT;
-
-              canvas.position = {
-                initX: Math.random() * this.width,
-                initY: -canvas.height - Math.random() * this.yRange,
-              };
-
-              canvas.rotation =
-                this.rotationRange / 2 - Math.random() * this.rotationRange;
-              canvas.speed = this.speedRange / 2 + Math.random() * (this.speedRange / 2);
-
-              ctx.save();
-              ctx.fillStyle =
-                Confetti.CONST.COLORS[(Math.random() * Confetti.CONST.COLORS.length) | 0];
-              ctx.fillRect(0, 0, canvas.width, canvas.height);
-              ctx.restore();
-
-              this.sprites.push(canvas);
-            }
-          };
-
-          Confetti.prototype.render = function render(now) {
-            var progress = this.progress.tick(now);
-
-            this.canvas.width = this.width;
-            this.canvas.height = this.height;
-
-            for (var i = 0; i < this.length; ++i) {
-              this.ctx.save();
-              this.ctx.translate(
-                this.sprites[i].position.initX +
-                  this.sprites[i].rotation * Confetti.CONST.ROTATION_RATE * progress,
-                this.sprites[i].position.initY + progress * (this.height + this.yRange)
-              );
-              this.ctx.rotate(this.sprites[i].rotation);
-              this.ctx.drawImage(
-                this.sprites[i],
-                (-Confetti.CONST.SPRITE_WIDTH *
-                  Math.abs(Math.sin(progress * Math.PI * 2 * this.sprites[i].speed))) /
-                  2,
-                -Confetti.CONST.SPRITE_HEIGHT / 2,
-                Confetti.CONST.SPRITE_WIDTH *
-                  Math.abs(Math.sin(progress * Math.PI * 2 * this.sprites[i].speed)),
-                Confetti.CONST.SPRITE_HEIGHT
-              );
-              this.ctx.restore();
-            }
-
-            requestAnimationFrame(this.render);
-          };
-
-          _createClass(Confetti, null, [
-            {
-              key: "CONST",
-              get: function get() {
-                return {
-                  SPRITE_WIDTH: 9,
-                  SPRITE_HEIGHT: 16,
-                  PAPER_LENGTH: 100,
-                  DURATION: 8000,
-                  ROTATION_RATE: 50,
-                  COLORS: [
-                    "#EF5350",
-                    "#EC407A",
-                    "#AB47BC",
-                    "#7E57C2",
-                    "#5C6BC0",
-                    "#42A5F5",
-                    "#29B6F6",
-                    "#26C6DA",
-                    "#26A69A",
-                    "#66BB6A",
-                    "#9CCC65",
-                    "#D4E157",
-                    "#FFEE58",
-                    "#FFCA28",
-                    "#FFA726",
-                    "#FF7043",
-                    "#8D6E63",
-                    "#BDBDBD",
-                    "#78909C",
-                  ],
-                };
-              },
-            },
-          ]);
-          return Confetti;
-        })();
-
-        (function () {
-          var DURATION = 8000,
-            LENGTH = 120;
-
-          new Confetti({
-            width: window.innerWidth,
-            height: window.innerHeight,
-            length: LENGTH,
-            duration: DURATION,
-          });
-
-          setTimeout(function () {
-            new Confetti({
-              width: window.innerWidth,
-              height: window.innerHeight,
-              length: LENGTH,
-              duration: DURATION,
-            });
-          }, DURATION / 2);
         })();
       }
     },
+
+    stopConfettiInner() {
+      this.streamingConfetti = false;
+    },
+
+    removeConfettiInner() {
+      this.stopConfetti();
+      this.particles = [];
+    },
+
+    toggleConfettiInner() {
+      if (this.streamingConfetti) stopConfettiInner();
+      else this.startConfettiInner();
+    },
+
+    drawParticles(context) {
+      let particles = this.particles;
+      var particle;
+      var x;
+      for (var i = 0; i < particles.length; i++) {
+        particle = particles[i];
+        context.beginPath();
+        context.lineWidth = particle.diameter;
+        context.strokeStyle = particle.color;
+        x = particle.x + particle.tilt;
+        context.moveTo(x + particle.diameter / 2, particle.y);
+        context.lineTo(x, particle.y + particle.tilt + particle.diameter / 2);
+        context.stroke();
+      }
+    },
+
+    updateParticles() {
+      let particles = this.particles;
+      var width = window.innerWidth;
+      var height = window.innerHeight;
+      var particle;
+      this.waveAngle += 0.01;
+      for (var i = 0; i < particles.length; i++) {
+        particle = particles[i];
+        if (!this.streamingConfetti && particle.y < -15) particle.y = height + 100;
+        else {
+          particle.tiltAngle += particle.tiltAngleIncrement;
+          particle.x += Math.sin(this.waveAngle);
+          particle.y +=
+            (Math.cos(this.waveAngle) + particle.diameter + this.particleSpeed) * 0.5;
+          particle.tilt = Math.sin(particle.tiltAngle) * 15;
+        }
+        if (particle.x > width + 20 || particle.x < -20 || particle.y > height) {
+          if (this.streamingConfetti && particles.length <= this.maxParticleCount)
+            this.resetParticle(particle, width, height);
+          else {
+            particles.splice(i, 1);
+            i--;
+          }
+        }
+      }
+    },
   },
+  //   },
 };
 </script>
 <style lang="scss">
+body {
+  background-image: linear-gradient(to top, #a8edea 0%, #fed6e3 100%);
+  min-height: 100vh;
+  overflow: hidden;
+}
+
+.container {
+  margin: 150px auto;
+  text-align: center;
+}
+
 .swal-bg {
   // color: #000000;
   background: #000000;

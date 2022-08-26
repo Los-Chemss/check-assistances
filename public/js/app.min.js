@@ -2714,12 +2714,11 @@ function asyncGeneratorStep(gen, resolve, reject, _next, _throw, key, arg) { try
 function _asyncToGenerator(fn) { return function () { var self = this, args = arguments; return new Promise(function (resolve, reject) { var gen = fn.apply(self, args); function _next(value) { asyncGeneratorStep(gen, resolve, reject, _next, _throw, "next", value); } function _throw(err) { asyncGeneratorStep(gen, resolve, reject, _next, _throw, "throw", err); } _next(undefined); }); }; }
 
 // https://codepen.io/gau/pen/LjQwGp
- // import Confeti from "./extra/Confeti.html";
+ // import { Confeti } from "../../../public/templates/confeti/confetti-falling-animation/confetti.js";
 
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = ({
   components: {
-    DigitalClock: _DigitalClock_vue__WEBPACK_IMPORTED_MODULE_0__["default"] // Confeti,
-
+    DigitalClock: _DigitalClock_vue__WEBPACK_IMPORTED_MODULE_0__["default"]
   },
   data: function data() {
     return {
@@ -2748,7 +2747,21 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
       fullScreen: 0,
       expired: null,
       expiresClose: null,
-      runn: 0
+      runn: 0,
+      //confetty vars
+      maxParticleCount: 150,
+      //set max confetti count
+      particleSpeed: 2,
+      //set the particle animation speed
+      //   startConfetti, //call to start confetti animation
+      //   stopConfetti, //call to stop adding confetti
+      //   toggleConfetti, //call to start or stop the confetti animation depending on whether it's already running
+      //   removeConfetti, //call to stop the confetti animation and remove all confetti immediately
+      colors: ["DodgerBlue", "OliveDrab", "Gold", "Pink", "SlateBlue", "LightBlue", "Violet", "PaleGreen", "SteelBlue", "SandyBrown", "Chocolate", "Crimson"],
+      streamingConfetti: false,
+      animationTimer: null,
+      particles: [],
+      waveAngle: 0
     };
   },
   created: function created() {
@@ -2781,12 +2794,11 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
   },
   methods: {
     assistance: function assistance() {
-      var _this = this;
-
       var me = this;
       me.loading = true;
-      me.run = 1;
-      var w = new me.showConfeti();
+      me.run = 1; //   var w = new me.showConfeti();
+
+      me.startConfetti();
       axios.post("assistances", {
         branch: me.branch.id,
         code: me.code
@@ -2818,8 +2830,14 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
         console.log(customer.image);
         console.log(imgSrc);
         var mamadolores = !(me.expired || me.expiresClose) ? '<img src="/images/iconogym2.png"/ ' + 'style="box-shadow:0 1rem 3rem rgba(68, 122, 17, 0.967), 0 1rem 3rem rgba(0, 0, 0, 0.19);' + ' border-radius:50%; rgba(10, 175, 230, 1), 0 0 20px rgba(10, 175, 230, 0);">' : "";
-        var birthBackdrop = "url(\"https://placekitten.com/150/150\")  left top  no-repeat";
-        var backdrop = me.expired ? "#ba0c0c8c" : me.expiresClose ? "#c29b089c" : "#010601e3";
+        var birthBackdrop = "url(\"../../images/birthday.png\")  left top  no-repeat";
+        var backdrop = birthBackdrop;
+        /* me.expired
+        ? "#ba0c0c8c"
+        : me.expiresClose
+        ? "#c29b089c"
+        : "#010601e3"; */
+
         var now = new Date();
         var birth = new Date(customer.birthday);
         var nowDay = now.getDay();
@@ -2830,9 +2848,7 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
         console.log({ month: now.getMonth() });
         console.log({ day: birth.getDay() });
         console.log({ month: birth.getMonth() }); */
-
-        _this.showConfeti(1); //   return;
-
+        //   return;
 
         Swal.fire({
           type: me.expired ? "error" : me.expiresClose ? "info" : "",
@@ -2841,8 +2857,8 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
           },
           backdrop: nowDay === birthDay && nowMonth === birthMonth ? backdrop + birthBackdrop : backdrop,
           target: document.getElementById("checkCard"),
-          html: "<div style=' target=' _blank ' > " + mamadolores + " </div>" + '<h1 style="color:white;"><b> Registro  de ' + movement + " satisfactorio</b></h1>" + ' <div class="text-center pt-2"> <img src="' + imgSrc + '"class="img-fluid" style="width:150px; height:150px; box-shadow:0 1rem 3rem rgba(68, 122, 17, 0.967), 0 1rem 3rem rgba(0, 0, 0, 0.19);' + ' border-radius:50%" alt="customer-image"/> <br>  <h1 style="margin-top:10px;">' + message + " </h1></div>",
-          timer: 5000
+          html: "<div style=' target=' _blank ' > " + mamadolores + " </div>" + '<h1 style="color:white;"><b> Registro  de ' + movement + " satisfactorio</b></h1>" + ' <div class="text-center pt-2"> <img src="' + imgSrc + '"class="img-fluid" style="width:150px; height:150px; box-shadow:0 1rem 3rem rgba(68, 122, 17, 0.967), 0 1rem 3rem rgba(0, 0, 0, 0.19);' + ' border-radius:50%" alt="customer-image"/> <br>  <h1 style="margin-top:10px;">' + message + " </h1></div>" // timer: 5000,
+
         });
         me.loading = false;
         document.getElementById("code").focus();
@@ -2877,6 +2893,7 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
 
               case 6:
                 return _context2.abrupt("return", me.run = 0 // this.showConfeti(0)
+                // me.stopConfetti()
 
                 /* setTimeout(w._createClass.bind(w), 0),
                 setTimeout(w._createClass.bind(w), 3000) */
@@ -2957,192 +2974,140 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
       null;
     }, */
     //cONFETI SCRIPT
-    showConfeti: function showConfeti(show) {
-      var _createClass = null;
-      var Progress = null;
-      var Confetti = null;
+    // showConfeti() {
+    //   (function () {
+    startConfetti: function startConfetti() {
+      console.log("Start");
+      this.startConfettiInner();
+    },
+    stopConfetti: function stopConfetti() {
+      console.log("Start");
+      return this.stopConfettiInner;
+    },
+    toggleConfetti: function toggleConfetti() {
+      return this.toggleConfettiInner;
+    },
+    removeConfetti: function removeConfetti() {
+      return this.removeConfettiInner;
+    },
 
-      if (!show) {
-        this.canvas = null;
-        console.log("try to stop confeti");
-        return;
-      } else {
-        var _classCallCheck = function _classCallCheck(instance, Constructor) {
-          if (!(instance instanceof Constructor)) {
-            throw new TypeError("Cannot call a class as a function");
-          }
+    /*
+        stopConfetti = stopConfettiInner;
+        toggleConfetti = toggleConfettiInner;
+        removeConfetti = removeConfettiInner;
+    */
+
+    /* function */
+    resetParticle: function resetParticle(particle, width, height) {
+      var colors = this.colors;
+      particle.color = colors[Math.random() * colors.length | 0];
+      particle.x = Math.random() * width;
+      particle.y = Math.random() * height - height;
+      particle.diameter = Math.random() * 10 + 5;
+      particle.tilt = Math.random() * 10 - 10;
+      particle.tiltAngleIncrement = Math.random() * 0.07 + 0.05;
+      particle.tiltAngle = 0;
+      return particle;
+    },
+    startConfettiInner: function startConfettiInner() {
+      console.log("Start inner");
+      var me = this;
+      var particles = me.particles;
+      var width = window.innerWidth;
+      var height = window.innerHeight;
+
+      window.requestAnimFrame = function () {
+        return window.requestAnimationFrame || window.webkitRequestAnimationFrame || window.mozRequestAnimationFrame || window.oRequestAnimationFrame || window.msRequestAnimationFrame || function (callback) {
+          return window.setTimeout(callback, 16.6666667);
         };
+      };
 
-        _createClass = function () {
-          function defineProperties(target, props) {
-            for (var i = 0; i < props.length; i++) {
-              var descriptor = props[i];
-              descriptor.enumerable = descriptor.enumerable || false;
-              descriptor.configurable = true;
-              if ("value" in descriptor) descriptor.writable = true;
-              Object.defineProperty(target, descriptor.key, descriptor);
-            }
+      var canvas = document.getElementById("confetti-canvas");
+
+      if (canvas === null) {
+        canvas = document.createElement("canvas");
+        canvas.setAttribute("id", "confetti-canvas");
+        canvas.setAttribute("style", "display:block;z-index:999999;pointer-events:none");
+        document.body.appendChild(canvas);
+        canvas.width = width;
+        canvas.height = height;
+        window.addEventListener("resize", function () {
+          canvas.width = window.innerWidth;
+          canvas.height = window.innerHeight;
+        }, true);
+      }
+
+      var context = canvas.getContext("2d");
+
+      while (particles.length < me.maxParticleCount) {
+        particles.push(me.resetParticle({}, width, height));
+      }
+
+      me.streamingConfetti = true;
+
+      if (me.animationTimer === null) {
+        (function runAnimation() {
+          context.clearRect(0, 0, window.innerWidth, window.innerHeight);
+          if (particles.length === 0) me.animationTimer = null;else {
+            me.updateParticles();
+            me.drawParticles(context);
+            me.animationTimer = requestAnimFrame(runAnimation);
           }
-
-          return function (Constructor, protoProps, staticProps) {
-            if (protoProps) defineProperties(Constructor.prototype, protoProps);
-            if (staticProps) defineProperties(Constructor, staticProps);
-            return Constructor;
-          };
-        }();
-
-        Progress = function () {
-          function Progress() {
-            var param = arguments.length <= 0 || arguments[0] === undefined ? {} : arguments[0];
-
-            _classCallCheck(this, Progress);
-
-            this.timestamp = null;
-            this.duration = param.duration || Progress.CONST.DURATION;
-            this.progress = 0;
-            this.delta = 0;
-            this.progress = 0;
-            this.isLoop = !!param.isLoop;
-            this.reset();
-          }
-
-          Progress.prototype.reset = function reset() {
-            this.timestamp = null;
-          };
-
-          Progress.prototype.start = function start(now) {
-            this.timestamp = now;
-          };
-
-          Progress.prototype.tick = function tick(now) {
-            if (this.timestamp) {
-              this.delta = now - this.timestamp;
-              this.progress = Math.min(this.delta / this.duration, 1);
-
-              if (this.progress >= 1 && this.isLoop) {
-                console.log(this.progress);
-                this.start(now);
-              }
-
-              return this.progress;
-            } else {
-              return 0;
-            }
-          };
-
-          _createClass(Progress, null, [{
-            key: "CONST",
-            get: function get() {
-              return {
-                DURATION: 1000
-              };
-            }
-          }]);
-
-          return Progress;
-        }();
-
-        Confetti = function () {
-          function Confetti(param) {
-            _classCallCheck(this, Confetti);
-
-            console.log(param);
-            this.parent = param.elm || document.body;
-            this.canvas = document.createElement("canvas");
-            this.ctx = this.canvas.getContext("2d");
-            this.width = param.width || this.parent.offsetWidth;
-            this.height = param.height || this.parent.offsetHeight;
-            this.length = param.length || Confetti.CONST.PAPER_LENGTH;
-            this.yRange = param.yRange || this.height * 2;
-            this.progress = new Progress({
-              duration: param.duration,
-              isLoop: true
-            });
-            this.rotationRange = typeof param.rotationLength === "number" ? param.rotationRange : 10;
-            this.speedRange = typeof param.speedRange === "number" ? param.speedRange : 10;
-            this.sprites = [];
-            this.canvas.style.cssText = ["display: block", "position: absolute", "top: 0", "left: 0", "pointer-events: none", "z-index:10000"].join(";");
-            this.render = this.render.bind(this);
-            this.build();
-            this.parent.append(this.canvas);
-            this.progress.start(performance.now());
-            requestAnimationFrame(this.render);
-          }
-
-          Confetti.prototype.build = function build() {
-            for (var i = 0; i < this.length; ++i) {
-              var canvas = document.createElement("canvas"),
-                  ctx = canvas.getContext("2d");
-              canvas.width = Confetti.CONST.SPRITE_WIDTH;
-              canvas.height = Confetti.CONST.SPRITE_HEIGHT;
-              canvas.position = {
-                initX: Math.random() * this.width,
-                initY: -canvas.height - Math.random() * this.yRange
-              };
-              canvas.rotation = this.rotationRange / 2 - Math.random() * this.rotationRange;
-              canvas.speed = this.speedRange / 2 + Math.random() * (this.speedRange / 2);
-              ctx.save();
-              ctx.fillStyle = Confetti.CONST.COLORS[Math.random() * Confetti.CONST.COLORS.length | 0];
-              ctx.fillRect(0, 0, canvas.width, canvas.height);
-              ctx.restore();
-              this.sprites.push(canvas);
-            }
-          };
-
-          Confetti.prototype.render = function render(now) {
-            var progress = this.progress.tick(now);
-            this.canvas.width = this.width;
-            this.canvas.height = this.height;
-
-            for (var i = 0; i < this.length; ++i) {
-              this.ctx.save();
-              this.ctx.translate(this.sprites[i].position.initX + this.sprites[i].rotation * Confetti.CONST.ROTATION_RATE * progress, this.sprites[i].position.initY + progress * (this.height + this.yRange));
-              this.ctx.rotate(this.sprites[i].rotation);
-              this.ctx.drawImage(this.sprites[i], -Confetti.CONST.SPRITE_WIDTH * Math.abs(Math.sin(progress * Math.PI * 2 * this.sprites[i].speed)) / 2, -Confetti.CONST.SPRITE_HEIGHT / 2, Confetti.CONST.SPRITE_WIDTH * Math.abs(Math.sin(progress * Math.PI * 2 * this.sprites[i].speed)), Confetti.CONST.SPRITE_HEIGHT);
-              this.ctx.restore();
-            }
-
-            requestAnimationFrame(this.render);
-          };
-
-          _createClass(Confetti, null, [{
-            key: "CONST",
-            get: function get() {
-              return {
-                SPRITE_WIDTH: 9,
-                SPRITE_HEIGHT: 16,
-                PAPER_LENGTH: 100,
-                DURATION: 8000,
-                ROTATION_RATE: 50,
-                COLORS: ["#EF5350", "#EC407A", "#AB47BC", "#7E57C2", "#5C6BC0", "#42A5F5", "#29B6F6", "#26C6DA", "#26A69A", "#66BB6A", "#9CCC65", "#D4E157", "#FFEE58", "#FFCA28", "#FFA726", "#FF7043", "#8D6E63", "#BDBDBD", "#78909C"]
-              };
-            }
-          }]);
-
-          return Confetti;
-        }();
-
-        (function () {
-          var DURATION = 8000,
-              LENGTH = 120;
-          new Confetti({
-            width: window.innerWidth,
-            height: window.innerHeight,
-            length: LENGTH,
-            duration: DURATION
-          });
-          setTimeout(function () {
-            new Confetti({
-              width: window.innerWidth,
-              height: window.innerHeight,
-              length: LENGTH,
-              duration: DURATION
-            });
-          }, DURATION / 2);
         })();
       }
+    },
+    stopConfettiInner: function stopConfettiInner() {
+      this.streamingConfetti = false;
+    },
+    removeConfettiInner: function removeConfettiInner() {
+      this.stopConfetti();
+      this.particles = [];
+    },
+    toggleConfettiInner: function toggleConfettiInner() {
+      if (this.streamingConfetti) stopConfettiInner();else this.startConfettiInner();
+    },
+    drawParticles: function drawParticles(context) {
+      var particles = this.particles;
+      var particle;
+      var x;
+
+      for (var i = 0; i < particles.length; i++) {
+        particle = particles[i];
+        context.beginPath();
+        context.lineWidth = particle.diameter;
+        context.strokeStyle = particle.color;
+        x = particle.x + particle.tilt;
+        context.moveTo(x + particle.diameter / 2, particle.y);
+        context.lineTo(x, particle.y + particle.tilt + particle.diameter / 2);
+        context.stroke();
+      }
+    },
+    updateParticles: function updateParticles() {
+      var particles = this.particles;
+      var width = window.innerWidth;
+      var height = window.innerHeight;
+      var particle;
+      this.waveAngle += 0.01;
+
+      for (var i = 0; i < particles.length; i++) {
+        particle = particles[i];
+        if (!this.streamingConfetti && particle.y < -15) particle.y = height + 100;else {
+          particle.tiltAngle += particle.tiltAngleIncrement;
+          particle.x += Math.sin(this.waveAngle);
+          particle.y += (Math.cos(this.waveAngle) + particle.diameter + this.particleSpeed) * 0.5;
+          particle.tilt = Math.sin(particle.tiltAngle) * 15;
+        }
+
+        if (particle.x > width + 20 || particle.x < -20 || particle.y > height) {
+          if (this.streamingConfetti && particles.length <= this.maxParticleCount) this.resetParticle(particle, width, height);else {
+            particles.splice(i, 1);
+            i--;
+          }
+        }
+      }
     }
-  }
+  } //   },
+
 });
 
 /***/ }),
@@ -7813,7 +7778,7 @@ var render = function render() {
   return _c("div", {
     staticClass: "row",
     staticStyle: {
-      background: "url('/templates/confeti/Confeti.html')"
+      "background-image": "url('/images/birthday.png') center z-index:99999"
     }
   }, [_c("div", {
     staticClass: "card"
@@ -7943,7 +7908,28 @@ var render = function render() {
     }
   }, [_c("i", {
     staticClass: "icon-login"
-  })])])])])])], 1)])])])])])]);
+  })])])])]), _vm._v(" "), _c("button", {
+    staticClass: "btn btn-danger",
+    on: {
+      click: function click($event) {
+        return _vm.startConfetti();
+      }
+    }
+  }, [_vm._v("Start")]), _vm._v(" "), _c("button", {
+    staticClass: "btn btn-info",
+    on: {
+      click: function click($event) {
+        return _vm.stopConfetti();
+      }
+    }
+  }, [_vm._v("Stop")]), _vm._v(" "), _c("button", {
+    staticClass: "btn btn-warning",
+    on: {
+      click: function click($event) {
+        return _vm.toggleConfetti();
+      }
+    }
+  }, [_vm._v("\n                  Toggle\n                ")])])], 1)])])])])])]);
 };
 
 var staticRenderFns = [function () {
@@ -13574,7 +13560,7 @@ __webpack_require__.r(__webpack_exports__);
 
 var ___CSS_LOADER_EXPORT___ = _node_modules_laravel_mix_node_modules_css_loader_dist_runtime_api_js__WEBPACK_IMPORTED_MODULE_0___default()(function(i){return i[1]});
 // Module
-___CSS_LOADER_EXPORT___.push([module.id, ".swal-bg {\n  background: #000000;\n  /* background: radial-gradient(ellipse at center, #18380a 0%, #000000 120%); */\n  background-size: 100%;\n  width: 80%;\n  height: 80%;\n}\n.swal-bg-red {\n  color: #000000;\n  background: red;\n  background-size: 100%;\n  width: 80%;\n  height: 80%;\n}\n.swal-bg-yellow {\n  color: #000000;\n  background: rgb(255, 172, 0);\n  background-size: 100%;\n  width: 80%;\n  height: 80%;\n}\n.swal-bg .swal2-content {\n  color: white;\n  /* text-shadow: 2px 2px 5px white; */\n}\n\n/* .swal2-icon.swal2-info {\n  border-color: #000000;\n  color: #bf1212;\n} */\n.swal2-icon.swal2-info {\n  border-color: #bf8a12;\n  color: #bf8a12;\n}\n.swal2-container.swal2-shown-warning {\n  background-color: rgba(169, 123, 26, 0.4);\n}\n.swal2-container.swal2-shown-danger {\n  background-color: rgba(185, 10, 10, 0.4);\n}\n\n/* .swal2-icon.swal2-error {\n  // border-color: #5d4d4d;\n} */", ""]);
+___CSS_LOADER_EXPORT___.push([module.id, "body {\n  background-image: linear-gradient(to top, #a8edea 0%, #fed6e3 100%);\n  min-height: 100vh;\n  overflow: hidden;\n}\n.container {\n  margin: 150px auto;\n  text-align: center;\n}\n.swal-bg {\n  background: #000000;\n  /* background: radial-gradient(ellipse at center, #18380a 0%, #000000 120%); */\n  background-size: 100%;\n  width: 80%;\n  height: 80%;\n}\n.swal-bg-red {\n  color: #000000;\n  background: red;\n  background-size: 100%;\n  width: 80%;\n  height: 80%;\n}\n.swal-bg-yellow {\n  color: #000000;\n  background: rgb(255, 172, 0);\n  background-size: 100%;\n  width: 80%;\n  height: 80%;\n}\n.swal-bg .swal2-content {\n  color: white;\n  /* text-shadow: 2px 2px 5px white; */\n}\n\n/* .swal2-icon.swal2-info {\n  border-color: #000000;\n  color: #bf1212;\n} */\n.swal2-icon.swal2-info {\n  border-color: #bf8a12;\n  color: #bf8a12;\n}\n.swal2-container.swal2-shown-warning {\n  background-color: rgba(169, 123, 26, 0.4);\n}\n.swal2-container.swal2-shown-danger {\n  background-color: rgba(185, 10, 10, 0.4);\n}\n\n/* .swal2-icon.swal2-error {\n  // border-color: #5d4d4d;\n} */", ""]);
 // Exports
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (___CSS_LOADER_EXPORT___);
 
