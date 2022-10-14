@@ -8,7 +8,7 @@
       </div>
     </div>
   </div>
-  <div v-else>
+  <div v-else style="display: block; overflow: auto; max-height:1284px"><!--  -->
     <template v-if="template === 0">
       <div class="row">
         <div class="col-12">
@@ -84,7 +84,7 @@
                 <br />
                 <div class="row">
                   <div class="col-md-12">
-                    <table>
+                    <table ><!-- style="overflow-x: visible" -->
                       <tr>
                         <td>
                           <div class="circle tgreen"></div>
@@ -372,9 +372,9 @@
             :class="{ mostrar: modal }"
             role="dialog"
             aria-labelledby="myModalLabel"
-            style="display: none; overflow-y: auto"
+
             aria-hidden="true"
-          >
+          ><!--  style="display: none; overflow-y: auto" -->
             <div
               class="modal-dialog modal-primary modal-lg"
               style="padding-top: 55px"
@@ -470,7 +470,7 @@
                           v-model="customer.lastname"
                         />
                       </div>
-                        <div class="form-group col-md-4">
+                      <div class="form-group col-md-4">
                         <label for="code">Fecha de nacimiento</label>
                         <input
                           type="date"

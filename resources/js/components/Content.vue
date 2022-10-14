@@ -107,13 +107,13 @@
                     </div>
                   </form>
 
-                  <button @click="startConfetti()" class="btn btn-danger">Start</button>
+                  <!--  <button @click="startConfetti()" class="btn btn-danger">Start</button>
 
                   <button @click="stopConfetti()" class="btn btn-info">Stop</button>
 
                   <button @click="toggleConfetti()" class="btn btn-warning">
                     Toggle
-                  </button>
+                  </button> -->
                 </div>
               </div>
             </div>
@@ -225,6 +225,24 @@ export default {
           let message = null;
           let customer = response.data.customer;
           console.log(customer);
+
+          console.log("membership" in customer ? "TRUE" : "FALSE");
+          console.log('payments' in customer.membership ? "TRUE" : "FALSE");
+          let expires_at = () => {
+            if("membership" in customer){
+                if('payments' in customer.membership){
+                    console.log('Has pays')
+                }else{
+
+                    console.log('NO SSHas pays')
+                }
+            }else{
+                console.log('No membership')
+            }
+
+
+          };
+
           me.expired =
             Date.now() > me.cusDate(customer.membership.payments[0].expires_at)
               ? true

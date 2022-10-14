@@ -20,9 +20,8 @@ class DatabaseSeeder extends Seeder
             BranchSeeder::class,
             MembershipSeeder::class,
             CustomerSeeder::class,
-            AssistanceSeeder::class,
+            // AssistanceSeeder::class,
             PaymentSeeder::class,
-
             ProductSeeder::class,
             PurchaseSeeder::class,
             SaleSeeder::class,

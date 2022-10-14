@@ -14,16 +14,43 @@ class MembershipSeeder extends Seeder
         foreach ($companies as $company) {
             Membership::create([
                 'name' => 'Mensual',
-                'price' => 300,
+                'price' => 450,
                 'company_id' => $company->id,
                 'period' => 30,
             ]);
             Membership::create([
+                'name' => 'Bimestral',
+                'price' => 900,
+                'company_id' => $company->id,
+                'period' => 60,
+            ]);
+            Membership::create([
+                'name' => 'Trimestral',
+                'price' => 1300,
+                'company_id' => $company->id,
+                'period' => 90,
+            ]);
+
+
+            Membership::create([
+                'name' => 'Familiar',
+                'price' => 1600,
+                'company_id' => $company->id,
+                'period' => 30,
+            ]);
+            Membership::create([
+                'name' => 'Nuevo ingreso',
+                'price' => 1600,
+                'company_id' => $company->id,
+                'period' => 30,
+            ]);
+
+            /*    Membership::create([
                 'name' => 'Anual',
                 'price' => 1300,
                 'company_id' => $company->id,
                 'period' => 365
-            ]);
+            ]); */
         }
     }
 }

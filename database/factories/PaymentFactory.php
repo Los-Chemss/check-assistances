@@ -29,7 +29,7 @@ class PaymentFactory extends Factory
         $date = $this->faker->dateTimeBetween($customer->income, 'now');
         $pay = Payment::where('customer_id', $customer->id)->orderBy('paid_at', 'desc')->first();
         if ($pay) {
-            $p = $membership->period;;
+            $p = $membership->period;
             $date = date('Y-m-d', strtotime($pay->paid_at . " + $p days"));
         }
         $output = $date->format('Y-m-d');

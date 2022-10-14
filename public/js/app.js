@@ -2808,6 +2808,21 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
         var message = null;
         var customer = response.data.customer;
         console.log(customer);
+        console.log("membership" in customer ? "TRUE" : "FALSE");
+        console.log('payments' in customer.membership ? "TRUE" : "FALSE");
+
+        var expires_at = function expires_at() {
+          if ("membership" in customer) {
+            if ('payments' in customer.membership) {
+              console.log('Has pays');
+            } else {
+              console.log('NO SSHas pays');
+            }
+          } else {
+            console.log('No membership');
+          }
+        };
+
         me.expired = Date.now() > me.cusDate(customer.membership.payments[0].expires_at) ? true : false;
         me.expiresClose = me.expiresAtWeek(customer.membership.payments[0].expires_at) ? true : false;
         var expirationStatus = me.expired ? "<h1 class='text-danger'>Ha expirado </h1>" : me.expiresClose ? "<h1 class='text-warning'>Esta por expirar </h1>" : "";
@@ -7908,28 +7923,7 @@ var render = function render() {
     }
   }, [_c("i", {
     staticClass: "icon-login"
-  })])])])]), _vm._v(" "), _c("button", {
-    staticClass: "btn btn-danger",
-    on: {
-      click: function click($event) {
-        return _vm.startConfetti();
-      }
-    }
-  }, [_vm._v("Start")]), _vm._v(" "), _c("button", {
-    staticClass: "btn btn-info",
-    on: {
-      click: function click($event) {
-        return _vm.stopConfetti();
-      }
-    }
-  }, [_vm._v("Stop")]), _vm._v(" "), _c("button", {
-    staticClass: "btn btn-warning",
-    on: {
-      click: function click($event) {
-        return _vm.toggleConfetti();
-      }
-    }
-  }, [_vm._v("\n                  Toggle\n                ")])])], 1)])])])])])]);
+  })])])])])])], 1)])])])])])]);
 };
 
 var staticRenderFns = [function () {
@@ -7980,7 +7974,13 @@ var render = function render() {
     staticStyle: {
       heigth: "100%"
     }
-  }, [_vm._m(0)]) : _c("div", [_vm.template === 0 ? [_c("div", {
+  }, [_vm._m(0)]) : _c("div", {
+    staticStyle: {
+      display: "block",
+      overflow: "auto",
+      "max-height": "1284px"
+    }
+  }, [_vm.template === 0 ? [_c("div", {
     staticClass: "row"
   }, [_c("div", {
     staticClass: "col-12"
@@ -8287,10 +8287,6 @@ var render = function render() {
     staticClass: "modal fade",
     "class": {
       mostrar: _vm.modal
-    },
-    staticStyle: {
-      display: "none",
-      "overflow-y": "auto"
     },
     attrs: {
       tabindex: "-1",

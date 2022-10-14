@@ -67,7 +67,7 @@ class CustomerController extends Controller
                 ->join('memberships', function ($j) {
                     $j->on('memberships.id', 'customers.membership_id');
                 })
-                ->join('payments', function ($j) {
+                ->leftJoin('payments', function ($j) {
                     $j->on('payments.membership_id', 'memberships.id')
                         ->on('payments.customer_id', 'customers.id', function ($q) {
                             $q->orderBy('payments.expires_at', 'desc');
@@ -86,7 +86,7 @@ class CustomerController extends Controller
                 ->groupBy('customers.id')
                 ->addSelect('branches.division')
                 ->orderBy('id', 'asc')
-                ->paginate(10);
+                ->paginate(50);
             //add pagination
             //    return $customers;
             $customersRes = [];
@@ -126,10 +126,12 @@ class CustomerController extends Controller
             return response($e->getMessage());
         }
     }
+
+
     public function select()
     {
         $customers = Customer::where('company_id', 1)
-          /*   ->with(['membership' => function ($query) {
+            /*   ->with(['membership' => function ($query) {
                 $query->with(['payments' => function ($q) {
                     // $q->with('membership');
                     // $q->where('customer_id', 'customer.id')->orderBy('paid_at', 'desc')->first();

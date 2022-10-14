@@ -13,8 +13,8 @@ class CreateCustomersTable extends Migration
             $table->string('name');
             $table->string('lastname');
             $table->string('address')->nullable();
-            $table->string('province');
-            $table->string('postcode');
+            $table->string('province')->nullable();
+            $table->string('postcode')->nullable();
             $table->string('phone')->nullable();
             $table->string('image', 255)->nullable();
             $table->string('code')->unique();
