@@ -10,7 +10,7 @@ class CreatePaymentsTable extends Migration
     {
         Schema::create('payments', function (Blueprint $table) {
             $table->id();
-            $table->dateTime('paid_at');
+            $table->dateTime('paid_at')->nullable();
             $table->dateTime('expires_at')->nullable(); // based on membership
             $table->double('amount')->nullable();
             $table->timestamps();

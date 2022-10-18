@@ -7,6 +7,7 @@ use App\Models\Company;
 use App\Models\Customer;
 use App\Models\Membership;
 use Illuminate\Database\Eloquent\Factories\Factory;
+use Illuminate\Support\Facades\DB;
 
 class CustomerFactory extends Factory
 {
@@ -43,10 +44,16 @@ class CustomerFactory extends Factory
             // return;
         } */
 
-        $codes = [];
-        for ($x = 0001; $x <= 0005; $x++) {
+
+        $lastCode = Customer::select(DB::raw("MAX(code) AS code"))->get();
+        return str_pad($lastCode[0]->code ? $lastCode[0]->code + 1 : 1, 4, "0", STR_PAD_LEFT);
+
+       /*  $codes = [];
+        for ($x = 0001; $x <= 9999; $x++) {
             array_push($codes, str_pad($x, 4, "0", STR_PAD_LEFT));
         }
+
+        return  $this->faker->unique(0, 1000000)->randomElement($codes); */
 
         return [
             'name' => $this->faker->firstName(),
