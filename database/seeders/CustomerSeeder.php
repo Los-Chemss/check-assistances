@@ -18,8 +18,11 @@ class CustomerSeeder extends Seeder
      * @return void
      */
 
-
-
+    static function convertToDate2($strVal)
+    {
+        $exp = explode('/', $strVal);
+        return date('Y-m-d', strtotime($exp[2] . '/' . $exp[0] . '/' . $exp[1]));
+    }
     public function run()
     {
 
@@ -32,11 +35,6 @@ class CustomerSeeder extends Seeder
         /*    dd($sociosList);
         return;
  */
-        function convertToDate2($strVal)
-        {
-            $exp = explode('/', $strVal);
-            return date('Y-m-d', strtotime($exp[2] . $exp[0] . $exp[1]));
-        }
 
         foreach ($sociosList as $key => $socios) {
             // dd($key === 'se');
@@ -61,7 +59,7 @@ class CustomerSeeder extends Seeder
                     'lastname' => $socio->{'Apellido Paterno'} . ' ' . $socio->{'Apellido Materno'},
                     // 'code' => $socio->{'Número de Socio'},
                     'code' => (string)$factory->definition(),
-                    'income' => convertToDate2($socio->{'Comienza'}),
+                    'income' => self::convertToDate2($socio->{'Comienza'}),
                     /*       'birthday' => date(
                             'Y-m-d',
                             strtotime(

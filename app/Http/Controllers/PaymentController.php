@@ -9,6 +9,7 @@ use App\Models\Branch;
 use App\Models\Company;
 use App\Models\Customer;
 use App\Models\Membership;
+use App\Models\User;
 use Exception;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -24,6 +25,7 @@ class PaymentController extends Controller
     public function index(Request $request)
     {
         try {
+
             $buscar = $request->buscar;
             $criterio = $request->criterio;
 
@@ -40,13 +42,14 @@ class PaymentController extends Controller
                         $q->Where('expires_at', 'like', "%$buscar%");
                     }
                 }
-            )->join('branches', function ($j) use ($criterio, $buscar) {
+            )->join('branches', function ($j) use ($criterio, $buscar, $user) {
                 $j->on('branches.id', 'payments.registered_on_branch_id');
+                $j->where('branches.id', $user['branch_id']);
                 if ($criterio === 'branch') {
                     $j->where('branches.division', 'LIKE', "%$buscar%")
                         ->orWhere('branches.location', 'LIKE', "%$buscar%");
                 }
-                $j->latest('branches.id');
+                // $j->latest('branches.id');
             })->join('customers', function ($j) use ($criterio, $buscar) {
                 $j->on('customers.id', 'payments.customer_id');
                 if ($criterio === 'customer') {
@@ -74,7 +77,6 @@ class PaymentController extends Controller
                 ->orderBy('payments.paid_at', 'desc')
                 ->paginate();
 
-            // return $payments;
 
             /* $paymentsRes = [];
             foreach ($payments as $pay) {
