@@ -83,7 +83,7 @@ class CustomerController extends Controller
                         }
                     }
                 )
-                ->groupBy('customers.id')
+                // ->groupBy('customers.id')
                 ->addSelect('branches.division')
                 ->orderBy('id', 'asc')
                 ->paginate(50);
