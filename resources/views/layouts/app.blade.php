@@ -75,7 +75,6 @@
                 class="lds-pos2 fas fa-spin shadow-lg rounded-circle">
         </div>
     </div>
-
     <div id="main-wrapper">
         <!-- ============================================================== -->
         <!-- Main wrapper - style you can find in pages.scss -->
@@ -88,19 +87,11 @@
                 ];
             @endphp
         @endif
-
         @if (Auth::user())
             <header class="topbar">
                 @include('layouts.navbar')
             </header>
-        @endif
-
-        {{-- @else --}}
-        @if (Auth::user())
             @include('layouts.aside')
-            {{-- <header class="topbar">
-            @include('layouts.navbar')
-             </header> --}}
             @php
                 $user_auth_data = [
                     'isLoggedin' => true,
@@ -108,30 +99,22 @@
                 ];
             @endphp
         @endif
-        {{-- aside --}}
-        @if (Auth::user())
-            {{-- @include('layouts.aside') --}}
-        @endif
-        {{-- body --}}
-        <div class="page-wrapper">
-            {{-- <div class="container-fluid"> --}}
-            {{-- @yield('content') --}}
-            @if (Auth::user())
-                @yield('content')
-                <footer class="footer">
-                    © 2022 Urban fit GYM
-                </footer>
-            @endif
-            {{-- </div> --}}
+        <div class="page-wrapper" style="overflow-y: auto;max-height: calc(115vh - 130px)">
+            <div class="container-fluid">
+                @if (Auth::user())
+                    @yield('content')
+                    <footer class="footer">
+                        © 2022 Urban fit GYM
+                    </footer>
+                @endif
+            </div>
+
         </div>
         @if (!Auth::user())
             <footer class="footer">
                 © 2022 Urban fit GYM
             </footer>
         @endif
-        {{-- @endif --}}
-
-
     </div>
     <script>
         window.Laravel = JSON.parse(atob('{{ base64_encode(json_encode($user_auth_data)) }}'));
@@ -172,8 +155,7 @@
     <script src="/{{ env('ASSET_URL') }}templates/theme-forest-admin-pro/main/admin-pro/dist/js/feather.min.js"></script>
     <script src="/{{ env('ASSET_URL') }}templates/theme-forest-admin-pro/main/admin-pro/dist/js/custom.min.js"></script>
 
-    <script
-        src="/{{ env('ASSET_URL') }}templates/theme-forest-admin-pro/main/admin-pro/src/assets/libs/d3/dist/d3.min.js">
+    <script src="/{{ env('ASSET_URL') }}templates/theme-forest-admin-pro/main/admin-pro/src/assets/libs/d3/dist/d3.min.js">
     </script>
     <script src="/{{ env('ASSET_URL') }}templates/theme-forest-admin-pro/main/admin-pro/src/assets/libs/c3/c3.min.js">
     </script>
@@ -203,9 +185,7 @@
     @else
         <script src="/{{ env('ASSET_URL') }}js/app.min.js"></script>
     @endif
-
     @yield('scripts')
-
 </body>
 
 

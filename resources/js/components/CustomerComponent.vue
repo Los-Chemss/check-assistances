@@ -8,7 +8,7 @@
       </div>
     </div>
   </div>
-  <div v-else style="display: block; overflow: auto; max-height:1284px"><!--  -->
+  <div v-else class="row" >
     <template v-if="template === 0">
       <div class="row">
         <div class="col-12">
@@ -715,6 +715,7 @@
     </template>
   </div>
 </template>
+
 <script>
 import vue2Dropzone from "vue2-dropzone";
 import "vue2-dropzone/dist/vue2Dropzone.min.css";
