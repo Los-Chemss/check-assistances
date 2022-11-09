@@ -45,10 +45,13 @@ class CustomerController extends Controller
             if (!$user) return response(null, 404);
 
             $customers = Customer::when(
-                $criterio,
+                $criterio && $buscar,
                 function ($q) use ($criterio, $buscar) {
-                    if ($criterio === 'name' || $criterio === 'lastname' || $criterio === 'code') {
-                        $q->criterion($criterio, $buscar);
+                    if ($criterio === 'name') {
+                        $q->where('customers.name', 'LIKE', "%$buscar%")->orWhere('customers.lastname', 'LIKE', "%$buscar%");
+                    }
+                    if ($criterio === 'code') {
+                        $q->where('customers.code', 'LIKE', "%$buscar%");
                     }
                 }
             )

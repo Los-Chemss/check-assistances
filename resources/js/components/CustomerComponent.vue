@@ -788,7 +788,7 @@ export default {
       },
 
       offset: 3,
-      criterio: "name",
+      criterio:{ key: "name", val: "Nombre" },
       buscar: "",
 
       showCustomers: 10,
