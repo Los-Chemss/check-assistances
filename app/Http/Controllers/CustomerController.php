@@ -15,6 +15,7 @@ use Illuminate\Support\Facades\Auth;
 use App\Models\User;
 use Exception;
 use App\Helper\File;
+use Carbon\Carbon;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Storage;
 
@@ -48,10 +49,14 @@ class CustomerController extends Controller
                 $criterio && $buscar,
                 function ($q) use ($criterio, $buscar) {
                     if ($criterio === 'name') {
-                        $q->where('customers.name', 'LIKE', "%$buscar%")->orWhere('customers.lastname', 'LIKE', "%$buscar%");
+                        $q->where('customers.name', 'LIKE', "%$buscar%")
+                            ->orWhere('customers.lastname', 'LIKE', "%$buscar%");
                     }
                     if ($criterio === 'code') {
                         $q->where('customers.code', 'LIKE', "%$buscar%");
+                    }
+                    if ($criterio === 'status') {
+                        // $q->where('customers.code', 'LIKE', "%$buscar%");
                     }
                 }
             )
@@ -70,12 +75,30 @@ class CustomerController extends Controller
                 ->join('memberships', function ($j) {
                     $j->on('memberships.id', 'customers.membership_id');
                 })
-                ->leftJoin('payments', function ($j) {
-                    $j->on('payments.membership_id', 'memberships.id')
-                        ->on('payments.customer_id', 'customers.id', function ($q) {
-                            $q->orderBy('payments.expires_at', 'desc');
+                ->when(
+                    $criterio === 'status',
+                    function ($q)
+                    use ($criterio, $buscar) {
+                        $q->join('payments', function ($j) use ($criterio, $buscar) {
+                            $j->on('payments.membership_id', 'memberships.id')
+                                ->on('payments.customer_id', 'customers.id', function ($q) {
+                                    $q->orderBy('payments.expires_at', 'desc');
+                                });
+                            if ($buscar === 'active') {
+                                $j->where('payments.expires_at', '>', Carbon::now())
+                                    ->Where('payments.expires_at', '>>', Carbon::now()->addDays(7));
+                            }
+                            if ($buscar === 'expires_close') {
+                                $j->where('payments.expires_at', '>', Carbon::now())
+                                    ->where('payments.expires_at', '<=', Carbon::now()->addDays(7));
+                            }
+                            if ($buscar === 'expired') {
+                                $j->where('payments.expires_at', '<', Carbon::now());
+                            }
                         });
-                })
+                    },
+
+                )
                 ->Join(
                     'branches',
                     function ($j) use ($criterio, $buscar) {

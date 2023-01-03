@@ -15,13 +15,13 @@ class UserTableSeeder extends Seeder
     public function run()
     {
         User::create([
-            'name' => 'Lars',
-            'user_name' => 'lars_goetia',
-            'last_name' => 'Goetia',
+            'name' => 'Pantera',
+            'user_name' => 'panterclub',
+            'last_name' => 'Club',
             'avatar' => 'https://lorempixel.com/200/200',
             'password' => bcrypt('password'),
-            'email' => 'goetia@gmail.com',
-            
+            'email' => 'panter@gmail.com',
+
         ]);
     }
 }

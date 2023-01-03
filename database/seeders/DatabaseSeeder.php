@@ -19,12 +19,12 @@ class DatabaseSeeder extends Seeder
             CompanySeeder::class,
             BranchSeeder::class,
             MembershipSeeder::class,
-            CustomerSeeder::class,
+            // CustomerSeeder::class,
             // AssistanceSeeder::class,
-            PaymentSeeder::class,
-            ProductSeeder::class,
-            PurchaseSeeder::class,
-            SaleSeeder::class,
+            // PaymentSeeder::class,
+            // ProductSeeder::class,
+            // PurchaseSeeder::class,
+            // SaleSeeder::class,
         ]);
     }
 }

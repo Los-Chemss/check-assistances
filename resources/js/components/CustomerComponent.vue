@@ -1,14 +1,26 @@
 <template>
-  <div v-if="loading" style="heigth: 100%">
+  <div
+    v-if="loading"
+    style="heigth: 100%"
+  >
     <div class="card shadow p-1 rounded">
       <div class="card-body d-flex justify-content-around">
-        <div class="spinner-grow text-success center" role="status">
-          <span class="sr-only" style="">Loading...</span>
+        <div
+          class="spinner-grow text-success center"
+          role="status"
+        >
+          <span
+            class="sr-only"
+            style=""
+          >Loading...</span>
         </div>
       </div>
     </div>
   </div>
-  <div v-else class="row" >
+  <div
+    v-else
+    class="row"
+  >
     <template v-if="template === 0">
       <div class="row">
         <div class="col-12">
@@ -30,13 +42,17 @@
                         @change="selectCriteria"
                       >
                         <optgroup>
-                          <option v-for="criteria in criterions" :value="criteria">
+                          <option
+                            v-for="criteria in criterions"
+                            :value="criteria"
+                          >
                             {{ criteria.val }}
                           </option>
                         </optgroup>
                       </select>
                     </div>
                     <input
+                      v-if="criterio.key !== 'status'"
                       :type="
                         criterio.key == 'income'
                           ? 'date'
@@ -44,7 +60,7 @@
                           ? 'number'
                           : criterio.key == 'branch'
                           ? 'text'
-                          : 'text'
+                          :'text'
                       "
                       v-model="buscar"
                       @keyup.enter="listCustomers(1, buscar, criterio)"
@@ -59,6 +75,19 @@
                           : 'Nombre o apellidos del cliente'
                       "
                     />
+                    <select
+                      v-model="buscar"
+                      @change="listCustomers(1, buscar, criterio)"
+                      v-else
+                      class="form-control"
+                    >
+                      <option
+                        value="active"
+                        selected
+                      >Activo</option>
+                      <option value="expires_close">Por expirar</option>
+                      <option value="expired">Expirado</option>
+                    </select>
                     <div class="input-group-append">
                       <button
                         type="submit"
@@ -84,7 +113,8 @@
                 <br />
                 <div class="row">
                   <div class="col-md-12">
-                    <table ><!-- style="overflow-x: visible" -->
+                    <table>
+                      <!-- style="overflow-x: visible" -->
                       <tr>
                         <td>
                           <div class="circle tgreen"></div>
@@ -124,7 +154,10 @@
                         aria-describedby="col_render_info"
                       >
                         <thead>
-                          <tr v-for="(customer, index) in customers" v-if="index < 1">
+                          <tr
+                            v-for="(customer, index) in customers"
+                            v-if="index < 1"
+                          >
                             <th></th>
                             <th
                               v-for="(value, key, cIndex) in customer"
@@ -187,16 +220,14 @@
                                 : 'background-color:green'
                             " -->
                             <td class="circle-column">
-                              <div
-                                :class="
+                              <div :class="
                                   Date.now() > cusDate(customer['expires at']) ||
                                   !customer['expires at']
                                     ? 'circle tred'
                                     : expiresAtWeek(customer['expires at'])
                                     ? 'circle tyellow'
                                     : 'circle tgreen'
-                                "
-                              ></div>
+                                "></div>
                             </td>
                             <td
                               v-for="(value, key, cIndex) in customer"
@@ -248,7 +279,10 @@
                         </tbody>
                         <tfoot>
                           <tr></tr>
-                          <tr v-for="(customer, index) in customers" v-if="index < 1">
+                          <tr
+                            v-for="(customer, index) in customers"
+                            v-if="index < 1"
+                          >
                             <th></th>
                             <th
                               v-for="(value, key, cIndex) in customer"
@@ -311,7 +345,10 @@
                       >
                         <nav>
                           <ul class="pagination">
-                            <li class="page-item" v-if="pagination.current_page > 1">
+                            <li
+                              class="page-item"
+                              v-if="pagination.current_page > 1"
+                            >
                               <a
                                 class="page-link"
                                 href="#"
@@ -322,8 +359,7 @@
                                     criterio
                                   )
                                 "
-                                >Ant</a
-                              >
+                              >Ant</a>
                             </li>
                             <li
                               class="page-item"
@@ -352,8 +388,7 @@
                                     criterio
                                   )
                                 "
-                                >Sig</a
-                              >
+                              >Sig</a>
                             </li>
                           </ul>
                         </nav>
@@ -372,9 +407,9 @@
             :class="{ mostrar: modal }"
             role="dialog"
             aria-labelledby="myModalLabel"
-
             aria-hidden="true"
-          ><!--  style="display: none; overflow-y: auto" -->
+          >
+            <!--  style="display: none; overflow-y: auto" -->
             <div
               class="modal-dialog modal-primary modal-lg"
               style="padding-top: 55px"
@@ -383,7 +418,10 @@
               <div class="modal-content">
                 <div class="modal-header">
                   <!-- <h1>{{ actionType }}</h1> -->
-                  <h4 class="modal-title" v-text="modalTitle"></h4>
+                  <h4
+                    class="modal-title"
+                    v-text="modalTitle"
+                  ></h4>
                   <button
                     type="button"
                     class="close"
@@ -404,8 +442,7 @@
                             <label
                               for="attachment"
                               class="leading-7 text-sm text-gray-600"
-                              >Imagen del cliente </label
-                            ><br />
+                            >Imagen del cliente </label><br />
                             <ul class="nav nav-tabs mb-3">
                               <li class="nav-item">
                                 <a
@@ -431,7 +468,10 @@
                               </li>
                             </ul>
                             <div class="tab-content">
-                              <div class="tab-pane active" id="dropZone">
+                              <div
+                                class="tab-pane active"
+                                id="dropZone"
+                              >
                                 <vue-dropzone
                                   ref="myVueDropzone"
                                   id="dropzone"
@@ -441,7 +481,10 @@
                                   class="text-center"
                                 ></vue-dropzone>
                               </div>
-                              <div class="tab-pane" id="camera">
+                              <div
+                                class="tab-pane"
+                                id="camera"
+                              >
                                 <camera @takedPhoto="takedPhoto" />
                               </div>
                             </div>
@@ -533,7 +576,10 @@
                           @change="selectMembership"
                         >
                           <option></option>
-                          <option v-for="membership in memberships" :value="membership">
+                          <option
+                            v-for="membership in memberships"
+                            :value="membership"
+                          >
                             {{ membership.name }}
                           </option>
                         </select>
@@ -589,7 +635,11 @@
       </div>
     </template>
     <template v-if="template === 1">
-      <button type="btn " class="btn-success" @click="backToList">
+      <button
+        type="btn "
+        class="btn-success"
+        @click="backToList"
+      >
         <i class="far fa-arrow-alt-circle-left"></i> Volver a la lista
       </button>
       <div class="row">
@@ -694,10 +744,16 @@
                       </ul>
 
                       <div class="tab-content">
-                        <div class="tab-pane active" id="home">
+                        <div
+                          class="tab-pane active"
+                          id="home"
+                        >
                           <PaymentsComponent :customerInfo="customerInfo" />
                         </div>
-                        <div class="tab-pane" id="profile">
+                        <div
+                          class="tab-pane"
+                          id="profile"
+                        >
                           <AsistancesComponent :customerInfo="customerInfo" />
                         </div>
                       </div>
@@ -752,7 +808,8 @@ export default {
         addRemoveLinks: true,
         dictRemoveFile: "Remover archivo",
         headers: {
-          "X-CSRF-TOKEN": document.querySelector("meta[name=csrf-token]").content,
+          "X-CSRF-TOKEN": document.querySelector("meta[name=csrf-token]")
+            .content,
         },
       },
       customers: [],
@@ -788,7 +845,7 @@ export default {
       },
 
       offset: 3,
-      criterio:{ key: "name", val: "Nombre" },
+      criterio: { key: "name", val: "Nombre" },
       buscar: "",
 
       showCustomers: 10,
@@ -796,6 +853,7 @@ export default {
         { key: "name", val: "Nombre" },
         { key: "code", val: "Codigo" },
         { key: "income", val: "Ingreso" },
+        { key: "status", val: "Estado" },
         { key: "branch", val: "Sucursal" },
       ],
       customerInfo: {
@@ -863,7 +921,12 @@ export default {
       me.loading = true;
       me.template = 0;
       let url =
-        "customers?page=" + page + "&buscar=" + buscar + "&criterio=" + criterio.key;
+        "customers?page=" +
+        page +
+        "&buscar=" +
+        buscar +
+        "&criterio=" +
+        criterio.key;
       axios
         .get(url)
         .then((response) => {
@@ -926,7 +989,9 @@ export default {
         newVal = event;
       } else {
         newVal = JSON.parse(
-          JSON.stringify(event.target.options[event.target.options.selectedIndex])
+          JSON.stringify(
+            event.target.options[event.target.options.selectedIndex]
+          )
         )._value;
       }
       this.showCustomers = newVal;
@@ -1039,7 +1104,9 @@ export default {
         newVal = event;
       } else {
         newVal = JSON.parse(
-          JSON.stringify(event.target.options[event.target.options.selectedIndex])
+          JSON.stringify(
+            event.target.options[event.target.options.selectedIndex]
+          )
         )._value;
       }
       this.selectedMembership = newVal;
@@ -1091,7 +1158,9 @@ export default {
               this.customer.postcode = data.postcode;
               this.customer.phone = data.phone;
               this.customer.code = data.code;
-              this.customer.income = new Date(data.income).toISOString().slice(0, 10);
+              this.customer.income = new Date(data.income)
+                .toISOString()
+                .slice(0, 10);
               this.customer.membership_id = mem.id;
               this.selectedMembership = mem;
               this.customer.id = data.id;

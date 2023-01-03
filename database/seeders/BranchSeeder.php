@@ -23,7 +23,7 @@ class BranchSeeder extends Seeder
                 'company_id' => 1
             ]
         );
-        Branch::create(
+        /*        Branch::create(
             [
                 'division' => 'Jardines alcalde',
                 'location' => 'Amado aguirre',
@@ -37,7 +37,7 @@ class BranchSeeder extends Seeder
                 'location' => ' Av. Paseo de los filosofos',
                 'company_id' => 1
             ]
-        );
+        ); */
 
         $user = User::where('id', 1)->first();
         $user['branch_id'] = 1;

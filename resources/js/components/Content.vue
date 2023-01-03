@@ -11,7 +11,10 @@
               background-image: url('images/fondogym.jpg');
              no-repeat center center; background-size: cover;
             " -->
-          <div class="card" id="checkCard">
+          <div
+            class="card"
+            id="checkCard"
+          >
             <div class="row">
               <div class="col-md-12 ml4">
                 <button
@@ -41,13 +44,22 @@
               </div>
             </div>
 
-            <div class="card-header" id="aca">
-              <h1 v-if="branch" class="division">
+            <div
+              class="card-header"
+              id="aca"
+            >
+              <h1
+                v-if="branch"
+                class="division"
+              >
                 <p class="division">Sucursal: {{ branch.division }}</p>
                 <!-- <br /> -->
                 <p class="location">Direccion: {{ branch.location }}</p>
               </h1>
-              <h1 v-else class="bg'danger">
+              <h1
+                v-else
+                class="bg'danger"
+              >
                 <p>No branch selected. Please select one.</p>
               </h1>
             </div>
@@ -76,20 +88,23 @@
                     Ingresa tu codigo de socio
                   </h4>
                   <form class="mt-3">
-                    <div class="input-group mb-3" name="checkForm">
+                    <div
+                      class="input-group mb-3"
+                      name="checkForm"
+                    >
                       <input
+                        id="code"
+                        ref="code"
+                        v-model="code"
                         :disabled="loading ? true : false"
                         class="form-control text-center"
-                        id="code"
                         type="number"
-                        v-model="code"
                         placeholder="1921"
                         aria-label=""
                         aria-describedby="basic-addon1"
                         minlength="4"
                         maxlength="4"
                         v-on:keydown.enter.prevent="assistance"
-                        autofocus
                         required
                         style="
                           border: none;
@@ -100,7 +115,11 @@
                         "
                       />
                       <div class="input-group-append">
-                        <button class="btn btn-info" type="button" @click="assistance">
+                        <button
+                          class="btn btn-info"
+                          type="button"
+                          @click="assistance"
+                        >
                           <i class="icon-login"></i>
                         </button>
                       </div>
@@ -205,9 +224,15 @@ export default {
     }
   },
 
-  async mounted() {
-    await document.getElementById("code").focus();
-    // console.log(process.env);
+  mounted() {
+    this.$nextTick(() => {
+      document.getElementById("code").focus();
+    });
+  },
+  beforeMount() {
+    this.$nextTick(() => {
+      document.getElementById("code").focus();
+    });
   },
 
   methods: {
@@ -227,27 +252,26 @@ export default {
           console.log(customer);
 
           console.log("membership" in customer ? "TRUE" : "FALSE");
-          console.log('payments' in customer.membership ? "TRUE" : "FALSE");
+          console.log("payments" in customer.membership ? "TRUE" : "FALSE");
           let expires_at = () => {
-            if("membership" in customer){
-                if('payments' in customer.membership){
-                    console.log('Has pays')
-                }else{
-
-                    console.log('NO SSHas pays')
-                }
-            }else{
-                console.log('No membership')
+            if ("membership" in customer) {
+              if ("payments" in customer.membership) {
+                console.log("Has pays");
+              } else {
+                console.log("NO SSHas pays");
+              }
+            } else {
+              console.log("No membership");
             }
-
-
           };
 
           me.expired =
             Date.now() > me.cusDate(customer.membership.payments[0].expires_at)
               ? true
               : false;
-          me.expiresClose = me.expiresAtWeek(customer.membership.payments[0].expires_at)
+          me.expiresClose = me.expiresAtWeek(
+            customer.membership.payments[0].expires_at
+          )
             ? true
             : false;
 
@@ -295,7 +319,9 @@ export default {
               : "/storage/app/public/" + customer.image;
 
           let imgSrc =
-            customer.image != null ? imgPath : "https://placekitten.com/150/150";
+            customer.image != null
+              ? imgPath
+              : "https://placekitten.com/150/150";
           console.log(customer.image);
           console.log(imgSrc);
           let mamadolores = !(me.expired || me.expiresClose)
@@ -335,7 +361,7 @@ export default {
             target: document.getElementById("checkCard"),
             html:
               "<div style=' target=' _blank ' > " +
-              mamadolores +
+              //   mamadolores +
               " </div>" +
               '<h1 style="color:white;"><b> Registro  de ' +
               movement +
@@ -349,7 +375,6 @@ export default {
             // timer: 5000,
           });
           me.loading = false;
-          document.getElementById("code").focus();
         })
 
         .catch((error) => {
@@ -376,11 +401,6 @@ export default {
             (me.loading = false),
             await document.getElementById("code").focus(),
             (me.run = 0)
-            // this.showConfeti(0)
-            // me.stopConfetti()
-
-            /* setTimeout(w._createClass.bind(w), 0),
-            setTimeout(w._createClass.bind(w), 3000) */
           )
         );
     },
@@ -508,7 +528,10 @@ export default {
       if (canvas === null) {
         canvas = document.createElement("canvas");
         canvas.setAttribute("id", "confetti-canvas");
-        canvas.setAttribute("style", "display:block;z-index:999999;pointer-events:none");
+        canvas.setAttribute(
+          "style",
+          "display:block;z-index:999999;pointer-events:none"
+        );
         document.body.appendChild(canvas);
         canvas.width = width;
         canvas.height = height;
@@ -576,16 +599,27 @@ export default {
       this.waveAngle += 0.01;
       for (var i = 0; i < particles.length; i++) {
         particle = particles[i];
-        if (!this.streamingConfetti && particle.y < -15) particle.y = height + 100;
+        if (!this.streamingConfetti && particle.y < -15)
+          particle.y = height + 100;
         else {
           particle.tiltAngle += particle.tiltAngleIncrement;
           particle.x += Math.sin(this.waveAngle);
           particle.y +=
-            (Math.cos(this.waveAngle) + particle.diameter + this.particleSpeed) * 0.5;
+            (Math.cos(this.waveAngle) +
+              particle.diameter +
+              this.particleSpeed) *
+            0.5;
           particle.tilt = Math.sin(particle.tiltAngle) * 15;
         }
-        if (particle.x > width + 20 || particle.x < -20 || particle.y > height) {
-          if (this.streamingConfetti && particles.length <= this.maxParticleCount)
+        if (
+          particle.x > width + 20 ||
+          particle.x < -20 ||
+          particle.y > height
+        ) {
+          if (
+            this.streamingConfetti &&
+            particles.length <= this.maxParticleCount
+          )
             this.resetParticle(particle, width, height);
           else {
             particles.splice(i, 1);

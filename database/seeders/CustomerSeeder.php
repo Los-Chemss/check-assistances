@@ -73,9 +73,9 @@ class CustomerSeeder extends Seeder
                     // 'province' => $socio->{'Estado'},
                     // 'postcode' => $socio->{'Código Postal'},
                     // 'phone' => $socio->{'Teléfono Celular'},
-                    'registered_on_branch_id' => $br
+                    'registered_on_branch_id' => 1 ///$br
                 ];
-                Customer::create($newSocio);
+                // Customer::create($newSocio);
             }
         }
     }
