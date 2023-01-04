@@ -85,8 +85,7 @@ class CustomerController extends Controller
                                     $q->orderBy('payments.expires_at', 'desc');
                                 });
                             if ($buscar === 'active') {
-                                $j->where('payments.expires_at', '>', Carbon::now())
-                                    ->Where('payments.expires_at', '>>', Carbon::now()->addDays(7));
+                                $j->Where('payments.expires_at', '>=', Carbon::now()->addDays(7));
                             }
                             if ($buscar === 'expires_close') {
                                 $j->where('payments.expires_at', '>', Carbon::now())

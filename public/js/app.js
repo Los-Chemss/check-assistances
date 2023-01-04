@@ -2776,31 +2776,29 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
     }
   },
   mounted: function mounted() {
-    this.$nextTick(function () {
-      document.getElementById("code").focus();
-    });
+    document.getElementById("code").focus();
   },
-  beforeMount: function beforeMount() {
-    this.$nextTick(function () {
-      document.getElementById("code").focus();
-    });
-  },
+
+  /*   beforeMount() {
+    document.getElementById("code").focus();
+  }, */
   methods: {
     assistance: function assistance() {
       var me = this;
       me.loading = true;
       me.run = 1; //   var w = new me.showConfeti();
+      //   me.startConfetti();
 
-      me.startConfetti();
       axios.post("assistances", {
         branch: me.branch.id,
         code: me.code
       }).then(function (response) {
+        document.getElementById("code").setAttribute("disabled", true);
         console.log(response);
         var movement = null;
         var message = null;
-        var customer = response.data.customer;
-        console.log(customer);
+        var customer = response.data.customer; //   console.log(customer);
+
         console.log("membership" in customer ? "TRUE" : "FALSE");
         console.log("payments" in customer.membership ? "TRUE" : "FALSE");
 
@@ -2863,11 +2861,11 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
           customClass: {
             popup: "swal-bg"
           },
-          backdrop: nowDay === birthDay && nowMonth === birthMonth ? backdrop + birthBackdrop : backdrop,
           target: document.getElementById("checkCard"),
           html: "<div style=' target=' _blank ' > " + //   mamadolores +
-          " </div>" + '<h1 style="color:white;"><b> Registro  de ' + movement + " satisfactorio</b></h1>" + ' <div class="text-center pt-2"> <img src="' + imgSrc + '"class="img-fluid" style="width:150px; height:150px; box-shadow:0 1rem 3rem rgba(68, 122, 17, 0.967), 0 1rem 3rem rgba(0, 0, 0, 0.19);' + ' border-radius:50%" alt="customer-image"/> <br>  <h1 style="margin-top:10px;">' + message + " </h1></div>" // timer: 5000,
-
+          " </div>" + '<h1 style="color:white;"><b> Registro  de ' + movement + " satisfactorio</b></h1>" + ' <div class="text-center pt-2"> <img src="' + imgSrc + '"class="img-fluid" style="width:150px; height:150px; box-shadow:0 1rem 3rem rgba(68, 122, 17, 0.967), 0 1rem 3rem rgba(0, 0, 0, 0.19);' + ' border-radius:50%" alt="customer-image"/> <br>  <h1 style="margin-top:10px;">' + message + " </h1></div>",
+          showConfirmButton: false,
+          timer: 3000
         });
         me.loading = false;
       })["catch"](function (error) {
@@ -2881,7 +2879,8 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
             backdrop: "#ba0c0c8c",
             title: "Codigo invalido",
             text: "El codigo es invalido",
-            // timer: 4000,
+            showConfirmButton: false,
+            timer: 3000,
             target: document.getElementById("checkCard")
           });
         }
@@ -2896,11 +2895,9 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
                 me.expired = null;
                 me.expiresClose = null;
                 me.loading = false;
-                _context.next = 6;
-                return document.getElementById("code").focus();
-
-              case 6:
-                return _context.abrupt("return", me.run = 0);
+                me.run = 0;
+                document.getElementById("code").disabled = false;
+                document.getElementById("code").focus();
 
               case 7:
               case "end":

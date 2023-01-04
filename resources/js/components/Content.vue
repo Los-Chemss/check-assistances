@@ -225,15 +225,11 @@ export default {
   },
 
   mounted() {
-    this.$nextTick(() => {
-      document.getElementById("code").focus();
-    });
+    document.getElementById("code").focus();
   },
-  beforeMount() {
-    this.$nextTick(() => {
-      document.getElementById("code").focus();
-    });
-  },
+  /*   beforeMount() {
+    document.getElementById("code").focus();
+  }, */
 
   methods: {
     assistance() {
@@ -241,15 +237,16 @@ export default {
       me.loading = true;
       me.run = 1;
       //   var w = new me.showConfeti();
-      me.startConfetti();
+      //   me.startConfetti();
       axios
         .post("assistances", { branch: me.branch.id, code: me.code })
         .then((response) => {
+          document.getElementById("code").setAttribute("disabled", true);
           console.log(response);
           let movement = null;
           let message = null;
           let customer = response.data.customer;
-          console.log(customer);
+          //   console.log(customer);
 
           console.log("membership" in customer ? "TRUE" : "FALSE");
           console.log("payments" in customer.membership ? "TRUE" : "FALSE");
@@ -354,10 +351,6 @@ export default {
           Swal.fire({
             type: me.expired ? "error" : me.expiresClose ? "info" : "",
             customClass: { popup: "swal-bg" },
-            backdrop:
-              nowDay === birthDay && nowMonth === birthMonth
-                ? backdrop + birthBackdrop
-                : backdrop,
             target: document.getElementById("checkCard"),
             html:
               "<div style=' target=' _blank ' > " +
@@ -372,7 +365,8 @@ export default {
               ' border-radius:50%" alt="customer-image"/> <br>  <h1 style="margin-top:10px;">' +
               message +
               " </h1></div>",
-            // timer: 5000,
+            showConfirmButton: false,
+            timer: 3000,
           });
           me.loading = false;
         })
@@ -387,22 +381,23 @@ export default {
               backdrop: "#ba0c0c8c",
               title: "Codigo invalido",
               text: "El codigo es invalido",
-              // timer: 4000,
+              showConfirmButton: false,
+              timer: 3000,
               target: document.getElementById("checkCard"),
             });
           }
           document.getElementById("code").focus();
         })
-        .finally(
-          async () => (
-            (me.code = ""),
-            (me.expired = null),
-            (me.expiresClose = null),
-            (me.loading = false),
-            await document.getElementById("code").focus(),
-            (me.run = 0)
-          )
-        );
+
+        .finally(async () => {
+          me.code = "";
+          me.expired = null;
+          me.expiresClose = null;
+          me.loading = false;
+          me.run = 0;
+          document.getElementById("code").disabled = false;
+          document.getElementById("code").focus();
+        });
     },
 
     openFullscreen() {
