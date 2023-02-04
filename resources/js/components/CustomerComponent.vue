@@ -109,6 +109,16 @@
                     Nuevo cliente
                   </button>
                 </div>
+                <div class="col-md-4">
+                  <button
+                    style="float: right"
+                    type="button"
+                    class="btn btn-primary btn-lg fas fa-edit"
+                    @click="exportCsv"
+                  >
+                    Exportar csv
+                  </button>
+                </div>
                 <br />
                 <br />
                 <div class="row">
@@ -1263,6 +1273,25 @@ export default {
       if (day.length < 2) day = "0" + day;
 
       return [day, month, year].join("/");
+    },
+
+    exportCsv() {
+      axios
+        .post("/customers/export-csv")
+        .then((response) => {
+          console.log(response);
+          alert(response?.data);
+          //   me.listCustomers(me.page, me.buscar, me.criterio);
+        })
+        .catch((error) => {
+          console.log(error);
+          //   let message = me.swalErrorMessage(error.response.data.errors);
+          Swal.fire({
+            type: "error",
+            html: error,
+            timer: 3000,
+          });
+        });
     },
 
     //Paginator

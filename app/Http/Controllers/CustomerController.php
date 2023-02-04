@@ -18,6 +18,7 @@ use App\Helper\File;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Storage;
+use Response;
 
 class CustomerController extends Controller
 {
@@ -472,6 +473,78 @@ class CustomerController extends Controller
             } else {
                 return response()->json(['message' => 'error uploading file'], 503);
             }
+        } catch (Exception $e) {
+            $c = $this;
+            return $this->catchEx($e->getMessage(), $c,  __FUNCTION__ . ' | ' . $e->getLine());
+        }
+    }
+
+    public function exportCSV(Request $request)
+    {
+        try {
+            $customers = Customer::join('memberships', function ($j) {
+                $j->on('memberships.id', 'customers.membership_id');
+            })
+                ->join('payments', function ($j) {
+                    $j->on('payments.membership_id', 'memberships.id')
+                        ->on('payments.customer_id', 'customers.id', function ($q) {
+                            $q->orderBy('payments.expires_at', 'desc');
+                        });
+                })
+                ->select(
+                    'customers.name as name',
+                    'customers.lastname as lastname',
+                    'customers.income as income',
+                    'customers.code as code',
+                    'payments.expires_at',
+                    'memberships.name as membership',
+                )
+                ->get();
+
+            // return $customers;
+
+            $fileName = 'customers.csv';
+            $headers = array(
+                "Content-type"        => "text/csv",
+                "Content-Disposition" => "attachment; filename=$fileName",
+                "Pragma"              => "no-cache",
+                "Cache-Control"       => "must-revalidate, post-check=0, pre-check=0",
+                "Expires"             => "0"
+            );
+
+            $columns = array('Name', 'Income', 'Code', 'Expires', 'Membership');
+
+            $callback = function () use ($customers, $columns) {
+                $file = fopen('php://temp', 'w');
+                fputcsv($file, $columns);
+                foreach ($customers as $customer) {
+                    $row['Name']  = $customer->name . ' ' . $customer->lastname;
+                    $row['Income']    = $customer->income;
+                    $row['Code']    = "$customer->code";
+                    $row['Expires']    = "$customer->expires_at";
+                    $row['Membership']    = "$customer->membership";
+                    fputcsv($file, array($row['Name'], $row['Income'], $row['Code'],  $row['Expires'], $row['Membership']));
+                }
+
+                rewind($file);
+                $content = stream_get_contents($file);
+                fclose($file);
+
+                return $content;
+            };
+
+            $content = $callback();
+            Storage::disk('public')->put('files/' . $fileName, $content);
+
+            return env('APP_URL') . Storage::url('files/' . $fileName, $fileName, $headers);
+
+            return Storage::disk('public')->response('files/' . $fileName);
+            $files = Storage::disk('public')->files('files/');
+            return $files;
+            return Storage::disk('public')->files('files/' . $fileName);
+
+
+            return response()->stream($callback, 200, $headers);
         } catch (Exception $e) {
             $c = $this;
             return $this->catchEx($e->getMessage(), $c,  __FUNCTION__ . ' | ' . $e->getLine());
